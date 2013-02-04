@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dip"
+    android:background="@android:color/white"
+    android:orientation="horizontal"
+    android:padding="@dimen/standard_padding" >
+
+    <ImageView
+        android:id="@+id/fbProfilePic"
+        android:layout_width="75dip"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/contentWrapper"
+        android:layout_width="260dip"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="@dimen/standard_padding" >
+
+        <TextView
+            android:id="@+id/fbUserId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/fbMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/fbInterval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/fbPlace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/unreadWrapper"
+        android:layout_width="22dip"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_vertical|center_horizontal|center"
+        android:background="@color/bc_green" >
+
+        <TextView
+            android:id="@+id/unreadCounter"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal|center"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/black" />
+
+    </LinearLayout>
+
+</LinearLayout>

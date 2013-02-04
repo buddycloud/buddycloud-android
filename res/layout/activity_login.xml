@@ -1,0 +1,44 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="90dp"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/loginTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:ems="10"
+            android:hint="@string/login_hint"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/passwordTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/loginTxt"
+            android:ems="10"
+            android:hint="@string/login_password"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/postBtn"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/passwordTxt"
+            android:text="@string/login_button" />
+    </LinearLayout>
+
+</RelativeLayout>
