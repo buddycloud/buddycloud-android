@@ -8,5 +8,6 @@
     <string name="login_password">password</string>
     <string name="post_button">Post</string>
     <string name="login_button">Login</string>
+    <string name="apiAddressTxtHint">https://api.buddycloud.org</string>
 
 </resources>

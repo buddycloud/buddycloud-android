@@ -1,11 +1,14 @@
 package com.buddycloud.http;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,10 +27,11 @@ public class ProfilePicCache {
 		BuddycloudHTTPHelper.THREAD_POOL.execute(new Runnable() {
 			@Override
 			public void run() {
-				URL bitmapURL;
 				try {
-					bitmapURL = new URL(url);
-					Bitmap iconBitmap = BitmapFactory.decodeStream(bitmapURL.openConnection().getInputStream());
+					HttpClient client = new DefaultHttpClient(BuddycloudHTTPHelper.createConnectionManager(), null);
+					HttpGet method = new HttpGet(url);
+					HttpResponse response = client.execute(method);
+					Bitmap iconBitmap = BitmapFactory.decodeStream(response.getEntity().getContent());
 					cache.put(url, iconBitmap);
 					blockingBarrier.offer(iconBitmap);
 				} catch (Exception e) {

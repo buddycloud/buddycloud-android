@@ -1,8 +1,6 @@
 package com.buddycloud;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -10,10 +8,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.buddycloud.preferences.Preferences;
+
 public class LoginActivity extends Activity {
 
-	private static final String PREFS_NAME = "BuddycloudPrefsFile";
-	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,32 +19,35 @@ public class LoginActivity extends Activity {
         Button postBtn = (Button) findViewById(R.id.postBtn);
         final EditText loginTxt = (EditText) findViewById(R.id.loginTxt);
         final EditText passwordTxt = (EditText) findViewById(R.id.passwordTxt);
+        final EditText apiAddressTxt = (EditText) findViewById(R.id.apiAddressTxt);
         
-        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, 0);
-        String loginPref = preferences.getString("login", null);
+        String loginPref = Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
         if (loginPref != null) {
         	loginTxt.setText(loginPref);
         }
         
-        String passPref = preferences.getString("password", null);
+        String passPref = Preferences.getPreference(this, Preferences.PASSWORD);
         if (passPref != null) {
         	passwordTxt.setText(passPref);
+        }
+        
+        String apiAddressPref = Preferences.getPreference(this, Preferences.API_ADDRESS);
+        if (apiAddressPref != null) {
+        	apiAddressTxt.setText(apiAddressPref);
+        } else {
+        	apiAddressTxt.setText(Preferences.DEFAULT_API_ADDRESS);
         }
         
         postBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
-				SharedPreferences preferences = getSharedPreferences(PREFS_NAME, 0);
-				Editor editor = preferences.edit();
-				
 				String login = loginTxt.getText().toString();
 				String password = passwordTxt.getText().toString();
+				String apiAddress = apiAddressTxt.getText().toString();
 				
-				editor.putString("login", login);
-				editor.putString("password", password);
-				
-				editor.commit();
+				Preferences.setPreference(LoginActivity.this, Preferences.MY_CHANNEL_JID, login);
+				Preferences.setPreference(LoginActivity.this, Preferences.PASSWORD, password);
+				Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, apiAddress);
 				
 				LoginActivity.this.finish();
 			}

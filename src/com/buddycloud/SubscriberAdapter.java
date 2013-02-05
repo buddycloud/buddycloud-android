@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.http.ProfilePicCache;
 import com.buddycloud.model.Channel;
-import com.buddycloud.preferences.Constants;
+import com.buddycloud.preferences.Preferences;
 
 public class SubscriberAdapter extends BaseAdapter {
 
@@ -46,13 +46,13 @@ public class SubscriberAdapter extends BaseAdapter {
 	private void fetchSubscribers() {
 		subscribed.clear();
 		
-		JSONObject syncObject = BuddycloudHTTPHelper.get(Constants.MY_API + 
-				"/sync?since=2013-01-30T00:00:00Z&max=1000&counters=true", true,
-				parent.getSharedPreferences(Constants.PREFS_NAME, 0));
+		String apiAddress = Preferences.getPreference(parent, Preferences.API_ADDRESS);
+		
+		JSONObject syncObject = BuddycloudHTTPHelper.get(apiAddress + 
+				"/sync?since=2013-01-30T00:00:00Z&max=1000&counters=true", true, parent);
 		
 		JSONObject jsonObject = BuddycloudHTTPHelper.get(
-				Constants.MY_API + "/subscribed", true, 
-				parent.getSharedPreferences(Constants.PREFS_NAME, 0));
+				apiAddress + "/subscribed", true, parent);
 		
 		Iterator<String> keys = jsonObject.keys();
 		while (keys.hasNext()) {
@@ -61,8 +61,8 @@ public class SubscriberAdapter extends BaseAdapter {
 			Channel channel = new Channel(channelJid);
 			if (!subscribed.contains(channel)) {
 				channel.setUnread(syncObject.optInt("/user/" + channelJid + "/posts"));
-				channel.setAvatar(fetchAvatar(channelJid));
-				channel.setDescription(fetchDescription(channelJid));
+				channel.setAvatar(fetchAvatar(channelJid, apiAddress));
+				channel.setDescription(fetchDescription(channelJid, apiAddress));
 				subscribed.add(channel);
 			}
 		}
@@ -70,8 +70,8 @@ public class SubscriberAdapter extends BaseAdapter {
 		Collections.sort(subscribed, new Comparator<Channel>() {
 			@Override
 			public int compare(Channel arg0, Channel arg1) {
-				SharedPreferences sharedPreferences = parent.getSharedPreferences(Constants.PREFS_NAME, 0);
-				String myChannel = sharedPreferences.getString(Constants.MY_CHANNEL, null);
+				SharedPreferences sharedPreferences = parent.getSharedPreferences(Preferences.PREFS_NAME, 0);
+				String myChannel = sharedPreferences.getString(Preferences.MY_CHANNEL_JID, null);
 				if (arg1.getJid().equals(myChannel)) {
 					return 1;
 				}
@@ -92,14 +92,13 @@ public class SubscriberAdapter extends BaseAdapter {
 		});
 	}
 	
-	private Bitmap fetchAvatar(String channel) {
-		return picCache.getBitmap(Constants.MY_API + "/" + channel + "/media/avatar");
+	private Bitmap fetchAvatar(String channel, String apiAddress) {
+		return picCache.getBitmap(apiAddress + "/" + channel + "/media/avatar");
 	}
 	
-	private String fetchDescription(String channel) {
-		JSONObject jsonObject = BuddycloudHTTPHelper.get(Constants.MY_API + "/" + 
-				channel + "/metadata/posts", false,
-				parent.getSharedPreferences(Constants.PREFS_NAME, 0));
+	private String fetchDescription(String channel, String apiAddress) {
+		JSONObject jsonObject = BuddycloudHTTPHelper.get(apiAddress + "/" + 
+				channel + "/metadata/posts", false, parent);
 		return jsonObject.optString("description");
 	}
 
@@ -139,8 +138,8 @@ public class SubscriberAdapter extends BaseAdapter {
 		TextView unreadCounterView = (TextView) retView.findViewById(R.id.unreadCounter);
 		unreadCounterView.setText(subscribedChannel.getUnread().toString());
 		
-		SharedPreferences sharedPreferences = parent.getSharedPreferences(Constants.PREFS_NAME, 0);
-		String myChannel = sharedPreferences.getString(Constants.MY_CHANNEL, null);
+		SharedPreferences sharedPreferences = parent.getSharedPreferences(Preferences.PREFS_NAME, 0);
+		String myChannel = sharedPreferences.getString(Preferences.MY_CHANNEL_JID, null);
 		
 		if (subscribedChannel.getJid().equals(myChannel)) {
 			retView.setBackgroundColor(

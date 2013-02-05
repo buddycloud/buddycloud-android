@@ -13,11 +13,10 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import com.buddycloud.preferences.Constants;
+import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.TempUtils;
 
 public class UploadPictureTask extends AsyncTask<Uri, Void, String> {
@@ -32,8 +31,9 @@ public class UploadPictureTask extends AsyncTask<Uri, Void, String> {
 	protected String doInBackground(Uri... params) {
 
 		try {
-			SharedPreferences preferences = parent.getSharedPreferences(Constants.PREFS_NAME, 0);
-			String myChannel = preferences.getString(Constants.MY_CHANNEL, null);
+			
+			String apiAddress = Preferences.getPreference(parent, Preferences.API_ADDRESS);
+			String myChannel = Preferences.getPreference(parent, Preferences.MY_CHANNEL_JID);
 			
 			MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 			ContentResolver cr = parent.getContentResolver();
@@ -50,9 +50,9 @@ public class UploadPictureTask extends AsyncTask<Uri, Void, String> {
 			reqEntity.addPart("title", new StringBody("Android upload"));
 			
 			JSONObject jsonObject = BuddycloudHTTPHelper.post(
-					Constants.MY_API + "/" + myChannel + "/media", true,
-					reqEntity, preferences);
-			return Constants.MY_API + "/"
+					apiAddress + "/" + myChannel + "/media", true,
+					reqEntity, parent);
+			return apiAddress + "/"
 					+ jsonObject.optString("entityId") + "/media/"
 					+ jsonObject.optString("id");
 		} catch (Exception e) {
