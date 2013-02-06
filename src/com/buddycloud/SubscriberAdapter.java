@@ -64,9 +64,24 @@ public class SubscriberAdapter extends BaseAdapter {
 				channel.setAvatar(fetchAvatar(channelJid, apiAddress));
 				channel.setDescription(fetchDescription(channelJid, apiAddress));
 				subscribed.add(channel);
+				sortChannels();
+				notifyChanged();
 			}
 		}
 		
+		
+	}
+
+	private void notifyChanged() {
+		parent.findViewById(R.id.contentListView).post(new Runnable() {
+			@Override
+			public void run() {
+				notifyDataSetChanged();
+			}
+		});
+	}
+
+	private void sortChannels() {
 		Collections.sort(subscribed, new Comparator<Channel>() {
 			@Override
 			public int compare(Channel arg0, Channel arg1) {
@@ -83,17 +98,10 @@ public class SubscriberAdapter extends BaseAdapter {
 				return arg0.getJid().compareTo(arg1.getJid());
 			}
 		});
-		
-		parent.findViewById(R.id.contentListView).post(new Runnable() {
-			@Override
-			public void run() {
-				notifyDataSetChanged();
-			}
-		});
 	}
 	
 	private Bitmap fetchAvatar(String channel, String apiAddress) {
-		return picCache.getBitmap(apiAddress + "/" + channel + "/media/avatar");
+		return picCache.getBitmap(apiAddress + "/" + channel + "/media/avatar?maxwidth=50");
 	}
 	
 	private String fetchDescription(String channel, String apiAddress) {
