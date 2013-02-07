@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="standard_padding">1dip</dimen>
+    <dimen name="big_padding">5dip</dimen>
 </resources>

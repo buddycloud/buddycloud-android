@@ -17,6 +17,17 @@ public class ProfilePicCache {
 
 	private Map<String, Bitmap> cache = new HashMap<String, Bitmap>();
 	
+	private static ProfilePicCache instance;
+	
+	public static ProfilePicCache getInstance() {
+		if (instance == null) {
+			instance = new ProfilePicCache();
+		}
+		return instance;
+	}
+	
+	private ProfilePicCache() {}
+	
 	public Bitmap getBitmap(final String url) {
 		Bitmap bitmap = cache.get(url);
 		if (bitmap != null) {

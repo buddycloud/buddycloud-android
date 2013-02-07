@@ -16,17 +16,23 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_share" 
+            android:label="@string/app_name" 
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_share" 
+            android:screenOrientation="portrait">
+        </activity>
+        
+        <activity
+            android:name=".ChannelStreamActivity"
+            android:label="@string/title_activity_share" 
+        	android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait">
         </activity>
         

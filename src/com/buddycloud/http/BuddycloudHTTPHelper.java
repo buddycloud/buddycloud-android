@@ -20,6 +20,8 @@ import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -32,14 +34,33 @@ public class BuddycloudHTTPHelper {
 	public static Executor THREAD_POOL = Executors.newCachedThreadPool();
 	
 	public static JSONObject get(String url, boolean auth, Activity parent) {
-		return req("get", url, auth, null, parent);
+		String response = req("get", url, auth, null, parent);
+		try {
+			return new JSONObject(response);
+		} catch (JSONException e) {
+			return null;
+		}
 	}
 
-	public static JSONObject post(String url, boolean auth, HttpEntity entity, Activity parent) {
-		return req("post", url, auth, entity, parent);
+	public static JSONArray getArray(String url, boolean auth, Activity parent) {
+		String response = req("get", url, auth, null, parent);
+		try {
+			return new JSONArray(response);
+		} catch (JSONException e) {
+			return null;
+		}
 	}
 	
-	private static JSONObject req(final String methodType, final String url, 
+	public static JSONObject post(String url, boolean auth, HttpEntity entity, Activity parent) {
+		String response = req("post", url, auth, entity, parent);
+		try {
+			return new JSONObject(response);
+		} catch (JSONException e) {
+			return null;
+		}
+	}
+	
+	private static String req(final String methodType, final String url, 
 			final boolean auth, final HttpEntity entity, final Activity parent) {
 		
 		final BlockingQueue<Object> blockingBarrier = new ArrayBlockingQueue<Object>(1);
@@ -51,6 +72,7 @@ public class BuddycloudHTTPHelper {
 					HttpRequestBase method = null;
 					if (methodType.equals("get")) {
 						method = new HttpGet(url);
+						method.setHeader("Accept", "application/json");
 					} else if (methodType.equals("post")) {
 						method = new HttpPost(url);
 						if (entity != null) {
@@ -64,8 +86,7 @@ public class BuddycloudHTTPHelper {
 					HttpEntity resEntityGet = responseGet.getEntity();
 					if (resEntityGet != null) {
 						String response = EntityUtils.toString(resEntityGet);
-						JSONObject jsonObject = new JSONObject(response);
-						blockingBarrier.offer(jsonObject);
+						blockingBarrier.offer(response);
 					}
 				} catch (Exception e) {
 					blockingBarrier.offer(e);
@@ -75,8 +96,8 @@ public class BuddycloudHTTPHelper {
 		
 		try {
 			Object taken = blockingBarrier.take();
-			if (taken instanceof JSONObject) {
-				return (JSONObject) taken;
+			if (taken instanceof String) {
+				return (String)taken;
 			}
 			throw (Exception) taken;
 		} catch (Exception e) {

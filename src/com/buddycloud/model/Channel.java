@@ -1,16 +1,29 @@
 package com.buddycloud.model;
 
-import android.graphics.Bitmap;
+import java.io.Serializable;
 
-public class Channel {
+public class Channel implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1396459184012348432L;
+	
 	private String jid;
 	private String description;
-	private Bitmap avatar;
 	private int unread;
+	private String avatarURL;
 	
 	public Channel(String jid) {
 		this.jid = jid;
+	}
+	
+	public void setAvatarURL(String avatarURL) {
+		this.avatarURL = avatarURL;
+	}
+	
+	public String getAvatarURL() {
+		return avatarURL;
 	}
 	
 	public String getDescription() {
@@ -25,14 +38,6 @@ public class Channel {
 		return jid;
 	}
 
-	public void setAvatar(Bitmap avatar) {
-		this.avatar = avatar;
-	}
-	
-	public Bitmap getAvatar() {
-		return avatar;
-	}
-	
 	@Override
 	public boolean equals(Object o) {
 		return this.getJid().equals(((Channel)o).getJid());

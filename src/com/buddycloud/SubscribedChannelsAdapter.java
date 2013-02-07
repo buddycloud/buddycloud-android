@@ -31,7 +31,6 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 	private static final double AVATAR_DIP = 75.;
 	
 	private List<Channel> subscribed = new ArrayList<Channel>();
-	private ProfilePicCache picCache = new ProfilePicCache();
 	private final Activity parent;
 	
 	public SubscribedChannelsAdapter(Activity parent) {
@@ -76,7 +75,7 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 			Channel channel = new Channel(channelJid);
 			if (!subscribed.contains(channel)) {
 				channel.setUnread(syncObject.optInt("/user/" + channelJid + "/posts"));
-				channel.setAvatar(fetchAvatar(channelJid, apiAddress));
+				channel.setAvatarURL(fetchAvatar(channelJid, apiAddress));
 				channel.setDescription(fetchDescription(channelJid, apiAddress));
 				notifyChanged(channel);
 			}
@@ -116,19 +115,18 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 		});
 	}
 	
-	private Bitmap fetchAvatar(String channel, String apiAddress) {
-		
+	private String fetchAvatar(String channel, String apiAddress) {
 		int avatarSize = (int) (AVATAR_DIP * parent.getResources().getDisplayMetrics().density + 0.5);
-		
-		Bitmap avatar = picCache.getBitmap(apiAddress + "/" + channel + "/media/avatar?maxheight=" + avatarSize);
+		String url = apiAddress + "/" + channel + "/media/avatar?maxheight=" + avatarSize;
+		Bitmap avatar = ProfilePicCache.getInstance().getBitmap(url);
 		if (avatar == null) {
-			String fallBackURL = Preferences.FALLBACK_PERSONAL_AVATAR;
+			url = Preferences.FALLBACK_PERSONAL_AVATAR;
 			if (channel.contains("@topics.buddycloud.org")) {
-				fallBackURL = Preferences.FALLBACK_TOPIC_AVATAR;
+				url = Preferences.FALLBACK_TOPIC_AVATAR;
 			}
-			avatar = picCache.getBitmap(fallBackURL);
+			ProfilePicCache.getInstance().getBitmap(url);
 		}
-		return avatar;
+		return url;
 	}
 	
 	private String fetchDescription(String channel, String apiAddress) {
@@ -167,9 +165,8 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 		userIdView.setText(subscribedChannel.getJid());
 		
 		ImageView avatarView = (ImageView) retView.findViewById(R.id.fbProfilePic);
-		if (subscribedChannel.getAvatar() != null) {
-			avatarView.setImageBitmap(subscribedChannel.getAvatar());
-		}
+		avatarView.setImageBitmap(ProfilePicCache.getInstance().getBitmap(
+				subscribedChannel.getAvatarURL()));
 		
 		TextView descriptionView = (TextView) retView.findViewById(R.id.fbMessage);
 		descriptionView.setText(subscribedChannel.getDescription());
