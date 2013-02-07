@@ -5,11 +5,12 @@
     android:background="@android:color/white"
     android:orientation="horizontal"
     android:padding="@dimen/standard_padding" >
-
+
     <ImageView
         android:id="@+id/fbProfilePic"
         android:layout_width="75dip"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:scaleType="fitXY" />
 
     <LinearLayout
         android:id="@+id/contentWrapper"

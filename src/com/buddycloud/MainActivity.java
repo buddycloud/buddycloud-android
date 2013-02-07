@@ -20,7 +20,7 @@ public class MainActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		ListView contentView = (ListView) findViewById(R.id.contentListView);
 		contentView.setEmptyView(findViewById(R.id.subscribedProgress));
-		contentView.setAdapter(new SubscriberAdapter(this));
+		contentView.setAdapter(new SubscribedChannelsAdapter(this));
 	}
 
 }

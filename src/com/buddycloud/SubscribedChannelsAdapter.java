@@ -3,6 +3,7 @@ package com.buddycloud;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,13 +25,16 @@ import com.buddycloud.http.ProfilePicCache;
 import com.buddycloud.model.Channel;
 import com.buddycloud.preferences.Preferences;
 
-public class SubscriberAdapter extends BaseAdapter {
+public class SubscribedChannelsAdapter extends BaseAdapter {
 
+	private static final int MAX_COUNTER = 50;
+	private static final double AVATAR_DIP = 75.;
+	
 	private List<Channel> subscribed = new ArrayList<Channel>();
 	private ProfilePicCache picCache = new ProfilePicCache();
 	private final Activity parent;
 	
-	public SubscriberAdapter(Activity parent) {
+	public SubscribedChannelsAdapter(Activity parent) {
 		this.parent = parent;
 		new AsyncTask<Void, Void, Void>() {
 			@Override
@@ -47,9 +51,17 @@ public class SubscriberAdapter extends BaseAdapter {
 		subscribed.clear();
 		
 		String apiAddress = Preferences.getPreference(parent, Preferences.API_ADDRESS);
-		
+
+		String lastUpdate = Preferences.getPreference(parent, Preferences.LAST_UPDATE);
+		if (lastUpdate == null) {
+			lastUpdate = Preferences.DEFAUL_LAST_UPDATE;
+		}
 		JSONObject syncObject = BuddycloudHTTPHelper.get(apiAddress + 
-				"/sync?since=2013-01-30T00:00:00Z&max=1000&counters=true", true, parent);
+				"/sync?since=" + lastUpdate + "&max=" + (MAX_COUNTER + 1) + 
+				"&counters=true", true, parent);
+			
+		Preferences.setPreference(parent, Preferences.LAST_UPDATE, 
+				Preferences.ISO_8601.format(new Date()));
 		
 		JSONObject jsonObject = BuddycloudHTTPHelper.get(
 				apiAddress + "/subscribed", true, parent);
@@ -57,25 +69,26 @@ public class SubscriberAdapter extends BaseAdapter {
 		Iterator<String> keys = jsonObject.keys();
 		while (keys.hasNext()) {
 			String nodeJid = (String) keys.next();
+			if (!nodeJid.endsWith("/posts")) {
+				continue;
+			}
 			String channelJid = nodeJid.split("/")[0];
 			Channel channel = new Channel(channelJid);
 			if (!subscribed.contains(channel)) {
 				channel.setUnread(syncObject.optInt("/user/" + channelJid + "/posts"));
 				channel.setAvatar(fetchAvatar(channelJid, apiAddress));
 				channel.setDescription(fetchDescription(channelJid, apiAddress));
-				subscribed.add(channel);
-				sortChannels();
-				notifyChanged();
+				notifyChanged(channel);
 			}
 		}
-		
-		
 	}
 
-	private void notifyChanged() {
+	private void notifyChanged(final Channel channel) {
 		parent.findViewById(R.id.contentListView).post(new Runnable() {
 			@Override
 			public void run() {
+				subscribed.add(channel);
+				sortChannels();
 				notifyDataSetChanged();
 			}
 		});
@@ -90,6 +103,9 @@ public class SubscriberAdapter extends BaseAdapter {
 				if (arg1.getJid().equals(myChannel)) {
 					return 1;
 				}
+				if (arg0.getJid().equals(myChannel)) {
+					return -1;
+				}
 				int unreadCompare = arg1.getUnread().compareTo(arg0.getUnread());
 				if (unreadCompare != 0) {
 					return unreadCompare;
@@ -101,13 +117,28 @@ public class SubscriberAdapter extends BaseAdapter {
 	}
 	
 	private Bitmap fetchAvatar(String channel, String apiAddress) {
-		return picCache.getBitmap(apiAddress + "/" + channel + "/media/avatar?maxwidth=50");
+		
+		int avatarSize = (int) (AVATAR_DIP * parent.getResources().getDisplayMetrics().density + 0.5);
+		
+		Bitmap avatar = picCache.getBitmap(apiAddress + "/" + channel + "/media/avatar?maxheight=" + avatarSize);
+		if (avatar == null) {
+			String fallBackURL = Preferences.FALLBACK_PERSONAL_AVATAR;
+			if (channel.contains("@topics.buddycloud.org")) {
+				fallBackURL = Preferences.FALLBACK_TOPIC_AVATAR;
+			}
+			avatar = picCache.getBitmap(fallBackURL);
+		}
+		return avatar;
 	}
 	
 	private String fetchDescription(String channel, String apiAddress) {
-		JSONObject jsonObject = BuddycloudHTTPHelper.get(apiAddress + "/" + 
-				channel + "/metadata/posts", false, parent);
-		return jsonObject.optString("description");
+		try {
+			JSONObject jsonObject = BuddycloudHTTPHelper.get(apiAddress + "/" + 
+					channel + "/metadata/posts", false, parent);
+			return jsonObject.optString("description");
+		} catch (Exception e) {
+			return "";
+		}
 	}
 
 	@Override

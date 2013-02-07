@@ -42,7 +42,7 @@ public class BuddycloudHTTPHelper {
 	private static JSONObject req(final String methodType, final String url, 
 			final boolean auth, final HttpEntity entity, final Activity parent) {
 		
-		final BlockingQueue<JSONObject> blockingBarrier = new ArrayBlockingQueue<JSONObject>(1);
+		final BlockingQueue<Object> blockingBarrier = new ArrayBlockingQueue<Object>(1);
 		THREAD_POOL.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -68,14 +68,18 @@ public class BuddycloudHTTPHelper {
 						blockingBarrier.offer(jsonObject);
 					}
 				} catch (Exception e) {
-					throw new RuntimeException(e);
+					blockingBarrier.offer(e);
 				}
 			}
 		});
 		
 		try {
-			return blockingBarrier.take();
-		} catch (InterruptedException e) {
+			Object taken = blockingBarrier.take();
+			if (taken instanceof JSONObject) {
+				return (JSONObject) taken;
+			}
+			throw (Exception) taken;
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
