@@ -33,6 +33,10 @@ public class ChannelStreamAdapter extends BaseAdapter {
 	public ChannelStreamAdapter(Activity parent, Channel channel) {
 		this.parent = parent;
 		this.channel = channel;
+		refetchPosts();
+	}
+
+	public void refetchPosts() {
 		new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... params) {
@@ -44,7 +48,7 @@ public class ChannelStreamAdapter extends BaseAdapter {
 	}
 	
 	private void fetchPosts() {
-		posts.clear();
+		notifyCleared();
 		
 		String apiAddress = Preferences.getPreference(parent, Preferences.API_ADDRESS);
 
@@ -67,6 +71,16 @@ public class ChannelStreamAdapter extends BaseAdapter {
 		}
 	}
 
+	private void notifyCleared() {
+		parent.findViewById(R.id.contentListView).post(new Runnable() {
+			@Override
+			public void run() {
+				posts.clear();
+				notifyDataSetChanged();
+			}
+		});
+	}
+	
 	private void notifyChanged(final Post post) {
 		parent.findViewById(R.id.contentListView).post(new Runnable() {
 			@Override

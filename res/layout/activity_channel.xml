@@ -15,7 +15,7 @@
         android:layout_marginTop="0px"
         android:orientation="vertical" >
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dip"
             android:background="@color/bc_bg_grey"
@@ -30,8 +30,33 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/black" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="@dimen/big_padding" >
+
+            <EditText
+                android:id="@+id/postContentTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/postButton"
+                android:inputType="textMultiLine"
+                android:lines="2" />
+
+            <Button
+                android:id="@+id/postButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="Post" />
+        </RelativeLayout>
+        
         <LinearLayout
             android:id="@+id/contentLayout"
             android:layout_width="match_parent"
