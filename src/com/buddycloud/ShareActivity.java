@@ -3,7 +3,7 @@ package com.buddycloud;
 import java.util.concurrent.ExecutionException;
 
 import com.buddycloud.http.PostToBuddycloudTask;
-import com.buddycloud.http.UploadPictureTask;
+import com.buddycloud.http.UploadMediaTask;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -26,13 +26,13 @@ public class ShareActivity extends Activity {
 
 		final Uri uri = (Uri) intent.getExtras().get(Intent.EXTRA_STREAM);
 
-		UploadPictureTask uploadPictureTask = new UploadPictureTask(
+		UploadMediaTask uploadMediaTask = new UploadMediaTask(
 				ShareActivity.this);
-		uploadPictureTask.execute(uri);
+		uploadMediaTask.execute(uri);
 		try {
-			String resultURL = uploadPictureTask.get();
+			String resultURL = uploadMediaTask.get();
 			Toast.makeText(getApplicationContext(),
-					"Picture uploaded! Now posting it...", Toast.LENGTH_LONG)
+					"Media uploaded! Now posting it...", Toast.LENGTH_LONG)
 					.show();
 			postToBuddycloud(resultURL);
 		} catch (InterruptedException e) {
@@ -49,7 +49,7 @@ public class ShareActivity extends Activity {
 		postToBuddycloudTask.execute(picURL);
 		postToBuddycloudTask.get();
 
-		Toast.makeText(getApplicationContext(), "Picture posted!", Toast.LENGTH_LONG).show();
+		Toast.makeText(getApplicationContext(), "Media posted!", Toast.LENGTH_LONG).show();
 		finish();
 	}
 
