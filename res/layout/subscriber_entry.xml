@@ -5,13 +5,13 @@
     android:background="@android:color/white"
     android:orientation="horizontal"
     android:padding="@dimen/standard_padding" >
-
+    
     <ImageView
         android:id="@+id/fbProfilePic"
         android:layout_width="75dip"
         android:layout_height="match_parent"
         android:scaleType="fitXY" />
-
+    
     <LinearLayout
         android:id="@+id/contentWrapper"
         android:layout_width="260dip"
@@ -45,14 +45,14 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
-
+    
     <LinearLayout
         android:id="@+id/unreadWrapper"
         android:layout_width="22dip"
         android:layout_height="fill_parent"
         android:layout_gravity="center_vertical|center_horizontal|center"
         android:background="@color/bc_green" >
-
+        
         <TextView
             android:id="@+id/unreadCounter"
             android:layout_width="fill_parent"
