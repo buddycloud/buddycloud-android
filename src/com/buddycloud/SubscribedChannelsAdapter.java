@@ -53,7 +53,7 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 			ChannelMetadataModel.getInstance().refresh(parent, new ModelCallback<JSONObject>() {
 				@Override
 				public void success(JSONObject response) {
-					// The metadata from all subscribed channels has been fetched
+					// The metadata from all subscribed channels has been fecthed
 					if (ChannelMetadataModel.getInstance().size() == length) {
 						notifyDataSetChanged();
 					}
