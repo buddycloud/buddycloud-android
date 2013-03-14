@@ -10,7 +10,7 @@ import android.app.Activity;
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.preferences.Preferences;
 
-public class SubscribedChannelsModel implements Model<JSONArray, JSONArray> {
+public class SubscribedChannelsModel implements Model<JSONArray, JSONArray, Void> {
 
 	private static SubscribedChannelsModel instance;
 	private static final String ENDPOINT = "/subscribed"; 
@@ -28,22 +28,22 @@ public class SubscribedChannelsModel implements Model<JSONArray, JSONArray> {
 	}
 	
 	@Override
-	public void refresh(Activity context, final ModelCallback<JSONArray> callback) {
+	public void refresh(Activity context, final ModelCallback<JSONArray> callback, Void... p) {
 		BuddycloudHTTPHelper.getObject(url(context), 
 				true, context, new ModelCallback<JSONObject>() {
 					@SuppressWarnings("unchecked")
 					@Override
 					public void success(JSONObject response) {
-						JSONArray postNodes = new JSONArray();
+						JSONArray channels = new JSONArray();
 						Iterator<String> keyIterator = response.keys();
 						while (keyIterator.hasNext()) {
 							String node = (String) keyIterator.next();
 							if (node.endsWith(POST_NODE_SUFIX)) {
-								postNodes.put(node.split("/")[0]);
+								channels.put(node.split("/")[0]);
 							}
 						}
-						subscribedChannels = postNodes;
-						callback.success(postNodes);
+						subscribedChannels = channels;
+						callback.success(channels);
 					}
 					
 					@Override
@@ -58,13 +58,16 @@ public class SubscribedChannelsModel implements Model<JSONArray, JSONArray> {
 		return apiAddress + ENDPOINT;
 	}
 
+
 	@Override
-	public void save(Activity context, JSONArray object, ModelCallback<JSONArray> callback) {
+	public void save(Activity context, JSONArray object,
+			ModelCallback<JSONArray> callback, Void... p) {
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public JSONArray get(Activity context) {
+	public JSONArray get(Activity context, Void... p) {
 		return subscribedChannels;
 	}
 	

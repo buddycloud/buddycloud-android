@@ -1,6 +1,7 @@
 package com.buddycloud;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.buddycloud.http.ProfilePicCache;
+import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.preferences.Preferences;
@@ -31,7 +33,7 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 		SubscribedChannelsModel.getInstance().refresh(parent, new ModelCallback<JSONArray>() {
 			@Override
 			public void success(JSONArray response) {
-				notifyDataSetChanged();
+				fetchMetadatas();
 			}
 			
 			@Override
@@ -39,6 +41,31 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 				// TODO Auto-generated method stub
 			}
 		});
+	}
+	
+	private void fetchMetadatas() {
+		JSONArray subscribedChannels = SubscribedChannelsModel.getInstance().get(parent);
+		final int length = subscribedChannels.length();
+		
+		for (int i = 0; i < length; i++) {
+			String channel = subscribedChannels.optString(i);
+			
+			ChannelMetadataModel.getInstance().refresh(parent, new ModelCallback<JSONObject>() {
+				@Override
+				public void success(JSONObject response) {
+					// The metadata from all subscribed channels has been fetched
+					if (ChannelMetadataModel.getInstance().size() == length) {
+						notifyDataSetChanged();
+					}
+				}
+				
+				@Override
+				public void error(Throwable throwable) {
+					// TODO Auto-generated method stub
+				}
+			}, channel);
+		}
+		
 	}
 
 	private String fetchAvatar(String channel, String apiAddress) {
@@ -77,15 +104,20 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 
 		String channelJid = SubscribedChannelsModel.getInstance().get(parent).optString(position);
 		
-		TextView userIdView = (TextView) retView.findViewById(R.id.fbUserId);
-		userIdView.setText(channelJid);
+		JSONObject metadata = ChannelMetadataModel.getInstance().get(parent, channelJid);
+		String channelTitle = metadata.optString("title");
+		String channelDescription = metadata.optString("description");
+		
+		TextView channelTitleView = (TextView) retView.findViewById(R.id.fbUserId);
+		channelTitleView.setText(channelTitle);
+
+     	TextView descriptionView = (TextView) retView.findViewById(R.id.fbMessage);
+		descriptionView.setText(channelDescription);
 		
 //		ImageView avatarView = (ImageView) retView.findViewById(R.id.fbProfilePic);
 //		avatarView.setImageBitmap(ProfilePicCache.getInstance().getBitmap(
 //				subscribedChannel.getAvatarURL()));
 //		
-//		TextView descriptionView = (TextView) retView.findViewById(R.id.fbMessage);
-//		descriptionView.setText(subscribedChannel.getDescription());
 //		
 //		TextView unreadCounterView = (TextView) retView.findViewById(R.id.unreadCounter);
 //		unreadCounterView.setText(subscribedChannel.getUnread().toString());

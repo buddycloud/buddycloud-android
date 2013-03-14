@@ -2,12 +2,12 @@ package com.buddycloud.model;
 
 import android.app.Activity;
 
-public interface Model<F, S> {
+public interface Model<RefreshType, SaveType, Params> {
 
-	void refresh(Activity context, ModelCallback<F> callback);
+	void refresh(Activity context, ModelCallback<RefreshType> callback, Params... p);
 	
-	void save(Activity context, S object, ModelCallback<S> callback);
+	void save(Activity context, SaveType object, ModelCallback<SaveType> callback, Params... p);
 	
-	F get(Activity context);
+	RefreshType get(Activity context, Params... p);
 	
 }
