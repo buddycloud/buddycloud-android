@@ -57,12 +57,15 @@ public class UploadMediaTask extends AsyncTask<Uri, Void, String> {
 			reqEntity.addPart("content-type", new StringBody(streamType));
 			reqEntity.addPart("title", new StringBody("Android upload"));
 			
-			JSONObject jsonObject = BuddycloudHTTPHelper.post(
-					apiAddress + "/" + myChannel + "/media", true,
-					reqEntity, parent);
-			return apiAddress + "/"
-					+ jsonObject.optString("entityId") + "/media/"
-					+ jsonObject.optString("id");
+			return null;
+			
+//			JSONObject jsonObject = BuddycloudHTTPHelper.post(
+//					apiAddress + "/" + myChannel + "/media", true,
+//					reqEntity, parent);
+//			
+//			return apiAddress + "/"
+//					+ jsonObject.optString("entityId") + "/media/"
+//					+ jsonObject.optString("id");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

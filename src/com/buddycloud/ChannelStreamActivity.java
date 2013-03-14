@@ -50,7 +50,7 @@ public class ChannelStreamActivity extends Activity {
 							"{\"content\": \"" + postContent.getText().toString() + "\"}",
 						    "UTF-8");
 					requestEntity.setContentType("application/json");
-					BuddycloudHTTPHelper.post(url, true, requestEntity, ChannelStreamActivity.this);
+//					BuddycloudHTTPHelper.post(url, true, requestEntity, ChannelStreamActivity.this);
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}

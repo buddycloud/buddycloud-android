@@ -22,13 +22,16 @@ public class PostToBuddycloudTask extends AsyncTask<String, Void, Void> {
 			String myChannel = Preferences.getPreference(parent, Preferences.MY_CHANNEL_JID);
 			String apiAddress = Preferences.getPreference(parent, Preferences.API_ADDRESS);
 			
-			String url = apiAddress + "/" + myChannel + "/content/posts";
+			String imageURL = params[0];
+			String caption = params[1];
+			
+			String postURL = apiAddress + "/" + myChannel + "/content/posts";
 			StringEntity requestEntity = new StringEntity(
-					"{\"content\": \"Sent from buddycloud android app. " + params[0] + "\"}",
+					"{\"content\": \"" + caption + " - via buddycloud android app. " + imageURL + "\"}",
 				    "UTF-8");
 			
 			requestEntity.setContentType("application/json");
-			BuddycloudHTTPHelper.post(url, true, requestEntity, parent);
+//			BuddycloudHTTPHelper.post(postURL, true, requestEntity, parent);
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e);

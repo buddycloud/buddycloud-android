@@ -1,10 +1,5 @@
 package com.buddycloud.http;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 import javax.net.ssl.HostnameVerifier;
 
 import org.apache.http.HttpEntity;
@@ -25,86 +20,49 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.util.Base64;
 
+import com.buddycloud.model.ModelCallback;
 import com.buddycloud.preferences.Preferences;
 
 public class BuddycloudHTTPHelper {
 
-	public static Executor THREAD_POOL = Executors.newCachedThreadPool();
-	
-	public static JSONObject get(String url, boolean auth, Activity parent) {
-		String response = req("get", url, auth, null, parent);
-		try {
-			return new JSONObject(response);
-		} catch (JSONException e) {
-			return null;
-		}
+	public static void getObject(String url, boolean auth, Activity parent, 
+			final ModelCallback<JSONObject> callback) {
+		reqObject("get", url, auth, null, parent, callback);
 	}
 
-	public static JSONArray getArray(String url, boolean auth, Activity parent) {
-		String response = req("get", url, auth, null, parent);
-		try {
-			return new JSONArray(response);
-		} catch (JSONException e) {
-			return null;
-		}
+	public static void getArray(String url, boolean auth, Activity parent, 
+			final ModelCallback<JSONArray> callback) {
+		reqArray("get", url, auth, null, parent, callback);
 	}
 	
-	public static JSONObject post(String url, boolean auth, HttpEntity entity, Activity parent) {
-		String response = req("post", url, auth, entity, parent);
-		try {
-			return new JSONObject(response);
-		} catch (JSONException e) {
-			return null;
-		}
+	public static void post(String url, boolean auth, HttpEntity entity, Activity parent, 
+			final ModelCallback<JSONObject> callback) {
+		reqObject("post", url, auth, entity, parent, callback);
 	}
 	
-	private static String req(final String methodType, final String url, 
-			final boolean auth, final HttpEntity entity, final Activity parent) {
-		
-		final BlockingQueue<Object> blockingBarrier = new ArrayBlockingQueue<Object>(1);
-		THREAD_POOL.execute(new Runnable() {
+	private static void reqObject(String method, String url, boolean auth,
+			Object object, Activity parent, ModelCallback<JSONObject> callback) {
+		new RequestAsyncTask<JSONObject>(method, url, null, auth, parent, callback) {
 			@Override
-			public void run() {
-				try {
-					HttpClient client = new DefaultHttpClient(createConnectionManager(), null);
-					HttpRequestBase method = null;
-					if (methodType.equals("get")) {
-						method = new HttpGet(url);
-						method.setHeader("Accept", "application/json");
-					} else if (methodType.equals("post")) {
-						method = new HttpPost(url);
-						if (entity != null) {
-							((HttpPost)method).setEntity(entity);
-						}
-					}
-					if (auth) {
-						addAuthHeader(method, parent);
-					}
-					HttpResponse responseGet = client.execute(method);
-					HttpEntity resEntityGet = responseGet.getEntity();
-					if (resEntityGet != null) {
-						String response = EntityUtils.toString(resEntityGet);
-						blockingBarrier.offer(response);
-					}
-				} catch (Exception e) {
-					blockingBarrier.offer(e);
-				}
+			protected JSONObject toJSON(String responseStr) throws JSONException {
+				return new JSONObject(responseStr);
 			}
-		});
-		
-		try {
-			Object taken = blockingBarrier.take();
-			if (taken instanceof String) {
-				return (String)taken;
-			}
-			throw (Exception) taken;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+		}.execute();
+	}	
 
+	private static void reqArray(String method, String url, boolean auth,
+			Object object, Activity parent, ModelCallback<JSONArray> callback) {
+		new RequestAsyncTask<JSONArray>(method, url, null, auth, parent, callback) {
+			@Override
+			protected JSONArray toJSON(String responseStr) throws JSONException {
+				return new JSONArray(responseStr);
+			}
+		}.execute();
+	}
+	
 	protected static void addAuthHeader(HttpRequestBase method, Activity parent) {
 		String loginPref = Preferences.getPreference(parent, Preferences.MY_CHANNEL_JID);
         String passPref = Preferences.getPreference(parent, Preferences.PASSWORD);
@@ -112,12 +70,77 @@ public class BuddycloudHTTPHelper {
 		method.setHeader("Authorization", "Basic " + Base64.encodeToString(auth.getBytes(), Base64.NO_WRAP));
 	}
 	
-	public static SingleClientConnManager createConnectionManager() {
+	public static HttpClient createHttpClient() {
 		HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
 		SchemeRegistry registry = new SchemeRegistry();
 		SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
 		socketFactory.setHostnameVerifier((X509HostnameVerifier) hostnameVerifier);
 		registry.register(new Scheme("https", socketFactory, 443));
-		return new SingleClientConnManager(new DefaultHttpClient().getParams(), registry);
+		SingleClientConnManager connManager = new SingleClientConnManager(new DefaultHttpClient().getParams(), registry);
+		return new DefaultHttpClient(connManager, null);
+	}
+	
+	private static abstract class RequestAsyncTask<T extends Object> extends AsyncTask<Void, Void, Object> {
+
+		private String methodType;
+		private String url;
+		private HttpEntity entity;
+		private boolean auth;
+		private Activity parent;
+		private ModelCallback<T> callback;
+		
+		public RequestAsyncTask(String methodType, String url, HttpEntity entity,
+				boolean auth, Activity parent,
+				ModelCallback<T> callback) {
+			this.methodType = methodType;
+			this.url = url;
+			this.entity = entity;
+			this.auth = auth;
+			this.parent = parent;
+			this.callback = callback;
+		}
+
+		@Override
+		protected Object doInBackground(Void... params) {
+			try {
+				HttpClient client = createHttpClient();
+				HttpRequestBase method = null;
+				if (methodType.equals("get")) {
+					method = new HttpGet(url);
+					method.setHeader("Accept", "application/json");
+				} else if (methodType.equals("post")) {
+					method = new HttpPost(url);
+					if (entity != null) {
+						((HttpPost)method).setEntity(entity);
+					}
+				}
+				if (auth) {
+					addAuthHeader(method, parent);
+				}
+				HttpResponse response = client.execute(method);
+				return response;
+			} catch (Throwable e) {
+				return e;
+			}
+		}
+		
+		@Override
+		protected void onPostExecute(Object response) {
+			if (response instanceof Throwable) {
+				callback.error((Throwable) response);
+			} else {
+				try {
+					HttpEntity resEntityGet = ((HttpResponse)response).getEntity();
+					String responseStr = EntityUtils.toString(resEntityGet);
+					T jsonResponse = (T) toJSON(responseStr);
+					callback.success(jsonResponse);
+				} catch (Throwable e) {
+					callback.error(e);
+				}
+			}
+		}
+		
+		protected abstract T toJSON(String responseStr) throws JSONException;
+		
 	}
 }

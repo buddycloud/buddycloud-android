@@ -52,23 +52,23 @@ public class ChannelStreamAdapter extends BaseAdapter {
 		
 		String apiAddress = Preferences.getPreference(parent, Preferences.API_ADDRESS);
 
-		JSONArray jsonArray = BuddycloudHTTPHelper.getArray(
-				apiAddress + "/" + channel.getJid() + "/content/posts?max=25", true, parent);
-		
-		for (int i = 0; i < jsonArray.length(); i++) {
-			try {
-				JSONObject postObject = (JSONObject) jsonArray.getJSONObject(i);
-				Post post = new Post(channel.getJid(), postObject.optString("id"));
-				post.setAuthorJid(postObject.optString("author"));
-				post.setContent(postObject.optString("content"));
-//				post.setPublished(Preferences.ISO_8601.parse(postObject.optString("published")));
-				post.setInReplyTo(postObject.optString("replyTo"));
-				post.setAuthorAvatarURL(fetchAvatar(post.getAuthorJid(), apiAddress));
-				notifyChanged(post);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+//		JSONArray jsonArray = BuddycloudHTTPHelper.getArray(
+//				apiAddress + "/" + channel.getJid() + "/content/posts?max=25", true, parent);
+//		
+//		for (int i = 0; i < jsonArray.length(); i++) {
+//			try {
+//				JSONObject postObject = (JSONObject) jsonArray.getJSONObject(i);
+//				Post post = new Post(channel.getJid(), postObject.optString("id"));
+//				post.setAuthorJid(postObject.optString("author"));
+//				post.setContent(postObject.optString("content"));
+////				post.setPublished(Preferences.ISO_8601.parse(postObject.optString("published")));
+//				post.setInReplyTo(postObject.optString("replyTo"));
+//				post.setAuthorAvatarURL(fetchAvatar(post.getAuthorJid(), apiAddress));
+//				notifyChanged(post);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
 	}
 
 	private void notifyCleared() {
