@@ -53,10 +53,7 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 			ChannelMetadataModel.getInstance().refresh(parent, new ModelCallback<JSONObject>() {
 				@Override
 				public void success(JSONObject response) {
-					// The metadata from all subscribed channels has been fecthed
-					if (ChannelMetadataModel.getInstance().size() == length) {
-						notifyDataSetChanged();
-					}
+					notifyDataSetChanged();
 				}
 				
 				@Override
@@ -84,17 +81,17 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 	
 	@Override
 	public int getCount() {
-		return SubscribedChannelsModel.getInstance().get(parent).length();
+		return ChannelMetadataModel.getInstance().size();
 	}
 
 	@Override
 	public Object getItem(int arg0) {
-		return SubscribedChannelsModel.getInstance().get(parent).opt(arg0);
+		return ChannelMetadataModel.getInstance().get(arg0);
 	}
 
 	@Override
 	public long getItemId(int arg0) {
-		return SubscribedChannelsModel.getInstance().get(parent).opt(arg0).hashCode();
+		return ChannelMetadataModel.getInstance().get(arg0).hashCode();
 	}
 
 	@Override
@@ -102,9 +99,7 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 		LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
 		View retView = inflater.inflate(R.layout.subscriber_entry, viewGroup, false);
 
-		String channelJid = SubscribedChannelsModel.getInstance().get(parent).optString(position);
-		
-		JSONObject metadata = ChannelMetadataModel.getInstance().get(parent, channelJid);
+		JSONObject metadata = ChannelMetadataModel.getInstance().get(position);
 		String channelTitle = metadata.optString("title");
 		String channelDescription = metadata.optString("description");
 		

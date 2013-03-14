@@ -1,6 +1,8 @@
 package com.buddycloud.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -15,7 +17,8 @@ public class ChannelMetadataModel implements Model<JSONObject, JSONObject, Strin
 	private static ChannelMetadataModel instance;
 	private static final String ENDPOINT = "/metadata/posts"; 
 	
-	private Map<String, JSONObject> channelsMetadata = new HashMap<String, JSONObject>();
+	private Map<String, JSONObject> channelsMetadataMap = new HashMap<String, JSONObject>();
+	private List<JSONObject> channelsMetadataList = new ArrayList<JSONObject>();
 	
 	private ChannelMetadataModel() {}
 	
@@ -24,6 +27,11 @@ public class ChannelMetadataModel implements Model<JSONObject, JSONObject, Strin
 			instance = new ChannelMetadataModel();
 		}
 		return instance;
+	}
+	
+	private void add(String channel, JSONObject response) {
+		channelsMetadataMap.put(channel, response);
+		channelsMetadataList.add(response);
 	}
 	
 	@Override
@@ -35,7 +43,7 @@ public class ChannelMetadataModel implements Model<JSONObject, JSONObject, Strin
 					true, context, new ModelCallback<JSONObject>() {
 				@Override
 				public void success(JSONObject response) {
-					channelsMetadata.put(channel, response);
+					add(channel, response);
 					if (callback != null) {
 						callback.success(response);
 					}
@@ -57,7 +65,6 @@ public class ChannelMetadataModel implements Model<JSONObject, JSONObject, Strin
 		return apiAddress + "/" + channel + ENDPOINT;
 	}
 
-
 	@Override
 	public void save(Activity context, JSONObject object,
 			ModelCallback<JSONObject> callback, String... p) {
@@ -67,11 +74,15 @@ public class ChannelMetadataModel implements Model<JSONObject, JSONObject, Strin
 
 	@Override
 	public JSONObject get(Activity context, String... p) {
-		return p != null && p.length == 1 ? channelsMetadata.get(p[0]) : null;
+		return p != null && p.length == 1 ? channelsMetadataMap.get(p[0]) : null;
+	}
+	
+	public JSONObject get(int index) {
+		return channelsMetadataList.get(index);
 	}
 	
 	public int size() {
-		return channelsMetadata.size();
+		return channelsMetadataList.size();
 	}
 	
 }
