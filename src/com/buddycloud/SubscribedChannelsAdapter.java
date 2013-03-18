@@ -95,38 +95,15 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 		View retView = inflater.inflate(R.layout.subscriber_entry, viewGroup, false);
 
 		String channelJid = SubscribedChannelsModel.getInstance().get(parent).optString(position);
-		JSONObject metadata = ChannelMetadataModel.getInstance().get(parent, channelJid);
 		
-		String channelTitle = channelJid;
-		String channelDescription = null;
+		// Title and description
+		loadTitleAndDescription(retView, channelJid);
 		
-		if (metadata != null) {
-			channelTitle = metadata.optString("title");
-			channelDescription = metadata.optString("description");
-		}
+		// Avatar
+		loadAvatar(retView, channelJid);
 		
-		TextView channelTitleView = (TextView) retView.findViewById(R.id.bcUserId);
-		channelTitleView.setText(channelTitle);
-
-     	TextView descriptionView = (TextView) retView.findViewById(R.id.bcMessage);
-		descriptionView.setText(channelDescription);
-		
-		String avatarURL = ChannelMetadataModel.getInstance().avatarURL(parent, channelJid);
-		SmartImageView avatarView = (SmartImageView) retView.findViewById(R.id.bcProfilePic);
-		avatarView.setImageUrl(avatarURL, R.drawable.personal_50px);
-
-		JSONObject counters = SyncModel.getInstance().get(parent, channelJid);
-		
-		if (counters != null) {
-			TextView unreadCounterView = (TextView) retView.findViewById(R.id.unreadCounter);
-			int totalCount = Integer.parseInt(counters.optString("totalCount"));
-			if (totalCount > 30) {
-				unreadCounterView.setText("30+");
-			} else {
-				unreadCounterView.setText("" + totalCount);
-			}
-			
-		}
+		// Counters
+		loadCounters(retView, channelJid);
 		
 //		
 //		SharedPreferences sharedPreferences = parent.getSharedPreferences(Preferences.PREFS_NAME, 0);
@@ -148,5 +125,43 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 //		}
 		
         return retView;
+	}
+	
+	private void loadTitleAndDescription(View view, String channelJid) {
+		String channelTitle = channelJid;
+		String channelDescription = null;
+		JSONObject metadata = ChannelMetadataModel.getInstance().get(parent, channelJid);
+		
+		if (metadata != null) {
+			channelTitle = metadata.optString("title");
+			channelDescription = metadata.optString("description");
+		}
+		
+		TextView channelTitleView = (TextView) view.findViewById(R.id.bcUserId);
+		channelTitleView.setText(channelTitle);
+
+     	TextView descriptionView = (TextView) view.findViewById(R.id.bcMessage);
+		descriptionView.setText(channelDescription);
+	}
+	
+	private void loadAvatar(View view, String channelJid) {
+		String avatarURL = ChannelMetadataModel.getInstance().avatarURL(parent, channelJid);
+		SmartImageView avatarView = (SmartImageView) view.findViewById(R.id.bcProfilePic);
+		avatarView.setImageUrl(avatarURL, R.drawable.personal_50px);
+	}
+	
+	private void loadCounters(View view, String channelJid) {
+		JSONObject counters = SyncModel.getInstance().get(parent, channelJid);
+		
+		if (counters != null) {
+			TextView unreadCounterView = (TextView) view.findViewById(R.id.unreadCounter);
+			int totalCount = Integer.parseInt(counters.optString("totalCount"));
+			if (totalCount > 30) {
+				unreadCounterView.setText("30+");
+			} else {
+				unreadCounterView.setText("" + totalCount);
+			}
+			
+		}
 	}
 }
