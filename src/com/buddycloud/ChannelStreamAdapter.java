@@ -3,21 +3,14 @@ package com.buddycloud;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.buddycloud.http.BuddycloudHTTPHelper;
-import com.buddycloud.http.ProfilePicCache;
 import com.buddycloud.model.Channel;
 import com.buddycloud.model.Post;
 import com.buddycloud.preferences.Preferences;
@@ -92,17 +85,18 @@ public class ChannelStreamAdapter extends BaseAdapter {
 	}
 
 	private String fetchAvatar(String channel, String apiAddress) {
-		int avatarSize = (int) (AVATAR_DIP * parent.getResources().getDisplayMetrics().density + 0.5);
-		String url = apiAddress + "/" + channel + "/media/avatar?maxheight=" + avatarSize;
-		Bitmap avatar = ProfilePicCache.getInstance().getBitmap(url);
-		if (avatar == null) {
-			url = Preferences.FALLBACK_PERSONAL_AVATAR;
-			if (channel.contains("@topics.buddycloud.org")) {
-				url = Preferences.FALLBACK_TOPIC_AVATAR;
-			}
-			ProfilePicCache.getInstance().getBitmap(url);
-		}
-		return url;
+//		int avatarSize = (int) (AVATAR_DIP * parent.getResources().getDisplayMetrics().density + 0.5);
+//		String url = apiAddress + "/" + channel + "/media/avatar?maxheight=" + avatarSize;
+//		Bitmap avatar = ProfilePicCache.getInstance().getBitmap(url);
+//		if (avatar == null) {
+//			url = Preferences.FALLBACK_PERSONAL_AVATAR;
+//			if (channel.contains("@topics.buddycloud.org")) {
+//				url = Preferences.FALLBACK_TOPIC_AVATAR;
+//			}
+//			ProfilePicCache.getInstance().getBitmap(url);
+//		}
+//		return url;
+		return null;
 	}
 	
 	@Override
@@ -130,8 +124,8 @@ public class ChannelStreamAdapter extends BaseAdapter {
 		TextView userIdView = (TextView) retView.findViewById(R.id.fbUserId);
 		userIdView.setText(post.getAuthorJid());
 		
-		ImageView avatarView = (ImageView) retView.findViewById(R.id.fbProfilePic);
-		avatarView.setImageBitmap(ProfilePicCache.getInstance().getBitmap(post.getAuthorAvatarURL()));
+//		ImageView avatarView = (ImageView) retView.findViewById(R.id.fbProfilePic);
+//		avatarView.setImageBitmap(ProfilePicCache.getInstance().getBitmap(post.getAuthorAvatarURL()));
 		
 		TextView descriptionView = (TextView) retView.findViewById(R.id.fbMessage);
 		descriptionView.setText(post.getContent());
