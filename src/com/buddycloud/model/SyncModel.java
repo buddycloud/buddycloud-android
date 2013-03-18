@@ -14,7 +14,7 @@ import com.buddycloud.preferences.Preferences;
 public class SyncModel implements Model<JSONObject, JSONObject, String> {
 
 	private static SyncModel instance;
-	private static final String ENDPOINT = "/sync?since=1970-01-01T00:00:00Z&counters=true&max=30"; 
+	private static final String ENDPOINT = "/sync?since=1970-01-01T00:00:00Z&counters=true&max=31"; 
 	
 	private Map<String, JSONObject> channelsCounters = new HashMap<String, JSONObject>();
 	

@@ -15,12 +15,9 @@ import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.model.SyncModel;
-import com.buddycloud.preferences.Preferences;
 
 public class SubscribedChannelsAdapter extends BaseAdapter {
 
-	private static final double AVATAR_DIP = 75.;
-	
 	private final Activity parent;
 	
 	public SubscribedChannelsAdapter(Activity parent) {
@@ -77,12 +74,6 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 		});
 	}
 
-	private String getAvatarURL(String channel) {
-		int avatarSize = (int) (AVATAR_DIP * parent.getResources().getDisplayMetrics().density + 0.5);
-		String apiAddress = Preferences.getPreference(parent, Preferences.API_ADDRESS);
-		return apiAddress + "/" + channel + "/media/avatar?maxheight=" + avatarSize;
-	}
-	
 	@Override
 	public int getCount() {
 		return SubscribedChannelsModel.getInstance().get(parent).length();
@@ -120,14 +111,21 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
      	TextView descriptionView = (TextView) retView.findViewById(R.id.bcMessage);
 		descriptionView.setText(channelDescription);
 		
+		String avatarURL = ChannelMetadataModel.getInstance().avatarURL(parent, channelJid);
 		SmartImageView avatarView = (SmartImageView) retView.findViewById(R.id.bcProfilePic);
-		avatarView.setImageUrl(getAvatarURL(channelJid), R.drawable.personal_50px);
+		avatarView.setImageUrl(avatarURL, R.drawable.personal_50px);
 
 		JSONObject counters = SyncModel.getInstance().get(parent, channelJid);
 		
 		if (counters != null) {
 			TextView unreadCounterView = (TextView) retView.findViewById(R.id.unreadCounter);
-			unreadCounterView.setText(counters.optString("totalCount"));
+			int totalCount = Integer.parseInt(counters.optString("totalCount"));
+			if (totalCount > 30) {
+				unreadCounterView.setText("30+");
+			} else {
+				unreadCounterView.setText("" + totalCount);
+			}
+			
 		}
 		
 //		
