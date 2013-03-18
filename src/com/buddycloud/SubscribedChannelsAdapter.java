@@ -22,7 +22,21 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 	
 	public SubscribedChannelsAdapter(Activity parent) {
 		this.parent = parent;
-		fetchSubscribers();
+		fetchCounters();
+	}
+	
+	protected void fetchCounters() {
+		SyncModel.getInstance().refresh(parent, new ModelCallback<JSONObject>() {
+			@Override
+			public void success(JSONObject response) {
+				fetchSubscribers();
+			}
+			
+			@Override
+			public void error(Throwable throwable) {
+				// TODO Auto-generated method stub
+			}
+		});
 	}
 	
 	private void fetchSubscribers() {
@@ -31,7 +45,6 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 			public void success(JSONArray response) {
 				notifyDataSetChanged();
 				fetchMetadata();
-				fetchCounters();
 			}
 			
 			@Override
@@ -58,20 +71,6 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 				}
 			}, channel);
 		}
-	}
-
-	protected void fetchCounters() {
-		SyncModel.getInstance().refresh(parent, new ModelCallback<JSONObject>() {
-			@Override
-			public void success(JSONObject response) {
-				notifyDataSetChanged();
-			}
-			
-			@Override
-			public void error(Throwable throwable) {
-				// TODO Auto-generated method stub
-			}
-		});
 	}
 
 	@Override

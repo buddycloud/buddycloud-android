@@ -1,8 +1,13 @@
 package com.buddycloud.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -27,23 +32,54 @@ public class SubscribedChannelsModel implements Model<JSONArray, JSONArray, Void
 		return instance;
 	}
 	
-	@Override
-	public void refresh(Activity context, final ModelCallback<JSONArray> callback, Void... p) {
-		BuddycloudHTTPHelper.getObject(url(context), 
-				context, new ModelCallback<JSONObject>() {
+	public void refresh(final Activity context, final ModelCallback<JSONArray> callback, Void... p) {
+		BuddycloudHTTPHelper.getObject(url(context), context, 
+				new ModelCallback<JSONObject>() {
 					@SuppressWarnings("unchecked")
 					@Override
 					public void success(JSONObject response) {
-						JSONArray channels = new JSONArray();
+						List<String> channels = new ArrayList<String>();
 						Iterator<String> keyIterator = response.keys();
 						while (keyIterator.hasNext()) {
 							String node = (String) keyIterator.next();
 							if (node.endsWith(POST_NODE_SUFIX)) {
-								channels.put(node.split("/")[0]);
+								channels.add(node.split("/")[0]);
 							}
 						}
-						subscribedChannels = channels;
-						callback.success(channels);
+						subscribedChannels = new JSONArray(sort(channels));
+						callback.success(subscribedChannels);
+					}
+					
+					private List<String> sort(List<String> channels) {
+						Collections.sort(channels, new Comparator<String>() {
+							@Override
+							public int compare(String lhs, String rhs) {
+								try {
+									int countA = getCounter(lhs, "mentionsCount");
+									int countB = getCounter(rhs, "mentionsCount");
+									int diff = countB - countA;
+									
+									if (diff == 0) {
+										countA = getCounter(lhs, "totalCount");
+										countB = getCounter(rhs, "totalCount");
+										diff = countB - countA;
+									}
+
+									if (diff != 0) {
+										return diff;
+									}
+								} catch (JSONException e) {/*Do nothing*/}
+								
+								return rhs.compareTo(lhs);
+							}
+							
+							private int getCounter(String channel, String key) throws JSONException {
+								SyncModel sync = SyncModel.getInstance();
+								return sync.get(context, channel) != null ? sync.get(context, channel).getInt(key) : 0;
+							}
+						});
+						
+						return channels;
 					}
 					
 					@Override

@@ -41,6 +41,7 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 							channelsCounters.put(node.split("/")[2],
 									response.optJSONObject(node));
 						}
+						callback.success(response);
 					}
 
 					@Override
