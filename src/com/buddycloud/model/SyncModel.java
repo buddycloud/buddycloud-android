@@ -29,7 +29,7 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 	
 	@Override
 	public void refresh(Activity context, final ModelCallback<JSONObject> callback, String... p) {
-		BuddycloudHTTPHelper.getObject(url(context), true, context,
+		BuddycloudHTTPHelper.getObject(url(context), context,
 				new ModelCallback<JSONObject>() {
 
 					@SuppressWarnings("unchecked")

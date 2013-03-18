@@ -37,7 +37,7 @@ public class ChannelMetadataModel implements Model<JSONObject, JSONObject, Strin
 			final String channel = p[0];
 			
 			BuddycloudHTTPHelper.getObject(url(context, channel), 
-					true, context, new ModelCallback<JSONObject>() {
+					context, new ModelCallback<JSONObject>() {
 				@Override
 				public void success(JSONObject response) {
 					add(channel, response);

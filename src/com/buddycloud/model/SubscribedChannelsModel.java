@@ -30,7 +30,7 @@ public class SubscribedChannelsModel implements Model<JSONArray, JSONArray, Void
 	@Override
 	public void refresh(Activity context, final ModelCallback<JSONArray> callback, Void... p) {
 		BuddycloudHTTPHelper.getObject(url(context), 
-				true, context, new ModelCallback<JSONObject>() {
+				context, new ModelCallback<JSONObject>() {
 					@SuppressWarnings("unchecked")
 					@Override
 					public void success(JSONObject response) {
