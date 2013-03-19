@@ -29,7 +29,6 @@
                 android:gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/black" />
-
         </RelativeLayout>
 
         <RelativeLayout
@@ -56,7 +55,7 @@
                 android:layout_centerVertical="true"
                 android:text="Post" />
         </RelativeLayout>
-        
+
         <LinearLayout
             android:id="@+id/contentLayout"
             android:layout_width="match_parent"
@@ -69,15 +68,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
-
             <ListView
                 android:id="@+id/contentListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
             </ListView>
-
         </LinearLayout>
-
     </LinearLayout>
 
 </RelativeLayout>

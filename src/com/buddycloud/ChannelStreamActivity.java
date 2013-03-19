@@ -1,22 +1,9 @@
 package com.buddycloud;
 
-import java.io.UnsupportedEncodingException;
-
-import org.apache.http.entity.StringEntity;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.buddycloud.http.BuddycloudHTTPHelper;
-import com.buddycloud.model.Channel;
-import com.buddycloud.preferences.Preferences;
 
 public class ChannelStreamActivity extends Activity {
 	
@@ -25,16 +12,19 @@ public class ChannelStreamActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_channel);
 		
-		final Channel channel = (Channel) getIntent().getExtras().get("CHANNEL");
-		TextView channelTitleView = (TextView) findViewById(R.id.channelTitle);
-		channelTitleView.setText(channel.getJid());
-		
+		// Title
+		final String channelJid = (String) getIntent().getExtras().get(MainActivity.CHANNEL);
+		loadTitle(channelJid);
+
+		// Stream
 		ListView contentView = (ListView) findViewById(R.id.contentListView);
 		contentView.setEmptyView(findViewById(R.id.subscribedProgress));
-		final ChannelStreamAdapter streamAdapter = new ChannelStreamAdapter(this, channel);
+		
+		// Set adapter
+		final ChannelStreamAdapter streamAdapter = new ChannelStreamAdapter(this, channelJid);
 		contentView.setAdapter(streamAdapter);
 		
-		Button postButton = (Button) findViewById(R.id.postButton);
+		/*Button postButton = (Button) findViewById(R.id.postButton);
 		postButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -59,6 +49,11 @@ public class ChannelStreamActivity extends Activity {
 				postContent.setText("");
 				streamAdapter.refetchPosts();
 			}
-		});
+		});*/
+	}
+	
+	private void loadTitle(String channelJid) {
+		TextView channelTitleView = (TextView) findViewById(R.id.channelTitle);
+		channelTitleView.setText(channelJid);
 	}
 }

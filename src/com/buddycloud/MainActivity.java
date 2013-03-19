@@ -1,7 +1,5 @@
 package com.buddycloud;
 
-import com.buddycloud.model.Channel;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +9,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 public class MainActivity extends Activity {
+	
+	public final static String CHANNEL = "com.buddycloud.CHANNEL"; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +31,10 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View arg1, int position,
 					long arg3) {
-				Channel channel = (Channel) adapterView.getItemAtPosition(position);
+				String channelJid = (String) adapterView.getItemAtPosition(position);
 				Intent channelStreamIntent = new Intent();
 				channelStreamIntent.setClass(getApplicationContext(), ChannelStreamActivity.class);
-				channelStreamIntent.putExtra("CHANNEL", channel);
+				channelStreamIntent.putExtra(CHANNEL, channelJid);
 				startActivity(channelStreamIntent);
 			}
 		});
