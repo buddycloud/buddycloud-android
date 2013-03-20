@@ -7,8 +7,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.buddycloud.model.ModelCallback;
 import com.buddycloud.preferences.Preferences;
+import com.buddycloud.utils.DNSUtils;
 
 public class LoginActivity extends Activity {
 
@@ -17,13 +20,12 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Button postBtn = (Button) findViewById(R.id.postBtn);
-        final EditText loginTxt = (EditText) findViewById(R.id.loginTxt);
+        final EditText myChannelTxt = (EditText) findViewById(R.id.loginTxt);
         final EditText passwordTxt = (EditText) findViewById(R.id.passwordTxt);
-        final EditText apiAddressTxt = (EditText) findViewById(R.id.apiAddressTxt);
         
-        String loginPref = Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
-        if (loginPref != null) {
-        	loginTxt.setText(loginPref);
+        String myChannelPref = Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
+        if (myChannelPref != null) {
+        	myChannelTxt.setText(myChannelPref);
         }
         
         String passPref = Preferences.getPreference(this, Preferences.PASSWORD);
@@ -31,25 +33,32 @@ public class LoginActivity extends Activity {
         	passwordTxt.setText(passPref);
         }
         
-        String apiAddressPref = Preferences.getPreference(this, Preferences.API_ADDRESS);
-        if (apiAddressPref != null) {
-        	apiAddressTxt.setText(apiAddressPref);
-        } else {
-        	apiAddressTxt.setText(Preferences.DEFAULT_API_ADDRESS);
-        }
-        
         postBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String login = loginTxt.getText().toString();
+				String myChannelJid = myChannelTxt.getText().toString();
 				String password = passwordTxt.getText().toString();
-				String apiAddress = apiAddressTxt.getText().toString();
 				
-				Preferences.setPreference(LoginActivity.this, Preferences.MY_CHANNEL_JID, login);
+				Preferences.setPreference(LoginActivity.this, Preferences.MY_CHANNEL_JID, myChannelJid);
 				Preferences.setPreference(LoginActivity.this, Preferences.PASSWORD, password);
-				Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, apiAddress);
 				
-				LoginActivity.this.finish();
+				DNSUtils.resolveAPISRV(new ModelCallback<String>() {
+					
+					@Override
+					public void success(String apiAddress) {
+						Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, apiAddress);
+						LoginActivity.this.finish();
+					}
+					
+					@Override
+					public void error(Throwable throwable) {
+						Toast.makeText(getApplicationContext(), "Failure to discover API, using default.", 
+								Toast.LENGTH_LONG).show();
+						Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, Preferences.DEFAULT_API_ADDRESS);
+						LoginActivity.this.finish();
+						
+					}
+				}, myChannelJid.split("@")[1]);
 			}
 		});
     }

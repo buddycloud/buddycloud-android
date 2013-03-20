@@ -33,15 +33,6 @@
             android:hint="@string/login_password"
             android:inputType="textPassword" />
 
-        <EditText
-            android:id="@+id/apiAddressTxt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:singleLine="true" >
-
-        </EditText>
-
         <Button
             android:id="@+id/postBtn"
             style="?android:attr/buttonStyleSmall"

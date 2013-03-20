@@ -30,7 +30,7 @@
         </activity>
         
         <activity
-            android:name=".ChannelStreamActivity"
+            android:name=".ChannelStreamFragment"
             android:label="@string/title_activity_share" 
         	android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait">

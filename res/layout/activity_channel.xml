@@ -15,47 +15,6 @@
         android:layout_marginTop="0px"
         android:orientation="vertical" >
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dip"
-            android:background="@color/bc_bg_grey"
-            android:gravity="center_vertical"
-            android:padding="@dimen/big_padding" >
-
-            <TextView
-                android:id="@+id/channelTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/black" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="@dimen/big_padding" >
-
-            <EditText
-                android:id="@+id/postContentTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@+id/postButton"
-                android:inputType="textMultiLine"
-                android:lines="2" />
-
-            <Button
-                android:id="@+id/postButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:text="Post" />
-        </RelativeLayout>
-
         <LinearLayout
             android:id="@+id/contentLayout"
             android:layout_width="match_parent"
@@ -73,7 +32,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
             </ListView>
+
         </LinearLayout>
+        
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:padding="@dimen/big_padding" >
+
+            <com.buddycloud.image.SmartImageView
+		        android:id="@+id/bcProfilePic"
+		        android:layout_alignParentLeft="true"
+		        android:layout_width="50dp"
+		        android:layout_height="50dp"
+		        android:scaleType="fitXY" />
+            
+                <EditText
+                    android:id="@+id/postContentTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/postButton"
+                    android:layout_toRightOf="@+id/bcProfilePic"
+                    android:inputType="textMultiLine"
+                    android:lines="2" >
+                    <requestFocus />
+                </EditText>
+
+                <Button
+                    android:id="@+id/postButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="Post" />
+            </RelativeLayout>
+        
     </LinearLayout>
 
 </RelativeLayout>

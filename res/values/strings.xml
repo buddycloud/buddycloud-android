@@ -4,7 +4,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_share">buddycloud</string>
-    <string name="login_hint">buddycloud login</string>
+    <string name="login_hint">personal channel</string>
     <string name="login_password">password</string>
     <string name="post_button">Post</string>
     <string name="login_button">Login</string>

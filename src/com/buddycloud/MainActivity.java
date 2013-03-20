@@ -1,21 +1,22 @@
 package com.buddycloud;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 
-public class MainActivity extends Activity {
-	
-	public final static String CHANNEL = "com.buddycloud.CHANNEL"; 
+import com.buddycloud.preferences.Preferences;
+import com.slidingmenu.lib.SlidingMenu;
+import com.slidingmenu.lib.app.SlidingFragmentActivity;
+
+public class MainActivity extends SlidingFragmentActivity {
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		
+		setBehindContentView(R.layout.menu_frame);
+		setContentView(R.layout.content_frame);
 		
 		Intent loginActivity = new Intent();
 		loginActivity.setClass(getApplicationContext(), LoginActivity.class);
@@ -24,20 +25,35 @@ public class MainActivity extends Activity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		ListView contentView = (ListView) findViewById(R.id.contentListView);
-		contentView.setEmptyView(findViewById(R.id.subscribedProgress));
-		contentView.setAdapter(new SubscribedChannelsAdapter(this));
-		contentView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> adapterView, View arg1, int position,
-					long arg3) {
-				String channelJid = (String) adapterView.getItemAtPosition(position);
-				Intent channelStreamIntent = new Intent();
-				channelStreamIntent.setClass(getApplicationContext(), ChannelStreamActivity.class);
-				channelStreamIntent.putExtra(CHANNEL, channelJid);
-				startActivity(channelStreamIntent);
-			}
-		});
+		addMenuFragment();
+		addContentFragment();
+		customizeMenu();
 	}
-	
+
+	private void customizeMenu() {
+		SlidingMenu sm = getSlidingMenu();
+		sm.setShadowWidthRes(R.dimen.shadow_width);
+		sm.setShadowDrawable(R.drawable.shadow);
+		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+		sm.setFadeDegree(0.35f);
+		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+	}
+
+	private void addContentFragment() {
+		FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
+		String channelJid = (String) Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
+		Fragment myChannelFrag = new ChannelStreamFragment();
+		Bundle args = new Bundle();
+		args.putString(SubscribedChannelsFragment.CHANNEL, channelJid);
+		myChannelFrag.setArguments(args);
+		t.replace(R.id.content_frame, myChannelFrag);
+		t.commitAllowingStateLoss();
+	}
+
+	private void addMenuFragment() {
+		FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
+		Fragment subscribedFrag = new SubscribedChannelsFragment();
+		t.replace(R.id.menu_frame, subscribedFrag);
+		t.commitAllowingStateLoss();
+	}
 }

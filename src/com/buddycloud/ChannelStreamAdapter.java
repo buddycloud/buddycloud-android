@@ -28,7 +28,6 @@ public class ChannelStreamAdapter extends BaseAdapter {
 
 	public void fetchPosts() {
 		PostsModel.getInstance().refresh(parent, new ModelCallback<JSONArray>() {
-			
 			@Override
 			public void success(JSONArray response) {
 				notifyDataSetChanged();
