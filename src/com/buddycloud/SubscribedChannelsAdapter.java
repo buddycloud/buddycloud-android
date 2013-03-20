@@ -89,20 +89,26 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View arg1, ViewGroup viewGroup) {
-		LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-		View retView = inflater.inflate(R.layout.subscriber_entry, viewGroup, false);
+	public View getView(int position, View convertView, ViewGroup viewGroup) {
 
+		ViewHolder holder; 
+		
+		if (convertView == null) {
+			LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+			convertView = inflater.inflate(R.layout.subscriber_entry, viewGroup, false);
+			holder = fillHolder(convertView);
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
+		
 		String channelJid = SubscribedChannelsModel.getInstance().get(parent).optString(position);
-		
 		// Title and description
-		loadTitleAndDescription(retView, channelJid);
-		
+		loadTitleAndDescription(holder, channelJid);
 		// Avatar
-		loadAvatar(retView, channelJid);
-		
+		loadAvatar(holder, channelJid);
 		// Counters
-		loadCounters(retView, channelJid);
+		loadCounters(holder, channelJid);
 		
 //		
 //		SharedPreferences sharedPreferences = parent.getSharedPreferences(Preferences.PREFS_NAME, 0);
@@ -123,10 +129,26 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 //			}
 //		}
 		
-        return retView;
+        return convertView;
 	}
 	
-	private void loadTitleAndDescription(View view, String channelJid) {
+	private static class ViewHolder {
+		TextView title;
+		TextView description;
+		TextView unreadCounter;
+		SmartImageView avatar;
+	}
+	
+	private ViewHolder fillHolder(View view) {
+		ViewHolder viewHolder = new ViewHolder();
+		viewHolder.title = (TextView) view.findViewById(R.id.bcUserId);
+		viewHolder.description = (TextView) view.findViewById(R.id.bcMessage);
+		viewHolder.unreadCounter = (TextView) view.findViewById(R.id.unreadCounter);
+		viewHolder.avatar = (SmartImageView) view.findViewById(R.id.bcProfilePic);
+		return viewHolder;
+	}
+	
+	private void loadTitleAndDescription(ViewHolder holder, String channelJid) {
 		String channelTitle = channelJid;
 		String channelDescription = null;
 		JSONObject metadata = ChannelMetadataModel.getInstance().get(parent, channelJid);
@@ -136,29 +158,23 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 			channelDescription = metadata.optString("description");
 		}
 		
-		TextView channelTitleView = (TextView) view.findViewById(R.id.bcUserId);
-		channelTitleView.setText(channelTitle);
-
-     	TextView descriptionView = (TextView) view.findViewById(R.id.bcMessage);
-		descriptionView.setText(channelDescription);
+		holder.title.setText(channelTitle);
+		holder.description.setText(channelDescription);
 	}
 	
-	private void loadAvatar(View view, String channelJid) {
+	private void loadAvatar(ViewHolder holder, String channelJid) {
 		String avatarURL = ChannelMetadataModel.getInstance().avatarURL(parent, channelJid);
-		SmartImageView avatarView = (SmartImageView) view.findViewById(R.id.bcProfilePic);
-		avatarView.setImageUrl(avatarURL, R.drawable.personal_50px);
+		holder.avatar.setImageUrl(avatarURL, R.drawable.personal_50px);
 	}
 	
-	private void loadCounters(View view, String channelJid) {
+	private void loadCounters(ViewHolder holder, String channelJid) {
 		JSONObject counters = SyncModel.getInstance().get(parent, channelJid);
-		
 		if (counters != null) {
-			TextView unreadCounterView = (TextView) view.findViewById(R.id.unreadCounter);
 			int totalCount = Integer.parseInt(counters.optString("totalCount"));
 			if (totalCount > 30) {
-				unreadCounterView.setText("30+");
+				holder.unreadCounter.setText("30+");
 			} else {
-				unreadCounterView.setText("" + totalCount);
+				holder.unreadCounter.setText("" + totalCount);
 			}
 			
 		}
