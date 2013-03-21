@@ -32,6 +32,8 @@ public class PostCard extends Card {
 		
 		((TextView) view.findViewById(R.id.bcPostContent)).setText(content);
 		
+		//TODO: post time
+		
 		return view;
 	}
 }

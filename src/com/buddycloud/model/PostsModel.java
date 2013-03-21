@@ -17,6 +17,7 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 	private static final String ENDPOINT = "/content/posts?max=31"; 
 
 	private Map<String, JSONArray> channelsPosts = new HashMap<String, JSONArray>();
+	private Map<String, JSONArray> postsComments = new HashMap<String, JSONArray>();
 
 	private PostsModel() {}
 
@@ -26,6 +27,11 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 		}
 		return instance;
 	}
+	
+	
+	private boolean isPost(JSONObject item) {
+		return item.opt("replyTo") == null;
+	}
 
 	@Override
 	public void refresh(Activity context, final ModelCallback<JSONArray> callback, String... p) {
@@ -34,9 +40,31 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 			BuddycloudHTTPHelper.getArray(url(context, channel), context,
 					new ModelCallback<JSONArray>() {
 
+				private void parsePostsAndComments(JSONArray response) {
+					JSONArray posts = new JSONArray();
+					for (int i = 0; i < response.length(); i++) {
+						JSONObject item = response.optJSONObject(i);
+						
+						if (isPost(item)) {
+							posts.put(item);
+						} else {
+							String postId = item.optString("id");
+							JSONArray comments = postsComments.get(postId);
+							if (comments == null) {
+								comments = new JSONArray();
+							}
+							
+							comments.put(item);
+							postsComments.put(postId, comments);
+						}
+					}
+					
+					channelsPosts.put(channel, posts);
+				}
+
 				@Override
 				public void success(JSONArray response) {
-					channelsPosts.put(channel, response);
+					parsePostsAndComments(response);
 					if (callback != null) {
 						callback.success(response);
 					}
@@ -74,5 +102,18 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 		
 		return new JSONArray();
 	}
-
+	
+	public JSONArray postsFromChannel(Activity context, String channel) {
+		return get(context, channel);
+	}
+	
+	public JSONArray commentsFromPost(String postId) {
+		if (postId != null) {
+			if (postsComments.containsKey(postId)) {
+				return postsComments.get(postId);
+			}
+		}
+		
+		return new JSONArray();
+	}
 }

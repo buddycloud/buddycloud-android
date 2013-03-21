@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
@@ -62,17 +63,26 @@ public class ChannelStreamAdapter extends BaseAdapter {
 	public View getView(int position, View arg1, ViewGroup viewGroup) {
 		LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
 		View retView = inflater.inflate(R.layout.posts_stream, viewGroup, false);
-		CardUI postStream = (CardUI) retView.findViewById(R.id.postsStream);
 		
-		JSONObject post = PostsModel.getInstance().get(parent, channelJid).optJSONObject(position);
+		JSONObject post = PostsModel.getInstance().postsFromChannel(parent, channelJid).optJSONObject(position);
+		CardUI postStream = (CardUI) retView.findViewById(R.id.postsStream);
 		
 		String postAuthor = post.optString("author");
 		String postContent = post.optString("content");
 		String avatarURL = AvatarUtils.avatarURL(parent, postAuthor);
 		
-		postStream.addCard(new PostCard(postAuthor, avatarURL, postContent));
-		postStream.refresh();
+		PostCard postCard = new PostCard(postAuthor, avatarURL, postContent);
+		postCard.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				// TODO: Load single post view
+			}
+		});
+		postStream.addCard(postCard);
+		
+		postStream.refresh();
+		
         return retView;
 	}
 }
