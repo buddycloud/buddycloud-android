@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
             <ListView
-                android:id="@+id/contentListView"
+                android:id="@+id/posts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
             </ListView>

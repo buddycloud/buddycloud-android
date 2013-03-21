@@ -15,6 +15,7 @@ import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.model.SyncModel;
+import com.buddycloud.utils.AvatarUtils;
 
 public class SubscribedChannelsAdapter extends BaseAdapter {
 
@@ -163,7 +164,7 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 	}
 	
 	private void loadAvatar(ViewHolder holder, String channelJid) {
-		String avatarURL = ChannelMetadataModel.getInstance().avatarURL(parent, channelJid);
+		String avatarURL = AvatarUtils.avatarURL(parent, channelJid);
 		holder.avatar.setImageUrl(avatarURL, R.drawable.personal_50px);
 	}
 	

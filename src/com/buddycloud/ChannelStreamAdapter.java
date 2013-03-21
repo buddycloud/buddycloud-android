@@ -8,16 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
 
+import com.buddycloud.card.PostCard;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
+import com.buddycloud.utils.AvatarUtils;
+import com.fima.cardsui.views.CardUI;
 
 public class ChannelStreamAdapter extends BaseAdapter {
 
 	private final Activity parent;
 	private final String channelJid;
-	
+
 	
 	public ChannelStreamAdapter(Activity parent, String channelJid) {
 		this.parent = parent;
@@ -59,13 +61,18 @@ public class ChannelStreamAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View arg1, ViewGroup viewGroup) {
 		LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-		View retView = inflater.inflate(R.layout.post_entry, viewGroup, false);
-
-		JSONObject post = PostsModel.getInstance().get(parent, channelJid).optJSONObject(position);
-
-		TextView postContent = (TextView) retView.findViewById(R.id.bcPostContent);
-		postContent.setText(post.optString("content"));
+		View retView = inflater.inflate(R.layout.posts_stream, viewGroup, false);
+		CardUI postStream = (CardUI) retView.findViewById(R.id.postsStream);
 		
+		JSONObject post = PostsModel.getInstance().get(parent, channelJid).optJSONObject(position);
+		
+		String postAuthor = post.optString("author");
+		String postContent = post.optString("content");
+		String avatarURL = AvatarUtils.avatarURL(parent, postAuthor);
+		
+		postStream.addCard(new PostCard(postAuthor, avatarURL, postContent));
+		postStream.refresh();
+
         return retView;
 	}
 }

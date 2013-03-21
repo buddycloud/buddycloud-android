@@ -1,19 +1,35 @@
-<com.fima.cardsui.views.CardUI xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#e3e3e3"
     android:orientation="vertical" >
-    
-    <RelativeLayout
-        android:id="@+id/contentWrapper"
-        android:layout_width="fill_parent"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_toLeftOf="@+id/unreadWrapper"
-        android:layout_toRightOf="@+id/bcProfilePic"
-        android:orientation="vertical"
-        android:padding="@dimen/standard_padding" >
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp" >
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/CardTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/stroke" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="8dp" >
 
         <com.buddycloud.image.SmartImageView
             android:id="@+id/bcProfilePic"
@@ -23,10 +39,11 @@
 
         <TextView
             android:id="@+id/bcPostContent"
-            style="@style/cardStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            style="@style/CardText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:ellipsize="end" />
+    </LinearLayout>
 
-    </RelativeLayout>
-
-</com.fima.cardsui.views.CardUI>
+</LinearLayout>

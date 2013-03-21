@@ -1,15 +1,15 @@
 package com.buddycloud;
 
-import com.buddycloud.image.SmartImageView;
-import com.buddycloud.model.ChannelMetadataModel;
-import com.buddycloud.preferences.Preferences;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
+import com.buddycloud.image.SmartImageView;
+import com.buddycloud.preferences.Preferences;
+import com.buddycloud.utils.AvatarUtils;
 
 public class ChannelStreamFragment extends Fragment {
 
@@ -19,7 +19,7 @@ public class ChannelStreamFragment extends Fragment {
 		View view = inflater.inflate(R.layout.activity_channel, container, false);
 		
 		// Stream
-		ListView contentView = (ListView) view.findViewById(R.id.contentListView);
+		ListView contentView = (ListView) view.findViewById(R.id.posts);
 		contentView.setEmptyView(view.findViewById(R.id.subscribedProgress));
 
 		String channelJid = getArguments().getString(SubscribedChannelsFragment.CHANNEL);
@@ -29,7 +29,7 @@ public class ChannelStreamFragment extends Fragment {
 		contentView.setAdapter(streamAdapter);
 		
 		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
-		String avatarURL = ChannelMetadataModel.getInstance().avatarURL(getActivity(), myChannelJid);
+		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
 		SmartImageView avatarView = (SmartImageView) view.findViewById(R.id.bcProfilePic);
 		avatarView.setImageUrl(avatarURL, R.drawable.personal_50px);
 		
