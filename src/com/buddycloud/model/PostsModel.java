@@ -48,7 +48,7 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 						if (isPost(item)) {
 							posts.put(item);
 						} else {
-							String postId = item.optString("id");
+							String postId = item.optString("replyTo");
 							JSONArray comments = postsComments.get(postId);
 							if (comments == null) {
 								comments = new JSONArray();
