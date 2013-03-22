@@ -14,6 +14,7 @@ import com.buddycloud.card.PostCard;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
 import com.buddycloud.utils.AvatarUtils;
+import com.fima.cardsui.objects.CardStack;
 import com.fima.cardsui.views.CardUI;
 
 public class ChannelStreamAdapter extends BaseAdapter {
@@ -64,25 +65,37 @@ public class ChannelStreamAdapter extends BaseAdapter {
 		LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
 		View retView = inflater.inflate(R.layout.posts_stream, viewGroup, false);
 		
-		JSONObject post = PostsModel.getInstance().postsFromChannel(parent, channelJid).optJSONObject(position);
 		CardUI postStream = (CardUI) retView.findViewById(R.id.postsStream);
 		
+		JSONObject post = PostsModel.getInstance().postsFromChannel(parent, channelJid).optJSONObject(position);
+		
+		CardStack stack = new CardStack();
+		stack.add(toCard(post));
+		
+		JSONArray comments = PostsModel.getInstance().commentsFromPost(post.optString("id"));
+		for (int i = 0; i < comments.length(); i++) {
+			JSONObject comment = comments.optJSONObject(i);
+			stack.add(toCard(comment));
+		}
+		
+		postStream.addStack(stack);
+		postStream.refresh();
+		
+        return retView;
+	}
+
+	private PostCard toCard(JSONObject post) {
 		String postAuthor = post.optString("author");
 		String postContent = post.optString("content");
 		String avatarURL = AvatarUtils.avatarURL(parent, postAuthor);
 		
 		PostCard postCard = new PostCard(postAuthor, avatarURL, postContent);
 		postCard.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				// TODO: Load single post view
 			}
 		});
-		postStream.addCard(postCard);
-		
-		postStream.refresh();
-		
-        return retView;
+		return postCard;
 	}
 }
