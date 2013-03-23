@@ -94,7 +94,9 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 
 		ViewHolder holder; 
 		
-		if (convertView == null) {
+		boolean firstLoad = convertView == null; 
+		
+		if (firstLoad) {
 			LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
 			convertView = inflater.inflate(R.layout.subscriber_entry, viewGroup, false);
 			holder = fillHolder(convertView);
@@ -106,8 +108,11 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 		String channelJid = SubscribedChannelsModel.getInstance().get(parent).optString(position);
 		// Title and description
 		loadTitleAndDescription(holder, channelJid);
-		// Avatar
+		
+		// Load avatar
+		// TODO: Check for 404 to avoid reloading 
 		loadAvatar(holder, channelJid);
+		
 		// Counters
 		loadCounters(holder, channelJid);
 		

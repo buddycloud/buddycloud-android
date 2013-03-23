@@ -1,5 +1,6 @@
 package com.buddycloud;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,14 +11,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
+import com.buddycloud.card.PostCard;
 import com.buddycloud.image.SmartImageView;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
+import com.fima.cardsui.views.CardUI;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class ChannelStreamFragment extends Fragment {
@@ -25,19 +27,13 @@ public class ChannelStreamFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		final View view = inflater.inflate(R.layout.activity_channel, container, false);
-		
-		// Stream
-		ListView contentView = (ListView) view.findViewById(R.id.posts);
-		contentView.setEmptyView(view.findViewById(R.id.subscribedProgress));
-
+		final View view = inflater.inflate(R.layout.fragment_channel_stream, container, false);
 		final String channelJid = getArguments().getString(SubscribedChannelsFragment.CHANNEL);
 		
 		loadTitle(channelJid);
 		
-		// Set adapter
-		final ChannelStreamAdapter streamAdapter = new ChannelStreamAdapter(getActivity(), channelJid);
-		contentView.setAdapter(streamAdapter);
+		view.findViewById(R.id.subscribedProgress).setVisibility(View.VISIBLE);
+		fetchPosts(channelJid);
 		
 		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
@@ -57,7 +53,7 @@ public class ChannelStreamFragment extends Fragment {
 					public void success(JSONObject response) {
 						Toast.makeText(getActivity().getApplicationContext(), "Post created", Toast.LENGTH_LONG).show();
 						postContent.setText("");
-						streamAdapter.fetchPosts();
+						fetchPosts(channelJid);
 					}
 					
 					@Override
@@ -80,6 +76,42 @@ public class ChannelStreamFragment extends Fragment {
 		});
 		
 		return view;
+	}
+	
+	public void fetchPosts(String channelJid) {
+		PostsModel.getInstance().refresh(getActivity(), new ModelCallback<JSONArray>() {
+			@Override
+			public void success(JSONArray response) {
+				getView().findViewById(R.id.subscribedProgress).setVisibility(View.GONE);
+				for (int i = 0; i < response.length(); i++) {
+					JSONObject j = response.optJSONObject(i);
+					CardUI contentView = (CardUI) getView().findViewById(R.id.postsStream);
+					contentView.addCard(toCard(j));
+					contentView.refresh();
+				}
+			}
+			
+			@Override
+			public void error(Throwable throwable) {
+				System.err.println(throwable);
+				
+			}
+		}, channelJid);
+	}
+	
+	private PostCard toCard(JSONObject post) {
+		String postAuthor = post.optString("author");
+		String postContent = post.optString("content");
+		String avatarURL = AvatarUtils.avatarURL(getActivity(), postAuthor);
+		
+		PostCard postCard = new PostCard(postAuthor, avatarURL, postContent);
+		postCard.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO: Load single post view
+			}
+		});
+		return postCard;
 	}
 	
 	private void loadTitle(String channelJid) {
