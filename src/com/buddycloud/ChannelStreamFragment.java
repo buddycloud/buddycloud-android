@@ -86,7 +86,8 @@ public class ChannelStreamFragment extends Fragment {
 				for (int i = 0; i < response.length(); i++) {
 					JSONObject j = response.optJSONObject(i);
 					CardUI contentView = (CardUI) getView().findViewById(R.id.postsStream);
-					contentView.addCard(toCard(j));
+					PostCard card = toCard(j);
+					contentView.addCard(card);
 					contentView.refresh();
 				}
 			}

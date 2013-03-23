@@ -40,23 +40,24 @@
             buddycloud:typeface="Roboto-Light.ttf" />
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/unreadWrapper"
-        android:layout_width="25dp"
+        android:layout_width="22dp"
         android:layout_height="fill_parent"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:background="@color/bc_green" >
 
-        <TextView
+        <com.buddycloud.utils.TypefacedTextView
+            xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
             android:id="@+id/unreadCounter"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal|center"
-            android:textColor="@android:color/black"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="#555555"
             android:textSize="12sp"
-            android:textStyle="bold" />
+            buddycloud:typeface="Roboto-BoldCondensed.ttf" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>
