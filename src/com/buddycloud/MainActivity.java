@@ -21,6 +21,8 @@ public class MainActivity extends SlidingFragmentActivity {
 		Intent loginActivity = new Intent();
 		loginActivity.setClass(getApplicationContext(), LoginActivity.class);
 		startActivityForResult(loginActivity, 0);
+		
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 	
 	@Override

@@ -1,4 +1,8 @@
 <resources>
 
-    <style name="AppTheme" parent="android:Theme.Light" />
-</resources>
+    <style name="AppTheme2" parent="android:Theme.Light" />
+
+    <style name="AppTheme" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="homeAsUpIndicator">@drawable/new_indicator</item>
+    </style>
+    </resources>

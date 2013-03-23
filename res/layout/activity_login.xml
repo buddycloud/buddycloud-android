@@ -1,28 +1,39 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="#FFFFFF" >
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/logoSquare"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="90dp"
+        android:layout_marginTop="57dp"
+        android:adjustViewBounds="true"
+        android:maxHeight="200dp"
+        android:maxWidth="200dp"
+        android:src="@drawable/square_logo_500" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logoSquare"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
         android:orientation="vertical" >
 
         <EditText
             android:id="@+id/loginTxt"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:ems="10"
             android:hint="@string/login_hint"
-            android:inputType="textEmailAddress" >
-			<requestFocus />
-        </EditText>
-        
+            android:inputType="textEmailAddress" />
+
         <EditText
             android:id="@+id/passwordTxt"
             android:layout_width="wrap_content"
@@ -33,14 +44,21 @@
             android:hint="@string/login_password"
             android:inputType="textPassword" />
 
-        <Button
-            android:id="@+id/postBtn"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/loginBtn"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/passwordTxt"
-            android:text="@string/login_button" />
+            android:background="@color/bc_green"
+            android:padding="@dimen/login_button_padding" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/login_button" />
+        </RelativeLayout>
     </LinearLayout>
 
 </RelativeLayout>
