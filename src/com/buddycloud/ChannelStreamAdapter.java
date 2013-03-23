@@ -29,7 +29,6 @@ public class ChannelStreamAdapter extends BaseAdapter {
 		fetchPosts();
 	}
 	
-
 	public void fetchPosts() {
 		PostsModel.getInstance().refresh(parent, new ModelCallback<JSONArray>() {
 			@Override
@@ -43,6 +42,7 @@ public class ChannelStreamAdapter extends BaseAdapter {
 				
 			}
 		}, channelJid);
+		notifyDataSetChanged();
 	}
 	
 	@Override
@@ -72,11 +72,11 @@ public class ChannelStreamAdapter extends BaseAdapter {
 		CardStack stack = new CardStack();
 		stack.add(toCard(post));
 		
-		JSONArray comments = PostsModel.getInstance().commentsFromPost(post.optString("id"));
-		for (int i = 0; i < comments.length(); i++) {
-			JSONObject comment = comments.optJSONObject(i);
-			stack.add(toCard(comment));
-		}
+//		JSONArray comments = PostsModel.getInstance().commentsFromPost(post.optString("id"));
+//		for (int i = 0; i < comments.length(); i++) {
+//			JSONObject comment = comments.optJSONObject(i);
+//			stack.add(toCard(comment));
+//		}
 		
 		postStream.addStack(stack);
 		postStream.refresh();

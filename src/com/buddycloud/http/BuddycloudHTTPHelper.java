@@ -22,11 +22,14 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Base64;
+import android.util.Log;
 
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.preferences.Preferences;
 
 public class BuddycloudHTTPHelper {
+	
+	private static final String TAG = "BuddycloudHTTPHelper";
 	
 	public static void getObject(String url, Activity parent, 
 			final ModelCallback<JSONObject> callback) {
@@ -59,8 +62,8 @@ public class BuddycloudHTTPHelper {
 	}
 	
 	private static void reqObject(String method, String url, boolean auth, boolean acceptsJSON, 
-			Object object, Activity parent, ModelCallback<JSONObject> callback) {
-		new RequestAsyncTask<JSONObject>(method, url, null, auth, acceptsJSON, parent, callback) {
+			HttpEntity entity, Activity parent, ModelCallback<JSONObject> callback) {
+		new RequestAsyncTask<JSONObject>(method, url, entity, auth, acceptsJSON, parent, callback) {
 			@Override
 			protected JSONObject toJSON(String responseStr) throws JSONException {
 				return new JSONObject(responseStr);
@@ -69,8 +72,8 @@ public class BuddycloudHTTPHelper {
 	}	
 
 	private static void reqArray(String method, String url, boolean auth, boolean acceptsJSON, 
-			Object object, Activity parent, ModelCallback<JSONArray> callback) {
-		new RequestAsyncTask<JSONArray>(method, url, null, auth, acceptsJSON, parent, callback) {
+			HttpEntity entity, Activity parent, ModelCallback<JSONArray> callback) {
+		new RequestAsyncTask<JSONArray>(method, url, entity, auth, acceptsJSON, parent, callback) {
 			@Override
 			protected JSONArray toJSON(String responseStr) throws JSONException {
 				return new JSONArray(responseStr);
@@ -144,6 +147,7 @@ public class BuddycloudHTTPHelper {
 				HttpResponse response = client.execute(method);
 				return response;
 			} catch (Throwable e) {
+				Log.e(TAG, e.getLocalizedMessage(), e);
 				return e;
 			}
 		}

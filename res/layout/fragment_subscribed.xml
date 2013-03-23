@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white" >
+    android:background="#555555" >
 
     <LinearLayout
         android:id="@+id/wrapperLayout"
@@ -31,7 +31,10 @@
             <ListView
                 android:id="@+id/contentListView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:divider="@null"
+				android:dividerHeight="0dp" >
+
             </ListView>
 
         </LinearLayout>

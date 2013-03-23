@@ -1,21 +1,25 @@
 package com.buddycloud.model;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.preferences.Preferences;
 
 public class PostsModel implements Model<JSONArray, JSONObject, String> {
 
+	private static final String TAG = "PostsModel";
 	private static PostsModel instance;
 	private static final String ENDPOINT = "/content/posts?max=31"; 
-
+	
 	private Map<String, JSONArray> channelsPosts = new HashMap<String, JSONArray>();
 	private Map<String, JSONArray> postsComments = new HashMap<String, JSONArray>();
 
@@ -36,6 +40,8 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 	@Override
 	public void refresh(Activity context, final ModelCallback<JSONArray> callback, String... p) {
 		if (p != null && p.length == 1) {
+			channelsPosts.clear();
+			postsComments.clear();
 			final String channel = p[0];
 			BuddycloudHTTPHelper.getArray(url(context, channel), context,
 					new ModelCallback<JSONArray>() {
@@ -88,7 +94,18 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 	@Override
 	public void save(Activity context, JSONObject object,
 			ModelCallback<JSONObject> callback, String... p) {
-		// TODO Auto-generated method stub
+		if (p == null || p.length < 1) {
+			return;
+		}
+		
+		try {
+			Log.d(TAG, object.toString());
+			StringEntity requestEntity = new StringEntity(object.toString(), "UTF-8");
+			requestEntity.setContentType("application/json");
+			BuddycloudHTTPHelper.post(url(context, p[0]), true, false, requestEntity, context, callback);
+		} catch (UnsupportedEncodingException e) {
+			callback.error(e);
+		}
 	}
 
 	@Override
