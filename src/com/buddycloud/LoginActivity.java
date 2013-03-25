@@ -19,7 +19,7 @@ public class LoginActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        RelativeLayout postBtn = (RelativeLayout) findViewById(R.id.loginBtn);
+        final RelativeLayout postBtn = (RelativeLayout) findViewById(R.id.loginBtn);
         final EditText myChannelTxt = (EditText) findViewById(R.id.loginTxt);
         final EditText passwordTxt = (EditText) findViewById(R.id.passwordTxt);
         
@@ -36,6 +36,12 @@ public class LoginActivity extends Activity {
         postBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				
+				postBtn.setVisibility(View.GONE);
+				
+				View progressBar = findViewById(R.id.progressBar);
+				progressBar.setVisibility(View.VISIBLE);
+				
 				String myChannelJid = myChannelTxt.getText().toString();
 				String password = passwordTxt.getText().toString();
 				

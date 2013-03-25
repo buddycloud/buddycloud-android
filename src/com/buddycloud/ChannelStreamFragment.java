@@ -6,11 +6,13 @@ import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.buddycloud.card.PostCard;
@@ -101,6 +103,7 @@ public class ChannelStreamFragment extends Fragment {
 	}
 	
 	private PostCard toCard(JSONObject post) {
+		final String postId = post.optString("id");
 		String postAuthor = post.optString("author");
 		String postContent = post.optString("content");
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), postAuthor);
@@ -109,7 +112,13 @@ public class ChannelStreamFragment extends Fragment {
 		postCard.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO: Load single post view
+				Fragment postDetailsFrag = new PostDetailsFragment();
+				Bundle args = new Bundle();
+				args.putString(PostDetailsFragment.POST_ID, postId);
+				postDetailsFrag.setArguments(args);
+				
+				MainActivity activity = (MainActivity) getActivity();
+				activity.getPageAdapter().setLeftFragment(postDetailsFrag);
 			}
 		});
 		return postCard;

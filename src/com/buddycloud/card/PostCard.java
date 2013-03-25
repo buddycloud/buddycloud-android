@@ -36,4 +36,9 @@ public class PostCard extends Card {
 		
 		return view;
 	}
+	
+	protected int getLastCardLayout() {
+		return R.layout.item_card_empty_last_bc;
+	}
+
 }

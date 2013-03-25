@@ -1,9 +1,14 @@
 package com.buddycloud;
 
+import java.util.ArrayList;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 
 import com.buddycloud.preferences.Preferences;
 import com.slidingmenu.lib.SlidingMenu;
@@ -11,12 +16,19 @@ import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class MainActivity extends SlidingFragmentActivity {
 	
+	private ContentPageAdapter pageAdapter;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setBehindContentView(R.layout.menu_frame);
-		setContentView(R.layout.content_frame);
+		
+		ViewPager vp = new ViewPager(this);
+		vp.setId("VP".hashCode());
+		this.pageAdapter = new ContentPageAdapter(getSupportFragmentManager());
+		vp.setAdapter(pageAdapter);
+		setContentView(vp);
 		
 		Intent loginActivity = new Intent();
 		loginActivity.setClass(getApplicationContext(), LoginActivity.class);
@@ -42,20 +54,62 @@ public class MainActivity extends SlidingFragmentActivity {
 	}
 
 	private void addContentFragment() {
-		FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
 		String channelJid = (String) Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
 		Fragment myChannelFrag = new ChannelStreamFragment();
 		Bundle args = new Bundle();
 		args.putString(SubscribedChannelsFragment.CHANNEL, channelJid);
 		myChannelFrag.setArguments(args);
-		t.replace(R.id.content_frame, myChannelFrag);
-		t.commitAllowingStateLoss();
+		
+		pageAdapter.setLeftFragment(myChannelFrag);
 	}
 
+	public ContentPageAdapter getPageAdapter() {
+		return pageAdapter;
+	}
+	
 	private void addMenuFragment() {
 		FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
 		Fragment subscribedFrag = new SubscribedChannelsFragment();
 		t.replace(R.id.menu_frame, subscribedFrag);
 		t.commitAllowingStateLoss();
+	}
+	
+	static class ContentPageAdapter extends FragmentPagerAdapter {
+		
+		private ArrayList<Fragment> mFragments;
+
+		public ContentPageAdapter(FragmentManager fm) {
+			super(fm);
+			mFragments = new ArrayList<Fragment>();
+		}
+
+		public void setLeftFragment(Fragment fragment) {
+			if (mFragments.isEmpty()) {
+				mFragments.add(fragment);
+			} else {
+				mFragments.set(0, fragment);
+			}
+			notifyDataSetChanged();
+		}
+		
+		public void setRightFragment(Fragment fragment) {
+			if (mFragments.size() < 2) {
+				mFragments.add(fragment);
+			} else {
+				mFragments.set(1, fragment);
+			}
+			notifyDataSetChanged();
+		}
+		
+		@Override
+		public int getCount() {
+			return mFragments.size();
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			return mFragments.get(position);
+		}
+
 	}
 }

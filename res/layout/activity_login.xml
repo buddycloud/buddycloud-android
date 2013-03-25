@@ -48,6 +48,13 @@
             android:hint="@string/login_password"
             android:inputType="textPassword" />
 
+        <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone" />
+        
         <RelativeLayout
             android:id="@+id/loginBtn"
             android:layout_width="match_parent"
