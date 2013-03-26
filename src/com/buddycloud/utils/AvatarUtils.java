@@ -10,7 +10,6 @@ public class AvatarUtils {
 	
 	private AvatarUtils() {}
 	
-	
 	public static String avatarURL(Activity context, String channel) {
 		int avatarSize = (int) (AVATAR_DIP * context.getResources().getDisplayMetrics().density + 0.5);
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);

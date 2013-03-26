@@ -2,7 +2,6 @@ package com.buddycloud;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,13 +43,12 @@ public class SubscribedChannelsFragment extends Fragment {
 	}
 	
 	private void showChannelFragment(String channelJid) {
-		FragmentTransaction t = getActivity().getSupportFragmentManager().beginTransaction();
-		Fragment mFrag = new ChannelStreamFragment();
+		Fragment frag = new ChannelStreamFragment();
 		Bundle args = new Bundle();
 		args.putString(CHANNEL, channelJid);
-		mFrag.setArguments(args);
-		t.replace(R.id.content_frame, mFrag);
-		t.commitAllowingStateLoss();
+		frag.setArguments(args);
+		MainActivity activity = (MainActivity) getActivity();
+		activity.setLeftFragment(frag);
 	}
 
 }

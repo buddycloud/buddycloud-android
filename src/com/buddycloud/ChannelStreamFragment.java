@@ -6,13 +6,11 @@ import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.buddycloud.card.PostCard;
@@ -80,15 +78,17 @@ public class ChannelStreamFragment extends Fragment {
 		return view;
 	}
 	
-	public void fetchPosts(String channelJid) {
+	public void fetchPosts(final String channelJid) {
 		PostsModel.getInstance().refresh(getActivity(), new ModelCallback<JSONArray>() {
 			@Override
 			public void success(JSONArray response) {
 				getView().findViewById(R.id.subscribedProgress).setVisibility(View.GONE);
-				for (int i = 0; i < response.length(); i++) {
-					JSONObject j = response.optJSONObject(i);
+				
+				JSONArray posts = PostsModel.getInstance().postsFromChannel(getActivity(), channelJid);
+				for (int i = 0; i < posts.length(); i++) {
+					JSONObject j = posts.optJSONObject(i);
 					CardUI contentView = (CardUI) getView().findViewById(R.id.postsStream);
-					PostCard card = toCard(j);
+					PostCard card = toCard(j, channelJid);
 					contentView.addCard(card);
 					contentView.refresh();
 				}
@@ -102,23 +102,27 @@ public class ChannelStreamFragment extends Fragment {
 		}, channelJid);
 	}
 	
-	private PostCard toCard(JSONObject post) {
+	private PostCard toCard(JSONObject post, final String channelJid) {
 		final String postId = post.optString("id");
 		String postAuthor = post.optString("author");
 		String postContent = post.optString("content");
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), postAuthor);
 		
-		PostCard postCard = new PostCard(postAuthor, avatarURL, postContent);
+		Integer commentCount = PostsModel.getInstance().commentsFromPost(postId).length();
+		
+		PostCard postCard = new PostCard(postAuthor, avatarURL, postContent, commentCount);
 		postCard.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Fragment postDetailsFrag = new PostDetailsFragment();
 				Bundle args = new Bundle();
 				args.putString(PostDetailsFragment.POST_ID, postId);
+				args.putString(SubscribedChannelsFragment.CHANNEL, channelJid);
+				
 				postDetailsFrag.setArguments(args);
 				
 				MainActivity activity = (MainActivity) getActivity();
-				activity.getPageAdapter().setLeftFragment(postDetailsFrag);
+				activity.setRightFragment(postDetailsFrag);
 			}
 		});
 		return postCard;

@@ -13,10 +13,12 @@ public class PostCard extends Card {
 	
 	private String avatarURL;
 	private String content;
+	private Integer commentCount;
 	
 
-	public PostCard(String title, String avatarURL, String content) {
+	public PostCard(String title, String avatarURL, String content, Integer commentCount) {
 		super(title);
+		this.commentCount = commentCount;
 		this.avatarURL = avatarURL;
 		this.content = content;
 	}
@@ -31,6 +33,8 @@ public class PostCard extends Card {
 		((SmartImageView) view.findViewById(R.id.bcProfilePic)).setImageUrl(avatarURL, R.drawable.personal_50px);
 		
 		((TextView) view.findViewById(R.id.bcPostContent)).setText(content);
+		
+		((TextView) view.findViewById(R.id.bcCommentCount)).setText(commentCount.toString());
 		
 		//TODO: post time
 		

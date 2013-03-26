@@ -176,11 +176,11 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 	private void loadCounters(ViewHolder holder, String channelJid) {
 		JSONObject counters = SyncModel.getInstance().get(parent, channelJid);
 		if (counters != null) {
-			int totalCount = Integer.parseInt(counters.optString("totalCount"));
+			Integer totalCount = Integer.parseInt(counters.optString("totalCount"));
 			if (totalCount > 30) {
 				holder.unreadCounter.setText("30+");
 			} else {
-				holder.unreadCounter.setText("" + totalCount);
+				holder.unreadCounter.setText(totalCount.toString());
 			}
 			
 		}

@@ -2,48 +2,94 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:orientation="vertical"
         android:paddingLeft="8dp"
-        android:paddingRight="8dp" >
-
-        <TextView
-            android:id="@+id/title"
-            style="@style/CardTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+        android:paddingRight="2dp" >
+    
+	    <com.buddycloud.image.SmartImageView
+		            android:id="@+id/bcProfilePic"
+		            android:layout_width="75dp"
+		            android:layout_height="75dp"
+		            android:scaleType="fitXY" />
+	    
+	    <LinearLayout
+	        android:gravity="center_horizontal"
+	        android:orientation="vertical"
+	        android:background="@drawable/speech_balloon"
+	        android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="4dp" >
+        
+	        <com.buddycloud.utils.TypefacedTextView
+            	xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+	            android:id="@+id/bcCommentCount"
+	            android:paddingTop="3dp"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:ellipsize="end"
+	            android:textSize="14sp"
+	            android:textColor="#ffffff"
+	            buddycloud:typeface="Roboto-BoldCondensed.ttf"/>
+	        
+	    </LinearLayout>
+	    
     </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="4dp"
-        android:background="@color/stroke" />
-
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="8dp" >
+        android:orientation="vertical"
+        android:paddingLeft="2dp"
+        android:paddingRight="8dp" >
+    
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="center_vertical"
+	        android:paddingLeft="8dp"
+	        android:paddingRight="8dp" >
+	
+	        <com.buddycloud.utils.TypefacedTextView
+            	xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+	            android:id="@+id/title"
+	            android:layout_width="0dp"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:textColor="#ff707070"
+	            android:textSize="17sp"
+            	buddycloud:typeface="Roboto-Light.ttf"/>
+	
+	    </LinearLayout>
+	
+	    <View
+	        android:layout_width="fill_parent"
+	        android:layout_height="1dp"
+	        android:layout_marginTop="4dp"
+	        android:background="@color/stroke" />
+	
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="center_vertical"
+	        android:padding="8dp" >
+	
+	        <TextView
+	            android:id="@+id/bcPostContent"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:ellipsize="end"
+	            android:textSize="14sp"
+	            android:textColor="#ff8d8d8d"
+	            />
+	
+	    </LinearLayout>
 
-        <com.buddycloud.image.SmartImageView
-            android:id="@+id/bcProfilePic"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:scaleType="fitXY" />
-
-        <TextView
-            android:id="@+id/bcPostContent"
-            style="@style/CardText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:ellipsize="end" />
-    </LinearLayout>
-
+	</LinearLayout>
 </LinearLayout>
