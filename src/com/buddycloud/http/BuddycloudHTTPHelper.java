@@ -145,7 +145,10 @@ public class BuddycloudHTTPHelper {
 					addAuthHeader(method, parent);
 				}
 				HttpResponse response = client.execute(method);
-				return response;
+				HttpEntity resEntityGet = ((HttpResponse)response).getEntity();
+				String responseStr = EntityUtils.toString(resEntityGet);
+				
+				return responseStr;
 			} catch (Throwable e) {
 				Log.e(TAG, e.getLocalizedMessage(), e);
 				return e;
@@ -158,9 +161,7 @@ public class BuddycloudHTTPHelper {
 				callback.error((Throwable) response);
 			} else {
 				try {
-					HttpEntity resEntityGet = ((HttpResponse)response).getEntity();
-					String responseStr = EntityUtils.toString(resEntityGet);
-					T jsonResponse = (T) toJSON(responseStr);
+					T jsonResponse = (T) toJSON(response.toString());
 					callback.success(jsonResponse);
 				} catch (Throwable e) {
 					callback.error(e);
