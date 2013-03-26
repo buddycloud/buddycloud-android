@@ -15,6 +15,7 @@ import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.model.SyncModel;
+import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 
 public class SubscribedChannelsAdapter extends BaseAdapter {
@@ -96,16 +97,21 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 		
 		boolean firstLoad = convertView == null; 
 		
+		String channelJid = SubscribedChannelsModel.getInstance().get(parent).optString(position);
+
 		if (firstLoad) {
 			LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-			convertView = inflater.inflate(R.layout.subscriber_entry, viewGroup, false);
+			if (channelJid.equals(Preferences.getPreference(parent, Preferences.MY_CHANNEL_JID))) {
+				convertView = inflater.inflate(R.layout.personal_channel_entry, viewGroup, false);
+			} else {
+				convertView = inflater.inflate(R.layout.subscriber_entry, viewGroup, false);
+			}
 			holder = fillHolder(convertView);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		
-		String channelJid = SubscribedChannelsModel.getInstance().get(parent).optString(position);
 		// Title and description
 		loadTitleAndDescription(holder, channelJid);
 		

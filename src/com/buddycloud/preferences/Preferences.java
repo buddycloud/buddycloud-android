@@ -12,10 +12,10 @@ public class Preferences {
 
 	public static final String PREFS_NAME = "BuddycloudPrefsFile";
 	
-	public static final String MY_CHANNEL_JID = "com.bebendo.MYCHANNELJID";
-	public static final String API_ADDRESS = "com.bebendo.APIADDRESS";
-	public static final String PASSWORD = "com.bebendo.PASSWORD";
-	public static final String LAST_UPDATE = "com.bebendo.LASTUPDATE";
+	public static final String MY_CHANNEL_JID = "com.buddycloud.MYCHANNELJID";
+	public static final String API_ADDRESS = "com.buddycloud.APIADDRESS";
+	public static final String PASSWORD = "com.buddycloud.PASSWORD";
+	public static final String LAST_UPDATE = "com.buddycloud.LASTUPDATE";
 	
 	public static final String DEFAULT_API_ADDRESS = "https://api.buddycloud.org";
 	public static final String DEFAUL_LAST_UPDATE = "2013-01-01T00:00:00Z";
