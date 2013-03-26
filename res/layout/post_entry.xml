@@ -64,7 +64,7 @@
 	            android:layout_weight="1"
 	            android:textColor="#ff707070"
 	            android:textSize="17sp"
-            	buddycloud:typeface="Roboto-Light.ttf"/>
+            	buddycloud:typeface="Roboto-BoldCondensed.ttf"/>
 	
 	    </LinearLayout>
 	
