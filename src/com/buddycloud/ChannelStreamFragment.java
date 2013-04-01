@@ -37,7 +37,7 @@ public class ChannelStreamFragment extends Fragment {
 		
 		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
-		SmartImageView avatarView = (SmartImageView) view.findViewById(R.id.bcProfilePic);
+		SmartImageView avatarView = (SmartImageView) view.findViewById(R.id.bcCommentPic);
 		avatarView.setImageUrl(avatarURL, R.drawable.personal_50px);
 		
 		View postButton = view.findViewById(R.id.postButton);

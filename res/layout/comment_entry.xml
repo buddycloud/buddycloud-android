@@ -14,30 +14,9 @@
     
 	    <com.buddycloud.image.SmartImageView
 		            android:id="@+id/bcProfilePic"
-		            android:layout_width="75dp"
-		            android:layout_height="75dp"
+		            android:layout_width="50dp"
+		            android:layout_height="50dp"
 		            android:scaleType="fitXY" />
-	    
-	    <LinearLayout
-	        android:gravity="center_horizontal"
-	        android:orientation="vertical"
-	        android:background="@drawable/speech_balloon"
-	        android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="4dp" >
-        
-	        <com.buddycloud.utils.TypefacedTextView
-            	xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
-	            android:id="@+id/bcCommentCount"
-	            android:paddingTop="3dp"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:ellipsize="end"
-	            android:textSize="14sp"
-	            android:textColor="#ffffff"
-	            buddycloud:typeface="Roboto-BoldCondensed.ttf"/>
-	        
-	    </LinearLayout>
 	    
     </LinearLayout>
     
@@ -86,7 +65,6 @@
 	            android:layout_height="wrap_content"
 	            android:ellipsize="end"
 	            android:textSize="14sp"
-	            android:maxLines="4"
 	            android:textColor="#ff8d8d8d"
 	            />
 	

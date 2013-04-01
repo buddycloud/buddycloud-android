@@ -133,4 +133,15 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 		
 		return new JSONArray();
 	}
+	
+	public JSONObject getById(Activity context, String postId, String channel) {
+		JSONArray jsonArray = get(context, channel);
+		for (int i = 0; i < jsonArray.length(); i++) {
+			JSONObject post = jsonArray.optJSONObject(i);
+			if (post.optString("id").equals(postId)) {
+				return post;
+			}
+		}
+		return null;
+	}
 }

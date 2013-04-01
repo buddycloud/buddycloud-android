@@ -36,51 +36,7 @@
 
         </LinearLayout>
         
-        <View
-        	android:layout_width="match_parent"
-        	android:layout_height="3dp"
-        	android:background="@color/bc_green"/>
-        
-        <View
-        	android:layout_width="match_parent"
-        	android:layout_height="1dp"
-        	android:background="#EEEEEE"/>
-        
-        <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:padding="@dimen/big_padding"
-                android:background="#FFFFFF" >
-
-	            <com.buddycloud.image.SmartImageView
-			        android:id="@+id/bcProfilePic"
-			        android:layout_alignParentLeft="true"
-			        android:layout_centerVertical="true"
-			        android:layout_width="40dp"
-			        android:layout_height="40dp" />
-            
-                <EditText
-                    android:id="@+id/postContentTxt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/bcProfilePic"
-                    android:layout_toLeftOf="@+id/postButton"
-                    android:layout_toRightOf="@+id/bcProfilePic"
-                    android:inputType="textMultiLine"
-                    android:lines="1" >
-                    <requestFocus />
-                </EditText>
-
-                <ImageView
-                    android:id="@+id/postButton"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/speech_balloon_plus" />
-
-            </RelativeLayout>
+        <include layout="@layout/layout_comment_box"/>
         
     </LinearLayout>
 
