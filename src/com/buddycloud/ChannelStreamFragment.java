@@ -106,11 +106,13 @@ public class ChannelStreamFragment extends Fragment {
 		final String postId = post.optString("id");
 		String postAuthor = post.optString("author");
 		String postContent = post.optString("content");
+		String published = post.optString("published");
+		
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), postAuthor);
 		
 		Integer commentCount = PostsModel.getInstance().commentsFromPost(postId).length();
 		
-		PostCard postCard = new PostCard(postAuthor, avatarURL, postContent, commentCount);
+		PostCard postCard = new PostCard(postAuthor, avatarURL, postContent, published, commentCount);
 		postCard.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
