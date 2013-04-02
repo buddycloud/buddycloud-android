@@ -32,9 +32,9 @@
                     android:id="@+id/postContentTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/bcProfilePic"
+                    android:layout_alignBottom="@+id/bcCommentPic"
                     android:layout_toLeftOf="@+id/postButton"
-                    android:layout_toRightOf="@+id/bcProfilePic"
+                    android:layout_toRightOf="@+id/bcCommentPic"
                     android:inputType="textMultiLine"
                     android:lines="1" >
                     <requestFocus />
