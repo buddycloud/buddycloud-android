@@ -18,6 +18,7 @@ import com.buddycloud.card.CommentCard;
 import com.buddycloud.image.SmartImageView;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
+import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.fima.cardsui.views.CardUI;
 
@@ -37,11 +38,13 @@ public class PostDetailsFragment extends Fragment {
 		((TextView) view.findViewById(R.id.title)).setText(post.optString("author"));
 		
 		((SmartImageView) view.findViewById(R.id.bcProfilePic)).setImageUrl(
-				AvatarUtils.avatarURL(getActivity(), channelJid), R.drawable.personal_50px);
+				AvatarUtils.avatarURL(getActivity(), post.optString("author")), 
+				R.drawable.personal_50px);
 		
 		((TextView) view.findViewById(R.id.bcPostContent)).setText(post.optString("content"));
 		
-		String avatarURL = AvatarUtils.avatarURL(getActivity(), post.optString("author"));
+		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
+		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
 		SmartImageView avatarView = (SmartImageView) view.findViewById(R.id.bcCommentPic);
 		avatarView.setImageUrl(avatarURL, R.drawable.personal_50px);
 		
