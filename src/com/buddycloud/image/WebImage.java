@@ -1,6 +1,7 @@
 package com.buddycloud.image;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -39,6 +40,9 @@ public class WebImage implements SmartImage {
         if(url != null) {
             bitmap = webImageCache.get(url);
             if(bitmap == null) {
+            	if (webImageCache.isNotFound(url)) {
+            		return null;
+            	}
                 bitmap = getBitmapFromUrl(url);
                 if(bitmap != null){
                     webImageCache.put(url, bitmap);
@@ -57,6 +61,11 @@ public class WebImage implements SmartImage {
 			HttpGet get = new HttpGet(url);
 			HttpResponse responseGet = client.execute(get);
             
+			if (responseGet.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+				webImageCache.putNotFound(url);
+				return null;
+			}
+			
 			bitmap = BitmapFactory.decodeStream(responseGet.getEntity().getContent());
         } catch(Exception e) {
             e.printStackTrace();

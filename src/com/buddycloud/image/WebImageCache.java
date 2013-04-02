@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -21,8 +22,11 @@ public class WebImageCache {
 	
     private static final String DISK_CACHE_PATH = "/images/";
     private static final int CACHE_SIZE = 16 * 1024 * 1024;
+    private static final long NOT_FOUND_EXPIRATION = 5 * 60 * 1000; // 5 minutes
     
     private LruCache<String, Bitmap> memoryCache;
+    private LruCache<String, Date> notFoundCache;
+    
     private String diskCachePath;
     private boolean diskCacheEnabled = false;
     private ExecutorService writeThread;
@@ -30,7 +34,8 @@ public class WebImageCache {
     public WebImageCache(Context context) {
         // Set up in-memory cache store
         memoryCache = new LruCache<String, Bitmap>(CACHE_SIZE);
-
+        notFoundCache = new LruCache<String, Date>(CACHE_SIZE);
+        
         // Set up disk cache store
         Context appContext = context.getApplicationContext();
         diskCachePath = appContext.getExternalCacheDir().getAbsolutePath() + DISK_CACHE_PATH;
@@ -150,4 +155,14 @@ public class WebImageCache {
     private String getCacheKey(String url) {
         return new String(Hex.encodeHex(DigestUtils.md5(url)));
     }
+
+	public void putNotFound(String url) {
+		notFoundCache.put(getCacheKey(url), new Date());
+	}
+	
+	public boolean isNotFound(String url) {
+		Date notFoundEntry = notFoundCache.get(getCacheKey(url));
+		return notFoundEntry != null && 
+				new Date(notFoundEntry.getTime() + NOT_FOUND_EXPIRATION).after(new Date());
+	}
 }
