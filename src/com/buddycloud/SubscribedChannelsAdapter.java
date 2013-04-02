@@ -4,19 +4,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
 
-import com.buddycloud.image.SmartImageView;
 import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SubscribedChannelsModel;
-import com.buddycloud.model.SyncModel;
-import com.buddycloud.preferences.Preferences;
-import com.buddycloud.utils.AvatarUtils;
+import com.buddycloud.utils.SubscribedChannelUtils;
 
 public class SubscribedChannelsAdapter extends BaseAdapter {
 
@@ -24,21 +19,10 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 	
 	public SubscribedChannelsAdapter(Activity parent) {
 		this.parent = parent;
-		fetchCounters();
 	}
 	
-	protected void fetchCounters() {
-		SyncModel.getInstance().refresh(parent, new ModelCallback<JSONObject>() {
-			@Override
-			public void success(JSONObject response) {
-				fetchSubscribers();
-			}
-			
-			@Override
-			public void error(Throwable throwable) {
-				// TODO Auto-generated method stub
-			}
-		});
+	public void syncd() {
+		fetchSubscribers();
 	}
 	
 	private void fetchSubscribers() {
@@ -77,118 +61,24 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return SubscribedChannelsModel.getInstance().get(parent).length();
+		return SubscribedChannelsModel.getInstance().getAllButMine(parent).length();
 	}
 
 	@Override
 	public Object getItem(int arg0) {
-		return SubscribedChannelsModel.getInstance().get(parent).optString(arg0);
+		return SubscribedChannelsModel.getInstance().getAllButMine(parent).optString(arg0);
 	}
 
 	@Override
 	public long getItemId(int arg0) {
-		return SubscribedChannelsModel.getInstance().get(parent).optString(arg0).hashCode();
+		return SubscribedChannelsModel.getInstance().getAllButMine(parent).optString(arg0).hashCode();
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
-
-		ViewHolder holder; 
-		
-		boolean firstLoad = convertView == null; 
-		
-		String channelJid = SubscribedChannelsModel.getInstance().get(parent).optString(position);
-
-		if (firstLoad) {
-			LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-			if (channelJid.equals(Preferences.getPreference(parent, Preferences.MY_CHANNEL_JID))) {
-				convertView = inflater.inflate(R.layout.personal_channel_entry, viewGroup, false);
-			} else {
-				convertView = inflater.inflate(R.layout.subscriber_entry, viewGroup, false);
-			}
-			holder = fillHolder(convertView);
-			convertView.setTag(holder);
-		} else {
-			holder = (ViewHolder) convertView.getTag();
-		}
-		
-		// Title and description
-		loadTitleAndDescription(holder, channelJid);
-		
-		// Load avatar
-		// TODO: Check for 404 to avoid reloading 
-		loadAvatar(holder, channelJid);
-		
-		// Counters
-		loadCounters(holder, channelJid);
-		
-//		
-//		SharedPreferences sharedPreferences = parent.getSharedPreferences(Preferences.PREFS_NAME, 0);
-//		String myChannel = sharedPreferences.getString(Preferences.MY_CHANNEL_JID, null);
-//		
-//		if (subscribedChannel.getJid().equals(myChannel)) {
-//			retView.setBackgroundColor(
-//					viewGroup.getResources().getColor(R.color.bc_bg_grey));
-//			retView.findViewById(R.id.unreadWrapper).setBackgroundColor(
-//					viewGroup.getResources().getColor(R.color.bc_orange));
-//		} else {
-//			if (subscribedChannel.getUnread() == 0) {
-//				retView.findViewById(R.id.unreadWrapper).setBackgroundColor(
-//						viewGroup.getResources().getColor(R.color.bc_bg_grey));
-//			} else {
-//				retView.findViewById(R.id.unreadWrapper).setBackgroundColor(
-//						viewGroup.getResources().getColor(R.color.bc_green));
-//			}
-//		}
-		
-        return convertView;
+		String channelJid = (String) getItem(position);
+		return SubscribedChannelUtils.createSubscribedChannelMenuItem(
+				parent, convertView, viewGroup, channelJid);
 	}
 	
-	private static class ViewHolder {
-		TextView title;
-		TextView description;
-		TextView unreadCounter;
-		SmartImageView avatar;
-	}
-	
-	private ViewHolder fillHolder(View view) {
-		ViewHolder viewHolder = new ViewHolder();
-		viewHolder.title = (TextView) view.findViewById(R.id.bcUserId);
-		viewHolder.description = (TextView) view.findViewById(R.id.bcMessage);
-		viewHolder.unreadCounter = (TextView) view.findViewById(R.id.unreadCounter);
-		viewHolder.avatar = (SmartImageView) view.findViewById(R.id.bcProfilePic);
-		return viewHolder;
-	}
-	
-	private void loadTitleAndDescription(ViewHolder holder, String channelJid) {
-		String channelTitle = channelJid;
-		String channelDescription = null;
-		JSONObject metadata = ChannelMetadataModel.getInstance().get(parent, channelJid);
-		
-		if (metadata != null) {
-			channelTitle = metadata.optString("title");
-			channelDescription = metadata.optString("description");
-		}
-		
-		holder.title.setText(channelTitle);
-		holder.description.setText(channelDescription);
-	}
-	
-	private void loadAvatar(ViewHolder holder, String channelJid) {
-		String avatarURL = AvatarUtils.avatarURL(parent, channelJid);
-		holder.avatar.setImageUrl(avatarURL, R.drawable.personal_50px);
-	}
-	
-	private void loadCounters(ViewHolder holder, String channelJid) {
-		JSONObject counters = SyncModel.getInstance().get(parent, channelJid);
-		if (counters != null) {
-			Integer totalCount = Integer.parseInt(counters.optString("totalCount"));
-			if (totalCount > 30) {
-				holder.unreadCounter.setText("30+");
-			} else {
-				holder.unreadCounter.setText(totalCount.toString());
-			}
-			
-		}
-	}
 }

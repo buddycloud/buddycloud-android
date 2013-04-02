@@ -22,6 +22,7 @@ public class SubscribedChannelsModel implements Model<JSONArray, JSONArray, Void
 	private static final String POST_NODE_SUFIX = "/posts";
 	
 	private JSONArray subscribedChannels = new JSONArray();
+	private JSONArray subscribedChannelsButMine = new JSONArray();
 	
 	private SubscribedChannelsModel() {}
 	
@@ -46,7 +47,13 @@ public class SubscribedChannelsModel implements Model<JSONArray, JSONArray, Void
 								channels.add(node.split("/")[0]);
 							}
 						}
-						subscribedChannels = new JSONArray(sort(channels));
+						
+						List<String> sortedChannels = sort(channels);
+						List<String> sortedChannelsButMine = new ArrayList<String>(sortedChannels);
+						sortedChannelsButMine.remove(Preferences.getPreference(context, Preferences.MY_CHANNEL_JID));
+						
+						subscribedChannels = new JSONArray(sortedChannels);
+						subscribedChannelsButMine = new JSONArray(sortedChannelsButMine);
 						callback.success(subscribedChannels);
 					}
 					
@@ -107,4 +114,7 @@ public class SubscribedChannelsModel implements Model<JSONArray, JSONArray, Void
 		return subscribedChannels;
 	}
 	
+	public JSONArray getAllButMine(Activity context) {
+		return subscribedChannelsButMine;
+	}
 }

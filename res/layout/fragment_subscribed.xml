@@ -27,9 +27,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
-
+            
+            <com.buddycloud.utils.TypefacedTextView
+	            xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+	            android:id="@+id/personalTitle"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="PERSONAL"
+	            android:textColor="@color/bc_green"
+	            android:textSize="16sp"
+	            android:layout_marginLeft="4dp"
+	            buddycloud:typeface="Roboto-BoldCondensed.ttf" />
+            
             <ListView
-                android:id="@+id/contentListView"
+                android:id="@+id/personalListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@null"
@@ -37,6 +48,25 @@
 
             </ListView>
 
+            <com.buddycloud.utils.TypefacedTextView
+	            xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+	            android:id="@+id/subscribedTitle"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="SUBSCRIBED"
+	            android:textColor="@color/bc_green"
+	            android:textSize="16sp"
+	            android:layout_marginLeft="4dp"
+	            buddycloud:typeface="Roboto-BoldCondensed.ttf" />
+            
+            <ListView
+                android:id="@+id/subscribedListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null"
+				android:dividerHeight="0dp" >
+            </ListView>
+            
         </LinearLayout>
 
     </LinearLayout>

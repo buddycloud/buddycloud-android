@@ -32,6 +32,7 @@ public class MainActivity extends SlidingFragmentActivity {
 		viewPager.setAdapter(pageAdapter);
 		
 		viewPager.setOnPageChangeListener(createPageChangeListener());
+		viewPager.setOffscreenPageLimit(2);
 		
 		setContentView(viewPager);
 		
