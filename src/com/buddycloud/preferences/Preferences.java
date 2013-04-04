@@ -1,10 +1,7 @@
 package com.buddycloud.preferences;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
@@ -23,12 +20,7 @@ public class Preferences {
 	public static final String FALLBACK_PERSONAL_AVATAR = "https://demo.buddycloud.org/img/personal-75px.jpg";
 	public static final String FALLBACK_TOPIC_AVATAR = "https://demo.buddycloud.org/img/topic-75px.jpg";	
 	
-	public static final DateFormat ISO_8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-	static {
-		ISO_8601.setTimeZone(TimeZone.getTimeZone("GMT"));
-	}
-	
-	public static String getPreference(Activity parent, String key) {
+	public static String getPreference(Context parent, String key) {
 		SharedPreferences preferences = parent.getSharedPreferences(PREFS_NAME, 0);
 		return preferences.getString(key, null);
 	}

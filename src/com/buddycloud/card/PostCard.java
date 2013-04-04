@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.text.format.DateUtils;
@@ -14,11 +16,14 @@ import android.widget.TextView;
 
 import com.buddycloud.R;
 import com.buddycloud.image.SmartImageView;
+import com.buddycloud.preferences.Preferences;
 import com.fima.cardsui.objects.Card;
 
 public class PostCard extends Card {
 	
-	private static final DateFormat ISO_8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+	public static final DateFormat ISO_8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+	public static final String MEDIA_PATTERN_SUFIX = "/\\S+@\\S+/media/\\w+";
+	public static final String MEDIA_URL_SUFIX = "?maxheight=600";
 	
 	private String avatarURL;
 	private String content;
@@ -46,6 +51,18 @@ public class PostCard extends Card {
 		((TextView) view.findViewById(R.id.bcPostContent)).setText(content);
 		
 		((TextView) view.findViewById(R.id.bcCommentCount)).setText(commentCount.toString());
+		
+		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
+		Pattern mediaPattern = Pattern.compile(apiAddress + MEDIA_PATTERN_SUFIX);
+		Matcher matcher = mediaPattern.matcher(content);
+		boolean found = matcher.find();
+		
+		if (found) {
+			String mediaURL = content.substring(matcher.start(), matcher.end());
+			SmartImageView mediaView = (SmartImageView) view.findViewById(R.id.bcImageContent);
+			mediaView.setVisibility(View.VISIBLE);
+			mediaView.setImageUrl(mediaURL + MEDIA_URL_SUFIX);
+		}
 		
 		try {
 			long publishedTime = ISO_8601.parse(published).getTime();

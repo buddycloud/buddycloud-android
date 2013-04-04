@@ -2,105 +2,113 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:paddingLeft="8dp"
-        android:paddingRight="2dp" >
-    
-	    <com.buddycloud.image.SmartImageView
-		            android:id="@+id/bcProfilePic"
-		            android:layout_width="75dp"
-		            android:layout_height="75dp"
-		            android:scaleType="fitXY" />
-	    
-	    <LinearLayout
-	        android:gravity="center_horizontal"
-	        android:orientation="vertical"
-	        android:background="@drawable/speech_balloon"
-	        android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="4dp" >
-        
-	        <com.buddycloud.utils.TypefacedTextView
-            	xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
-	            android:id="@+id/bcCommentCount"
-	            android:paddingTop="3dp"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:ellipsize="end"
-	            android:textSize="14sp"
-	            android:textColor="#ffffff"
-	            buddycloud:typeface="Roboto-BoldCondensed.ttf"/>
-	        
-	    </LinearLayout>
-	    
-    </LinearLayout>
+    <com.buddycloud.image.SmartImageView
+                android:id="@+id/bcImageContent"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />"
     
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:paddingLeft="2dp"
-        android:paddingRight="8dp" >
-    
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:gravity="center_vertical"
-	        android:paddingLeft="8dp"
-	        android:paddingRight="8dp" >
-	
-	        <com.buddycloud.utils.TypefacedTextView
-            	xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
-	            android:id="@+id/title"
-	            android:layout_width="0dp"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:textColor="#ff707070"
-	            android:textSize="17sp"
-            	buddycloud:typeface="Roboto-BoldCondensed.ttf"/>
-	
-	    </LinearLayout>
-	
-	    <View
-	        android:layout_width="fill_parent"
-	        android:layout_height="1dp"
-	        android:layout_marginTop="4dp"
-	        android:background="@color/stroke" />
-	
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical"
-	        android:padding="8dp" >
-	
-	        <TextView
-	            android:id="@+id/bcPostContent"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:ellipsize="end"
-	            android:textSize="14sp"
-	            android:maxLines="4"
-	            android:textColor="#ff8d8d8d"
-	            />
-	
-	        <TextView
-	            android:id="@+id/bcPostDate"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="bottom|left"
-	            android:layout_marginTop="4dp"
-	            android:ellipsize="end"
-	            android:textColor="#ff8d8d8d"
-	            android:textSize="10sp" />
-	        
-	    </LinearLayout>
+        android:orientation="horizontal" >
 
-	</LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:paddingRight="2dp" >
+
+            <com.buddycloud.image.SmartImageView
+                android:id="@+id/bcProfilePic"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:scaleType="fitXY" />
+
+            <LinearLayout
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/speech_balloon"
+                android:gravity="center_horizontal"
+                android:orientation="vertical" >
+
+                <com.buddycloud.utils.TypefacedTextView
+                    xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+                    android:id="@+id/bcCommentCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingTop="3dp"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp"
+                    buddycloud:typeface="Roboto-BoldCondensed.ttf" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="2dp"
+            android:paddingRight="8dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp" >
+
+                <com.buddycloud.utils.TypefacedTextView
+                    xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+                    android:id="@+id/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="#ff707070"
+                    android:textSize="17sp"
+                    buddycloud:typeface="Roboto-BoldCondensed.ttf" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="4dp"
+                android:background="@color/stroke" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp" >
+
+                <TextView
+                    android:id="@+id/bcPostContent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="4"
+                    android:textColor="#ff8d8d8d"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/bcPostDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|left"
+                    android:layout_marginTop="6dp"
+                    android:ellipsize="end"
+                    android:textColor="#ff8d8d8d"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
 </LinearLayout>

@@ -125,9 +125,10 @@ public class PostDetailsFragment extends Fragment {
 	private CommentCard toCard(JSONObject comment) {
 		String postAuthor = comment.optString("author");
 		String postContent = comment.optString("content");
+		String published = comment.optString("published");
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), postAuthor);
 		
-		CommentCard commentCard = new CommentCard(postAuthor, avatarURL, postContent);
+		CommentCard commentCard = new CommentCard(postAuthor, avatarURL, postContent, published);
 		return commentCard;
 	}
 }

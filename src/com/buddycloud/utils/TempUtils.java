@@ -7,7 +7,7 @@ import android.os.Environment;
 public class TempUtils {
 
 	public static File createTemporaryFile(String part, String ext) throws Exception {
-	    File tempDir= Environment.getExternalStorageDirectory();
+	    File tempDir = Environment.getExternalStorageDirectory();
 	    tempDir = new File(tempDir.getAbsolutePath() + "/.temp/");
 	    if(!tempDir.exists()) {
 	        tempDir.mkdir();
