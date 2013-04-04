@@ -161,8 +161,16 @@ public class WebImageCache {
 	}
 	
 	public boolean isNotFound(String url) {
-		Date notFoundEntry = notFoundCache.get(getCacheKey(url));
-		return notFoundEntry != null && 
-				new Date(notFoundEntry.getTime() + NOT_FOUND_EXPIRATION).after(new Date());
+		String cacheKey = getCacheKey(url);
+		Date notFoundEntry = notFoundCache.get(cacheKey);
+		if (notFoundEntry == null) {
+			return false;
+		}
+		boolean isEntryValid = new Date(notFoundEntry.getTime()
+				+ NOT_FOUND_EXPIRATION).after(new Date());
+		if (!isEntryValid) {
+			notFoundCache.remove(cacheKey);
+		}
+		return isEntryValid;
 	}
 }
