@@ -10,5 +10,7 @@
     <string name="login_button">Login</string>
     <string name="apiAddressTxtHint">https://api.buddycloud.org</string>
     <string name="caption_hint">Type caption</string>
-
+	<string name="personal_channel_hint">PERSONAL</string>
+	<string name="subscribed_channel_hint">SUBSCRIBED</string>
+	
 </resources>
