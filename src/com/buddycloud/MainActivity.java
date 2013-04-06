@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 
 import com.buddycloud.preferences.Preferences;
+import com.google.android.gcm.GCMRegistrar;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
@@ -67,9 +68,21 @@ public class MainActivity extends SlidingFragmentActivity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		registerInGCM();
 		addMenuFragment();
 		showMyChannelFragment();
 		customizeMenu();
+	}
+
+	private void registerInGCM() {
+		GCMRegistrar.checkDevice(this);
+		GCMRegistrar.checkManifest(this);
+		final String regId = GCMRegistrar.getRegistrationId(this);
+		if (regId.equals("")) {
+			String senderId = null;
+			// TODO Get google project id from the API/pusher
+			GCMRegistrar.register(this, senderId);
+		}
 	}
 
 	private void showMyChannelFragment() {
