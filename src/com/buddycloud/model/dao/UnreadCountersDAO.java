@@ -14,7 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.buddycloud.model.db.UnreadCountersTableHelper;
 import com.buddycloud.preferences.Preferences;
 
-public class UnreadCountersDAO {
+public class UnreadCountersDAO implements DAO<JSONObject> {
 	
 	private static UnreadCountersDAO instance;
 	
@@ -89,7 +89,7 @@ public class UnreadCountersDAO {
 		Cursor cursor = db.query(UnreadCountersTableHelper.TABLE_NAME, COLUMNS, filter,
 				null, null, null, null);
 		cursor.moveToFirst();
-		JSONObject json = cursorToJSONObject(cursor);
+		JSONObject json = cursorToJSON(cursor);
 		cursor.close();
 		
 		return json;
@@ -104,7 +104,7 @@ public class UnreadCountersDAO {
 		
 		cursor.moveToFirst();
 	    while (!cursor.isAfterLast()) {
-	    	JSONObject json = cursorToJSONObject(cursor);
+	    	JSONObject json = cursorToJSON(cursor);
 	    	if (json != null) {
 	    		map.put(cursor.getString(0), json);
 	    	}
@@ -115,7 +115,7 @@ public class UnreadCountersDAO {
 	    return map;
 	}
 	
-	private JSONObject cursorToJSONObject(Cursor cursor) {
+	private JSONObject cursorToJSON(Cursor cursor) {
 		JSONObject json = new JSONObject();
 		try {
 			json.put(UnreadCountersTableHelper.COLUMN_MENTIONS_COUNT, cursor.getInt(1));
