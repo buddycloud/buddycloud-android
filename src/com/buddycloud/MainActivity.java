@@ -17,30 +17,30 @@ import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class MainActivity extends SlidingFragmentActivity {
-	
+
 	private ContentPageAdapter pageAdapter;
 	private ViewPager viewPager;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setBehindContentView(R.layout.menu_frame);
-		
+
 		this.viewPager = new ViewPager(this);
 		this.pageAdapter = new ContentPageAdapter(getSupportFragmentManager());
 		viewPager.setId("VP".hashCode());
 		viewPager.setAdapter(pageAdapter);
-		
+
 		viewPager.setOnPageChangeListener(createPageChangeListener());
 		viewPager.setOffscreenPageLimit(2);
-		
+
 		setContentView(viewPager);
-		
+
 		Intent loginActivity = new Intent();
 		loginActivity.setClass(getApplicationContext(), LoginActivity.class);
 		startActivityForResult(loginActivity, 0);
-		
+
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
@@ -65,10 +65,10 @@ public class MainActivity extends SlidingFragmentActivity {
 			}
 		};
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		registerInGCM();
+		//registerInGCM();
 		addMenuFragment();
 		showMyChannelFragment();
 		customizeMenu();
@@ -112,20 +112,20 @@ public class MainActivity extends SlidingFragmentActivity {
 		pageAdapter.setRightFragment(frag);
 		viewPager.setCurrentItem(1);
 	}
-	
+
 	public ContentPageAdapter getPageAdapter() {
 		return pageAdapter;
 	}
-	
+
 	private void addMenuFragment() {
 		FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
 		Fragment subscribedFrag = new SubscribedChannelsFragment();
 		t.replace(R.id.menu_frame, subscribedFrag);
 		t.commitAllowingStateLoss();
 	}
-	
+
 	private static class ContentPageAdapter extends FragmentPagerAdapter {
-		
+
 		private ArrayList<Fragment> mFragments;
 		private final FragmentManager fm;
 
@@ -144,7 +144,7 @@ public class MainActivity extends SlidingFragmentActivity {
 			}
 			notifyDataSetChanged();
 		}
-		
+
 		public void setRightFragment(Fragment fragment) {
 			if (mFragments.size() < 2) {
 				mFragments.add(fragment);
@@ -154,12 +154,12 @@ public class MainActivity extends SlidingFragmentActivity {
 			}
 			notifyDataSetChanged();
 		}
-		
+
 		@Override
 		public int getCount() {
 			return mFragments.size();
 		}
-		
+
 		@Override
 		public int getItemPosition(Object object) {
 			if (mFragments.contains(object)) {

@@ -29,8 +29,7 @@ public class SubscribedChannelsFragment extends Fragment {
 			public void onItemClick(AdapterView<?> adapterView, View arg1, int position,
 					long arg3) {
 				String channelJid = (String) adapterView.getItemAtPosition(position);
-				showChannelFragment(channelJid);
-				hideMenu();
+				selectChannel(channelJid);
 			}
 		};
 		
@@ -61,6 +60,12 @@ public class SubscribedChannelsFragment extends Fragment {
 		personalChannelView.setOnItemClickListener(channelItemListener);
 		
 		return view;
+	}
+	
+	private void selectChannel(String channelJid) {
+		showChannelFragment(channelJid);
+		hideMenu();
+		SyncModel.getInstance().reset(getActivity(), channelJid);
 	}
 
 	private void hideMenu() {
