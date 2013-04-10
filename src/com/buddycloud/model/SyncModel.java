@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.model.dao.UnreadCountersDAO;
@@ -36,7 +37,7 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 	}
 	
 	@Override
-	public void refresh(Activity context, final ModelCallback<JSONObject> callback, String... p) {
+	public void refresh(Context context, final ModelCallback<JSONObject> callback, String... p) {
 		// Get info from db first
 		final UnreadCountersDAO dao = UnreadCountersDAO.getInstance(context);
 		channelsCounters = dao.getAll();
@@ -107,19 +108,19 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 		UnreadCountersDAO.getInstance(context).update(channel, counter);
 	}
 
-	private static String url(Activity context) {
+	private static String url(Context context) {
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
 		return apiAddress + ENDPOINT;
 	}
 
 	@Override
-	public void save(Activity context, JSONObject object,
+	public void save(Context context, JSONObject object,
 			ModelCallback<JSONObject> callback, String... p) {
 		// Do nothing
 	}
 
 	@Override
-	public JSONObject get(Activity context, String... p) {
+	public JSONObject get(Context context, String... p) {
 		return p != null && p.length == 1 ? channelsCounters.get(p[0]) : null;
 	}
 	

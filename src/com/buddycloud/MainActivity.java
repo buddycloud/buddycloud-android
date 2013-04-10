@@ -2,6 +2,8 @@ package com.buddycloud;
 
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,7 +12,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 
+import com.buddycloud.model.ModelCallback;
+import com.buddycloud.model.NotificationMetadataModel;
 import com.buddycloud.preferences.Preferences;
 import com.google.android.gcm.GCMRegistrar;
 import com.slidingmenu.lib.SlidingMenu;
@@ -18,9 +23,10 @@ import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class MainActivity extends SlidingFragmentActivity {
 
+	private static final String TAG = MainActivity.class.getName();
 	private ContentPageAdapter pageAdapter;
 	private ViewPager viewPager;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -68,20 +74,42 @@ public class MainActivity extends SlidingFragmentActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		//registerInGCM();
+		registerInGCM();
 		addMenuFragment();
 		showMyChannelFragment();
 		customizeMenu();
 	}
 
 	private void registerInGCM() {
+		try {
+			issueGCMRegistration();
+		} catch (Exception e) {
+			Log.e(TAG, "Failed to register in GCM.", e);
+		}
+	}
+
+	private void issueGCMRegistration() {
 		GCMRegistrar.checkDevice(this);
 		GCMRegistrar.checkManifest(this);
 		final String regId = GCMRegistrar.getRegistrationId(this);
 		if (regId.equals("")) {
-			String senderId = null;
-			// TODO Get google project id from the API/pusher
-			GCMRegistrar.register(this, senderId);
+			NotificationMetadataModel.getInstance().refresh(this, new ModelCallback<JSONObject>() {
+				@Override
+				public void success(JSONObject response) {
+					String sender = response.optString("google_project_id", null);
+					if (sender != null) {
+						GCMRegistrar.register(getApplicationContext(), sender);
+					} else {
+						Log.w(TAG, "GCM project id not found.");
+					}
+				}
+				@Override
+				public void error(Throwable throwable) {
+					Log.e(TAG, "Failed to register in GCM.", throwable);
+				}
+			});
+		} else {
+			GCMIntentService.sendToPusher(this, regId);
 		}
 	}
 

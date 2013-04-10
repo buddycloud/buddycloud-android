@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
@@ -38,7 +39,7 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 	}
 
 	@Override
-	public void refresh(Activity context, final ModelCallback<JSONArray> callback, String... p) {
+	public void refresh(Context context, final ModelCallback<JSONArray> callback, String... p) {
 		if (p != null && p.length == 1) {
 			channelsPosts.clear();
 			postsComments.clear();
@@ -86,13 +87,13 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 		}
 	}
 
-	private static String url(Activity context, String channel) {
+	private static String url(Context context, String channel) {
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
 		return apiAddress + "/" + channel + ENDPOINT;
 	}
 
 	@Override
-	public void save(Activity context, JSONObject object,
+	public void save(Context context, JSONObject object,
 			ModelCallback<JSONObject> callback, String... p) {
 		if (p == null || p.length < 1) {
 			return;
@@ -109,7 +110,7 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 	}
 
 	@Override
-	public JSONArray get(Activity context, String... p) {
+	public JSONArray get(Context context, String... p) {
 		if (p != null && p.length == 1) {
 			String channelJid = p[0];
 			if (channelsPosts.containsKey(channelJid)) {

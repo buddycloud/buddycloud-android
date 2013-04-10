@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import android.app.Activity;
+import android.content.Context;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.model.dao.ChannelMetadataDAO;
@@ -67,7 +67,7 @@ public class ChannelMetadataModel implements Model<JSONObject, JSONObject, Strin
 	}
 	
 	@Override
-	public void refresh(Activity context, final ModelCallback<JSONObject> callback, String... p) {
+	public void refresh(Context context, final ModelCallback<JSONObject> callback, String... p) {
 		if (p != null && p.length == 1) {
 			final String channel = p[0];
 			
@@ -106,19 +106,19 @@ public class ChannelMetadataModel implements Model<JSONObject, JSONObject, Strin
 		}
 	}
 	
-	private static String url(Activity context, String channel) {
+	private static String url(Context context, String channel) {
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
 		return apiAddress + "/" + channel + ENDPOINT;
 	}
 
 	@Override
-	public void save(Activity context, JSONObject object,
+	public void save(Context context, JSONObject object,
 			ModelCallback<JSONObject> callback, String... p) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public JSONObject get(Activity context, String... p) {
+	public JSONObject get(Context context, String... p) {
 		return p != null && p.length == 1 ? channelsMetadataMap.get(p[0]) : null;
 	}
 	

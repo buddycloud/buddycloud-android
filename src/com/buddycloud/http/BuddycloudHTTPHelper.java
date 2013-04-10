@@ -19,7 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
@@ -31,38 +31,38 @@ public class BuddycloudHTTPHelper {
 	
 	private static final String TAG = "BuddycloudHTTPHelper";
 	
-	public static void getObject(String url, Activity parent, 
+	public static void getObject(String url, Context parent, 
 			final ModelCallback<JSONObject> callback) {
 		getObject(url, true, true, parent, callback);
 	}
 
-	public static void getArray(String url, Activity parent, 
+	public static void getArray(String url, Context parent, 
 			final ModelCallback<JSONArray> callback) {
 		getArray(url, true, true, parent, callback);
 	}
 	
-	public static void post(String url, HttpEntity entity, Activity parent, 
+	public static void post(String url, HttpEntity entity, Context parent, 
 			final ModelCallback<JSONObject> callback) {
 		post(url, true, true, entity, parent, callback);
 	}
 
-	public static void getObject(String url, boolean auth, boolean acceptsJSON, Activity parent, 
+	public static void getObject(String url, boolean auth, boolean acceptsJSON, Context parent, 
 			final ModelCallback<JSONObject> callback) {
 		reqObject("get", url, auth, acceptsJSON, null, parent, callback);
 	}
 
-	public static void getArray(String url, boolean auth, boolean acceptsJSON, Activity parent, 
+	public static void getArray(String url, boolean auth, boolean acceptsJSON, Context parent, 
 			final ModelCallback<JSONArray> callback) {
 		reqArray("get", url, auth, acceptsJSON, null, parent, callback);
 	}
 	
-	public static void post(String url, boolean auth, boolean acceptsJSON, HttpEntity entity, Activity parent, 
+	public static void post(String url, boolean auth, boolean acceptsJSON, HttpEntity entity, Context parent, 
 			final ModelCallback<JSONObject> callback) {
 		reqObject("post", url, auth, acceptsJSON, entity, parent, callback);
 	}
 	
 	private static void reqObject(String method, String url, boolean auth, boolean acceptsJSON, 
-			HttpEntity entity, Activity parent, ModelCallback<JSONObject> callback) {
+			HttpEntity entity, Context parent, ModelCallback<JSONObject> callback) {
 		new RequestAsyncTask<JSONObject>(method, url, entity, auth, acceptsJSON, parent, callback) {
 			@Override
 			protected JSONObject toJSON(String responseStr) throws JSONException {
@@ -72,7 +72,7 @@ public class BuddycloudHTTPHelper {
 	}	
 
 	private static void reqArray(String method, String url, boolean auth, boolean acceptsJSON, 
-			HttpEntity entity, Activity parent, ModelCallback<JSONArray> callback) {
+			HttpEntity entity, Context parent, ModelCallback<JSONArray> callback) {
 		new RequestAsyncTask<JSONArray>(method, url, entity, auth, acceptsJSON, parent, callback) {
 			@Override
 			protected JSONArray toJSON(String responseStr) throws JSONException {
@@ -85,7 +85,7 @@ public class BuddycloudHTTPHelper {
 		method.setHeader("Accept", "application/json");
 	}
 	
-	protected static void addAuthHeader(HttpRequestBase method, Activity parent) {
+	protected static void addAuthHeader(HttpRequestBase method, Context parent) {
 		String loginPref = Preferences.getPreference(parent, Preferences.MY_CHANNEL_JID);
         String passPref = Preferences.getPreference(parent, Preferences.PASSWORD);
         String auth = loginPref.split("@")[0] + ":" + passPref;
@@ -109,11 +109,11 @@ public class BuddycloudHTTPHelper {
 		private HttpEntity entity;
 		private boolean auth;
 		private boolean acceptsJSON;
-		private Activity parent;
+		private Context parent;
 		private ModelCallback<T> callback;
 		
 		public RequestAsyncTask(String methodType, String url, HttpEntity entity,
-				boolean auth, boolean acceptsJSON, Activity parent,
+				boolean auth, boolean acceptsJSON, Context parent,
 				ModelCallback<T> callback) {
 			this.methodType = methodType;
 			this.url = url;

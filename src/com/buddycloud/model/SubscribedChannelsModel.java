@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.preferences.Preferences;
@@ -33,7 +34,7 @@ public class SubscribedChannelsModel implements Model<JSONArray, JSONArray, Void
 		return instance;
 	}
 	
-	public void refresh(final Activity context, final ModelCallback<JSONArray> callback, Void... p) {
+	public void refresh(final Context context, final ModelCallback<JSONArray> callback, Void... p) {
 		BuddycloudHTTPHelper.getObject(url(context), context, 
 				new ModelCallback<JSONObject>() {
 					@SuppressWarnings("unchecked")
@@ -96,21 +97,21 @@ public class SubscribedChannelsModel implements Model<JSONArray, JSONArray, Void
 				});
 	}
 
-	private static String url(Activity context) {
+	private static String url(Context context) {
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
 		return apiAddress + ENDPOINT;
 	}
 
 
 	@Override
-	public void save(Activity context, JSONArray object,
+	public void save(Context context, JSONArray object,
 			ModelCallback<JSONArray> callback, Void... p) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public JSONArray get(Activity context, Void... p) {
+	public JSONArray get(Context context, Void... p) {
 		return subscribedChannels;
 	}
 	
