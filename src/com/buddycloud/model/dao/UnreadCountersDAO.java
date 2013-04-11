@@ -11,6 +11,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.buddycloud.model.db.BuddycloudSQLiteOpenHelper;
 import com.buddycloud.model.db.UnreadCountersTableHelper;
 import com.buddycloud.preferences.Preferences;
 
@@ -19,7 +20,7 @@ public class UnreadCountersDAO implements DAO<JSONObject> {
 	private static UnreadCountersDAO instance;
 	
 	private SQLiteDatabase db;
-	private UnreadCountersTableHelper helper;
+	private BuddycloudSQLiteOpenHelper helper;
 	private String myJid;
 	
 	private final String[] COLUMNS = new String[]{
@@ -29,7 +30,7 @@ public class UnreadCountersDAO implements DAO<JSONObject> {
 	
 	
 	private UnreadCountersDAO(Context context) {
-		this.helper = new UnreadCountersTableHelper(context);
+		this.helper = new BuddycloudSQLiteOpenHelper(context);
 		this.db = helper.getWritableDatabase();
 		this.myJid = Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
 	}
@@ -74,7 +75,7 @@ public class UnreadCountersDAO implements DAO<JSONObject> {
 		ContentValues values = buildValues(channel, counter);
 		if (values != null) {
 			String filter = UnreadCountersTableHelper.COLUMN_USER + "=\"" + myJid + "\" AND " + 
-					UnreadCountersTableHelper.COLUMN_CHANNEL + "=" + channel;
+					UnreadCountersTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
 			int rowsAffected = db.update(UnreadCountersTableHelper.TABLE_NAME, 
 					values, filter, null);
 			return rowsAffected == 1;
@@ -85,7 +86,7 @@ public class UnreadCountersDAO implements DAO<JSONObject> {
 	
 	public JSONObject get(String channel) {
 		String filter = UnreadCountersTableHelper.COLUMN_USER + "=\"" + myJid + "\" AND " + 
-				UnreadCountersTableHelper.COLUMN_CHANNEL + "=" + channel;
+				UnreadCountersTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
 		Cursor cursor = db.query(UnreadCountersTableHelper.TABLE_NAME, COLUMNS, filter,
 				null, null, null, null);
 		cursor.moveToFirst();
@@ -126,8 +127,4 @@ public class UnreadCountersDAO implements DAO<JSONObject> {
 		
 		return json;
 	}
-	
-	/*private UnreadCounter cursorToUnreadCounter(Cursor cursor) {
-	    return new UnreadCounter(cursor.getString(0), cursor.getInt(1), cursor.getInt(2));
-	}*/
 }

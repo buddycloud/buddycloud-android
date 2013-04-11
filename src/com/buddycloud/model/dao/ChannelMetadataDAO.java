@@ -11,6 +11,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.buddycloud.model.db.BuddycloudSQLiteOpenHelper;
 import com.buddycloud.model.db.ChannelMetadataTableHelper;
 
 public class ChannelMetadataDAO implements DAO<JSONObject> {
@@ -18,7 +19,7 @@ public class ChannelMetadataDAO implements DAO<JSONObject> {
 	private static ChannelMetadataDAO instance;
 	
 	private SQLiteDatabase db;
-	private ChannelMetadataTableHelper helper;
+	private BuddycloudSQLiteOpenHelper helper;
 	
 	private final String[] COLUMNS = new String[]{
 			ChannelMetadataTableHelper.COLUMN_ID, 
@@ -31,6 +32,7 @@ public class ChannelMetadataDAO implements DAO<JSONObject> {
 	
 	
 	private ChannelMetadataDAO(Context context) {
+		this.helper = new BuddycloudSQLiteOpenHelper(context);
 		this.db = helper.getWritableDatabase();
 	}
 	
