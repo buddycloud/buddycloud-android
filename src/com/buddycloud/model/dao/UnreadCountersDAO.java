@@ -15,7 +15,7 @@ import com.buddycloud.model.db.BuddycloudSQLiteOpenHelper;
 import com.buddycloud.model.db.UnreadCountersTableHelper;
 import com.buddycloud.preferences.Preferences;
 
-public class UnreadCountersDAO implements DAO<JSONObject> {
+public class UnreadCountersDAO implements DAO<JSONObject, JSONObject> {
 	
 	private static UnreadCountersDAO instance;
 	

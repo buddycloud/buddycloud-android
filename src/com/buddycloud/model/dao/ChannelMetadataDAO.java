@@ -14,7 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.buddycloud.model.db.BuddycloudSQLiteOpenHelper;
 import com.buddycloud.model.db.ChannelMetadataTableHelper;
 
-public class ChannelMetadataDAO implements DAO<JSONObject> {
+public class ChannelMetadataDAO implements DAO<JSONObject, JSONObject> {
 	
 	private static ChannelMetadataDAO instance;
 	

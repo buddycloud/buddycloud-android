@@ -24,6 +24,10 @@ public class BuddycloudSQLiteOpenHelper extends SQLiteOpenHelper {
 		// Unread counters table
 		db.execSQL(UnreadCountersTableHelper.CREATE_TABLE);
 		db.execSQL(UnreadCountersTableHelper.CREATE_USER_INDEX);
+		
+		// Posts table
+		db.execSQL(PostsTableHelper.CREATE_TABLE);
+		db.execSQL(PostsTableHelper.CREATE_CHANNEL_INDEX);
 	}
 
 	@Override
@@ -35,6 +39,7 @@ public class BuddycloudSQLiteOpenHelper extends SQLiteOpenHelper {
 		// Drop old data
 		db.execSQL("DROP TABLE IF EXISTS " + ChannelMetadataTableHelper.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + UnreadCountersTableHelper.TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + PostsTableHelper.TABLE_NAME);
 		onCreate(db);
 	}
 
