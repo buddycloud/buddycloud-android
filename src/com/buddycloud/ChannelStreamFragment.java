@@ -6,11 +6,14 @@ import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.buddycloud.card.PostCard;
@@ -40,10 +43,19 @@ public class ChannelStreamFragment extends Fragment {
 		SmartImageView avatarView = (SmartImageView) view.findViewById(R.id.bcCommentPic);
 		avatarView.setImageUrl(avatarURL, R.drawable.personal_50px);
 		
-		View postButton = view.findViewById(R.id.postButton);
+		final ImageView postButton = (ImageView) view.findViewById(R.id.postButton);
+		postButton.setEnabled(false);
+		
+		EditText postContent = (EditText) view.findViewById(R.id.postContentTxt);
+		
 		postButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				
+				if (!postButton.isEnabled()) {
+					return;
+				}
+				
 				final EditText postContent = (EditText) view.findViewById(R.id.postContentTxt);
 				
 				JSONObject post = createPost(postContent);
@@ -74,6 +86,8 @@ public class ChannelStreamFragment extends Fragment {
 				return post;
 			}
 		});
+		
+		configurePostSection(postContent, postButton);
 		
 		return view;
 	}
@@ -133,5 +147,35 @@ public class ChannelStreamFragment extends Fragment {
 	private void loadTitle(String channelJid) {
 		SlidingFragmentActivity activity = (SlidingFragmentActivity) getActivity();
 		activity.getSupportActionBar().setTitle(channelJid);
+	}
+	
+	public static void configurePostSection(EditText postContent, final ImageView postButton) {
+		postContent.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+				
+			}
+
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+				boolean wasEnabled = postButton.isEnabled();
+				boolean enabled = arg0 != null && arg0.length() > 0;
+				postButton.setEnabled(enabled);
+				if (!enabled) {
+					postButton.setImageResource(R.drawable.speech_balloon_plus_disabled);
+				} else if (!wasEnabled) {
+					postButton.setImageResource(R.drawable.speech_balloon_plus);
+				}
+			}
+			
+		});
 	}
 }

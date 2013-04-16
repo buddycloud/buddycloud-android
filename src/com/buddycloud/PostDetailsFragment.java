@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,12 +51,17 @@ public class PostDetailsFragment extends Fragment {
 		
 		loadComments(view, postId);
 		
-		View postButton = view.findViewById(R.id.postButton);
+		final ImageView postButton = (ImageView) view.findViewById(R.id.postButton);
+		postButton.setEnabled(false);
+		final EditText postContent = (EditText) view.findViewById(R.id.postContentTxt);
+		
 		postButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				
-				final EditText postContent = (EditText) view.findViewById(R.id.postContentTxt);
+				if (!postButton.isEnabled()) {
+					return;
+				}
 				
 				JSONObject post = createPost(postContent);
 				
@@ -86,6 +92,8 @@ public class PostDetailsFragment extends Fragment {
 				return post;
 			}
 		});
+		
+		ChannelStreamFragment.configurePostSection(postContent, postButton);
 		
 		return view;
 	}

@@ -46,7 +46,7 @@
                     android:layout_height="40dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/speech_balloon_plus" />
+                    android:src="@drawable/speech_balloon_plus_disabled" />
 
         </RelativeLayout>
         
