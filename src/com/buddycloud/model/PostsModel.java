@@ -1,7 +1,11 @@
 package com.buddycloud.model;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.http.entity.StringEntity;
@@ -13,13 +17,16 @@ import android.content.Context;
 import android.util.Log;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
+import com.buddycloud.model.dao.PostsDAO;
+import com.buddycloud.model.db.PostsTableHelper;
 import com.buddycloud.preferences.Preferences;
 
 public class PostsModel implements Model<JSONArray, JSONObject, String> {
 
 	private static final String TAG = "PostsModel";
 	private static PostsModel instance;
-	private static final String ENDPOINT = "/content/posts?max=31"; 
+	private static final int PAGE_SIZE = 31;
+	private static final String ENDPOINT = "/content/posts"; 
 	
 	private Map<String, JSONArray> channelsPosts = new HashMap<String, JSONArray>();
 	private Map<String, JSONArray> postsComments = new HashMap<String, JSONArray>();
@@ -37,6 +44,46 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 	private boolean isPost(JSONObject item) {
 		return item.opt("replyTo") == null;
 	}
+	
+	private void parsePosts(PostsDAO dao, String channel, JSONArray response, boolean updateDatabase) {
+		JSONArray posts = channelsPosts.get(channel);
+		if (posts == null) {
+			posts = new JSONArray();
+		}
+		
+		for (int i = 0; i < response.length(); i++) {
+			JSONObject item = response.optJSONObject(i);
+			
+			if (updateDatabase) {
+				dao.insert(channel, item);
+			}
+			
+			if (isPost(item)) {
+				posts.put(item);
+			} else {
+				String postId = item.optString("replyTo");
+				JSONArray comments = postsComments.get(postId);
+				if (comments == null) {
+					comments = new JSONArray();
+				}
+				
+				comments.put(item);
+				postsComments.put(postId, comments);
+			}
+		}
+		
+		channelsPosts.put(channel, posts);
+	}
+	
+	private void lookupDatabase(PostsDAO dao, String channel, ModelCallback<JSONArray> callback) {
+		JSONArray response = dao.get(channel, PAGE_SIZE);
+		if (response != null && response.length() > 0) {
+			parsePosts(dao, channel, response, false);
+			if (callback != null) {
+				callback.success(response);
+			}
+		}
+	}
 
 	@Override
 	public void refresh(Context context, final ModelCallback<JSONArray> callback, String... p) {
@@ -44,29 +91,20 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 			channelsPosts.clear();
 			postsComments.clear();
 			final String channel = p[0];
+			
+			// Lookup for posts at database
+			final PostsDAO dao = PostsDAO.getInstance(context);
+			lookupDatabase(dao, channel, callback);
+			
 			BuddycloudHTTPHelper.getArray(url(context, channel), context,
 					new ModelCallback<JSONArray>() {
 
 				private void parsePostsAndComments(JSONArray response) {
-					JSONArray posts = new JSONArray();
-					for (int i = 0; i < response.length(); i++) {
-						JSONObject item = response.optJSONObject(i);
-						
-						if (isPost(item)) {
-							posts.put(item);
-						} else {
-							String postId = item.optString("replyTo");
-							JSONArray comments = postsComments.get(postId);
-							if (comments == null) {
-								comments = new JSONArray();
-							}
-							
-							comments.put(item);
-							postsComments.put(postId, comments);
-						}
-					}
+					parsePosts(dao, channel, response, true);
 					
-					channelsPosts.put(channel, posts);
+					if (callback != null) {
+						callback.success(response);
+					}
 				}
 
 				@Override
@@ -86,10 +124,62 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 			});
 		}
 	}
+	
+	/*private int loadedItemsSize(String channel) {
+		// Total posts and comments already loaded from a channel
+		int totalItems = 0;
+		
+		JSONArray posts = channelsPosts.get(channel);
+		if (posts != null) {
+			totalItems += posts.length();
 
-	private static String url(Context context, String channel) {
+			for (int i = 0; i < posts.length(); i++) {
+				String postId = posts.optJSONObject(i).optString(PostsTableHelper.COLUMN_ID);
+				JSONArray comments = postsComments.get(postId);
+				
+				if (comments != null) {
+					totalItems += comments.length();
+				}
+			}
+		}
+		
+		return totalItems;
+	}*/
+	
+	public static Date fromISODateString(String isoDateString) throws Exception {
+		String isoFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+	    DateFormat format = new SimpleDateFormat(isoFormat, Locale.getDefault());
+
+	    return format.parse(isoDateString);
+	}
+	
+	private JSONObject mostRecentItem(String channel) {
+		JSONArray posts = channelsPosts.get(channel);
+		
+		if (posts != null) {
+			JSONObject mostRecentPost = posts.optJSONObject(0);
+			JSONArray comments = postsComments.get(mostRecentPost.optString(PostsTableHelper.COLUMN_ID));
+			
+			if (comments != null) {
+				JSONObject mostRecentComment = comments.optJSONObject(0);
+				try {
+					Date postDate = fromISODateString(mostRecentPost.optString(PostsTableHelper.COLUMN_UPDATED));
+					Date commentDate = fromISODateString(mostRecentComment.optString(PostsTableHelper.COLUMN_UPDATED));
+
+					return postDate.compareTo(commentDate) > 0 ? mostRecentPost : mostRecentComment;
+				} catch (Exception e) {}
+			}
+		}
+		
+		return null;
+	}
+
+	private String url(Context context, String channel) {
+		JSONObject mostRecentItem = mostRecentItem(channel);
+		String params = mostRecentItem != null ? "?after=" + mostRecentItem.optString(PostsTableHelper.COLUMN_UPDATED) : "?max=" + PAGE_SIZE;
+		
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
-		return apiAddress + "/" + channel + ENDPOINT;
+		return apiAddress + "/" + channel + ENDPOINT + params;
 	}
 
 	@Override
