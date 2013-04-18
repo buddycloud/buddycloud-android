@@ -1,9 +1,12 @@
 package com.buddycloud.model;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
@@ -120,39 +123,40 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 		channelsPosts.put(channel, posts);
 	}
 	
-	private void lookupPostsFromDatabase(PostsDAO postsDAO, String channel) {
-		JSONArray response = postsDAO.get(channel, PAGE_SIZE);
-		if (response != null && response.length() > 0) {
-			parseChannelPosts(postsDAO, channel, response, false);
+	private void lookupPostsFromDatabase(PostsDAO postsDAO) {
+		List<String> channels = postsDAO.getChannels();
+		
+		for (String channel : channels) {
+			JSONArray response = postsDAO.get(channel, PAGE_SIZE);
+			if (response != null && response.length() > 0) {
+				parseChannelPosts(postsDAO, channel, response, false);
+			}
 		}
 	}
 	
-	private void lookupUnreadCountersFromDatabase(UnreadCountersDAO unreadCountersDAO, String channel) {
+	private void lookupUnreadCountersFromDatabase(UnreadCountersDAO unreadCountersDAO) {
 		channelsCounters = unreadCountersDAO.getAll();
 	}
 
 	@Override
 	public void refresh(Context context, final ModelCallback<JSONObject> callback, String... p) {
-		if (p != null && p.length == 1) {
-			channelsPosts.clear();
-			postsComments.clear();
-			String channel = p[0];
-			
-			// Lookup for posts at database
-			PostsDAO postsDAO = PostsDAO.getInstance(context);
-			lookupPostsFromDatabase(postsDAO, channel);
-			
-			UnreadCountersDAO unreadCountersDAO = UnreadCountersDAO.getInstance(context);
-			lookupUnreadCountersFromDatabase(unreadCountersDAO, channel);
-			
-			// Fetch server
-			sync(context, channel, postsDAO, unreadCountersDAO, callback);
-		}
+		channelsPosts.clear();
+		postsComments.clear();
+		
+		// Lookup for posts at database
+		PostsDAO postsDAO = PostsDAO.getInstance(context);
+		lookupPostsFromDatabase(postsDAO);
+		
+		UnreadCountersDAO unreadCountersDAO = UnreadCountersDAO.getInstance(context);
+		lookupUnreadCountersFromDatabase(unreadCountersDAO);
+		
+		// Fetch server
+		sync(context, postsDAO, unreadCountersDAO, callback);
 	}
 	
-	private void sync(Context context, final String channel, final PostsDAO postsDAO, 
+	private void sync(Context context, final PostsDAO postsDAO, 
 			final UnreadCountersDAO unreadCountersDAO, final ModelCallback<JSONObject> callback) {
-		BuddycloudHTTPHelper.getObject(syncUrl(context, channel), context,
+		BuddycloudHTTPHelper.getObject(syncUrl(context), context,
 				new ModelCallback<JSONObject>() {
 
 			@Override
@@ -173,26 +177,41 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 		});
 	}
 	
-	private String mostRecentItemDate(String channel) {
-		JSONArray posts = channelsPosts.get(channel);
+	private String since() {
+		Set<String> channels = channelsPosts.keySet();
+		String since = TimeUtils.OLDEST_DATE;
 		
-		if (posts != null) {
-			JSONObject mostRecentPost = posts.optJSONObject(0);
-			JSONArray comments = postsComments.get(mostRecentPost.optString(PostsTableHelper.COLUMN_ID));
+		for (String channel : channels) {
+			JSONArray posts = channelsPosts.get(channel);
+			String temp = null;
 			
-			if (comments != null) {
-				JSONObject mostRecentComment = comments.optJSONObject(comments.length() - 1);
-				return mostRecentComment.optString(PostsTableHelper.COLUMN_UPDATED);
+			if (posts != null) {
+				JSONObject mostRecentPost = posts.optJSONObject(0);
+				JSONArray comments = postsComments.get(mostRecentPost.optString(PostsTableHelper.COLUMN_ID));
+				
+				if (comments != null) {
+					JSONObject mostRecentComment = comments.optJSONObject(comments.length() - 1);
+					temp = mostRecentComment.optString(PostsTableHelper.COLUMN_UPDATED);
+				} else {
+					temp = mostRecentPost.optString(PostsTableHelper.COLUMN_UPDATED);
+				}
+				
 			}
 			
-			return mostRecentPost.optString(PostsTableHelper.COLUMN_UPDATED);
+			if (temp != null) {
+				try {
+					if (TimeUtils.fromISOToDate(since).compareTo(TimeUtils.fromISOToDate(temp)) < 0) {
+						since = temp;
+					}
+				} catch (ParseException e) {/*Do nothing*/}
+			}
 		}
 		
-		return TimeUtils.OLDEST_DATE;
+		return since;
 	}
 
-	private String syncUrl(Context context, String channel) {
-		String params = "?max=" + PAGE_SIZE + "&since=" + mostRecentItemDate(channel);
+	private String syncUrl(Context context) {
+		String params = "?max=" + PAGE_SIZE + "&since=" + since();
 		
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
 		return apiAddress + SYNC_ENDPOINT + params;

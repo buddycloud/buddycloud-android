@@ -112,7 +112,7 @@ public class MainActivity extends SlidingFragmentActivity {
 				// TODO Auto-generated method stub
 				
 			}
-		}, myJid);
+		});
 	}
 
 	private void registerInGCM() {

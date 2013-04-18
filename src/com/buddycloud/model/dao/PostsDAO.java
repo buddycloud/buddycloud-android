@@ -1,5 +1,7 @@
 package com.buddycloud.model.dao;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -57,7 +59,7 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 	
 	private ContentValues buildValues(String channel, JSONObject json) {
 		String id = json.optString("id");
-		String author = json.optString("description");
+		String author = json.optString("author");
 		String published = json.optString("published");
 		String updated = json.optString("updated");
 		String content = json.optString("content");
@@ -114,7 +116,7 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 	public JSONArray get(String channel, int limit) {
 		JSONArray channelPosts = new JSONArray();
 		
-		String filter = PostsTableHelper.COLUMN_ID + "=\"" + channel + "\"";
+		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
 		String orderBy = "date(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
 
 		Cursor cursor = db.query(PostsTableHelper.TABLE_NAME, null, filter,
@@ -136,6 +138,21 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 	public Map<String, JSONArray> getAll() {
 		// TODO: select by channel, get() and then return
 		return null;
+	}
+	
+	public List<String> getChannels() {
+		List<String> channels = new LinkedList<String>();
+		Cursor cursor = db.query(true, PostsTableHelper.TABLE_NAME, new String[]{PostsTableHelper.COLUMN_CHANNEL}, null,
+				null, null, null, null, null);
+		
+		cursor.moveToFirst();
+	    while (!cursor.isAfterLast()) {
+	    	channels.add(getString(cursor, PostsTableHelper.COLUMN_CHANNEL));
+	    	cursor.moveToNext();
+	    }
+		cursor.close();
+		
+		return channels;
 	}
 	
 	private JSONObject cursorToJSON(Cursor cursor) {
