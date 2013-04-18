@@ -69,7 +69,7 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void parsePosts(PostsDAO postsDAO, UnreadCountersDAO unreadCountersDAO, JSONObject response, boolean updateDatabase) {
+	private void parse(PostsDAO postsDAO, UnreadCountersDAO unreadCountersDAO, JSONObject response, boolean updateDatabase) {
 		Iterator<String> keys = response.keys();
 		while (keys.hasNext()) {
 			String node = keys.next();
@@ -88,6 +88,16 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 		
 		for (int i = 0; i < jsonPosts.length(); i++) {
 			JSONObject item = jsonPosts.optJSONObject(i);
+			String author = item.optString("author");
+			
+			if (author.contains("acct:")) {
+				String[] split = author.split(":");
+				author = split[1];
+				
+				try {
+					item.put("author", author);
+				} catch (JSONException e) {}
+			}
 			
 			if (updateDatabase) {
 				postsDAO.insert(channel, item);
@@ -110,10 +120,10 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 		channelsPosts.put(channel, posts);
 	}
 	
-	private void lookupPostsFromDatabase(PostsDAO dao, String channel) {
-		JSONArray response = dao.get(channel, PAGE_SIZE);
+	private void lookupPostsFromDatabase(PostsDAO postsDAO, String channel) {
+		JSONArray response = postsDAO.get(channel, PAGE_SIZE);
 		if (response != null && response.length() > 0) {
-			parseChannelPosts(dao, channel, response, false);
+			parseChannelPosts(postsDAO, channel, response, false);
 		}
 	}
 	
@@ -145,13 +155,10 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 		BuddycloudHTTPHelper.getObject(syncUrl(context, channel), context,
 				new ModelCallback<JSONObject>() {
 
-			private void parse(JSONObject response) {
-				parsePosts(postsDAO, unreadCountersDAO, response, true);
-			}
-
 			@Override
 			public void success(JSONObject response) {
-				parse(response);
+				parse(postsDAO, unreadCountersDAO, response, true);
+				
 				if (callback != null) {
 					callback.success(response);
 				}

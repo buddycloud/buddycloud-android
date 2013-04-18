@@ -84,7 +84,7 @@ public class SubscribedChannelUtils {
 	private static void loadCounters(ViewHolder holder, String channelJid) {
 		JSONObject counters = SyncModel.getInstance().countersFromChannel(channelJid);
 		if (counters != null) {
-			Integer totalCount = Integer.parseInt(counters.optString("totalCount"));
+			Integer totalCount = counters.optInt("totalCount");
 			if (totalCount > 30) {
 				holder.unreadCounter.setText("30+");
 			} else {

@@ -36,7 +36,6 @@ public class MainActivity extends SlidingFragmentActivity {
 
 		setBehindContentView(R.layout.menu_frame);
 		
-		this.myJid = (String) Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
 		this.viewPager = new ViewPager(this);
 		this.pageAdapter = new ContentPageAdapter(getSupportFragmentManager());
 		viewPager.setId("VP".hashCode());
@@ -93,12 +92,11 @@ public class MainActivity extends SlidingFragmentActivity {
 	}
 
 	private void startActivity() {
+		myJid = (String) Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
 		registerInGCM();
-		SubscribedChannelsFragment subscribedFrag = addMenuFragment();
-		ChannelStreamFragment channelFrag = showMyChannelFragment();
-		customizeMenu();
 		// Sync with server
-		sync(subscribedFrag, channelFrag);
+		sync(addMenuFragment(), showMyChannelFragment());
+		customizeMenu();
 	}
 
 	private void sync(final SubscribedChannelsFragment subscribedFrag, final ChannelStreamFragment channelFrag) {
