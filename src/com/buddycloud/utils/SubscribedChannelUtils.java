@@ -36,7 +36,7 @@ public class SubscribedChannelUtils {
 		loadAvatar(parent, holder, channelJid, isScrolling);
 		
 		// Counters
-		loadCounters(parent, holder, channelJid);
+		loadCounters(holder, channelJid);
 		
 	    return convertView;
 	}
@@ -81,8 +81,8 @@ public class SubscribedChannelUtils {
 		}
 	}
 	
-	private static void loadCounters(Activity parent, ViewHolder holder, String channelJid) {
-		JSONObject counters = SyncModel.getInstance().get(parent, channelJid);
+	private static void loadCounters(ViewHolder holder, String channelJid) {
+		JSONObject counters = SyncModel.getInstance().countersFromChannel(channelJid);
 		if (counters != null) {
 			Integer totalCount = Integer.parseInt(counters.optString("totalCount"));
 			if (totalCount > 30) {

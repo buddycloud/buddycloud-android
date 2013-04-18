@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -62,28 +61,26 @@ public class SubscribedChannelsModel implements Model<JSONArray, JSONArray, Void
 						Collections.sort(channels, new Comparator<String>() {
 							@Override
 							public int compare(String lhs, String rhs) {
-								try {
-									int countA = getCounter(lhs, "mentionsCount");
-									int countB = getCounter(rhs, "mentionsCount");
-									int diff = countB - countA;
-									
-									if (diff == 0) {
-										countA = getCounter(lhs, "totalCount");
-										countB = getCounter(rhs, "totalCount");
-										diff = countB - countA;
-									}
-
-									if (diff != 0) {
-										return diff;
-									}
-								} catch (JSONException e) {/*Do nothing*/}
+								int countA = getCounter(lhs, "mentionsCount");
+								int countB = getCounter(rhs, "mentionsCount");
+								int diff = countB - countA;
+								
+								if (diff == 0) {
+									countA = getCounter(lhs, "totalCount");
+									countB = getCounter(rhs, "totalCount");
+									diff = countB - countA;
+								}
+								
+								if (diff != 0) {
+									return diff;
+								}
 								
 								return rhs.compareTo(lhs);
 							}
 							
-							private int getCounter(String channel, String key) throws JSONException {
-								SyncModel sync = SyncModel.getInstance();
-								return sync.get(context, channel) != null ? sync.get(context, channel).getInt(key) : 0;
+							private int getCounter(String channel, String key) {
+								SyncModel syncModel = SyncModel.getInstance();
+								return syncModel.countersFromChannel(channel).optInt(key);
 							}
 						});
 						

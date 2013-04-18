@@ -125,7 +125,7 @@ public class WebImageCache {
                                 ostream.flush();
                                 ostream.close();
                             }
-                        } catch (IOException e) {}
+                        } catch (IOException e) {/*Do nothing*/}
                     }
                 }
             }

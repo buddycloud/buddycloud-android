@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.NotificationMetadataModel;
+import com.buddycloud.model.SyncModel;
 import com.buddycloud.preferences.Preferences;
 import com.google.android.gcm.GCMRegistrar;
 import com.slidingmenu.lib.SlidingMenu;
@@ -26,13 +27,16 @@ public class MainActivity extends SlidingFragmentActivity {
 	private static final String TAG = MainActivity.class.getName();
 	private ContentPageAdapter pageAdapter;
 	private ViewPager viewPager;
+	private String myJid;
+
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setBehindContentView(R.layout.menu_frame);
-
+		
+		this.myJid = (String) Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
 		this.viewPager = new ViewPager(this);
 		this.pageAdapter = new ContentPageAdapter(getSupportFragmentManager());
 		viewPager.setId("VP".hashCode());
@@ -90,9 +94,27 @@ public class MainActivity extends SlidingFragmentActivity {
 
 	private void startActivity() {
 		registerInGCM();
-		addMenuFragment();
-		showMyChannelFragment();
+		SubscribedChannelsFragment subscribedFrag = addMenuFragment();
+		ChannelStreamFragment channelFrag = showMyChannelFragment();
 		customizeMenu();
+		// Sync with server
+		sync(subscribedFrag, channelFrag);
+	}
+
+	private void sync(final SubscribedChannelsFragment subscribedFrag, final ChannelStreamFragment channelFrag) {
+		SyncModel.getInstance().refresh(this, new ModelCallback<JSONObject>() {
+			@Override
+			public void success(JSONObject response) {
+				subscribedFrag.syncd();
+				channelFrag.syncd(myJid);
+			}
+
+			@Override
+			public void error(Throwable throwable) {
+				// TODO Auto-generated method stub
+				
+			}
+		}, myJid);
 	}
 
 	private void registerInGCM() {
@@ -128,13 +150,14 @@ public class MainActivity extends SlidingFragmentActivity {
 		}
 	}
 
-	private void showMyChannelFragment() {
-		String channelJid = (String) Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
-		Fragment myChannelFrag = new ChannelStreamFragment();
+	private ChannelStreamFragment showMyChannelFragment() {
+		ChannelStreamFragment myChannelFrag = new ChannelStreamFragment();
 		Bundle args = new Bundle();
-		args.putString(SubscribedChannelsFragment.CHANNEL, channelJid);
+		args.putString(SubscribedChannelsFragment.CHANNEL, myJid);
 		myChannelFrag.setArguments(args);
 		setLeftFragment(myChannelFrag);
+		
+		return myChannelFrag;
 	}
 
 	private void customizeMenu() {
@@ -160,11 +183,13 @@ public class MainActivity extends SlidingFragmentActivity {
 		return pageAdapter;
 	}
 
-	private void addMenuFragment() {
+	private SubscribedChannelsFragment addMenuFragment() {
 		FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
-		Fragment subscribedFrag = new SubscribedChannelsFragment();
+		SubscribedChannelsFragment subscribedFrag = new SubscribedChannelsFragment();
 		t.replace(R.id.menu_frame, subscribedFrag);
 		t.commitAllowingStateLoss();
+		
+		return subscribedFrag;
 	}
 
 	private static class ContentPageAdapter extends FragmentPagerAdapter {

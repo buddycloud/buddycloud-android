@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.buddycloud.card.PostCard;
 import com.buddycloud.image.SmartImageView;
 import com.buddycloud.model.ModelCallback;
-import com.buddycloud.model.PostsModel;
+import com.buddycloud.model.SyncModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.fima.cardsui.views.CardUI;
@@ -36,7 +36,7 @@ public class ChannelStreamFragment extends Fragment {
 		loadTitle(channelJid);
 		
 		view.findViewById(R.id.subscribedProgress).setVisibility(View.VISIBLE);
-		fetchPosts(channelJid);
+		//fetchPosts(channelJid);
 		
 		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
@@ -60,12 +60,12 @@ public class ChannelStreamFragment extends Fragment {
 				
 				JSONObject post = createPost(postContent);
 				
-				PostsModel.getInstance().save(getActivity(), post, new ModelCallback<JSONObject>() {
+				SyncModel.getInstance().save(getActivity(), post, new ModelCallback<JSONObject>() {
 					@Override
 					public void success(JSONObject response) {
 						Toast.makeText(getActivity().getApplicationContext(), "Post created", Toast.LENGTH_LONG).show();
 						postContent.setText("");
-						fetchPosts(channelJid);
+						syncd(channelJid);
 					}
 					
 					@Override
@@ -92,28 +92,17 @@ public class ChannelStreamFragment extends Fragment {
 		return view;
 	}
 	
-	public void fetchPosts(final String channelJid) {
-		PostsModel.getInstance().refresh(getActivity(), new ModelCallback<JSONArray>() {
-			@Override
-			public void success(JSONArray response) {
-				getView().findViewById(R.id.subscribedProgress).setVisibility(View.GONE);
-				
-				JSONArray posts = PostsModel.getInstance().postsFromChannel(getActivity(), channelJid);
-				for (int i = 0; i < posts.length(); i++) {
-					JSONObject j = posts.optJSONObject(i);
-					CardUI contentView = (CardUI) getView().findViewById(R.id.postsStream);
-					PostCard card = toCard(j, channelJid);
-					contentView.addCard(card);
-					contentView.refresh();
-				}
-			}
-			
-			@Override
-			public void error(Throwable throwable) {
-				System.err.println(throwable);
-				
-			}
-		}, channelJid);
+	public void syncd(final String channelJid) {
+		getView().findViewById(R.id.subscribedProgress).setVisibility(View.GONE);
+		
+		JSONArray posts = SyncModel.getInstance().postsFromChannel(channelJid);
+		for (int i = 0; i < posts.length(); i++) {
+			JSONObject j = posts.optJSONObject(i);
+			CardUI contentView = (CardUI) getView().findViewById(R.id.postsStream);
+			PostCard card = toCard(j, channelJid);
+			contentView.addCard(card);
+			contentView.refresh();
+		}
 	}
 	
 	private PostCard toCard(JSONObject post, final String channelJid) {
@@ -124,7 +113,7 @@ public class ChannelStreamFragment extends Fragment {
 		
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), postAuthor);
 		
-		Integer commentCount = PostsModel.getInstance().commentsFromPost(postId).length();
+		Integer commentCount = SyncModel.getInstance().commentsFromPost(postId).length();
 		
 		PostCard postCard = new PostCard(postAuthor, avatarURL, postContent, published, commentCount);
 		postCard.setOnClickListener(new OnClickListener() {

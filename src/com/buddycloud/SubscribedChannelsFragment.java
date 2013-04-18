@@ -1,7 +1,5 @@
 package com.buddycloud;
 
-import org.json.JSONObject;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,13 +11,16 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SyncModel;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class SubscribedChannelsFragment extends Fragment {
 
-	public final static String CHANNEL = "com.buddycloud.CHANNEL"; 
+	public final static String CHANNEL = "com.buddycloud.CHANNEL";
+	
+	private SubscribedChannelsAdapter subscribed;
+	private PersonalChannelAdapter personal;
+	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,21 +36,8 @@ public class SubscribedChannelsFragment extends Fragment {
 			}
 		};
 		
-		final SubscribedChannelsAdapter subscribed = new SubscribedChannelsAdapter(getActivity());
-		final PersonalChannelAdapter personal = new PersonalChannelAdapter(getActivity());
-		
-		SyncModel.getInstance().refresh(getActivity(), new ModelCallback<JSONObject>() {
-			@Override
-			public void success(JSONObject response) {
-				subscribed.syncd();
-				personal.syncd();
-			}
-			
-			@Override
-			public void error(Throwable throwable) {
-				// TODO Auto-generated method stub
-			}
-		});
+		subscribed = new SubscribedChannelsAdapter(getActivity());
+		personal = new PersonalChannelAdapter(getActivity());
 		
 		final ListView subscribedChannelsView = (ListView) view.findViewById(R.id.subscribedListView);
 		subscribedChannelsView.setEmptyView(view.findViewById(R.id.subscribedProgress));
@@ -83,10 +71,15 @@ public class SubscribedChannelsFragment extends Fragment {
 		return view;
 	}
 	
+	public void syncd() {
+		subscribed.syncd();
+		personal.syncd();
+	}
+	
 	private void selectChannel(String channelJid) {
 		showChannelFragment(channelJid);
 		hideMenu();
-		SyncModel.getInstance().reset(getActivity(), channelJid);
+		SyncModel.getInstance().selectChannel(getActivity(), channelJid);
 	}
 
 	private void hideMenu() {

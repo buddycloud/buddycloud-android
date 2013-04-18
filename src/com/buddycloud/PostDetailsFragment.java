@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.buddycloud.card.CommentCard;
 import com.buddycloud.image.SmartImageView;
 import com.buddycloud.model.ModelCallback;
-import com.buddycloud.model.PostsModel;
+import com.buddycloud.model.SyncModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.fima.cardsui.views.CardUI;
@@ -34,7 +34,7 @@ public class PostDetailsFragment extends Fragment {
 		final String postId = getArguments().getString(POST_ID);
 		final String channelJid = getArguments().getString(SubscribedChannelsFragment.CHANNEL);
 		
-		JSONObject post = PostsModel.getInstance().getById(getActivity(), postId, channelJid);
+		JSONObject post = SyncModel.getInstance().postWithId(postId, channelJid);
 
 		((TextView) view.findViewById(R.id.title)).setText(post.optString("author"));
 		
@@ -65,12 +65,12 @@ public class PostDetailsFragment extends Fragment {
 				
 				JSONObject post = createPost(postContent);
 				
-				PostsModel.getInstance().save(getActivity(), post, new ModelCallback<JSONObject>() {
+				SyncModel.getInstance().save(getActivity(), post, new ModelCallback<JSONObject>() {
 					@Override
 					public void success(JSONObject response) {
 						Toast.makeText(getActivity().getApplicationContext(), "Post created", Toast.LENGTH_LONG).show();
 						postContent.setText("");
-						fetchPosts(channelJid, postId);
+						sync(channelJid, postId);
 					}
 					
 					@Override
@@ -98,16 +98,16 @@ public class PostDetailsFragment extends Fragment {
 		return view;
 	}
 
-	public void fetchPosts(final String channelJid, final String postId) {
+	public void sync(final String channelJid, final String postId) {
 		CardUI cardsUI = (CardUI) getView().findViewById(R.id.postsStream);
 		cardsUI.clearCards();
 		
 		final View progress = getView().findViewById(R.id.subscribedProgress);
 		progress.setVisibility(View.VISIBLE);
 		
-		PostsModel.getInstance().refresh(getActivity(), new ModelCallback<JSONArray>() {
+		SyncModel.getInstance().refresh(getActivity(), new ModelCallback<JSONObject>() {
 			@Override
-			public void success(JSONArray response) {
+			public void success(JSONObject response) {
 				progress.setVisibility(View.GONE);
 				loadComments(getView(), postId);
 			}
@@ -121,7 +121,7 @@ public class PostDetailsFragment extends Fragment {
 	}
 	
 	private void loadComments(final View view, final String postId) {
-		JSONArray comments = PostsModel.getInstance().commentsFromPost(postId);
+		JSONArray comments = SyncModel.getInstance().commentsFromPost(postId);
 		for (int i = 0; i < comments.length(); i++) {
 			JSONObject comment = comments.optJSONObject(i);
 			CardUI contentView = (CardUI) view.findViewById(R.id.postsStream);
