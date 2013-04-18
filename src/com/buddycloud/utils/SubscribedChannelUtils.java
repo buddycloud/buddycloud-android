@@ -16,7 +16,7 @@ import com.buddycloud.model.SyncModel;
 public class SubscribedChannelUtils {
 
 	public static View createSubscribedChannelMenuItem(Activity parent, View convertView,
-			ViewGroup viewGroup, String channelJid) {
+			ViewGroup viewGroup, String channelJid, boolean isScrolling) {
 		ViewHolder holder = null; 
 		boolean firstLoad = convertView == null; 
 		
@@ -33,8 +33,7 @@ public class SubscribedChannelUtils {
 		loadTitleAndDescription(parent, holder, channelJid);
 		
 		// Load avatar
-		// TODO: Check for 404 to avoid reloading 
-		loadAvatar(parent, holder, channelJid);
+		loadAvatar(parent, holder, channelJid, isScrolling);
 		
 		// Counters
 		loadCounters(parent, holder, channelJid);
@@ -72,9 +71,14 @@ public class SubscribedChannelUtils {
 		holder.description.setText(channelDescription);
 	}
 	
-	private static void loadAvatar(Activity parent, ViewHolder holder, String channelJid) {
-		String avatarURL = AvatarUtils.avatarURL(parent, channelJid);
-		holder.avatar.setImageUrl(avatarURL, R.drawable.personal_50px);
+	private static void loadAvatar(Activity parent, ViewHolder holder, String channelJid, 
+			boolean isScrolling) {
+		if (!isScrolling) {
+			String avatarURL = AvatarUtils.avatarURL(parent, channelJid);
+			holder.avatar.setImageUrl(avatarURL, R.drawable.personal_50px);
+		} else {
+			holder.avatar.setImageResource(R.drawable.personal_50px);
+		}
 	}
 	
 	private static void loadCounters(Activity parent, ViewHolder holder, String channelJid) {

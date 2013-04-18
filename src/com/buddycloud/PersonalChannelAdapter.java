@@ -41,7 +41,7 @@ public class PersonalChannelAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
 		return SubscribedChannelUtils.createSubscribedChannelMenuItem(
-				parent, convertView, viewGroup, myChannelJid);
+				parent, convertView, viewGroup, myChannelJid, false);
 	}
 
 	public void syncd() {

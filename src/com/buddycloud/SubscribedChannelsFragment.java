@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -49,10 +51,29 @@ public class SubscribedChannelsFragment extends Fragment {
 			}
 		});
 		
-		ListView subscribedChannelsView = (ListView) view.findViewById(R.id.subscribedListView);
+		final ListView subscribedChannelsView = (ListView) view.findViewById(R.id.subscribedListView);
 		subscribedChannelsView.setEmptyView(view.findViewById(R.id.subscribedProgress));
 		subscribedChannelsView.setAdapter(subscribed);
 		subscribedChannelsView.setOnItemClickListener(channelItemListener);
+		
+		subscribedChannelsView.setOnScrollListener(new OnScrollListener() {
+
+			@Override
+			public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
+				if (scrollState != 0) {
+					subscribed.isScrolling = true;
+				} else {
+					subscribed.isScrolling = false;
+					subscribed.notifyDataSetChanged();
+				}
+			}
+		});
 		
 		ListView personalChannelView = (ListView) view.findViewById(R.id.personalListView);
 		personalChannelView.setEmptyView(view.findViewById(R.id.subscribedProgress));

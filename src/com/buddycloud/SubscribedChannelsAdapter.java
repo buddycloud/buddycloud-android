@@ -16,6 +16,7 @@ import com.buddycloud.utils.SubscribedChannelUtils;
 public class SubscribedChannelsAdapter extends BaseAdapter {
 
 	private final Activity parent;
+	protected boolean isScrolling;
 	
 	public SubscribedChannelsAdapter(Activity parent) {
 		this.parent = parent;
@@ -78,7 +79,7 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
 		String channelJid = (String) getItem(position);
 		return SubscribedChannelUtils.createSubscribedChannelMenuItem(
-				parent, convertView, viewGroup, channelJid);
+				parent, convertView, viewGroup, channelJid, isScrolling);
 	}
 	
 }
