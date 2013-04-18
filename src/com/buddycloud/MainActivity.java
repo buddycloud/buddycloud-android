@@ -43,11 +43,21 @@ public class MainActivity extends SlidingFragmentActivity {
 
 		setContentView(viewPager);
 
-		Intent loginActivity = new Intent();
-		loginActivity.setClass(getApplicationContext(), LoginActivity.class);
-		startActivityForResult(loginActivity, 0);
+		if (shouldLogin()) {
+			Intent loginActivity = new Intent();
+			loginActivity.setClass(getApplicationContext(), LoginActivity.class);
+			startActivityForResult(loginActivity, 0);
+		} else { 
+			startActivity();
+		}
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+
+	private boolean shouldLogin() {
+		return Preferences.getPreference(this, Preferences.MY_CHANNEL_JID) == null || 
+				Preferences.getPreference(this, Preferences.PASSWORD) == null || 
+				Preferences.getPreference(this, Preferences.API_ADDRESS) == null;
 	}
 
 	private OnPageChangeListener createPageChangeListener() {
@@ -74,6 +84,10 @@ public class MainActivity extends SlidingFragmentActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		startActivity();
+	}
+
+	private void startActivity() {
 		registerInGCM();
 		addMenuFragment();
 		showMyChannelFragment();
