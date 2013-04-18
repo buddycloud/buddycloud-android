@@ -1,5 +1,7 @@
 package com.buddycloud;
 
+import org.json.JSONArray;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.buddycloud.model.ModelCallback;
+import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.DNSUtils;
 
@@ -22,6 +25,7 @@ public class LoginActivity extends Activity {
         final RelativeLayout postBtn = (RelativeLayout) findViewById(R.id.loginBtn);
         final EditText myChannelTxt = (EditText) findViewById(R.id.loginTxt);
         final EditText passwordTxt = (EditText) findViewById(R.id.passwordTxt);
+        final View progressBar = findViewById(R.id.progressBar);
         
         String myChannelPref = Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
         if (myChannelPref != null) {
@@ -38,8 +42,6 @@ public class LoginActivity extends Activity {
 			public void onClick(View v) {
 				
 				postBtn.setVisibility(View.GONE);
-				
-				View progressBar = findViewById(R.id.progressBar);
 				progressBar.setVisibility(View.VISIBLE);
 				
 				String myChannelJid = myChannelTxt.getText().toString();
@@ -53,17 +55,37 @@ public class LoginActivity extends Activity {
 					@Override
 					public void success(String apiAddress) {
 						Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, apiAddress);
-						LoginActivity.this.finish();
+						checkCredentials();
 					}
-					
+
 					@Override
 					public void error(Throwable throwable) {
-						Toast.makeText(getApplicationContext(), "Failure to discover API, using default.", 
+						Toast.makeText(getApplicationContext(), "Failure to discover API, using the default one", 
 								Toast.LENGTH_LONG).show();
 						Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, Preferences.DEFAULT_API_ADDRESS);
-						LoginActivity.this.finish();
+						checkCredentials();
 						
 					}
+					
+					private void checkCredentials() {
+						SubscribedChannelsModel.getInstance().refresh(LoginActivity.this, new ModelCallback<JSONArray>() {
+							
+							@Override
+							public void success(JSONArray response) {
+								LoginActivity.this.finish();
+							}
+							
+							@Override
+							public void error(Throwable throwable) {
+								Toast.makeText(getApplicationContext(), "Wrong credentials", 
+										Toast.LENGTH_LONG).show();
+								Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, Preferences.DEFAULT_API_ADDRESS);
+								postBtn.setVisibility(View.VISIBLE);
+								progressBar.setVisibility(View.GONE);
+							}
+						});
+					}
+					
 				}, myChannelJid.split("@")[1]);
 			}
 		});

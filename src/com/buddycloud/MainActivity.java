@@ -55,6 +55,7 @@ public class MainActivity extends SlidingFragmentActivity {
 	}
 
 	private boolean shouldLogin() {
+		//TODO Check credentials here too
 		return Preferences.getPreference(this, Preferences.MY_CHANNEL_JID) == null || 
 				Preferences.getPreference(this, Preferences.PASSWORD) == null || 
 				Preferences.getPreference(this, Preferences.API_ADDRESS) == null;
