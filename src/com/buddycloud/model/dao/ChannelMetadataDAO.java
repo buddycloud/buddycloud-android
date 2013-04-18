@@ -126,17 +126,28 @@ public class ChannelMetadataDAO implements DAO<JSONObject, JSONObject> {
 	private JSONObject cursorToJSON(Cursor cursor) {
 		JSONObject json = new JSONObject();
 		try {
-			json.put(ChannelMetadataTableHelper.COLUMN_ID, cursor.getString(0));
-			json.put(ChannelMetadataTableHelper.COLUMN_TITLE, cursor.getString(1));
-			json.put(ChannelMetadataTableHelper.COLUMN_DESCRIPTION, cursor.getString(2));
-			json.put(ChannelMetadataTableHelper.COLUMN_CHANNEL_TYPE, cursor.getString(3));
-			json.put(ChannelMetadataTableHelper.COLUMN_ACCESS_MODEL, cursor.getString(4));
-			json.put(ChannelMetadataTableHelper.COLUMN_CREATION_DATE, cursor.getString(5));
-			json.put(ChannelMetadataTableHelper.COLUMN_DEFAULT_AFFILIATION, cursor.getString(6));
+			json.put(ChannelMetadataTableHelper.COLUMN_ID, 
+					getString(cursor, ChannelMetadataTableHelper.COLUMN_ID));
+			json.put(ChannelMetadataTableHelper.COLUMN_TITLE, 
+					getString(cursor, ChannelMetadataTableHelper.COLUMN_TITLE));
+			json.put(ChannelMetadataTableHelper.COLUMN_DESCRIPTION, 
+					getString(cursor, ChannelMetadataTableHelper.COLUMN_DESCRIPTION));
+			json.put(ChannelMetadataTableHelper.COLUMN_CHANNEL_TYPE, 
+					getString(cursor, ChannelMetadataTableHelper.COLUMN_CHANNEL_TYPE));
+			json.put(ChannelMetadataTableHelper.COLUMN_ACCESS_MODEL, 
+					getString(cursor, ChannelMetadataTableHelper.COLUMN_ACCESS_MODEL));
+			json.put(ChannelMetadataTableHelper.COLUMN_CREATION_DATE, 
+					getString(cursor, ChannelMetadataTableHelper.COLUMN_CREATION_DATE));
+			json.put(ChannelMetadataTableHelper.COLUMN_DEFAULT_AFFILIATION, 
+					getString(cursor, ChannelMetadataTableHelper.COLUMN_DEFAULT_AFFILIATION));
 		} catch (JSONException e) {
 			return null;
 		}
 		
 		return json;
+	}
+	
+	private String getString(Cursor cursor, String columnName) {
+		return cursor.getString(cursor.getColumnIndex(columnName));
 	}
 }

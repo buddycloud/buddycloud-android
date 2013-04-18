@@ -141,17 +141,21 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 	private JSONObject cursorToJSON(Cursor cursor) {
 		JSONObject json = new JSONObject();
 		try {
-			json.put(PostsTableHelper.COLUMN_ID, cursor.getString(0));
-			json.put(PostsTableHelper.COLUMN_AUTHOR, cursor.getString(1));
-			json.put(PostsTableHelper.COLUMN_PUBLISHED, cursor.getString(2));
-			json.put(PostsTableHelper.COLUMN_UPDATED, cursor.getString(3));
-			json.put(PostsTableHelper.COLUMN_CHANNEL, cursor.getString(4));
-			json.put(PostsTableHelper.COLUMN_CONTENT, cursor.getString(5));
-			json.put(PostsTableHelper.COLUMN_REPLY_TO, cursor.getString(6));
+			json.put(PostsTableHelper.COLUMN_ID, getString(cursor, PostsTableHelper.COLUMN_ID));
+			json.put(PostsTableHelper.COLUMN_AUTHOR, getString(cursor, PostsTableHelper.COLUMN_AUTHOR));
+			json.put(PostsTableHelper.COLUMN_PUBLISHED, getString(cursor, PostsTableHelper.COLUMN_PUBLISHED));
+			json.put(PostsTableHelper.COLUMN_UPDATED, getString(cursor, PostsTableHelper.COLUMN_UPDATED));
+			json.put(PostsTableHelper.COLUMN_CHANNEL, getString(cursor, PostsTableHelper.COLUMN_CHANNEL));
+			json.put(PostsTableHelper.COLUMN_CONTENT, getString(cursor, PostsTableHelper.COLUMN_CONTENT));
+			json.put(PostsTableHelper.COLUMN_REPLY_TO, getString(cursor, PostsTableHelper.COLUMN_REPLY_TO));
 		} catch (JSONException e) {
 			return null;
 		}
 		
 		return json;
+	}
+	
+	private String getString(Cursor cursor, String columnName) {
+		return cursor.getString(cursor.getColumnIndex(columnName));
 	}
 }
