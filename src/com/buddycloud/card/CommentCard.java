@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.buddycloud.R;
 import com.buddycloud.image.SmartImageView;
+import com.buddycloud.utils.TimeUtils;
 import com.fima.cardsui.objects.Card;
 
 public class CommentCard extends Card {
@@ -37,7 +38,7 @@ public class CommentCard extends Card {
 		((TextView) view.findViewById(R.id.bcPostContent)).setText(content);
 		
 		try {
-			long publishedTime = PostCard.ISO_8601.parse(published).getTime();
+			long publishedTime = TimeUtils.fromISOToDate(published).getTime();
 			((TextView) view.findViewById(R.id.bcPostDate)).setText(
 					DateUtils.getRelativeTimeSpanString(publishedTime, 
 							new Date().getTime(), DateUtils.MINUTE_IN_MILLIS));

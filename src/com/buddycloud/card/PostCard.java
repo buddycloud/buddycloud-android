@@ -17,11 +17,11 @@ import android.widget.TextView;
 import com.buddycloud.R;
 import com.buddycloud.image.SmartImageView;
 import com.buddycloud.preferences.Preferences;
+import com.buddycloud.utils.TimeUtils;
 import com.fima.cardsui.objects.Card;
 
 public class PostCard extends Card {
 	
-	public static final DateFormat ISO_8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
 	public static final String MEDIA_PATTERN_SUFIX = "/\\S+@\\S+/media/\\w+";
 	public static final String MEDIA_URL_SUFIX = "?maxheight=600";
 	
@@ -65,7 +65,7 @@ public class PostCard extends Card {
 		}
 		
 		try {
-			long publishedTime = ISO_8601.parse(published).getTime();
+			long publishedTime = TimeUtils.fromISOToDate(published).getTime();
 			((TextView) view.findViewById(R.id.bcPostDate)).setText(
 					DateUtils.getRelativeTimeSpanString(publishedTime, 
 							new Date().getTime(), DateUtils.MINUTE_IN_MILLIS));
