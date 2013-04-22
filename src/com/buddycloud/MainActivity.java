@@ -42,7 +42,6 @@ public class MainActivity extends SlidingFragmentActivity {
 		viewPager.setAdapter(pageAdapter);
 
 		viewPager.setOnPageChangeListener(createPageChangeListener());
-		viewPager.setOffscreenPageLimit(2);
 
 		setContentView(viewPager);
 
@@ -64,6 +63,18 @@ public class MainActivity extends SlidingFragmentActivity {
 				Preferences.getPreference(this, Preferences.API_ADDRESS) == null;
 	}
 
+	@Override
+	public void onBackPressed() {
+		//TODO Animation between fragments
+		if (getSlidingMenu().isMenuShowing()) {
+			getSlidingMenu().showContent();
+		} else if (viewPager.getCurrentItem() != 0) {
+			viewPager.setCurrentItem(0, true);
+		} else {
+			super.onBackPressed();
+		}
+	}
+	
 	private OnPageChangeListener createPageChangeListener() {
 		return new OnPageChangeListener() {
 			@Override
@@ -169,12 +180,12 @@ public class MainActivity extends SlidingFragmentActivity {
 
 	public void setLeftFragment(Fragment frag) {
 		pageAdapter.setLeftFragment(frag);
-		viewPager.setCurrentItem(0);
+		viewPager.setCurrentItem(0, true);
 	}
 
 	public void setRightFragment(Fragment frag) {
 		pageAdapter.setRightFragment(frag);
-		viewPager.setCurrentItem(1);
+		viewPager.setCurrentItem(1, true);
 	}
 
 	public ContentPageAdapter getPageAdapter() {
