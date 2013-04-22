@@ -158,7 +158,7 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 	private JSONObject cursorToJSON(Cursor cursor) {
 		JSONObject json = new JSONObject();
 		try {
-			json.put(PostsTableHelper.COLUMN_ID, getString(cursor, PostsTableHelper.COLUMN_ID));
+			json.put("id", getString(cursor, PostsTableHelper.COLUMN_ID));
 			json.put(PostsTableHelper.COLUMN_AUTHOR, getString(cursor, PostsTableHelper.COLUMN_AUTHOR));
 			json.put(PostsTableHelper.COLUMN_PUBLISHED, getString(cursor, PostsTableHelper.COLUMN_PUBLISHED));
 			json.put(PostsTableHelper.COLUMN_UPDATED, getString(cursor, PostsTableHelper.COLUMN_UPDATED));
