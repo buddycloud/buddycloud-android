@@ -14,7 +14,6 @@ public class Preferences {
 	public static final String PASSWORD = "com.buddycloud.PASSWORD";
 	public static final String LAST_UPDATE = "com.buddycloud.LASTUPDATE";
 	
-	public static final String DEFAULT_API_ADDRESS = "https://api.buddycloud.org";
 	public static final String DEFAUL_LAST_UPDATE = "2013-01-01T00:00:00Z";
 	
 	public static final String FALLBACK_PERSONAL_AVATAR = "https://demo.buddycloud.org/img/personal-75px.jpg";

@@ -60,16 +60,11 @@ public class LoginActivity extends Activity {
 
 					@Override
 					public void error(Throwable throwable) {
-						Toast.makeText(getApplicationContext(), "Failure to discover API, using the default one", 
-								Toast.LENGTH_LONG).show();
-						Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, Preferences.DEFAULT_API_ADDRESS);
-						checkCredentials();
-						
+						showLoginError();
 					}
 					
 					private void checkCredentials() {
 						SubscribedChannelsModel.getInstance().refresh(LoginActivity.this, new ModelCallback<JSONArray>() {
-							
 							@Override
 							public void success(JSONArray response) {
 								LoginActivity.this.finish();
@@ -77,11 +72,7 @@ public class LoginActivity extends Activity {
 							
 							@Override
 							public void error(Throwable throwable) {
-								Toast.makeText(getApplicationContext(), "Wrong credentials", 
-										Toast.LENGTH_LONG).show();
-								Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, Preferences.DEFAULT_API_ADDRESS);
-								postBtn.setVisibility(View.VISIBLE);
-								progressBar.setVisibility(View.GONE);
+								showLoginError();
 							}
 						});
 					}
@@ -91,7 +82,17 @@ public class LoginActivity extends Activity {
 		});
     }
 
-	@Override
+    private void showLoginError() {
+    	final RelativeLayout postBtn = (RelativeLayout) findViewById(R.id.loginBtn);
+        final View progressBar = findViewById(R.id.progressBar);
+		Toast.makeText(getApplicationContext(), "Wrong credentials", 
+				Toast.LENGTH_LONG).show();
+		Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, null);
+		postBtn.setVisibility(View.VISIBLE);
+		progressBar.setVisibility(View.GONE);
+	}
+    
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_share, menu);
         return true;
