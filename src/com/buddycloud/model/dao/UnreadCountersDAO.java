@@ -84,16 +84,22 @@ public class UnreadCountersDAO implements DAO<JSONObject, JSONObject> {
 		return false;
 	}
 	
-	public JSONObject get(String channel) {
+	public void get(String channel, final DAOCallback<JSONObject> callback) {
 		String filter = UnreadCountersTableHelper.COLUMN_USER + "=\"" + myJid + "\" AND " + 
 				UnreadCountersTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
-		Cursor cursor = db.query(UnreadCountersTableHelper.TABLE_NAME, COLUMNS, filter,
-				null, null, null, null);
-		cursor.moveToFirst();
-		JSONObject json = cursorToJSON(cursor);
-		cursor.close();
-		
-		return json;
+		DAOHelper.queryUnique(db, false, UnreadCountersTableHelper.TABLE_NAME, COLUMNS, filter,
+				null, null, null, null, null, cursorParser(), callback);
+	}
+
+
+	private DAOCursorParser cursorParser() {
+		DAOCursorParser cursorParser = new DAOCursorParser() {
+			@Override
+			public JSONObject parse(Cursor c) {
+				return cursorToJSON(c);
+			}
+		};
+		return cursorParser;
 	}
 	
 	public Map<String, JSONObject> getAll() {

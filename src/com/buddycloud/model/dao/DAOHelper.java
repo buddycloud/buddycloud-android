@@ -74,4 +74,17 @@ public class DAOHelper {
 			}
 		}.execute();
 	}
+	
+	static void queryUnique(final SQLiteDatabase db, final boolean distinct, final String table, 
+			final String[] columns, final String selection, final String[] selectionArgs, 
+			final String groupBy, final String having, final String orderBy, final String limit, 
+			final DAOCursorParser cursorParser, final DAOCallback<JSONObject> callback) {
+		query(db, distinct, table, columns, selection, selectionArgs, groupBy, having, 
+				orderBy, limit, cursorParser, 
+				new DAOCallback<JSONArray>() {
+					public void onResponse(JSONArray t) {
+						callback.onResponse(t.optJSONObject(0));
+					}
+				});
+	}
 }

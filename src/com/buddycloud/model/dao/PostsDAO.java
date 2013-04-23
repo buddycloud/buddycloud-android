@@ -92,47 +92,31 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 		return false;
 	}
 	
-	public JSONArray get(String channel) {
-		JSONArray channelPosts = new JSONArray();
-		
+	public void get(String channel, DAOCallback<JSONArray> callback) {
 		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
 		String orderBy = "date(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
 
-		Cursor cursor = db.query(PostsTableHelper.TABLE_NAME, null, filter,
-				null, null, null, orderBy);
-		cursor.moveToFirst();
-	    while (!cursor.isAfterLast()) {
-	    	JSONObject json = cursorToJSON(cursor);
-	    	if (json != null) {
-	    		channelPosts.put(json);
-	    	}
-	    	cursor.moveToNext();
-	    }
-		cursor.close();
-		
-		return channelPosts;
+		DAOHelper.query(db, false, PostsTableHelper.TABLE_NAME, null, filter,
+				null, null, null, orderBy, null, cursorParser(), callback);
+	}
+
+	public void get(String channel, int limit, DAOCallback<JSONArray> callback) {
+		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
+		String orderBy = "date(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
+
+		DAOHelper.query(db, false, PostsTableHelper.TABLE_NAME, null, filter,
+				null, null, null, orderBy, String.valueOf(limit), 
+				cursorParser(), callback);
 	}
 	
-	public JSONArray get(String channel, int limit) {
-		JSONArray channelPosts = new JSONArray();
-		
-		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
-		String orderBy = "date(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
-
-		Cursor cursor = db.query(PostsTableHelper.TABLE_NAME, null, filter,
-				null, null, null, orderBy, limit + "");
-		
-		cursor.moveToFirst();
-	    while (!cursor.isAfterLast()) {
-	    	JSONObject json = cursorToJSON(cursor);
-	    	if (json != null) {
-	    		channelPosts.put(json);
-	    	}
-	    	cursor.moveToNext();
-	    }
-		cursor.close();
-		
-		return channelPosts;
+	private DAOCursorParser cursorParser() {
+		DAOCursorParser cursorParser = new DAOCursorParser() {
+			@Override
+			public JSONObject parse(Cursor c) {
+				return cursorToJSON(c);
+			}
+		};
+		return cursorParser;
 	}
 	
 	public Map<String, JSONArray> getAll() {

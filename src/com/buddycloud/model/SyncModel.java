@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Semaphore;
 
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
@@ -17,6 +18,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
+import com.buddycloud.model.dao.DAOCallback;
 import com.buddycloud.model.dao.PostsDAO;
 import com.buddycloud.model.dao.UnreadCountersDAO;
 import com.buddycloud.model.db.PostsTableHelper;
@@ -123,14 +125,24 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 		channelsPosts.put(channel, posts);
 	}
 	
-	private void lookupPostsFromDatabase(PostsDAO postsDAO) {
+	private void lookupPostsFromDatabase(final Context context, final ModelCallback<JSONObject> callback) {
+		final PostsDAO postsDAO = PostsDAO.getInstance(context);
 		List<String> channels = postsDAO.getChannels();
+		final Semaphore semaphore = new Semaphore(channels.size() - 1);
 		
-		for (String channel : channels) {
-			JSONArray response = postsDAO.get(channel, PAGE_SIZE);
-			if (response != null && response.length() > 0) {
-				parseChannelPosts(postsDAO, channel, response, false);
-			}
+		for (final String channel : channels) {
+			DAOCallback<JSONArray> postCallback = new DAOCallback<JSONArray>() {
+				@Override
+				public void onResponse(JSONArray response) {
+					if (response != null && response.length() > 0) {
+						parseChannelPosts(postsDAO, channel, response, false);
+					}
+					if (!semaphore.tryAcquire()) {
+						fetchUnreadAndSync(context, callback, postsDAO);
+					}
+				}
+			};
+			postsDAO.get(channel, PAGE_SIZE, postCallback);
 		}
 	}
 	
@@ -144,9 +156,11 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 		postsComments.clear();
 		
 		// Lookup for posts at database
-		PostsDAO postsDAO = PostsDAO.getInstance(context);
-		lookupPostsFromDatabase(postsDAO);
-		
+		lookupPostsFromDatabase(context, callback);
+	}
+
+	private void fetchUnreadAndSync(Context context,
+			final ModelCallback<JSONObject> callback, PostsDAO postsDAO) {
 		UnreadCountersDAO unreadCountersDAO = UnreadCountersDAO.getInstance(context);
 		lookupUnreadCountersFromDatabase(unreadCountersDAO);
 		
