@@ -12,5 +12,5 @@ public interface DAO<Set, Get> {
 	
 	public void get(String channel, DAOCallback<Get> callback);
 	
-	public Map<String, Get> getAll();
+	public void getAll(DAOCallback<Map<String, Get>> callback);
 }

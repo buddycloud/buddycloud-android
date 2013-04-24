@@ -1,6 +1,5 @@
 package com.buddycloud.model.dao;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -102,29 +101,18 @@ public class UnreadCountersDAO implements DAO<JSONObject, JSONObject> {
 		return cursorParser;
 	}
 	
-	public Map<String, JSONObject> getAll() {
-		Map<String, JSONObject> map = new HashMap<String, JSONObject>();
+	public void getAll(final DAOCallback<Map<String, JSONObject>> callback) {
 		String filter = UnreadCountersTableHelper.COLUMN_USER + "=\"" + myJid + "\"";
-		
-		Cursor cursor = db.query(UnreadCountersTableHelper.TABLE_NAME,
-				COLUMNS, filter, null, null, null, null);
-		
-		cursor.moveToFirst();
-	    while (!cursor.isAfterLast()) {
-	    	JSONObject json = cursorToJSON(cursor);
-	    	if (json != null) {
-	    		map.put(cursor.getString(0), json);
-	    	}
-	    	cursor.moveToNext();
-	    }
-	    cursor.close();
-	    
-	    return map;
+		DAOHelper.queryMap(db, false, UnreadCountersTableHelper.TABLE_NAME,
+				COLUMNS, filter, null, null, null, null, null, cursorParser(), 
+				UnreadCountersTableHelper.COLUMN_CHANNEL, callback);
 	}
 	
 	private JSONObject cursorToJSON(Cursor cursor) {
 		JSONObject json = new JSONObject();
 		try {
+			json.put(UnreadCountersTableHelper.COLUMN_CHANNEL, 
+					getString(cursor, UnreadCountersTableHelper.COLUMN_CHANNEL));
 			json.put(UnreadCountersTableHelper.COLUMN_MENTIONS_COUNT, 
 					getInt(cursor, UnreadCountersTableHelper.COLUMN_MENTIONS_COUNT));
 			json.put(UnreadCountersTableHelper.COLUMN_TOTAL_COUNT, 
@@ -138,5 +126,9 @@ public class UnreadCountersDAO implements DAO<JSONObject, JSONObject> {
 	
 	private int getInt(Cursor cursor, String columnName) {
 		return cursor.getInt(cursor.getColumnIndex(columnName));
+	}
+	
+	private String getString(Cursor cursor, String columnName) {
+		return cursor.getString(cursor.getColumnIndex(columnName));
 	}
 }

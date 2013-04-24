@@ -1,5 +1,8 @@
 package com.buddycloud.model.dao;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -84,6 +87,25 @@ public class DAOHelper {
 				new DAOCallback<JSONArray>() {
 					public void onResponse(JSONArray t) {
 						callback.onResponse(t.optJSONObject(0));
+					}
+				});
+	}
+	
+	static void queryMap(final SQLiteDatabase db, final boolean distinct, final String table, 
+			final String[] columns, final String selection, final String[] selectionArgs, 
+			final String groupBy, final String having, final String orderBy, final String limit, 
+			final DAOCursorParser cursorParser, final String keyColumn, 
+			final DAOCallback<Map<String, JSONObject>> callback) {
+		query(db, distinct, table, columns, selection, selectionArgs, groupBy, having, 
+				orderBy, limit, cursorParser, 
+				new DAOCallback<JSONArray>() {
+					public void onResponse(JSONArray t) {
+						Map<String, JSONObject> map = new HashMap<String, JSONObject>();
+						for (int i = 0; i < t.length(); i++) {
+							JSONObject json = t.optJSONObject(i);
+							map.put(json.optString(keyColumn), json);
+						}
+						callback.onResponse(map);
 					}
 				});
 	}

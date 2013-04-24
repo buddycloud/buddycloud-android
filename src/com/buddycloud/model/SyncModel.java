@@ -146,8 +146,17 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 		}
 	}
 	
-	private void lookupUnreadCountersFromDatabase(UnreadCountersDAO unreadCountersDAO) {
-		channelsCounters = unreadCountersDAO.getAll();
+	private void lookupUnreadCountersFromDatabase(final Context context, 
+			final ModelCallback<JSONObject> callback) {
+		UnreadCountersDAO unreadCountersDAO = UnreadCountersDAO.getInstance(context);
+		unreadCountersDAO.getAll(new DAOCallback<Map<String,JSONObject>>() {
+			@Override
+			public void onResponse(Map<String, JSONObject> response) {
+				channelsCounters = response;
+				// Fetch server
+				sync(context, callback);
+			}
+		});
 	}
 
 	@Override
@@ -161,20 +170,17 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 
 	private void fetchUnreadAndSync(Context context,
 			final ModelCallback<JSONObject> callback, PostsDAO postsDAO) {
-		UnreadCountersDAO unreadCountersDAO = UnreadCountersDAO.getInstance(context);
-		lookupUnreadCountersFromDatabase(unreadCountersDAO);
-		
-		// Fetch server
-		sync(context, postsDAO, unreadCountersDAO, callback);
+		lookupUnreadCountersFromDatabase(context, callback);
 	}
 	
-	private void sync(Context context, final PostsDAO postsDAO, 
-			final UnreadCountersDAO unreadCountersDAO, final ModelCallback<JSONObject> callback) {
+	private void sync(final Context context, final ModelCallback<JSONObject> callback) {
 		BuddycloudHTTPHelper.getObject(syncUrl(context), context,
 				new ModelCallback<JSONObject>() {
 
 			@Override
 			public void success(JSONObject response) {
+				final PostsDAO postsDAO = PostsDAO.getInstance(context);
+				final UnreadCountersDAO unreadCountersDAO = UnreadCountersDAO.getInstance(context);
 				parse(postsDAO, unreadCountersDAO, response, true);
 				
 				if (callback != null) {

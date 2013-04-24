@@ -119,11 +119,6 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 		return cursorParser;
 	}
 	
-	public Map<String, JSONArray> getAll() {
-		// TODO: select by channel, get() and then return
-		return null;
-	}
-	
 	public List<String> getChannels() {
 		List<String> channels = new LinkedList<String>();
 		Cursor cursor = db.query(true, PostsTableHelper.TABLE_NAME, new String[]{PostsTableHelper.COLUMN_CHANNEL}, null,
@@ -158,5 +153,11 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 	
 	private String getString(Cursor cursor, String columnName) {
 		return cursor.getString(cursor.getColumnIndex(columnName));
+	}
+
+
+	@Override
+	public void getAll(DAOCallback<Map<String, JSONArray>> callback) {
+		// TODO Auto-generated method stub
 	}
 }

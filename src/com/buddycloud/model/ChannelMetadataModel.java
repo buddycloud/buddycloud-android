@@ -10,6 +10,7 @@ import android.content.Context;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.model.dao.ChannelMetadataDAO;
+import com.buddycloud.model.dao.DAOCallback;
 import com.buddycloud.preferences.Preferences;
 
 public class ChannelMetadataModel implements Model<JSONObject, JSONObject, String> {
@@ -70,40 +71,47 @@ public class ChannelMetadataModel implements Model<JSONObject, JSONObject, Strin
 	public void refresh(Context context, final ModelCallback<JSONObject> callback, String... p) {
 		if (p != null && p.length == 1) {
 			final String channel = p[0];
-			
-			final ChannelMetadataDAO dao = ChannelMetadataDAO.getInstance(context);
-			// Look on db first
-			lookupStoredData(dao, channel, callback);
-			
-			// Fetch from sever
-			BuddycloudHTTPHelper.getObject(url(context, channel), 
-					context, new ModelCallback<JSONObject>() {
-				@Override
-				public void success(JSONObject response) {
-					JSONObject metadata = channelsMetadataMap.get(channel);
-					if (metadata != null) {
-						updateMetadata(dao, channel, metadata, response, callback);
-					} else {
-						insertMetadata(dao, channel, response, callback);
-					}
-				}
-				
-				@Override
-				public void error(Throwable throwable) {
-					if (callback != null) {
-						callback.error(throwable);
-					}
-				}
-			});
+			lookupStoredData(context, callback, channel);
 		}
 	}
+
+	private void fetchFromServer(Context context,
+			final ModelCallback<JSONObject> callback, final String channel) {
+		final ChannelMetadataDAO dao = ChannelMetadataDAO.getInstance(context);
+		BuddycloudHTTPHelper.getObject(url(context, channel), 
+				context, new ModelCallback<JSONObject>() {
+			@Override
+			public void success(JSONObject response) {
+				JSONObject metadata = channelsMetadataMap.get(channel);
+				if (metadata != null) {
+					updateMetadata(dao, channel, metadata, response, callback);
+				} else {
+					insertMetadata(dao, channel, response, callback);
+				}
+			}
+			
+			@Override
+			public void error(Throwable throwable) {
+				if (callback != null) {
+					callback.error(throwable);
+				}
+			}
+		});
+	}
 	
-	private void lookupStoredData(ChannelMetadataDAO dao, String channel, ModelCallback<JSONObject> callback) {
-		channelsMetadataMap = dao.getAll();
-		
-		if (channelsMetadataMap != null && callback != null) {
-			callback.success(null);
-		}
+	private void lookupStoredData(final Context context,
+			final ModelCallback<JSONObject> callback, final String channel) {
+		final ChannelMetadataDAO dao = ChannelMetadataDAO.getInstance(context);
+		dao.getAll(new DAOCallback<Map<String,JSONObject>>() {
+			@Override
+			public void onResponse(Map<String, JSONObject> response) {
+				channelsMetadataMap = response;
+				if (channelsMetadataMap != null && callback != null) {
+					callback.success(null);
+				}
+				fetchFromServer(context, callback, channel);
+			}
+		});
 	}
 	
 	private static String url(Context context, String channel) {

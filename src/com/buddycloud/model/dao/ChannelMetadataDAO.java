@@ -1,6 +1,5 @@
 package com.buddycloud.model.dao;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -109,23 +108,10 @@ public class ChannelMetadataDAO implements DAO<JSONObject, JSONObject> {
 		return cursorParser;
 	}
 	
-	public Map<String, JSONObject> getAll() {
-		Map<String, JSONObject> map = new HashMap<String, JSONObject>();
-		
-		Cursor cursor = db.query(ChannelMetadataTableHelper.TABLE_NAME,
-				COLUMNS, null, null, null, null, null);
-		
-		cursor.moveToFirst();
-	    while (!cursor.isAfterLast()) {
-	    	JSONObject json = cursorToJSON(cursor);
-	    	if (json != null) {
-	    		map.put(cursor.getString(0), json);
-	    	}
-	    	cursor.moveToNext();
-	    }
-	    cursor.close();
-	    
-	    return map;
+	public void getAll(final DAOCallback<Map<String, JSONObject>> callback) {
+		DAOHelper.queryMap(db, false, ChannelMetadataTableHelper.TABLE_NAME,
+				COLUMNS, null, null, null, null, null, null, cursorParser(), 
+				ChannelMetadataTableHelper.COLUMN_ID, callback);
 	}
 	
 	private JSONObject cursorToJSON(Cursor cursor) {
