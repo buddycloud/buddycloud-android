@@ -128,8 +128,13 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 	private void lookupPostsFromDatabase(final Context context, final ModelCallback<JSONObject> callback) {
 		final PostsDAO postsDAO = PostsDAO.getInstance(context);
 		List<String> channels = postsDAO.getChannels();
-		final Semaphore semaphore = new Semaphore(channels.size() - 1);
 		
+		if (channels.isEmpty()) {
+			fetchUnreadAndSync(context, callback, postsDAO);
+			return;
+		}
+		
+		final Semaphore semaphore = new Semaphore(channels.size() - 1);
 		for (final String channel : channels) {
 			DAOCallback<JSONArray> postCallback = new DAOCallback<JSONArray>() {
 				@Override
