@@ -90,12 +90,13 @@ public class SubscribedChannelsFragment extends Fragment {
 	}
 	
 	private void showChannelFragment(String channelJid) {
-		Fragment frag = new ChannelStreamFragment();
+		ChannelStreamFragment frag = new ChannelStreamFragment();
 		Bundle args = new Bundle();
 		args.putString(CHANNEL, channelJid);
 		frag.setArguments(args);
 		MainActivity activity = (MainActivity) getActivity();
 		activity.setLeftFragment(frag);
+		frag.syncd();
 	}
 
 }

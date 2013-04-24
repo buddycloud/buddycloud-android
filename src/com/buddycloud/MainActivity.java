@@ -106,16 +106,20 @@ public class MainActivity extends SlidingFragmentActivity {
 		myJid = (String) Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
 		registerInGCM();
 		// Sync with server
-		sync(addMenuFragment(), showMyChannelFragment());
+		SubscribedChannelsFragment menuFragment = addMenuFragment();
+		showMyChannelFragment();
+		sync(menuFragment);
 		customizeMenu();
 	}
 
-	private void sync(final SubscribedChannelsFragment subscribedFrag, final ChannelStreamFragment channelFrag) {
+	private void sync(final SubscribedChannelsFragment subscribedFrag) {
 		SyncModel.getInstance().refresh(this, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
 				subscribedFrag.syncd();
-				channelFrag.syncd(myJid);
+				ChannelStreamFragment channelFragment = (ChannelStreamFragment) pageAdapter
+						.getLeftFragment();
+				channelFragment.syncd();
 			}
 
 			@Override
@@ -222,6 +226,10 @@ public class MainActivity extends SlidingFragmentActivity {
 			notifyDataSetChanged();
 		}
 
+		public Fragment getLeftFragment() {
+			return mFragments.get(0);
+		}
+		
 		public void setRightFragment(Fragment fragment) {
 			if (mFragments.size() < 2) {
 				mFragments.add(fragment);

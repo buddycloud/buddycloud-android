@@ -27,12 +27,14 @@ import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class ChannelStreamFragment extends Fragment {
 
+	private String channelJid;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		this.channelJid = getArguments().getString(SubscribedChannelsFragment.CHANNEL);
+	
 		final View view = inflater.inflate(R.layout.fragment_channel_stream, container, false);
-		final String channelJid = getArguments().getString(SubscribedChannelsFragment.CHANNEL);
-		
 		loadTitle(channelJid);
 		
 		view.findViewById(R.id.subscribedProgress).setVisibility(View.VISIBLE);
@@ -65,7 +67,7 @@ public class ChannelStreamFragment extends Fragment {
 					public void success(JSONObject response) {
 						Toast.makeText(getActivity().getApplicationContext(), "Post created", Toast.LENGTH_LONG).show();
 						postContent.setText("");
-						syncd(channelJid);
+						syncd();
 					}
 					
 					@Override
@@ -92,9 +94,8 @@ public class ChannelStreamFragment extends Fragment {
 		return view;
 	}
 	
-	public void syncd(final String channelJid) {
+	public void syncd() {
 		getView().findViewById(R.id.subscribedProgress).setVisibility(View.GONE);
-		
 		JSONArray posts = SyncModel.getInstance().postsFromChannel(channelJid);
 		for (int i = 0; i < posts.length(); i++) {
 			JSONObject j = posts.optJSONObject(i);
