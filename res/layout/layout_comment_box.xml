@@ -37,7 +37,6 @@
                     android:layout_toRightOf="@+id/bcCommentPic"
                     android:inputType="textMultiLine"
                     android:lines="1" >
-                    <requestFocus />
                 </EditText>
 
                 <ImageView
