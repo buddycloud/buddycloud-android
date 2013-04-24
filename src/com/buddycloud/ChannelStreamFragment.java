@@ -14,15 +14,16 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.buddycloud.card.CardListAdapter;
 import com.buddycloud.card.PostCard;
 import com.buddycloud.image.SmartImageView;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SyncModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
-import com.fima.cardsui.views.CardUI;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class ChannelStreamFragment extends Fragment {
@@ -97,13 +98,15 @@ public class ChannelStreamFragment extends Fragment {
 	public void syncd() {
 		getView().findViewById(R.id.subscribedProgress).setVisibility(View.GONE);
 		JSONArray posts = SyncModel.getInstance().postsFromChannel(channelJid);
+		ListView contentView = (ListView) getView().findViewById(R.id.postsStream);
+		CardListAdapter cardAdapter = new CardListAdapter();
+		contentView.setAdapter(cardAdapter);
 		for (int i = 0; i < posts.length(); i++) {
 			JSONObject j = posts.optJSONObject(i);
-			CardUI contentView = (CardUI) getView().findViewById(R.id.postsStream);
 			PostCard card = toCard(j, channelJid);
-			contentView.addCard(card);
-			contentView.refresh();
+			cardAdapter.addCard(card);
 		}
+		cardAdapter.notifyDataSetChanged();
 	}
 	
 	private PostCard toCard(JSONObject post, final String channelJid) {

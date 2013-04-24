@@ -9,15 +9,15 @@ import android.content.Context;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.buddycloud.R;
 import com.buddycloud.image.SmartImageView;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.TimeUtils;
-import com.fima.cardsui.objects.Card;
 
-public class PostCard extends Card {
+public class PostCard extends AbstractCard {
 	
 	public static final String MEDIA_PATTERN_SUFIX = "/\\S+@\\S+/media/\\w+";
 	public static final String MEDIA_URL_SUFIX = "?maxheight=600";
@@ -26,55 +26,76 @@ public class PostCard extends Card {
 	private String content;
 	private Integer commentCount;
 	private final String published;
+	private final String title;
 
 	public PostCard(String title, String avatarURL, String content, 
 			String published, Integer commentCount) {
-		super(title);
+		this.title = title;
 		this.published = published;
 		this.commentCount = commentCount;
 		this.avatarURL = avatarURL;
 		this.content = content;
 	}
-
 	
 	@Override
-	public View getCardContent(Context context) {
-		View view = LayoutInflater.from(context).inflate(R.layout.post_entry, null);
-
-		((TextView) view.findViewById(R.id.title)).setText(title);
+	public View getContentView(int position, View convertView, ViewGroup viewGroup) {
 		
-		((SmartImageView) view.findViewById(R.id.bcProfilePic)).setImageUrl(avatarURL, R.drawable.personal_50px);
+		boolean reuse = convertView != null && convertView.getTag() != null; 
+		CardViewHolder holder = null;
 		
-		((TextView) view.findViewById(R.id.bcPostContent)).setText(content);
+		if (!reuse) {
+			LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+			convertView = inflater.inflate(R.layout.post_entry, viewGroup, false);
+			holder = fillHolder(convertView);
+			convertView.setTag(holder);
+		} else {
+			holder = (CardViewHolder) convertView.getTag();
+		}
 		
-		((TextView) view.findViewById(R.id.bcCommentCount)).setText(commentCount.toString());
+		Context context = viewGroup.getContext();
+		TextView titleView = holder.getView(R.id.title);
+		titleView.setText(title);
+		
+		SmartImageView avatarView = holder.getView(R.id.bcProfilePic);
+		avatarView.setImageUrl(avatarURL, R.drawable.personal_50px);
+		
+		TextView contentView = holder.getView(R.id.bcPostContent);
+		contentView.setText(content);
+		
+		TextView commentCountView = holder.getView(R.id.bcCommentCount);
+		commentCountView.setText(commentCount.toString());
 		
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
 		Pattern mediaPattern = Pattern.compile(apiAddress + MEDIA_PATTERN_SUFIX);
 		Matcher matcher = mediaPattern.matcher(content);
 		boolean found = matcher.find();
 		
+		SmartImageView mediaView = holder.getView(R.id.bcImageContent);
 		if (found) {
 			String mediaURL = content.substring(matcher.start(), matcher.end());
-			SmartImageView mediaView = (SmartImageView) view.findViewById(R.id.bcImageContent);
 			mediaView.setVisibility(View.VISIBLE);
 			mediaView.setImageUrl(mediaURL + MEDIA_URL_SUFIX);
+		} else {
+			mediaView.setVisibility(View.GONE);
+			mediaView.setImageBitmap(null);
 		}
 		
 		try {
 			long publishedTime = TimeUtils.fromISOToDate(published).getTime();
-			((TextView) view.findViewById(R.id.bcPostDate)).setText(
+			TextView publishedView = holder.getView(R.id.bcPostDate);
+			publishedView.setText(
 					DateUtils.getRelativeTimeSpanString(publishedTime, 
 							new Date().getTime(), DateUtils.MINUTE_IN_MILLIS));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		
-		return view;
+		return convertView;
 	}
 	
-	protected int getLastCardLayout() {
-		return R.layout.item_card_empty_last_bc;
+	private static CardViewHolder fillHolder(View view) {
+		return CardViewHolder.create(view, R.id.title, R.id.bcProfilePic, 
+				R.id.bcPostContent, R.id.bcCommentCount, 
+				R.id.bcImageContent, R.id.bcPostDate);
 	}
-
 }

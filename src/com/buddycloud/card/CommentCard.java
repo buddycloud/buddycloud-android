@@ -3,54 +3,70 @@ package com.buddycloud.card;
 import java.text.ParseException;
 import java.util.Date;
 
-import android.content.Context;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.buddycloud.R;
 import com.buddycloud.image.SmartImageView;
 import com.buddycloud.utils.TimeUtils;
-import com.fima.cardsui.objects.Card;
 
-public class CommentCard extends Card {
+public class CommentCard extends AbstractCard {
 	
 	private String avatarURL;
 	private String content;
 	private final String published;
+	private final String title;
 	
 	public CommentCard(String title, String avatarURL, String content, String published) {
-		super(title);
+		this.title = title;
 		this.avatarURL = avatarURL;
 		this.content = content;
 		this.published = published;
 	}
 
 	@Override
-	public View getCardContent(Context context) {
-		View view = LayoutInflater.from(context).inflate(R.layout.comment_entry, null);
-
-		((TextView) view.findViewById(R.id.title)).setText(title);
+	public View getContentView(int position, View convertView,
+			ViewGroup viewGroup) {
 		
-		((SmartImageView) view.findViewById(R.id.bcProfilePic)).setImageUrl(avatarURL, R.drawable.personal_50px);
+		boolean reuse = convertView != null && convertView.getTag() != null; 
+		CardViewHolder holder = null;
 		
-		((TextView) view.findViewById(R.id.bcPostContent)).setText(content);
+		if (!reuse) {
+			LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+			convertView = inflater.inflate(R.layout.comment_entry, viewGroup, false);
+			holder = fillHolder(convertView);
+			convertView.setTag(holder);
+		} else {
+			holder = (CardViewHolder) convertView.getTag();
+		}
+		
+		TextView titleView = holder.getView(R.id.title);
+		titleView.setText(title);
+		
+		SmartImageView avatarView = holder.getView(R.id.bcProfilePic);
+		avatarView.setImageUrl(avatarURL, R.drawable.personal_50px);
+		
+		TextView contentView = holder.getView(R.id.bcPostContent);
+		contentView.setText(content);
 		
 		try {
 			long publishedTime = TimeUtils.fromISOToDate(published).getTime();
-			((TextView) view.findViewById(R.id.bcPostDate)).setText(
+			TextView publishedView = holder.getView(R.id.bcPostDate);
+			publishedView.setText(
 					DateUtils.getRelativeTimeSpanString(publishedTime, 
 							new Date().getTime(), DateUtils.MINUTE_IN_MILLIS));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		
-		return view;
-	}
-	
-	protected int getLastCardLayout() {
-		return R.layout.item_card_empty_last_bc;
+		return convertView;
 	}
 
+	private static CardViewHolder fillHolder(View view) {
+		return CardViewHolder.create(view, R.id.title, 
+				R.id.bcProfilePic, R.id.bcPostContent, R.id.bcPostDate);
+	}
 }

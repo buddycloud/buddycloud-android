@@ -15,6 +15,9 @@
  limitations under the License.
  -->
 <resources>
+  <color name="stroke">#dddddd</color>
+  <color name="card_title_text">#ff707070</color>
+  <color name="card_text">#ff8d8d8d</color>
   <color name="bc_green">#8ac03a</color>
   <color name="bc_bg_grey">#ced8da</color>
   <color name="bc_orange">#f29e37</color>

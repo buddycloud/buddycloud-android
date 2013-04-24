@@ -5,4 +5,18 @@
     <style name="AppTheme" parent="Theme.Sherlock.Light.DarkActionBar">
         <item name="homeAsUpIndicator">@drawable/new_indicator</item>
     </style>
+    
+     <style name="CardText">
+        <item name="android:textSize">@dimen/card_small_text</item>
+        <item name="android:textColor">@color/card_text</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
+    </style>
+    
+     <style name="CardTitle" parent="@style/CardText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/card_large_text</item>
+        <item name="android:textColor">@color/card_title_text</item>
+    </style>
     </resources>

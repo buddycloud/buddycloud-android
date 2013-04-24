@@ -12,20 +12,22 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.buddycloud.card.CardListAdapter;
 import com.buddycloud.card.CommentCard;
 import com.buddycloud.image.SmartImageView;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SyncModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
-import com.fima.cardsui.views.CardUI;
 
 public class PostDetailsFragment extends Fragment {
 
 	public static final String POST_ID = "com.buddycloud.POST_ID";
+	private CardListAdapter commentAdapter;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +50,10 @@ public class PostDetailsFragment extends Fragment {
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
 		SmartImageView avatarView = (SmartImageView) view.findViewById(R.id.bcCommentPic);
 		avatarView.setImageUrl(avatarURL, R.drawable.personal_50px);
+		
+		ListView commentList = (ListView) view.findViewById(R.id.postsStream);
+		this.commentAdapter = new CardListAdapter();
+		commentList.setAdapter(commentAdapter);
 		
 		loadComments(view, postId);
 		
@@ -99,8 +105,7 @@ public class PostDetailsFragment extends Fragment {
 	}
 
 	public void sync(final String channelJid, final String postId) {
-		CardUI cardsUI = (CardUI) getView().findViewById(R.id.postsStream);
-		cardsUI.clearCards();
+		commentAdapter.clear();
 		
 		final View progress = getView().findViewById(R.id.subscribedProgress);
 		progress.setVisibility(View.VISIBLE);
@@ -124,9 +129,8 @@ public class PostDetailsFragment extends Fragment {
 		JSONArray comments = SyncModel.getInstance().commentsFromPost(postId);
 		for (int i = 0; i < comments.length(); i++) {
 			JSONObject comment = comments.optJSONObject(i);
-			CardUI contentView = (CardUI) view.findViewById(R.id.postsStream);
-			contentView.addCard(toCard(comment));
-			contentView.refresh();
+			commentAdapter.addCard(toCard(comment));
+			commentAdapter.notifyDataSetChanged();
 		}
 	}
 	
