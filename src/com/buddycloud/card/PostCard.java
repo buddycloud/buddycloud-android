@@ -25,8 +25,10 @@ public class PostCard extends AbstractCard {
 	private String avatarURL;
 	private String content;
 	private Integer commentCount;
+	private Boolean hasUserMedia;
 	private final String published;
 	private final String title;
+	private String userMediaURL;
 
 	public PostCard(String title, String avatarURL, String content, 
 			String published, Integer commentCount) {
@@ -65,16 +67,20 @@ public class PostCard extends AbstractCard {
 		TextView commentCountView = holder.getView(R.id.bcCommentCount);
 		commentCountView.setText(commentCount.toString());
 		
-		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
-		Pattern mediaPattern = Pattern.compile(apiAddress + MEDIA_PATTERN_SUFIX);
-		Matcher matcher = mediaPattern.matcher(content);
-		boolean found = matcher.find();
+		if (hasUserMedia == null) {
+			String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
+			Pattern mediaPattern = Pattern.compile(apiAddress + MEDIA_PATTERN_SUFIX);
+			Matcher matcher = mediaPattern.matcher(content);
+			hasUserMedia = matcher.find();
+			if (hasUserMedia) {
+				this.userMediaURL = content.substring(matcher.start(), matcher.end());
+			}
+		}
 		
 		SmartImageView mediaView = holder.getView(R.id.bcImageContent);
-		if (found) {
-			String mediaURL = content.substring(matcher.start(), matcher.end());
+		if (hasUserMedia) {
 			mediaView.setVisibility(View.VISIBLE);
-			mediaView.setImageUrl(mediaURL + MEDIA_URL_SUFIX);
+			mediaView.setImageUrl(userMediaURL + MEDIA_URL_SUFIX);
 		} else {
 			mediaView.setVisibility(View.GONE);
 			mediaView.setImageBitmap(null);

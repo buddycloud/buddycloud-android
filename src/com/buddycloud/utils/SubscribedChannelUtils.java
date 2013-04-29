@@ -70,15 +70,11 @@ public class SubscribedChannelUtils {
 		holder.title.setText(channelTitle);
 		holder.description.setText(channelDescription);
 	}
-	
+
 	private static void loadAvatar(Activity parent, ViewHolder holder, String channelJid, 
 			boolean isScrolling) {
-		if (!isScrolling) {
-			String avatarURL = AvatarUtils.avatarURL(parent, channelJid);
-			holder.avatar.setImageUrl(avatarURL, R.drawable.personal_50px);
-		} else {
-			holder.avatar.setImageResource(R.drawable.personal_50px);
-		}
+		String avatarURL = AvatarUtils.avatarURL(parent, channelJid);
+		holder.avatar.setImageUrl(avatarURL, R.drawable.personal_50px);
 	}
 	
 	private static void loadCounters(ViewHolder holder, String channelJid) {

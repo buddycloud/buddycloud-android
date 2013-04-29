@@ -24,7 +24,7 @@
         <com.buddycloud.utils.TypefacedTextView
             xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
             android:id="@+id/bcUserId"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
             android:textSize="17sp"
@@ -33,7 +33,7 @@
         <com.buddycloud.utils.TypefacedTextView
             xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
             android:id="@+id/bcMessage"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#aeaeae"
             android:textSize="14sp"
