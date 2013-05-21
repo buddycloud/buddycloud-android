@@ -145,6 +145,10 @@ public class BuddycloudHTTPHelper {
 					addAuthHeader(method, parent);
 				}
 				HttpResponse response = client.execute(method);
+				if (response.getStatusLine().getStatusCode() >= 400) {
+					throw new Exception(response.getStatusLine().toString());
+				}
+				
 				HttpEntity resEntityGet = ((HttpResponse)response).getEntity();
 				String responseStr = EntityUtils.toString(resEntityGet);
 				
