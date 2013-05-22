@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -26,7 +25,7 @@ import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
-public class ChannelStreamFragment extends Fragment {
+public class ChannelStreamFragment extends ContentFragment {
 
 	private String channelJid;
 
@@ -36,7 +35,6 @@ public class ChannelStreamFragment extends Fragment {
 		this.channelJid = getArguments().getString(SubscribedChannelsFragment.CHANNEL);
 	
 		final View view = inflater.inflate(R.layout.fragment_channel_stream, container, false);
-		loadTitle(channelJid);
 		
 		view.findViewById(R.id.subscribedProgress).setVisibility(View.VISIBLE);
 		//fetchPosts(channelJid);
@@ -123,7 +121,7 @@ public class ChannelStreamFragment extends Fragment {
 		postCard.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Fragment postDetailsFrag = new PostDetailsFragment();
+				ContentFragment postDetailsFrag = new PostDetailsFragment();
 				Bundle args = new Bundle();
 				args.putString(PostDetailsFragment.POST_ID, postId);
 				args.putString(SubscribedChannelsFragment.CHANNEL, channelJid);
@@ -170,5 +168,10 @@ public class ChannelStreamFragment extends Fragment {
 			}
 			
 		});
+	}
+
+	@Override
+	void attached() {
+		loadTitle(channelJid);
 	}
 }

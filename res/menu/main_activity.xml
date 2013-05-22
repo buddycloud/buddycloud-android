@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_search"
+        android:title="@string/menu_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:showAsAction="ifRoom" />
+    
+    <item android:id="@+id/menu_create_channel"
+        android:title="@string/menu_create_channel"
+        android:icon="@android:drawable/ic_menu_add"
+        android:showAsAction="ifRoom" />
+    
+    <item android:id="@+id/menu_settings"
+        android:title="@string/menu_settings"
+        android:showAsAction="never" />
+    
+    <item android:id="@+id/menu_find_active"
+        android:title="@string/menu_find_active"
+        android:showAsAction="never" />
+    
+    <item android:id="@+id/menu_find_nearby"
+        android:title="@string/menu_find_nearby"
+        android:showAsAction="never" />
+    
+</menu>

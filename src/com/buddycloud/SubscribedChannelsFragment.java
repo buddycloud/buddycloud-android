@@ -1,7 +1,6 @@
 package com.buddycloud;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import android.widget.ListView;
 import com.buddycloud.model.SyncModel;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
-public class SubscribedChannelsFragment extends Fragment {
+public class SubscribedChannelsFragment extends ContentFragment {
 
 	public final static String CHANNEL = "com.buddycloud.CHANNEL";
 	
@@ -97,6 +96,11 @@ public class SubscribedChannelsFragment extends Fragment {
 		MainActivity activity = (MainActivity) getActivity();
 		activity.setLeftFragment(frag);
 		frag.syncd();
+	}
+
+	@Override
+	void attached() {
+		getSherlockActivity().getSupportActionBar().setTitle("");
 	}
 
 }

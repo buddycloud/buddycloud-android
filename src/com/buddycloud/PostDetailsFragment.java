@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,7 +23,7 @@ import com.buddycloud.model.SyncModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 
-public class PostDetailsFragment extends Fragment {
+public class PostDetailsFragment extends ContentFragment {
 
 	public static final String POST_ID = "com.buddycloud.POST_ID";
 	private CardListAdapter commentAdapter;
@@ -142,5 +141,17 @@ public class PostDetailsFragment extends Fragment {
 		
 		CommentCard commentCard = new CommentCard(postAuthor, avatarURL, postContent, published);
 		return commentCard;
+	}
+
+	@Override
+	void syncd() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	void attached() {
+		// TODO Auto-generated method stub
+		
 	}
 }

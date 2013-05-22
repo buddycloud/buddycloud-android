@@ -14,12 +14,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 
+import com.actionbarsherlock.view.Menu;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.NotificationMetadataModel;
 import com.buddycloud.model.SyncModel;
 import com.buddycloud.preferences.Preferences;
 import com.google.android.gcm.GCMRegistrar;
 import com.slidingmenu.lib.SlidingMenu;
+import com.slidingmenu.lib.SlidingMenu.OnClosedListener;
+import com.slidingmenu.lib.SlidingMenu.OnOpenedListener;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class MainActivity extends SlidingFragmentActivity {
@@ -85,6 +88,7 @@ public class MainActivity extends SlidingFragmentActivity {
 
 			@Override
 			public void onPageSelected(int position) {
+				((ContentFragment) pageAdapter.getItem(position)).attached();
 				switch (position) {
 				case 0:
 					getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
@@ -109,7 +113,7 @@ public class MainActivity extends SlidingFragmentActivity {
 		SubscribedChannelsFragment menuFragment = addMenuFragment();
 		showMyChannelFragment();
 		sync(menuFragment);
-		customizeMenu();
+		customizeMenu(menuFragment);
 	}
 
 	private void sync(final SubscribedChannelsFragment subscribedFrag) {
@@ -120,12 +124,12 @@ public class MainActivity extends SlidingFragmentActivity {
 				ChannelStreamFragment channelFragment = (ChannelStreamFragment) pageAdapter
 						.getLeftFragment();
 				channelFragment.syncd();
+				getSlidingMenu().showMenu();
 			}
 
 			@Override
 			public void error(Throwable throwable) {
 				// TODO Auto-generated method stub
-				
 			}
 		});
 	}
@@ -173,21 +177,35 @@ public class MainActivity extends SlidingFragmentActivity {
 		return myChannelFrag;
 	}
 
-	private void customizeMenu() {
+	private void customizeMenu(final SubscribedChannelsFragment menuFragment) {
 		SlidingMenu sm = getSlidingMenu();
 		sm.setShadowWidthRes(R.dimen.shadow_width);
 		sm.setShadowDrawable(R.drawable.shadow);
 		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-		sm.setFadeDegree(0.35f);
+		sm.setFadeDegree(0.15f);
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+		setSlidingActionBarEnabled(false);
+		getSlidingMenu().setOnOpenedListener(new OnOpenedListener() {
+			@Override
+			public void onOpened() {
+				menuFragment.attached();
+			}
+		});
+		
+		getSlidingMenu().setOnClosedListener(new OnClosedListener() {
+			@Override
+			public void onClosed() {
+				((ContentFragment)pageAdapter.getItem(0)).attached();
+			}
+		});
 	}
 
-	public void setLeftFragment(Fragment frag) {
+	public void setLeftFragment(ContentFragment frag) {
 		pageAdapter.setLeftFragment(frag);
 		viewPager.setCurrentItem(0, true);
 	}
 
-	public void setRightFragment(Fragment frag) {
+	public void setRightFragment(ContentFragment frag) {
 		pageAdapter.setRightFragment(frag);
 		viewPager.setCurrentItem(1, true);
 	}
@@ -205,18 +223,24 @@ public class MainActivity extends SlidingFragmentActivity {
 		return subscribedFrag;
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.main_activity, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	
 	private static class ContentPageAdapter extends FragmentPagerAdapter {
 
-		private ArrayList<Fragment> mFragments;
+		private ArrayList<ContentFragment> mFragments;
 		private final FragmentManager fm;
 
 		public ContentPageAdapter(FragmentManager fm) {
 			super(fm);
 			this.fm = fm;
-			this.mFragments = new ArrayList<Fragment>();
+			this.mFragments = new ArrayList<ContentFragment>();
 		}
 
-		public void setLeftFragment(Fragment fragment) {
+		public void setLeftFragment(ContentFragment fragment) {
 			if (mFragments.isEmpty()) {
 				mFragments.add(fragment);
 			} else {
@@ -226,11 +250,11 @@ public class MainActivity extends SlidingFragmentActivity {
 			notifyDataSetChanged();
 		}
 
-		public Fragment getLeftFragment() {
+		public ContentFragment getLeftFragment() {
 			return mFragments.get(0);
 		}
 		
-		public void setRightFragment(Fragment fragment) {
+		public void setRightFragment(ContentFragment fragment) {
 			if (mFragments.size() < 2) {
 				mFragments.add(fragment);
 			} else {
@@ -257,6 +281,5 @@ public class MainActivity extends SlidingFragmentActivity {
 		public Fragment getItem(int position) {
 			return mFragments.get(position);
 		}
-
 	}
 }

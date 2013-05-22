@@ -2,7 +2,7 @@
 <resources>
     <dimen name="standard_padding">1dip</dimen>
     <dimen name="big_padding">5dip</dimen>
-    <dimen name="slidingmenu_offset">60dp</dimen>
+    <dimen name="slidingmenu_offset">30dp</dimen>
     <dimen name="list_padding">10dp</dimen>
     <dimen name="shadow_width">15dp</dimen>
     <dimen name="login_button_padding">10dip</dimen>
