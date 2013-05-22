@@ -55,7 +55,7 @@ public class DNSUtils {
 		path = path == null || path.equals("/") ? "" : path;
 		port = port == null ? "" : port;
 		
-		return protocol + "://" + host + path + ":" + port;
+		return protocol + "://" + host + ":" + port + path;
 	}
 	
 	private static Map<String, String> parseStrings(List<String> strings) {
