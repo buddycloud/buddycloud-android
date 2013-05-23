@@ -1,81 +1,37 @@
 package com.buddycloud.fragments;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.MainActivity;
 import com.buddycloud.R;
+import com.buddycloud.SearchActivity;
 import com.buddycloud.model.SyncModel;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class SubscribedChannelsFragment extends ContentFragment {
 
-	public final static String CHANNEL = "com.buddycloud.CHANNEL";
-	
-	private SubscribedChannelsAdapter subscribed;
-	private PersonalChannelAdapter personal;
-	
+	private GenericChannelsFragment genericChannelFrag = new GenericChannelsFragment() {
+		@Override
+		public void channelSelected(String channelJid) {
+			selectChannel(channelJid);
+		}
+	};
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_subscribed, container, false);
-		
-		OnItemClickListener channelItemListener = new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> adapterView, View arg1, int position,
-					long arg3) {
-				String channelJid = (String) adapterView.getItemAtPosition(position);
-				selectChannel(channelJid);
-			}
-		};
-		
-		subscribed = new SubscribedChannelsAdapter(getActivity());
-		personal = new PersonalChannelAdapter(getActivity());
-		
-		final ListView subscribedChannelsView = (ListView) view.findViewById(R.id.subscribedListView);
-		subscribedChannelsView.setEmptyView(view.findViewById(R.id.subscribedProgress));
-		subscribedChannelsView.setAdapter(subscribed);
-		subscribedChannelsView.setOnItemClickListener(channelItemListener);
-		
-		subscribedChannelsView.setOnScrollListener(new OnScrollListener() {
-
-			@Override
-			public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
-				if (scrollState != 0) {
-					subscribed.isScrolling = true;
-				} else {
-					subscribed.isScrolling = false;
-					subscribed.notifyDataSetChanged();
-				}
-			}
-		});
-		
-		ListView personalChannelView = (ListView) view.findViewById(R.id.personalListView);
-		personalChannelView.setEmptyView(view.findViewById(R.id.subscribedProgress));
-		personalChannelView.setAdapter(personal);
-		personalChannelView.setOnItemClickListener(channelItemListener);
-		
-		return view;
+		return genericChannelFrag.onCreateView(inflater, container, savedInstanceState);
 	}
 	
-	public void syncd() {
-		subscribed.syncd();
-		personal.syncd();
+	public void syncd(Context context) {
+		genericChannelFrag.load(context);
 	}
 	
 	private void selectChannel(String channelJid) {
@@ -93,7 +49,7 @@ public class SubscribedChannelsFragment extends ContentFragment {
 	
 	private void showChannelFragment(String channelJid) {
 		MainActivity activity = (MainActivity) getActivity();
-		activity.showChannelFragment(channelJid).syncd();
+		activity.showChannelFragment(channelJid).syncd(activity);
 	}
 
 	@Override
@@ -105,6 +61,19 @@ public class SubscribedChannelsFragment extends ContentFragment {
 	public void createOptions(Menu menu) {
 		getSherlockActivity().getSupportMenuInflater().inflate(
 				R.menu.subscribed_fragment_options, menu);
+	}
+
+	@Override
+	public boolean menuItemSelected(int featureId, MenuItem item) {
+		if (item.getItemId() == R.id.menu_search) {
+			Intent searchActivityIntent = new Intent();
+			searchActivityIntent.setClass(getActivity(), SearchActivity.class);
+			getActivity().startActivityForResult(
+					searchActivityIntent, SearchActivity.REQUEST_CODE);
+			return true;
+		}
+		
+		return false;
 	}
 
 }

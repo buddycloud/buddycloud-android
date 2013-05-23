@@ -26,7 +26,7 @@ public class ContentPageAdapter extends FragmentPagerAdapter {
 		if (mFragments.isEmpty()) {
 			mFragments.add(fragment);
 		} else {
-			fm.beginTransaction().remove(mFragments.get(0)).commit();
+			fm.beginTransaction().remove(mFragments.get(0)).commitAllowingStateLoss();
 			mFragments.set(0, fragment);
 		}
 		notifyDataSetChanged();
@@ -41,7 +41,7 @@ public class ContentPageAdapter extends FragmentPagerAdapter {
 		if (mFragments.size() < 2) {
 			mFragments.add(fragment);
 		} else {
-			fm.beginTransaction().remove(mFragments.get(1)).commit();
+			fm.beginTransaction().remove(mFragments.get(1)).commitAllowingStateLoss();
 			mFragments.set(1, fragment);
 		}
 		notifyDataSetChanged();

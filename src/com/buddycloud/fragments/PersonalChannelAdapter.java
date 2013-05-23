@@ -2,30 +2,23 @@ package com.buddycloud.fragments;
 
 import org.json.JSONObject;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.model.ModelCallback;
-import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.SubscribedChannelUtils;
 
 public class PersonalChannelAdapter extends BaseAdapter {
 
-	private final Activity parent;
 	private String myChannelJid;
-	
-	public PersonalChannelAdapter(Activity parent) {
-		this.parent = parent;
-		this.myChannelJid = Preferences.getPreference(parent, Preferences.MY_CHANNEL_JID);
-	}
 	
 	@Override
 	public int getCount() {
-		return Math.min(1, SubscribedChannelsModel.getInstance().get(parent).length());
+		return myChannelJid == null ? 0 : 1;
 	}
 
 	@Override
@@ -41,17 +34,18 @@ public class PersonalChannelAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
 		return SubscribedChannelUtils.createSubscribedChannelMenuItem(
-				parent, convertView, viewGroup, myChannelJid, false);
+				viewGroup.getContext(), convertView, viewGroup, myChannelJid);
 	}
 
-	public void syncd() {
+	public void load(Context context) {
+		this.myChannelJid = Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
 		notifyDataSetChanged();
-		fetchMetadata();
+		fetchMetadata(context);
 	}
 	
-	private void fetchMetadata() {
+	private void fetchMetadata(Context context) {
 		ChannelMetadataModel.getInstance().refresh(
-				parent, new ModelCallback<JSONObject>() {
+				context, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
 				notifyDataSetChanged();

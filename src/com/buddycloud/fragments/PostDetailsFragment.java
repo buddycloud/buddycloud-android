@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.R;
 import com.buddycloud.card.CardListAdapter;
 import com.buddycloud.card.CommentCard;
@@ -35,7 +37,7 @@ public class PostDetailsFragment extends ContentFragment {
 			Bundle savedInstanceState) {
 		final View view = inflater.inflate(R.layout.fragment_post_details, container, false);
 		final String postId = getArguments().getString(POST_ID);
-		final String channelJid = getArguments().getString(SubscribedChannelsFragment.CHANNEL);
+		final String channelJid = getArguments().getString(GenericChannelsFragment.CHANNEL);
 		
 		JSONObject post = SyncModel.getInstance().postWithId(postId, channelJid);
 
@@ -153,7 +155,7 @@ public class PostDetailsFragment extends ContentFragment {
 	}
 
 	@Override
-	public void syncd() {
+	public void syncd(Context context) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -168,5 +170,11 @@ public class PostDetailsFragment extends ContentFragment {
 	public void createOptions(Menu menu) {
 		getSherlockActivity().getSupportMenuInflater().inflate(
 				R.menu.post_fragment_options, menu);
+	}
+
+	@Override
+	public boolean menuItemSelected(int featureId, MenuItem item) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

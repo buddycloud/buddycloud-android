@@ -11,8 +11,10 @@ import android.util.Log;
 import android.view.KeyEvent;
 
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.fragments.ChannelStreamFragment;
 import com.buddycloud.fragments.ContentFragment;
+import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.fragments.PostDetailsFragment;
 import com.buddycloud.fragments.SubscribedChannelsFragment;
 import com.buddycloud.model.ModelCallback;
@@ -49,7 +51,7 @@ public class MainActivity extends SlidingFragmentActivity {
 		if (shouldLogin()) {
 			Intent loginActivity = new Intent();
 			loginActivity.setClass(getApplicationContext(), LoginActivity.class);
-			startActivityForResult(loginActivity, 0);
+			startActivityForResult(loginActivity, LoginActivity.REQUEST_CODE);
 		} else { 
 			startActivity();
 		}
@@ -117,7 +119,13 @@ public class MainActivity extends SlidingFragmentActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		startActivity();
+		if (requestCode == LoginActivity.REQUEST_CODE) {
+			startActivity();
+		} else if (requestCode == SearchActivity.REQUEST_CODE) {
+			if (data != null) {
+				showChannelFragment(data.getStringExtra(GenericChannelsFragment.CHANNEL)).syncd(this);
+			}
+		}
 	}
 
 	private void startActivity() {
@@ -134,8 +142,8 @@ public class MainActivity extends SlidingFragmentActivity {
 		SyncModel.getInstance().refresh(this, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
-				subscribedChannelsFrag.syncd();
-				pageAdapter.getLeftFragment().syncd();
+				subscribedChannelsFrag.syncd(MainActivity.this);
+				pageAdapter.getLeftFragment().syncd(MainActivity.this);
 				getSlidingMenu().showMenu();
 			}
 
@@ -155,12 +163,13 @@ public class MainActivity extends SlidingFragmentActivity {
 	}
 
 	public ChannelStreamFragment showChannelFragment(String channelJid) {
-		ChannelStreamFragment myChannelFrag = new ChannelStreamFragment();
+		ChannelStreamFragment channelFrag = new ChannelStreamFragment();
 		Bundle args = new Bundle();
-		args.putString(SubscribedChannelsFragment.CHANNEL, channelJid);
-		myChannelFrag.setArguments(args);
-		pageAdapter.setLeftFragment(myChannelFrag);
-		return myChannelFrag;
+		args.putString(GenericChannelsFragment.CHANNEL, channelJid);
+		channelFrag.setArguments(args);
+		pageAdapter.setLeftFragment(channelFrag);
+		getSlidingMenu().showContent();
+		return channelFrag;
 	}
 	
 	public PostDetailsFragment showPostDetailFragment(final String channelJid,
@@ -168,9 +177,10 @@ public class MainActivity extends SlidingFragmentActivity {
 		PostDetailsFragment postDetailsFrag = new PostDetailsFragment();
 		Bundle args = new Bundle();
 		args.putString(PostDetailsFragment.POST_ID, postId);
-		args.putString(SubscribedChannelsFragment.CHANNEL, channelJid);
+		args.putString(GenericChannelsFragment.CHANNEL, channelJid);
 		postDetailsFrag.setArguments(args);
 		pageAdapter.setRightFragment(postDetailsFrag);
+		getSlidingMenu().showContent();
 		return postDetailsFrag;
 	}
 
@@ -213,6 +223,11 @@ public class MainActivity extends SlidingFragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getCurrentFragment().createOptions(menu);
 		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		return getCurrentFragment().menuItemSelected(featureId, item);
 	}
 
 	private void fragmentChanged() {

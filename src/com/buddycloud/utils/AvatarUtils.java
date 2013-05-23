@@ -1,6 +1,6 @@
 package com.buddycloud.utils;
 
-import android.app.Activity;
+import android.content.Context;
 
 import com.buddycloud.preferences.Preferences;
 
@@ -14,7 +14,7 @@ public class AvatarUtils {
 	
 	private AvatarUtils() {}
 	
-	public static String avatarURL(Activity context, String channel) {
+	public static String avatarURL(Context context, String channel) {
 		int avatarSize = (int) (AVATAR_DIP * context.getResources().getDisplayMetrics().density + 0.5);
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
 		avatarSize = avatarSize > THRESHOLD ? MAX_SIZE : MIN_SIZE; 

@@ -1,9 +1,12 @@
 package com.buddycloud.fragments;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -11,27 +14,24 @@ import android.widget.BaseAdapter;
 import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SubscribedChannelsModel;
+import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.SubscribedChannelUtils;
 
 public class SubscribedChannelsAdapter extends BaseAdapter {
 
-	private final Activity parent;
-	protected boolean isScrolling;
+	private List<String> allChannels = new ArrayList<String>();
+	private List<String> filteredChannels = new ArrayList<String>();
 	
-	public SubscribedChannelsAdapter(Activity parent) {
-		this.parent = parent;
+	public void load(Context context) {
+		fetchSubscribers(context);
 	}
 	
-	public void syncd() {
-		fetchSubscribers();
-	}
-	
-	private void fetchSubscribers() {
-		SubscribedChannelsModel.getInstance().refresh(parent, new ModelCallback<JSONArray>() {
+	private void fetchSubscribers(final Context context) {
+		SubscribedChannelsModel.getInstance().refresh(context, new ModelCallback<JSONArray>() {
 			@Override
 			public void success(JSONArray response) {
 				notifyDataSetChanged();
-				fetchMetadata();
+				fetchMetadata(context);
 			}
 			
 			@Override
@@ -41,12 +41,27 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 		});
 	}
 	
-	private void fetchMetadata() {
-		JSONArray subscribedChannels = SubscribedChannelsModel.getInstance().get(parent);
+	public void setFilter(String filter) {
+		filteredChannels.clear();
+		for (String channel : allChannels) {
+			if (channel.contains(filter)) {
+				filteredChannels.add(channel);
+			}
+		}
+		notifyDataSetChanged();
+	}
+	
+	private void fetchMetadata(Context context) {
+		JSONArray subscribedChannels = SubscribedChannelsModel.getInstance().get(context);
+		allChannels.clear();
+		filteredChannels.clear();
 		for (int i = 0; i < subscribedChannels.length(); i++) {
 			String channel = subscribedChannels.optString(i);
-			
-			ChannelMetadataModel.getInstance().refresh(parent, new ModelCallback<JSONObject>() {
+			String myChannel = Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
+			if (!channel.equals(myChannel)) {
+				allChannels.add(channel);
+			}
+			ChannelMetadataModel.getInstance().refresh(context, new ModelCallback<JSONObject>() {
 				@Override
 				public void success(JSONObject response) {
 					notifyDataSetChanged();
@@ -58,28 +73,29 @@ public class SubscribedChannelsAdapter extends BaseAdapter {
 				}
 			}, channel);
 		}
+		filteredChannels.addAll(allChannels);
 	}
 
 	@Override
 	public int getCount() {
-		return SubscribedChannelsModel.getInstance().getAllButMine(parent).length();
+		return filteredChannels.size();
 	}
 
 	@Override
 	public Object getItem(int arg0) {
-		return SubscribedChannelsModel.getInstance().getAllButMine(parent).optString(arg0);
+		return filteredChannels.get(arg0);
 	}
 
 	@Override
 	public long getItemId(int arg0) {
-		return SubscribedChannelsModel.getInstance().getAllButMine(parent).optString(arg0).hashCode();
+		return filteredChannels.get(arg0).hashCode();
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
 		String channelJid = (String) getItem(position);
-		return SubscribedChannelUtils.createSubscribedChannelMenuItem(
-				parent, convertView, viewGroup, channelJid, isScrolling);
+		View returningView = SubscribedChannelUtils.createSubscribedChannelMenuItem(
+				viewGroup.getContext(), convertView, viewGroup, channelJid);
+		return returningView;
 	}
-	
 }

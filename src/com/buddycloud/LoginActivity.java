@@ -18,6 +18,8 @@ import com.buddycloud.utils.DNSUtils;
 
 public class LoginActivity extends Activity {
 
+	public static final int REQUEST_CODE = 101;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

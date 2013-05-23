@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +18,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.card.CardListAdapter;
@@ -35,12 +37,11 @@ public class ChannelStreamFragment extends ContentFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		this.channelJid = getArguments().getString(SubscribedChannelsFragment.CHANNEL);
+		this.channelJid = getArguments().getString(GenericChannelsFragment.CHANNEL);
 	
 		final View view = inflater.inflate(R.layout.fragment_channel_stream, container, false);
 		
 		view.findViewById(R.id.subscribedProgress).setVisibility(View.VISIBLE);
-		//fetchPosts(channelJid);
 		
 		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
@@ -72,7 +73,7 @@ public class ChannelStreamFragment extends ContentFragment {
 					public void success(JSONObject response) {
 						Toast.makeText(getActivity().getApplicationContext(), "Post created", Toast.LENGTH_LONG).show();
 						postContent.setText("");
-						syncd();
+						syncd(getActivity());
 					}
 					
 					@Override
@@ -99,7 +100,7 @@ public class ChannelStreamFragment extends ContentFragment {
 		return view;
 	}
 	
-	public void syncd() {
+	public void syncd(Context context) {
 		getView().findViewById(R.id.subscribedProgress).setVisibility(View.GONE);
 		JSONArray posts = SyncModel.getInstance().postsFromChannel(channelJid);
 		ListView contentView = (ListView) getView().findViewById(R.id.postsStream);
@@ -183,5 +184,11 @@ public class ChannelStreamFragment extends ContentFragment {
 	public void createOptions(Menu menu) {
 		getSherlockActivity().getSupportMenuInflater().inflate(
 				R.menu.channel_fragment_options, menu);
+	}
+
+	@Override
+	public boolean menuItemSelected(int featureId, MenuItem item) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

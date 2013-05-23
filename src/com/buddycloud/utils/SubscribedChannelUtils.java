@@ -2,7 +2,7 @@ package com.buddycloud.utils;
 
 import org.json.JSONObject;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +16,8 @@ import com.squareup.picasso.Picasso;
 
 public class SubscribedChannelUtils {
 
-	public static View createSubscribedChannelMenuItem(Activity parent, View convertView,
-			ViewGroup viewGroup, String channelJid, boolean isScrolling) {
+	public static View createSubscribedChannelMenuItem(Context context, View convertView,
+			ViewGroup viewGroup, String channelJid) {
 		ViewHolder holder = null; 
 		boolean firstLoad = convertView == null; 
 		
@@ -31,10 +31,10 @@ public class SubscribedChannelUtils {
 		}
 		
 		// Title and description
-		loadTitleAndDescription(parent, holder, channelJid);
+		loadTitleAndDescription(context, holder, channelJid);
 		
 		// Load avatar
-		loadAvatar(parent, holder, channelJid, isScrolling);
+		loadAvatar(context, holder, channelJid);
 		
 		// Counters
 		loadCounters(holder, channelJid);
@@ -58,7 +58,7 @@ public class SubscribedChannelUtils {
 		return viewHolder;
 	}
 	
-	private static void loadTitleAndDescription(Activity parent, ViewHolder holder, String channelJid) {
+	private static void loadTitleAndDescription(Context parent, ViewHolder holder, String channelJid) {
 		String channelTitle = channelJid;
 		String channelDescription = null;
 		JSONObject metadata = ChannelMetadataModel.getInstance().get(parent, channelJid);
@@ -72,8 +72,7 @@ public class SubscribedChannelUtils {
 		holder.description.setText(channelDescription);
 	}
 
-	private static void loadAvatar(Activity parent, ViewHolder holder, String channelJid, 
-			boolean isScrolling) {
+	private static void loadAvatar(Context parent, ViewHolder holder, String channelJid) {
 		String avatarURL = AvatarUtils.avatarURL(parent, channelJid);
 		Picasso.with(parent).load(avatarURL)
 				.placeholder(R.drawable.personal_50px)
