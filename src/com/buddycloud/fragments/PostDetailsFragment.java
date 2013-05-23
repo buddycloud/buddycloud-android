@@ -19,11 +19,11 @@ import com.actionbarsherlock.view.Menu;
 import com.buddycloud.R;
 import com.buddycloud.card.CardListAdapter;
 import com.buddycloud.card.CommentCard;
-import com.buddycloud.image.SmartImageView;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SyncModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
+import com.squareup.picasso.Picasso;
 
 public class PostDetailsFragment extends ContentFragment {
 
@@ -41,16 +41,23 @@ public class PostDetailsFragment extends ContentFragment {
 
 		((TextView) view.findViewById(R.id.title)).setText(post.optString("author"));
 		
-		((SmartImageView) view.findViewById(R.id.bcProfilePic)).setImageUrl(
-				AvatarUtils.avatarURL(getActivity(), post.optString("author")), 
-				R.drawable.personal_50px);
+		String authorAvatarURL = AvatarUtils.avatarURL(getActivity(), post.optString("author"));
+		ImageView authorAvatarView = (ImageView) view.findViewById(R.id.bcProfilePic);
+		Picasso.with(getActivity()).load(authorAvatarURL)
+				.placeholder(R.drawable.personal_50px)
+				.error(R.drawable.personal_50px)
+				.into(authorAvatarView);
 		
 		((TextView) view.findViewById(R.id.bcPostContent)).setText(post.optString("content"));
 		
 		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
-		SmartImageView avatarView = (SmartImageView) view.findViewById(R.id.bcCommentPic);
-		avatarView.setImageUrl(avatarURL, R.drawable.personal_50px);
+		ImageView avatarView = (ImageView) view.findViewById(R.id.bcCommentPic);
+		Picasso.with(getActivity()).load(avatarURL)
+				.placeholder(R.drawable.personal_50px)
+				.error(R.drawable.personal_50px)
+				.into(avatarView);
+		
 		
 		ListView commentList = (ListView) view.findViewById(R.id.postsStream);
 		this.commentAdapter = new CardListAdapter();

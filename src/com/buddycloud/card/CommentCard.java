@@ -7,11 +7,12 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.buddycloud.R;
-import com.buddycloud.image.SmartImageView;
 import com.buddycloud.utils.TimeUtils;
+import com.squareup.picasso.Picasso;
 
 public class CommentCard extends AbstractCard {
 	
@@ -46,8 +47,11 @@ public class CommentCard extends AbstractCard {
 		TextView titleView = holder.getView(R.id.title);
 		titleView.setText(title);
 		
-		SmartImageView avatarView = holder.getView(R.id.bcProfilePic);
-		avatarView.setImageUrl(avatarURL, R.drawable.personal_50px);
+		ImageView avatarView = holder.getView(R.id.bcProfilePic);
+		Picasso.with(viewGroup.getContext()).load(avatarURL)
+				.placeholder(R.drawable.personal_50px)
+				.error(R.drawable.personal_50px)
+				.into(avatarView);
 		
 		TextView contentView = holder.getView(R.id.bcPostContent);
 		contentView.setText(content);

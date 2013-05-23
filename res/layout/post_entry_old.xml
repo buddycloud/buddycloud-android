@@ -31,11 +31,12 @@
         android:gravity="center_vertical"
         android:padding="8dp" >
 
-        <com.buddycloud.image.SmartImageView
+        <ImageView
             android:id="@+id/bcProfilePic"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            android:contentDescription="@string/avatar_desc" />
 
         <TextView
             android:id="@+id/bcPostContent"

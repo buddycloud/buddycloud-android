@@ -12,12 +12,13 @@
 		android:layout_marginRight="12dp"
         android:background="@drawable/card_background" >
     
-    <com.buddycloud.image.SmartImageView
+    <ImageView
                 android:id="@+id/bcImageContent"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:scaleType="centerCrop"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:contentDescription="@string/avatar_desc"/>
     
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,11 +33,12 @@
             android:paddingLeft="8dp"
             android:paddingRight="2dp" >
 
-            <com.buddycloud.image.SmartImageView
+            <ImageView
                 android:id="@+id/bcProfilePic"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                android:contentDescription="@string/avatar_desc" />
 
             <LinearLayout
                 android:layout_width="30dp"

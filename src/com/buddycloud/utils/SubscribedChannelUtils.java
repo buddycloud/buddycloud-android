@@ -6,12 +6,13 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.buddycloud.R;
-import com.buddycloud.image.SmartImageView;
 import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.model.SyncModel;
+import com.squareup.picasso.Picasso;
 
 public class SubscribedChannelUtils {
 
@@ -45,7 +46,7 @@ public class SubscribedChannelUtils {
 		TextView title;
 		TextView description;
 		TextView unreadCounter;
-		SmartImageView avatar;
+		ImageView avatar;
 	}
 	
 	private static ViewHolder fillHolder(View view) {
@@ -53,7 +54,7 @@ public class SubscribedChannelUtils {
 		viewHolder.title = (TextView) view.findViewById(R.id.bcUserId);
 		viewHolder.description = (TextView) view.findViewById(R.id.bcMessage);
 		viewHolder.unreadCounter = (TextView) view.findViewById(R.id.unreadCounter);
-		viewHolder.avatar = (SmartImageView) view.findViewById(R.id.bcProfilePic);
+		viewHolder.avatar = (ImageView) view.findViewById(R.id.bcProfilePic);
 		return viewHolder;
 	}
 	
@@ -74,7 +75,10 @@ public class SubscribedChannelUtils {
 	private static void loadAvatar(Activity parent, ViewHolder holder, String channelJid, 
 			boolean isScrolling) {
 		String avatarURL = AvatarUtils.avatarURL(parent, channelJid);
-		holder.avatar.setImageUrl(avatarURL, R.drawable.personal_50px);
+		Picasso.with(parent).load(avatarURL)
+				.placeholder(R.drawable.personal_50px)
+				.error(R.drawable.personal_50px)
+				.into(holder.avatar);
 	}
 	
 	private static void loadCounters(ViewHolder holder, String channelJid) {

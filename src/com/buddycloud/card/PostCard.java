@@ -10,12 +10,13 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.buddycloud.R;
-import com.buddycloud.image.SmartImageView;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.TimeUtils;
+import com.squareup.picasso.Picasso;
 
 public class PostCard extends AbstractCard {
 	
@@ -58,8 +59,11 @@ public class PostCard extends AbstractCard {
 		TextView titleView = holder.getView(R.id.title);
 		titleView.setText(title);
 		
-		SmartImageView avatarView = holder.getView(R.id.bcProfilePic);
-		avatarView.setImageUrl(avatarURL, R.drawable.personal_50px);
+		ImageView avatarView = holder.getView(R.id.bcProfilePic);
+		Picasso.with(viewGroup.getContext()).load(avatarURL)
+				.placeholder(R.drawable.personal_50px)
+				.error(R.drawable.personal_50px)
+				.into(avatarView);
 		
 		TextView contentView = holder.getView(R.id.bcPostContent);
 		contentView.setText(content);
@@ -77,10 +81,15 @@ public class PostCard extends AbstractCard {
 			}
 		}
 		
-		SmartImageView mediaView = holder.getView(R.id.bcImageContent);
+		ImageView mediaView = holder.getView(R.id.bcImageContent);
 		if (hasUserMedia) {
 			mediaView.setVisibility(View.VISIBLE);
-			mediaView.setImageUrl(userMediaURL + MEDIA_URL_SUFIX);
+			Picasso.with(viewGroup.getContext())
+				.load(userMediaURL + MEDIA_URL_SUFIX)
+				.placeholder(R.drawable.personal_50px)
+				.error(R.drawable.personal_50px)
+				.into(mediaView);
+			
 		} else {
 			mediaView.setVisibility(View.GONE);
 			mediaView.setImageBitmap(null);

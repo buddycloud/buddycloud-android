@@ -21,12 +21,12 @@ import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.card.CardListAdapter;
 import com.buddycloud.card.PostCard;
-import com.buddycloud.image.SmartImageView;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SyncModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
+import com.squareup.picasso.Picasso;
 
 public class ChannelStreamFragment extends ContentFragment {
 
@@ -44,8 +44,11 @@ public class ChannelStreamFragment extends ContentFragment {
 		
 		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
-		SmartImageView avatarView = (SmartImageView) view.findViewById(R.id.bcCommentPic);
-		avatarView.setImageUrl(avatarURL, R.drawable.personal_50px);
+		ImageView avatarView = (ImageView) view.findViewById(R.id.bcCommentPic);
+		Picasso.with(getActivity()).load(avatarURL)
+				.placeholder(R.drawable.personal_50px)
+				.error(R.drawable.personal_50px)
+				.into(avatarView);
 		
 		final ImageView postButton = (ImageView) view.findViewById(R.id.postButton);
 		postButton.setEnabled(false);

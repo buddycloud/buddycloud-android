@@ -21,12 +21,13 @@
                 android:padding="@dimen/big_padding"
                 android:background="#FFFFFF" >
 
-	            <com.buddycloud.image.SmartImageView
+	            <ImageView
 			        android:id="@+id/bcCommentPic"
 			        android:layout_alignParentLeft="true"
 			        android:layout_centerVertical="true"
 			        android:layout_width="40dp"
-			        android:layout_height="40dp" />
+			        android:layout_height="40dp"
+			        android:contentDescription="@string/avatar_desc" />
             
                 <EditText
                     android:id="@+id/postContentTxt"
