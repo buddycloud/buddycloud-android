@@ -21,4 +21,7 @@
         android:title="@string/menu_find_nearby"
         android:showAsAction="never" />
     
+    <item android:id="@+id/menu_find_recommended"
+        android:title="@string/menu_find_recommended"
+        android:showAsAction="never" />
 </menu>

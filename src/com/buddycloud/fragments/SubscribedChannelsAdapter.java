@@ -1,4 +1,4 @@
-package com.buddycloud;
+package com.buddycloud.fragments;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

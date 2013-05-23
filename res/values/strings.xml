@@ -8,6 +8,13 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_find_nearby">Nearby channels</string>
     <string name="menu_find_active">Active channels</string>
+    <string name="menu_find_recommended">Recommended channels</string>
+    
+    <string name="menu_follow">Follow</string>
+    <string name="menu_channel_details">Channel details</string>
+    <string name="menu_channel_followers">Followers</string>
+    <string name="menu_channel_banned">Banned</string>
+    <string name="menu_similar_channels">Similar channels</string>
     
     <string name="title_activity_share">buddycloud</string>
     <string name="login_hint">personal channel</string>

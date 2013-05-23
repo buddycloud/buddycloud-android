@@ -1,4 +1,4 @@
-package com.buddycloud;
+package com.buddycloud.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +10,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.actionbarsherlock.view.Menu;
+import com.buddycloud.MainActivity;
+import com.buddycloud.R;
 import com.buddycloud.model.SyncModel;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
@@ -89,18 +92,19 @@ public class SubscribedChannelsFragment extends ContentFragment {
 	}
 	
 	private void showChannelFragment(String channelJid) {
-		ChannelStreamFragment frag = new ChannelStreamFragment();
-		Bundle args = new Bundle();
-		args.putString(CHANNEL, channelJid);
-		frag.setArguments(args);
 		MainActivity activity = (MainActivity) getActivity();
-		activity.setLeftFragment(frag);
-		frag.syncd();
+		activity.showChannelFragment(channelJid).syncd();
 	}
 
 	@Override
-	void attached() {
+	public void attached() {
 		getSherlockActivity().getSupportActionBar().setTitle("");
+	}
+
+	@Override
+	public void createOptions(Menu menu) {
+		getSherlockActivity().getSupportMenuInflater().inflate(
+				R.menu.subscribed_fragment_options, menu);
 	}
 
 }

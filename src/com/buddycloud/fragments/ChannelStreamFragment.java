@@ -1,4 +1,4 @@
-package com.buddycloud;
+package com.buddycloud.fragments;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.view.Menu;
+import com.buddycloud.MainActivity;
+import com.buddycloud.R;
 import com.buddycloud.card.CardListAdapter;
 import com.buddycloud.card.PostCard;
 import com.buddycloud.image.SmartImageView;
@@ -121,15 +124,13 @@ public class ChannelStreamFragment extends ContentFragment {
 		postCard.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ContentFragment postDetailsFrag = new PostDetailsFragment();
-				Bundle args = new Bundle();
-				args.putString(PostDetailsFragment.POST_ID, postId);
-				args.putString(SubscribedChannelsFragment.CHANNEL, channelJid);
-				
-				postDetailsFrag.setArguments(args);
-				
+				showPostDetailFragment(channelJid, postId);
+			}
+
+			private void showPostDetailFragment(final String channelJid,
+					final String postId) {
 				MainActivity activity = (MainActivity) getActivity();
-				activity.setRightFragment(postDetailsFrag);
+				activity.showPostDetailFragment(channelJid, postId);
 			}
 		});
 		return postCard;
@@ -171,7 +172,13 @@ public class ChannelStreamFragment extends ContentFragment {
 	}
 
 	@Override
-	void attached() {
+	public void attached() {
 		loadTitle(channelJid);
+	}
+
+	@Override
+	public void createOptions(Menu menu) {
+		getSherlockActivity().getSupportMenuInflater().inflate(
+				R.menu.channel_fragment_options, menu);
 	}
 }

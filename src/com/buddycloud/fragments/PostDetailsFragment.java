@@ -1,4 +1,4 @@
-package com.buddycloud;
+package com.buddycloud.fragments;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.view.Menu;
+import com.buddycloud.R;
 import com.buddycloud.card.CardListAdapter;
 import com.buddycloud.card.CommentCard;
 import com.buddycloud.image.SmartImageView;
@@ -144,14 +146,20 @@ public class PostDetailsFragment extends ContentFragment {
 	}
 
 	@Override
-	void syncd() {
+	public void syncd() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	void attached() {
+	public void attached() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void createOptions(Menu menu) {
+		getSherlockActivity().getSupportMenuInflater().inflate(
+				R.menu.post_fragment_options, menu);
 	}
 }
