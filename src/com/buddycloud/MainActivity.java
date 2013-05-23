@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.KeyEvent;
 
 import com.actionbarsherlock.view.Menu;
 import com.buddycloud.fragments.ChannelStreamFragment;
@@ -64,14 +65,23 @@ public class MainActivity extends SlidingFragmentActivity {
 	}
 
 	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			onBackPressed();
+			return false;
+	    }
+	    return true;
+	}
+	
+	@Override
 	public void onBackPressed() {
 		//TODO Animation between fragments
 		if (getSlidingMenu().isMenuShowing()) {
-			getSlidingMenu().showContent();
-		} else if (pageAdapter.getCurrentFragmentIndex() != 0) {
-			pageAdapter.setCurrentFragment(0);
+			finish();
+		} else if (pageAdapter.getCurrentFragmentIndex() == 0) {
+			getSlidingMenu().showMenu();
 		} else {
-			super.onBackPressed();
+			pageAdapter.setCurrentFragment(pageAdapter.getCurrentFragmentIndex() - 1);
 		}
 	}
 	
