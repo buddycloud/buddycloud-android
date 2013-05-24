@@ -182,6 +182,9 @@ public class ChannelStreamFragment extends ContentFragment {
 
 	@Override
 	public void createOptions(Menu menu) {
+		if (getSherlockActivity() == null) {
+			return;
+		}
 		getSherlockActivity().getSupportMenuInflater().inflate(
 				R.menu.channel_fragment_options, menu);
 	}

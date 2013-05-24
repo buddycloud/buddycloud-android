@@ -17,8 +17,7 @@ public class SubscribedChannelsAdapter extends GenericChannelAdapter {
 	private String myChannel;
 	
 	public SubscribedChannelsAdapter() {
-		addCategory(PERSONAL);
-		addCategory(SUBSCRIBED);
+		setCategoryOrder(PERSONAL, SUBSCRIBED);
 	}
 	
 	public void load(final Context context) {

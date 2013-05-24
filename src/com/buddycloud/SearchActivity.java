@@ -23,8 +23,6 @@ public class SearchActivity extends SherlockFragmentActivity {
 		transaction.replace(R.id.contentFrame, searchChannelsFragment);
 		transaction.commitAllowingStateLoss();
 		
-		searchChannelsFragment.load(this);
-		
 		((TextView)findViewById(R.id.searchTxt)).addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -40,7 +38,7 @@ public class SearchActivity extends SherlockFragmentActivity {
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
 					int arg3) {
 				String q = arg0.toString();
-				searchChannelsFragment.filter(q);
+				searchChannelsFragment.filter(SearchActivity.this, q);
 			}
 		});
 		

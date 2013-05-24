@@ -23,7 +23,9 @@ public class SearchChannelsFragment extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return genericChannelFrag.onCreateView(inflater, container, savedInstanceState);
+		View view = genericChannelFrag.onCreateView(inflater, container, savedInstanceState);
+		adapter.load(container.getContext());
+		return view;
 	}
 	
 	private void selectChannel(String channelJid) {
@@ -33,11 +35,7 @@ public class SearchChannelsFragment extends SherlockFragment {
 		getActivity().finish();
 	}
 
-	public void load(Context context) {
-		adapter.load(context);
-	}
-
-	public void filter(String q) {
-		adapter.filter(q);
+	public void filter(Context context, String q) {
+		adapter.filter(context, q);
 	}
 }
