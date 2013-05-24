@@ -8,10 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.buddycloud.fragments.adapter.SearchChannelsAdapter;
 
 public class SearchChannelsFragment extends SherlockFragment {
 
-	private GenericChannelsFragment genericChannelFrag = new GenericChannelsFragment() {
+	private SearchChannelsAdapter adapter = new SearchChannelsAdapter();
+	private GenericChannelsFragment genericChannelFrag = new GenericChannelsFragment(adapter) {
 		@Override
 		public void channelSelected(String channelJid) {
 			selectChannel(channelJid);
@@ -32,10 +34,10 @@ public class SearchChannelsFragment extends SherlockFragment {
 	}
 
 	public void load(Context context) {
-		genericChannelFrag.load(context);
+		adapter.load(context);
 	}
 
 	public void filter(String q) {
-		genericChannelFrag.filter(q);
+		adapter.filter(q);
 	}
 }

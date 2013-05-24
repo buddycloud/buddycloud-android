@@ -12,12 +12,14 @@ import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.SearchActivity;
+import com.buddycloud.fragments.adapter.SubscribedChannelsAdapter;
 import com.buddycloud.model.SyncModel;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class SubscribedChannelsFragment extends ContentFragment {
 
-	private GenericChannelsFragment genericChannelFrag = new GenericChannelsFragment() {
+	private SubscribedChannelsAdapter adapter = new SubscribedChannelsAdapter();
+	private GenericChannelsFragment genericChannelFrag = new GenericChannelsFragment(adapter) {
 		@Override
 		public void channelSelected(String channelJid) {
 			selectChannel(channelJid);
@@ -31,7 +33,7 @@ public class SubscribedChannelsFragment extends ContentFragment {
 	}
 	
 	public void syncd(Context context) {
-		genericChannelFrag.load(context);
+		adapter.load(context);
 	}
 	
 	private void selectChannel(String channelJid) {

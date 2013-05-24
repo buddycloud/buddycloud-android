@@ -14,16 +14,27 @@ import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.model.SyncModel;
 import com.squareup.picasso.Picasso;
 
-public class SubscribedChannelUtils {
+public class ChannelAdapterHelper {
 
-	public static View createSubscribedChannelMenuItem(Context context, View convertView,
+	public static View createChannelGroupItem(Context context, View convertView,
+			ViewGroup viewGroup, String channelGroup) {
+		LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+		convertView = inflater.inflate(R.layout.channel_group_header, viewGroup, false);
+		
+		TextView groupHeader = (TextView) convertView.findViewById(R.id.groupHeader);
+		groupHeader.setText(channelGroup);
+		
+		return convertView;
+	}
+	
+	public static View createChannelMenuItem(Context context, View convertView,
 			ViewGroup viewGroup, String channelJid) {
 		ViewHolder holder = null; 
 		boolean firstLoad = convertView == null; 
 		
 		if (firstLoad) {
 			LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-			convertView = inflater.inflate(R.layout.subscriber_entry, viewGroup, false);
+			convertView = inflater.inflate(R.layout.channel_item, viewGroup, false);
 			holder = fillHolder(convertView);
 			convertView.setTag(holder);
 		} else {
