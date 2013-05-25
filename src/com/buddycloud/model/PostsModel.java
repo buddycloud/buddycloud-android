@@ -79,15 +79,22 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 				if (comments == null) {
 					comments = new JSONArray();
 				}
-				
-				comments.put(item);
-				postsComments.put(postId, comments);
+				postsComments.put(postId, prepend(item, comments));
 			}
 		}
 		
 		channelsPosts.put(channel, posts);
 	}
 	
+	private JSONArray prepend(JSONObject item, JSONArray comments) {
+		JSONArray result = new JSONArray();
+		result.put(item);
+		for (int i = 0; i < comments.length(); i++) {
+			result.put(comments.optJSONObject(i));
+		}
+		return result;
+	}
+
 	private void lookupPostsFromDatabase(final Context context, 
 			final String channelJid, 
 			final ModelCallback<JSONArray> callback) {
@@ -141,7 +148,7 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 	
 	private String postsUrl(Context context, String channel) {
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
-		return apiAddress + "/" + channel + POSTS_ENDPOINT;
+		return apiAddress + "/" + channel + POSTS_ENDPOINT + "?max=" + PAGE_SIZE;
 	}
 
 	@Override

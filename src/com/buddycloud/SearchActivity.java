@@ -1,9 +1,11 @@
 package com.buddycloud;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -18,12 +20,15 @@ public class SearchActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        TextView searchView = (TextView)findViewById(R.id.searchTxt);
+		
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		final SearchChannelsFragment searchChannelsFragment = new SearchChannelsFragment();
+		searchChannelsFragment.setWindowToken(searchView.getWindowToken());
 		transaction.replace(R.id.contentFrame, searchChannelsFragment);
 		transaction.commitAllowingStateLoss();
 		
-		((TextView)findViewById(R.id.searchTxt)).addTextChangedListener(new TextWatcher() {
+		searchView.addTextChangedListener(new TextWatcher() {
 
 			@Override
 			public void afterTextChanged(Editable arg0) {
@@ -41,6 +46,13 @@ public class SearchActivity extends SherlockFragmentActivity {
 				searchChannelsFragment.filter(SearchActivity.this, q);
 			}
 		});
-		
+    }
+    
+    @Override
+    protected void onPause() {
+    	TextView et = ((TextView)findViewById(R.id.searchTxt));
+    	InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+        super.onPause();
     }
 }
