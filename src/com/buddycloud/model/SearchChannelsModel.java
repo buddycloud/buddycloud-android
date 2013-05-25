@@ -13,8 +13,12 @@ import com.buddycloud.preferences.Preferences;
 
 public class SearchChannelsModel implements Model<JSONArray, JSONArray, String> {
 
-	private static SearchChannelsModel instance;
+	public static final String METADATA_TYPE = "metadata";
+	public static final String POST_TYPE = "content";
+	
 	private static final String ENDPOINT = "/search"; 
+	private static final int MAX = 5;
+	private static SearchChannelsModel instance;
 	
 	private SearchChannelsModel() {}
 	
@@ -26,14 +30,22 @@ public class SearchChannelsModel implements Model<JSONArray, JSONArray, String> 
 	}
 	
 	public void refresh(final Context context, final ModelCallback<JSONArray> callback, String... p) {
-		BuddycloudHTTPHelper.getObject(url(context, p[0], p[1]), context, 
+		final String type = p[0];
+		final String q = p[1];
+		BuddycloudHTTPHelper.getObject(url(context, type, q), context, 
 				new ModelCallback<JSONObject>() {
 					@Override
 					public void success(JSONObject response) {
 						List<String> channels = new ArrayList<String>();
 						JSONArray channelJson = response.optJSONArray("items");
 						for (int i = 0; i < channelJson.length(); i++) {
-							channels.add(channelJson.optJSONObject(i).optString("jid"));
+							String channelJid = null;
+							if (type.equals(METADATA_TYPE)) {
+								channelJid = channelJson.optJSONObject(i).optString("jid");
+							} else if (type.equals(POST_TYPE)) {
+								channelJid = channelJson.optJSONObject(i).optString("parent_simpleid");
+							}
+							channels.add(channelJid);
 						}
 						callback.success(new JSONArray(channels));
 					}
@@ -47,7 +59,7 @@ public class SearchChannelsModel implements Model<JSONArray, JSONArray, String> 
 
 	private static String url(Context context, String type, String q) {
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
-		return apiAddress + ENDPOINT + "?type=" + type + "&q=" + q;
+		return apiAddress + ENDPOINT + "?type=" + type + "&q=" + q + "&max=" + MAX;
 	}
 
 
