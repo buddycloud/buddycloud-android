@@ -24,7 +24,7 @@ import com.buddycloud.R;
 import com.buddycloud.card.CardListAdapter;
 import com.buddycloud.card.PostCard;
 import com.buddycloud.model.ModelCallback;
-import com.buddycloud.model.SyncModel;
+import com.buddycloud.model.PostsModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
@@ -68,7 +68,7 @@ public class ChannelStreamFragment extends ContentFragment {
 				
 				JSONObject post = createPost(postContent);
 				
-				SyncModel.getInstance().save(getActivity(), post, new ModelCallback<JSONObject>() {
+				PostsModel.getInstance().save(getActivity(), post, new ModelCallback<JSONObject>() {
 					@Override
 					public void success(JSONObject response) {
 						Toast.makeText(getActivity().getApplicationContext(), "Post created", Toast.LENGTH_LONG).show();
@@ -102,7 +102,7 @@ public class ChannelStreamFragment extends ContentFragment {
 	
 	public void syncd(Context context) {
 		getView().findViewById(R.id.subscribedProgress).setVisibility(View.GONE);
-		JSONArray posts = SyncModel.getInstance().postsFromChannel(channelJid);
+		JSONArray posts = PostsModel.getInstance().cachedPostsFromChannel(channelJid);
 		ListView contentView = (ListView) getView().findViewById(R.id.postsStream);
 		CardListAdapter cardAdapter = new CardListAdapter();
 		contentView.setAdapter(cardAdapter);
@@ -122,7 +122,7 @@ public class ChannelStreamFragment extends ContentFragment {
 		
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), postAuthor);
 		
-		Integer commentCount = SyncModel.getInstance().commentsFromPost(postId).length();
+		Integer commentCount = PostsModel.getInstance().cachedCommentsFromPost(postId).length();
 		
 		PostCard postCard = new PostCard(postAuthor, avatarURL, postContent, published, commentCount);
 		postCard.setOnClickListener(new OnClickListener() {

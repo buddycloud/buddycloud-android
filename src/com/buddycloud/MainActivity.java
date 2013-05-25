@@ -1,5 +1,6 @@
 package com.buddycloud;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Intent;
@@ -18,6 +19,7 @@ import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.fragments.PostDetailsFragment;
 import com.buddycloud.fragments.SubscribedChannelsFragment;
 import com.buddycloud.model.ModelCallback;
+import com.buddycloud.model.PostsModel;
 import com.buddycloud.model.SyncModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.GCMUtils;
@@ -124,7 +126,20 @@ public class MainActivity extends SlidingFragmentActivity {
 			startActivity();
 		} else if (requestCode == SearchActivity.REQUEST_CODE) {
 			if (data != null) {
-				showChannelFragment(data.getStringExtra(GenericChannelsFragment.CHANNEL)).syncd(this);
+				final String channelJid = data.getStringExtra(GenericChannelsFragment.CHANNEL);
+				final ChannelStreamFragment channelFragment = showChannelFragment(channelJid);
+				PostsModel.getInstance().refresh(this, new ModelCallback<JSONArray>() {
+
+					@Override
+					public void success(JSONArray response) {
+						channelFragment.syncd(MainActivity.this);
+					}
+
+					@Override
+					public void error(Throwable throwable) {
+						
+					}
+				}, channelJid);
 			}
 		}
 	}

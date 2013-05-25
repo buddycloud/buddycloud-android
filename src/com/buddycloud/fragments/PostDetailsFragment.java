@@ -22,6 +22,7 @@ import com.buddycloud.R;
 import com.buddycloud.card.CardListAdapter;
 import com.buddycloud.card.CommentCard;
 import com.buddycloud.model.ModelCallback;
+import com.buddycloud.model.PostsModel;
 import com.buddycloud.model.SyncModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
@@ -39,8 +40,11 @@ public class PostDetailsFragment extends ContentFragment {
 		final String postId = getArguments().getString(POST_ID);
 		final String channelJid = getArguments().getString(GenericChannelsFragment.CHANNEL);
 		
-		JSONObject post = SyncModel.getInstance().postWithId(postId, channelJid);
-
+		JSONObject post = PostsModel.getInstance().postWithId(postId, channelJid);
+		if (post == null) {
+			return view;
+		}
+		
 		((TextView) view.findViewById(R.id.title)).setText(post.optString("author"));
 		
 		String authorAvatarURL = AvatarUtils.avatarURL(getActivity(), post.optString("author"));
@@ -81,7 +85,7 @@ public class PostDetailsFragment extends ContentFragment {
 				
 				JSONObject post = createPost(postContent);
 				
-				SyncModel.getInstance().save(getActivity(), post, new ModelCallback<JSONObject>() {
+				PostsModel.getInstance().save(getActivity(), post, new ModelCallback<JSONObject>() {
 					@Override
 					public void success(JSONObject response) {
 						Toast.makeText(getActivity().getApplicationContext(), "Post created", Toast.LENGTH_LONG).show();
@@ -136,7 +140,7 @@ public class PostDetailsFragment extends ContentFragment {
 	}
 	
 	private void loadComments(final View view, final String postId) {
-		JSONArray comments = SyncModel.getInstance().commentsFromPost(postId);
+		JSONArray comments = PostsModel.getInstance().cachedCommentsFromPost(postId);
 		for (int i = 0; i < comments.length(); i++) {
 			JSONObject comment = comments.optJSONObject(i);
 			commentAdapter.addCard(toCard(comment));

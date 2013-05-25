@@ -13,7 +13,6 @@ import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.SearchActivity;
 import com.buddycloud.fragments.adapter.SubscribedChannelsAdapter;
-import com.buddycloud.model.SyncModel;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class SubscribedChannelsFragment extends ContentFragment {
@@ -39,7 +38,6 @@ public class SubscribedChannelsFragment extends ContentFragment {
 	private void selectChannel(String channelJid) {
 		showChannelFragment(channelJid);
 		hideMenu();
-		SyncModel.getInstance().selectChannel(getActivity(), channelJid);
 	}
 
 	private void hideMenu() {
