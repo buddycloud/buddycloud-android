@@ -63,6 +63,9 @@ public class ContentPageAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
+		if (mFragments.isEmpty()) {
+			return null;
+		}
 		return mFragments.get(position);
 	}
 

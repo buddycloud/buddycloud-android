@@ -37,6 +37,7 @@ public class MainActivity extends SlidingFragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		setSlidingActionBarEnabled(false);
 		setBehindContentView(R.layout.menu_frame);
 		
 		ViewPager viewPager = new ViewPager(this);
@@ -191,15 +192,14 @@ public class MainActivity extends SlidingFragmentActivity {
 		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 		sm.setFadeDegree(0.15f);
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-		setSlidingActionBarEnabled(false);
-		getSlidingMenu().setOnOpenedListener(new OnOpenedListener() {
+		sm.setOnOpenedListener(new OnOpenedListener() {
 			@Override
 			public void onOpened() {
 				fragmentChanged();
 			}
 		});
 		
-		getSlidingMenu().setOnClosedListener(new OnClosedListener() {
+		sm.setOnClosedListener(new OnClosedListener() {
 			@Override
 			public void onClosed() {
 				fragmentChanged();
@@ -221,7 +221,10 @@ public class MainActivity extends SlidingFragmentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getCurrentFragment().createOptions(menu);
+		ContentFragment currentFragment = getCurrentFragment();
+		if (currentFragment != null) {
+			currentFragment.createOptions(menu);
+		}
 		return super.onCreateOptionsMenu(menu);
 	}
 	
