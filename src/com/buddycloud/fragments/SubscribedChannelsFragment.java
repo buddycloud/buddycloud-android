@@ -1,5 +1,7 @@
 package com.buddycloud.fragments;
 
+import java.util.List;
+
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -15,6 +17,8 @@ import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.SearchActivity;
 import com.buddycloud.fragments.adapter.SubscribedChannelsAdapter;
+import com.buddycloud.model.ModelCallback;
+import com.buddycloud.model.PostsModel;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class SubscribedChannelsFragment extends ContentFragment {
@@ -51,7 +55,19 @@ public class SubscribedChannelsFragment extends ContentFragment {
 	
 	private void showChannelFragment(String channelJid) {
 		MainActivity activity = (MainActivity) getActivity();
-		activity.showChannelFragment(channelJid).syncd(activity);
+		final ChannelStreamFragment channelFragment = activity.showChannelFragment(channelJid);
+		PostsModel.getInstance().refresh(getActivity(), new ModelCallback<List<String>>() {
+			@Override
+			public void success(List<String> response) {
+				channelFragment.syncd(getActivity());
+			}
+
+			@Override
+			public void error(Throwable throwable) {
+				// TODO Auto-generated method stub
+				
+			}
+		}, channelJid);
 	}
 
 	@Override

@@ -1,53 +1,68 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="#555555" >
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+    <ImageView
+        android:id="@+id/shareImagePreview"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_alignParentLeft="true"
+        android:layout_margin="8dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/share_preview_border"
+        android:scaleType="centerCrop"
+        android:src="@drawable/abs__ab_solid_dark_holo" />
+
+    <EditText
+        android:id="@+id/channelText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/shareImagePreview"
+        android:layout_alignRight="@+id/captionText"
+        android:layout_below="@+id/shareImagePreview"
+        android:ems="10"
+        android:hint="channel"
+        android:inputType="textEmailAddress"
+        android:textColor="#FFFFFF" />
+
+    <EditText
+        android:id="@+id/captionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:orientation="vertical" >
+        android:layout_alignTop="@+id/shareImagePreview"
+        android:layout_marginRight="8dp"
+        android:layout_toRightOf="@+id/shareImagePreview"
+        android:ems="10"
+        android:hint="caption"
+        android:inputType="textMultiLine"
+        android:maxLines="5"
+        android:textColor="#FFFFFF" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+    <RelativeLayout
+        android:id="@+id/shareMediaBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/channelText"
+        android:layout_alignRight="@+id/channelText"
+        android:layout_below="@+id/channelText"
+        android:background="@color/bc_green"
+        android:layout_marginTop="8dp"
+        android:padding="@dimen/login_button_padding" >
 
-            <EditText
-                android:id="@+id/captionText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="@string/caption_hint"
-                android:inputType="textLongMessage"
-                android:lines="2" >
-
-                <requestFocus />
-            </EditText>
-
-            <Button
-                android:id="@+id/shareMediaBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/post_button" />
-        </LinearLayout>
-
-        <VideoView
-            android:id="@+id/shareVideoPreview"
+        <com.buddycloud.utils.TypefacedTextView
+            xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+            android:id="@+id/textView1"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/shareImagePreview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="matrix"
-            android:visibility="gone" />
-
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/share_button"
+            android:textColor="#555555"
+            android:textSize="20sp"
+            buddycloud:typeface="Roboto-Bold.ttf" />
+    </RelativeLayout>
 
 </RelativeLayout>

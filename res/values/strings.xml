@@ -27,5 +27,6 @@
 	<string name="subscribed_channel_hint">SUBSCRIBED</string>
 	<string name="avatar_desc">Channel avatar</string>
 	<string name="search_hint">Search</string>
+	<string name="share_button">Share</string>
 		
 </resources>
