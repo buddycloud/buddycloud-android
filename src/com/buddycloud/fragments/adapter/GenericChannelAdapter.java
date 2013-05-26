@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONObject;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -17,11 +19,11 @@ import com.buddycloud.utils.ChannelAdapterHelper;
 public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 
 	private List<String> categories = new ArrayList<String>();
-	private Map<String, List<String>> channelsPerCategory = new HashMap<String, List<String>>();
+	private Map<String, List<JSONObject>> channelsPerCategory = new HashMap<String, List<JSONObject>>();
 	private Map<String, Integer> categoryOrder = new HashMap<String, Integer>(); 
 	
 	@Override
-	public Object getChild(int groupPosition, int childPosition) {
+	public JSONObject getChild(int groupPosition, int childPosition) {
 		return channelsPerCategory.get(categories.get(groupPosition)).get(childPosition);
 	}
 	
@@ -41,7 +43,7 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 			return;
 		}
 		categories.add(category);
-		channelsPerCategory.put(category, new ArrayList<String>());
+		channelsPerCategory.put(category, new ArrayList<JSONObject>());
 		Collections.sort(categories, new Comparator<String>() {
 			@Override
 			public int compare(String lhs, String rhs) {
@@ -51,9 +53,9 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 		notifyDataSetChanged();
 	}
 	
-	protected void addChannel(String category, String channel) {
+	protected void addChannel(String category, JSONObject channelItem) {
 		addCategory(category);
-		channelsPerCategory.get(category).add(channel);
+		channelsPerCategory.get(category).add(channelItem);
 		notifyDataSetChanged();
 	}
 	
@@ -63,10 +65,12 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 		notifyDataSetChanged();
 	}
 	
-	protected boolean hasChannel(String channel) {
-		for (List<String> channels : channelsPerCategory.values()) {
-			if (channels.contains(channel)) {
-				return true;
+	protected boolean hasChannel(String channelJid) {
+		for (List<JSONObject> channels : channelsPerCategory.values()) {
+			for (JSONObject channel : channels) {
+				if (channel.optString("jid").equals(channelJid)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -75,7 +79,8 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getChildView(final int groupPosition, final int childPosition,
             boolean isLastChild, View convertView, ViewGroup viewGroup) {
-		String channelJid = (String) getChild(groupPosition, childPosition);
+		JSONObject channelItem = getChild(groupPosition, childPosition);
+		String channelJid = channelItem.optString("jid");
 		View returningView = ChannelAdapterHelper.createChannelMenuItem(
 				viewGroup.getContext(), convertView, viewGroup, channelJid);
 		return returningView;
@@ -86,6 +91,12 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 		return channelsPerCategory.get(categories.get(groupPosition)).size();
 	}
 
+	public static JSONObject createChannelItem(String jid) {
+		Map<String, String> props = new HashMap<String, String>();
+		props.put("jid", jid);
+		return new JSONObject(props);
+	}
+	
 	@Override
 	public Object getGroup(int groupPosition) {
 		return categories.get(groupPosition);

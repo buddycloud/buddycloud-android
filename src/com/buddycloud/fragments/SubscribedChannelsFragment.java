@@ -1,5 +1,7 @@
 package com.buddycloud.fragments;
 
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,8 +22,8 @@ public class SubscribedChannelsFragment extends ContentFragment {
 	private SubscribedChannelsAdapter adapter = new SubscribedChannelsAdapter();
 	private GenericChannelsFragment genericChannelFrag = new GenericChannelsFragment(adapter) {
 		@Override
-		public void channelSelected(String channelJid) {
-			selectChannel(channelJid);
+		public void channelSelected(JSONObject channelItem) {
+			selectChannel(channelItem.optString("jid"));
 		}
 	};
 	

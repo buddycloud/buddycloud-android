@@ -151,16 +151,16 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 		String since = TimeUtils.OLDEST_DATE;
 		
 		for (String channel : channels) {
-			JSONArray posts = PostsModel.getInstance().cachedPostsFromChannel(channel);
+			List<String> postsIds = PostsModel.getInstance().cachedPostsFromChannel(channel);
 			String temp = null;
 			
-			if (posts != null) {
-				JSONObject mostRecentPost = posts.optJSONObject(0);
-				JSONArray comments = PostsModel.getInstance().cachedCommentsFromPost(
+			if (postsIds != null) {
+				JSONObject mostRecentPost = PostsModel.getInstance().postWithId(postsIds.get(0), channel);
+				List<JSONObject> comments = PostsModel.getInstance().cachedCommentsFromPost(
 						mostRecentPost.optString(PostsTableHelper.COLUMN_ID));
 				
-				if (comments != null && comments.length() > 0) {
-					JSONObject mostRecentComment = comments.optJSONObject(comments.length() - 1);
+				if (comments != null && comments.size() > 0) {
+					JSONObject mostRecentComment = comments.get(comments.size() - 1);
 					temp = mostRecentComment.optString(PostsTableHelper.COLUMN_UPDATED);
 				} else {
 					temp = mostRecentPost.optString(PostsTableHelper.COLUMN_UPDATED);

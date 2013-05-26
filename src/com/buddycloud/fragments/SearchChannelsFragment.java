@@ -1,5 +1,7 @@
 package com.buddycloud.fragments;
 
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,8 +19,13 @@ public class SearchChannelsFragment extends SherlockFragment {
 	private SearchChannelsAdapter adapter = new SearchChannelsAdapter();
 	private GenericChannelsFragment genericChannelFrag = new GenericChannelsFragment(adapter) {
 		@Override
-		public void channelSelected(String channelJid) {
-			selectChannel(channelJid);
+		public void channelSelected(JSONObject channelItem) {
+			if (channelItem.has("post_id")) {
+				selectItem(channelItem.optString("post_id"), 
+						channelItem.optString("jid"));
+			} else {
+				selectChannel(channelItem.optString("jid"));
+			}
 		}
 	};
 	private IBinder windowToken;
@@ -31,14 +38,20 @@ public class SearchChannelsFragment extends SherlockFragment {
 		return view;
 	}
 	
-	private void selectChannel(String channelJid) {
+	protected void selectItem(String itemId, String channelJid) {
 		hideKeyboard();
-		finishActivity(channelJid);
+		finishActivity(itemId, channelJid);
 	}
 
-	private void finishActivity(String channelJid) {
+	private void selectChannel(String channelJid) {
+		hideKeyboard();
+		finishActivity(null, channelJid);
+	}
+
+	private void finishActivity(String itemId, String channelJid) {
 		Intent returnIntent = new Intent();
 		returnIntent.putExtra(GenericChannelsFragment.CHANNEL, channelJid);
+		returnIntent.putExtra(GenericChannelsFragment.POST_ID, itemId);
 		getActivity().setResult(0, returnIntent);
 		getActivity().finish();
 	}

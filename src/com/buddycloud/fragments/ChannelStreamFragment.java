@@ -1,6 +1,7 @@
 package com.buddycloud.fragments;
 
-import org.json.JSONArray;
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -102,15 +103,17 @@ public class ChannelStreamFragment extends ContentFragment {
 	
 	public void syncd(Context context) {
 		getView().findViewById(R.id.subscribedProgress).setVisibility(View.GONE);
-		JSONArray posts = PostsModel.getInstance().cachedPostsFromChannel(channelJid);
+		List<String> postsIds = PostsModel.getInstance().cachedPostsFromChannel(channelJid);
 		ListView contentView = (ListView) getView().findViewById(R.id.postsStream);
 		CardListAdapter cardAdapter = new CardListAdapter();
 		contentView.setAdapter(cardAdapter);
-		for (int i = 0; i < posts.length(); i++) {
-			JSONObject j = posts.optJSONObject(i);
-			PostCard card = toCard(j, channelJid);
+		
+		for (String postId : postsIds) {
+			JSONObject post = PostsModel.getInstance().postWithId(postId, channelJid);
+			PostCard card = toCard(post, channelJid);
 			cardAdapter.addCard(card);
 		}
+		
 		cardAdapter.notifyDataSetChanged();
 	}
 	
@@ -122,7 +125,7 @@ public class ChannelStreamFragment extends ContentFragment {
 		
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), postAuthor);
 		
-		Integer commentCount = PostsModel.getInstance().cachedCommentsFromPost(postId).length();
+		Integer commentCount = PostsModel.getInstance().cachedCommentsFromPost(postId).size();
 		
 		PostCard postCard = new PostCard(postAuthor, avatarURL, postContent, published, commentCount);
 		postCard.setOnClickListener(new OnClickListener() {

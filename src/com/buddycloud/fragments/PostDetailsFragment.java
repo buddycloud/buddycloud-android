@@ -1,6 +1,7 @@
 package com.buddycloud.fragments;
 
-import org.json.JSONArray;
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,36 +41,7 @@ public class PostDetailsFragment extends ContentFragment {
 		final String postId = getArguments().getString(POST_ID);
 		final String channelJid = getArguments().getString(GenericChannelsFragment.CHANNEL);
 		
-		JSONObject post = PostsModel.getInstance().postWithId(postId, channelJid);
-		if (post == null) {
-			return view;
-		}
-		
-		((TextView) view.findViewById(R.id.title)).setText(post.optString("author"));
-		
-		String authorAvatarURL = AvatarUtils.avatarURL(getActivity(), post.optString("author"));
-		ImageView authorAvatarView = (ImageView) view.findViewById(R.id.bcProfilePic);
-		Picasso.with(getActivity()).load(authorAvatarURL)
-				.placeholder(R.drawable.personal_50px)
-				.error(R.drawable.personal_50px)
-				.into(authorAvatarView);
-		
-		((TextView) view.findViewById(R.id.bcPostContent)).setText(post.optString("content"));
-		
-		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
-		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
-		ImageView avatarView = (ImageView) view.findViewById(R.id.bcCommentPic);
-		Picasso.with(getActivity()).load(avatarURL)
-				.placeholder(R.drawable.personal_50px)
-				.error(R.drawable.personal_50px)
-				.into(avatarView);
-		
-		
-		ListView commentList = (ListView) view.findViewById(R.id.postsStream);
-		this.commentAdapter = new CardListAdapter();
-		commentList.setAdapter(commentAdapter);
-		
-		loadComments(view, postId);
+		updateView(view, postId, channelJid);
 		
 		final ImageView postButton = (ImageView) view.findViewById(R.id.postButton);
 		postButton.setEnabled(false);
@@ -118,6 +90,43 @@ public class PostDetailsFragment extends ContentFragment {
 		return view;
 	}
 
+	private void updateView(View view, final String postId, final String channelJid) {
+		JSONObject post = PostsModel.getInstance().postWithId(postId, channelJid);
+		if (post == null) {
+			return;
+		}
+		
+		if (view == null) {
+			view = getView();
+		}
+		
+		((TextView) view.findViewById(R.id.title)).setText(post.optString("author"));
+		
+		String authorAvatarURL = AvatarUtils.avatarURL(getActivity(), post.optString("author"));
+		ImageView authorAvatarView = (ImageView) view.findViewById(R.id.bcProfilePic);
+		Picasso.with(getActivity()).load(authorAvatarURL)
+				.placeholder(R.drawable.personal_50px)
+				.error(R.drawable.personal_50px)
+				.into(authorAvatarView);
+		
+		((TextView) view.findViewById(R.id.bcPostContent)).setText(post.optString("content"));
+		
+		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
+		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
+		ImageView avatarView = (ImageView) view.findViewById(R.id.bcCommentPic);
+		Picasso.with(getActivity()).load(avatarURL)
+				.placeholder(R.drawable.personal_50px)
+				.error(R.drawable.personal_50px)
+				.into(avatarView);
+		
+		
+		ListView commentList = (ListView) view.findViewById(R.id.postsStream);
+		this.commentAdapter = new CardListAdapter();
+		commentList.setAdapter(commentAdapter);
+		
+		loadComments(view, postId);
+	}
+
 	public void sync(final String channelJid, final String postId) {
 		commentAdapter.clear();
 		
@@ -140,9 +149,8 @@ public class PostDetailsFragment extends ContentFragment {
 	}
 	
 	private void loadComments(final View view, final String postId) {
-		JSONArray comments = PostsModel.getInstance().cachedCommentsFromPost(postId);
-		for (int i = 0; i < comments.length(); i++) {
-			JSONObject comment = comments.optJSONObject(i);
+		List<JSONObject> comments = PostsModel.getInstance().cachedCommentsFromPost(postId);
+		for (JSONObject comment : comments) {
 			commentAdapter.addCard(toCard(comment));
 			commentAdapter.notifyDataSetChanged();
 		}
@@ -160,8 +168,9 @@ public class PostDetailsFragment extends ContentFragment {
 
 	@Override
 	public void syncd(Context context) {
-		// TODO Auto-generated method stub
-		
+		final String postId = getArguments().getString(POST_ID);
+		final String channelJid = getArguments().getString(GenericChannelsFragment.CHANNEL);
+		updateView(getView(), postId, channelJid);
 	}
 
 	@Override

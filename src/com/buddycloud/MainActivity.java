@@ -1,6 +1,7 @@
 package com.buddycloud;
 
-import org.json.JSONArray;
+import java.util.List;
+
 import org.json.JSONObject;
 
 import android.content.Intent;
@@ -127,19 +128,28 @@ public class MainActivity extends SlidingFragmentActivity {
 		} else if (requestCode == SearchActivity.REQUEST_CODE) {
 			if (data != null) {
 				final String channelJid = data.getStringExtra(GenericChannelsFragment.CHANNEL);
-				final ChannelStreamFragment channelFragment = showChannelFragment(channelJid);
-				PostsModel.getInstance().refresh(this, new ModelCallback<JSONArray>() {
-
+				final String postId = data.getStringExtra(GenericChannelsFragment.POST_ID);
+				
+				ModelCallback<List<String>> callback = new ModelCallback<List<String>>() {
 					@Override
-					public void success(JSONArray response) {
-						channelFragment.syncd(MainActivity.this);
+					public void success(List<String> response) {
+						getCurrentFragment().syncd(MainActivity.this);
 					}
-
+					
 					@Override
 					public void error(Throwable throwable) {
 						
 					}
-				}, channelJid);
+				};
+				
+				if (postId != null) {
+					showPostDetailFragment(channelJid, postId);
+					PostsModel.getInstance().refreshPost(this, callback, channelJid, postId);
+				} else {
+					showChannelFragment(channelJid);
+					PostsModel.getInstance().refresh(this, callback, channelJid);
+				}
+				
 			}
 		}
 	}

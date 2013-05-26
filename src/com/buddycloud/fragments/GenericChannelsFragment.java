@@ -1,5 +1,7 @@
 package com.buddycloud.fragments;
 
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import com.buddycloud.fragments.adapter.GenericChannelAdapter;
 public abstract class GenericChannelsFragment extends SherlockFragment {
 
 	public final static String CHANNEL = "com.buddycloud.CHANNEL";
+	public static final String POST_ID = "com.buddycloud.ITEM";
 	
 	private final GenericChannelAdapter adapter;
 	
@@ -30,8 +33,8 @@ public abstract class GenericChannelsFragment extends SherlockFragment {
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
-				String channelJid = (String) adapter.getChild(groupPosition, childPosition);
-				channelSelected(channelJid);
+				JSONObject channelItem = (JSONObject) adapter.getChild(groupPosition, childPosition);
+				channelSelected(channelItem);
 				return true;
 			}
 		};
@@ -55,6 +58,6 @@ public abstract class GenericChannelsFragment extends SherlockFragment {
 		}
 	}
 	
-	public abstract void channelSelected(String channelJid);
+	public abstract void channelSelected(JSONObject channelItem);
 
 }

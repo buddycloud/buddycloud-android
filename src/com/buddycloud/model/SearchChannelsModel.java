@@ -1,7 +1,9 @@
 package com.buddycloud.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,18 +38,20 @@ public class SearchChannelsModel implements Model<JSONArray, JSONArray, String> 
 				new ModelCallback<JSONObject>() {
 					@Override
 					public void success(JSONObject response) {
-						List<String> channels = new ArrayList<String>();
-						JSONArray channelJson = response.optJSONArray("items");
-						for (int i = 0; i < channelJson.length(); i++) {
-							String channelJid = null;
+						List<JSONObject> channelItems = new ArrayList<JSONObject>();
+						JSONArray items = response.optJSONArray("items");
+						for (int i = 0; i < items.length(); i++) {
+							Map<String, String> channelItem = new HashMap<String, String>();
+							JSONObject item = items.optJSONObject(i);
 							if (type.equals(METADATA_TYPE)) {
-								channelJid = channelJson.optJSONObject(i).optString("jid");
+								channelItem.put("jid", item.optString("jid"));
 							} else if (type.equals(POST_TYPE)) {
-								channelJid = channelJson.optJSONObject(i).optString("parent_simpleid");
+								channelItem.put("jid", item.optString("parent_simpleid"));
+								channelItem.put("post_id", item.optString("id"));
 							}
-							channels.add(channelJid);
+							channelItems.add(new JSONObject(channelItem));
 						}
-						callback.success(new JSONArray(channels));
+						callback.success(new JSONArray(channelItems));
 					}
 					
 					@Override

@@ -63,9 +63,9 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 				continue;
 			}
 			if (!channel.equals(myChannel)) {
-				addChannel(SUBSCRIBED, channel);
+				addChannel(SUBSCRIBED, createChannelItem(channel));
 			} else {
-				addChannel(PERSONAL, channel);
+				addChannel(PERSONAL, createChannelItem(channel));
 			}
 			matchedChannels++;
 		}
@@ -99,10 +99,11 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 			@Override
 			public void success(JSONArray response) {
 				for (int i = 0; i < response.length(); i++) {
-					String channel = response.optString(i);
-					if (!hasChannel(channel)) {
-						addChannel(category, channel);
-						fetchMetadata(context, channel);
+					JSONObject channelItem = response.optJSONObject(i);
+					String channelJid = channelItem.optString("jid");
+					if (!hasChannel(channelJid)) {
+						addChannel(category, channelItem);
+						fetchMetadata(context, channelJid);
 					}
 				}
 			}
