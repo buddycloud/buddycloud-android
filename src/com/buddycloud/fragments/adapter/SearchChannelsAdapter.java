@@ -8,6 +8,7 @@ import java.util.Locale;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import com.buddycloud.model.ChannelMetadataModel;
@@ -52,6 +53,7 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 		});
 	}
 
+	@SuppressLint("DefaultLocale")
 	public void filter(final Context context, String q) {
 		clearChannels();
 		int matchedChannels = 0;

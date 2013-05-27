@@ -2,12 +2,9 @@ package com.buddycloud.model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
@@ -20,7 +17,7 @@ import android.net.Uri;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.preferences.Preferences;
-import com.buddycloud.utils.TempUtils;
+import com.buddycloud.utils.FileUtils;
 
 public class MediaModel implements Model<JSONObject, JSONObject, String> {
 
@@ -63,15 +60,11 @@ public class MediaModel implements Model<JSONObject, JSONObject, String> {
 		
 		final Uri streamUri = Uri.parse(p[0]);
 		final String streamType = cr.getType(streamUri);
-		InputStream inputStream = cr.openInputStream(streamUri);
 		
-		File temporaryFile = TempUtils.createTemporaryFile("compressed-", null);
-		FileOutputStream fos = new FileOutputStream(temporaryFile);
-		IOUtils.copy(inputStream, fos);
-		fos.close();
+		File mediaFile = new File(FileUtils.getRealPathFromURI(context, streamUri));
 		
-		reqEntity.addPart("data", new FileBody(temporaryFile));
-		reqEntity.addPart("filename", new StringBody(temporaryFile.getName()));
+		reqEntity.addPart("data", new FileBody(mediaFile));
+		reqEntity.addPart("filename", new StringBody(mediaFile.getName()));
 		reqEntity.addPart("content-type", new StringBody(streamType));
 		reqEntity.addPart("title", new StringBody("Android upload"));
 		

@@ -12,8 +12,7 @@
         android:layout_margin="8dp"
         android:adjustViewBounds="true"
         android:background="@drawable/share_preview_border"
-        android:scaleType="centerCrop"
-        android:src="@drawable/abs__ab_solid_dark_holo" />
+        android:scaleType="centerCrop" />
 
     <EditText
         android:id="@+id/channelText"
@@ -41,6 +40,17 @@
         android:maxLines="5"
         android:textColor="#FFFFFF" />
 
+    <ProgressBar
+        android:id="@+id/uploadProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/channelText"
+        android:layout_alignLeft="@+id/channelText"
+        android:layout_alignRight="@+id/channelText"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:visibility="gone" />
+    
     <RelativeLayout
         android:id="@+id/shareMediaBtn"
         android:layout_width="match_parent"

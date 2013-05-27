@@ -5,13 +5,11 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +23,8 @@ import com.buddycloud.model.MediaModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
 import com.buddycloud.preferences.Preferences;
+import com.buddycloud.utils.FileUtils;
+import com.squareup.picasso.Picasso;
 
 public class ShareActivity extends Activity {
 
@@ -56,9 +56,12 @@ public class ShareActivity extends Activity {
 		String mediaType = getContentResolver().getType(uri);
 		ImageView imageView = (ImageView) findViewById(R.id.shareImagePreview);
 		if (mediaType.contains("image/")) {
-			imageView.setImageURI(uri);
+			Picasso.with(this).load(uri.toString())
+			        .resize(512, 512)
+					.into(imageView);
 		} else if (mediaType.contains("video/")) {
-			Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(getRealPathFromURI(uri),
+			Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(
+					FileUtils.getRealPathFromURI(this, uri),
 			        MediaStore.Images.Thumbnails.MINI_KIND);
 			imageView.setImageBitmap(thumbnail);
 		}
@@ -72,15 +75,6 @@ public class ShareActivity extends Activity {
 		});
 	}
 
-	private String getRealPathFromURI(Uri contentUri) {
-	    String[] proj = { MediaStore.Images.Media.DATA };
-	    CursorLoader loader = new CursorLoader(this, contentUri, proj, null, null, null);
-	    Cursor cursor = loader.loadInBackground();
-	    int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-	    cursor.moveToFirst();
-	    return cursor.getString(columnIndex);
-	}
-	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == SearchActivity.REQUEST_CODE) {
@@ -93,6 +87,10 @@ public class ShareActivity extends Activity {
 	}
 	
 	protected void shareMedia(Uri uri) {
+		
+		findViewById(R.id.shareMediaBtn).setVisibility(View.GONE);
+		findViewById(R.id.uploadProgress).setVisibility(View.VISIBLE);
+		
 		Toast.makeText(getApplicationContext(),
 				"Uploading media...", Toast.LENGTH_LONG).show();
 		EditText targetChannelView = (EditText) findViewById(R.id.channelText);
@@ -144,7 +142,6 @@ public class ShareActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-//		getMenuInflater().inflate(R.menu.activity_share, menu);
 		return true;
 	}
 }
