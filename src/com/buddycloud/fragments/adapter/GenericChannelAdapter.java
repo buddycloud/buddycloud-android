@@ -33,6 +33,11 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 		}
 	}
 
+	public void clear() {
+		categories.clear();
+		channelsPerCategory.clear();
+	}
+	
 	@Override
 	public long getChildId(int groupPosition, int childPosition) {
 		return getChild(groupPosition, childPosition).hashCode();
@@ -65,15 +70,19 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 		notifyDataSetChanged();
 	}
 	
-	protected boolean hasChannel(String channelJid) {
+	protected JSONObject getChannel(String channelJid) {
 		for (List<JSONObject> channels : channelsPerCategory.values()) {
 			for (JSONObject channel : channels) {
 				if (channel.optString("jid").equals(channelJid)) {
-					return true;
+					return channel;
 				}
 			}
 		}
-		return false;
+		return null;
+	}
+	
+	protected boolean hasChannel(String channelJid) {
+		return getChannel(channelJid) != null;
 	}
 	
 	@Override

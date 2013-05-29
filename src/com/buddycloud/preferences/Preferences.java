@@ -1,6 +1,5 @@
 package com.buddycloud.preferences;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -24,8 +23,8 @@ public class Preferences {
 		return preferences.getString(key, null);
 	}
 	
-	public static void setPreference(Activity parent, String key, String value) {
-		SharedPreferences preferences = parent.getSharedPreferences(PREFS_NAME, 0);
+	public static void setPreference(Context context, String key, String value) {
+		SharedPreferences preferences = context.getSharedPreferences(PREFS_NAME, 0);
 		Editor editor = preferences.edit();
 		editor.putString(key, value);
 		editor.commit();

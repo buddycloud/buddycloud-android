@@ -34,7 +34,7 @@ public class MediaModel implements Model<JSONObject, JSONObject, String> {
 	}
 	
 	@Override
-	public void refresh(Context context, final ModelCallback<JSONObject> callback, String... p) {
+	public void getAsync(Context context, final ModelCallback<JSONObject> callback, String... p) {
 	}
 
 	public static String url(Context context, String channel) {
@@ -73,7 +73,14 @@ public class MediaModel implements Model<JSONObject, JSONObject, String> {
 
 	@Override
 	public JSONObject get(Context context, String... p) {
+		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
+	@Override
+	public void fill(Context context, ModelCallback<Void> callback, String... p) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

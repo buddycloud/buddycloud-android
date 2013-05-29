@@ -1,15 +1,11 @@
 package com.buddycloud.fragments;
 
-import android.content.Context;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public abstract class ContentFragment extends SherlockFragment {
 
-	public abstract void syncd(Context context);
-	
 	public abstract void attached();
 
 	public abstract void createOptions(Menu menu);

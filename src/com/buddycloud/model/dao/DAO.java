@@ -10,7 +10,7 @@ public interface DAO<Set, Get> {
 	
 	public boolean update(String channel, JSONObject json);
 	
-	public void get(String channel, DAOCallback<Get> callback);
+	public Get get(String channel);
 	
-	public void getAll(DAOCallback<Map<String, Get>> callback);
+	public Map<String, Get> getAll();
 }

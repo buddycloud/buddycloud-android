@@ -86,8 +86,6 @@ public class PostCard extends AbstractCard {
 			mediaView.setVisibility(View.VISIBLE);
 			Picasso.with(viewGroup.getContext())
 				.load(userMediaURL + MEDIA_URL_SUFIX)
-				.placeholder(R.drawable.personal_50px)
-				.error(R.drawable.personal_50px)
 				.into(mediaView);
 			
 		} else {

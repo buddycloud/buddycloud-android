@@ -1,11 +1,9 @@
 package com.buddycloud.fragments;
 
-import java.util.List;
-
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +22,6 @@ import com.buddycloud.card.CardListAdapter;
 import com.buddycloud.card.CommentCard;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
-import com.buddycloud.model.SyncModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.squareup.picasso.Picasso;
@@ -62,7 +59,7 @@ public class PostDetailsFragment extends ContentFragment {
 					public void success(JSONObject response) {
 						Toast.makeText(getActivity().getApplicationContext(), "Post created", Toast.LENGTH_LONG).show();
 						postContent.setText("");
-						sync(channelJid, postId);
+						refresh(channelJid, postId);
 					}
 					
 					@Override
@@ -90,67 +87,79 @@ public class PostDetailsFragment extends ContentFragment {
 		return view;
 	}
 
-	private void updateView(View view, final String postId, final String channelJid) {
-		JSONObject post = PostsModel.getInstance().postWithId(postId, channelJid);
-		if (post == null) {
-			return;
-		}
-		
-		if (view == null) {
-			view = getView();
-		}
-		
-		((TextView) view.findViewById(R.id.title)).setText(post.optString("author"));
-		
-		String authorAvatarURL = AvatarUtils.avatarURL(getActivity(), post.optString("author"));
-		ImageView authorAvatarView = (ImageView) view.findViewById(R.id.bcProfilePic);
-		Picasso.with(getActivity()).load(authorAvatarURL)
-				.placeholder(R.drawable.personal_50px)
-				.error(R.drawable.personal_50px)
-				.into(authorAvatarView);
-		
-		((TextView) view.findViewById(R.id.bcPostContent)).setText(post.optString("content"));
-		
-		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
-		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
-		ImageView avatarView = (ImageView) view.findViewById(R.id.bcCommentPic);
-		Picasso.with(getActivity()).load(avatarURL)
-				.placeholder(R.drawable.personal_50px)
-				.error(R.drawable.personal_50px)
-				.into(avatarView);
-		
-		
-		ListView commentList = (ListView) view.findViewById(R.id.postsStream);
-		this.commentAdapter = new CardListAdapter();
-		commentList.setAdapter(commentAdapter);
-		
-		loadComments(view, postId);
+	private void updateView(final View view, final String postId, final String channelJid) {
+		PostsModel.getInstance().getPostAsync(getActivity(), new ModelCallback<JSONObject>() {
+
+			@Override
+			public void success(JSONObject post) {
+				if (post == null) {
+					return;
+				}
+				
+				View thisView = view;
+				if (thisView == null) {
+					thisView = getView();
+				}
+				
+				((TextView) thisView.findViewById(R.id.title)).setText(post.optString("author"));
+				
+				String authorAvatarURL = AvatarUtils.avatarURL(getActivity(), post.optString("author"));
+				ImageView authorAvatarView = (ImageView) thisView.findViewById(R.id.bcProfilePic);
+				Picasso.with(getActivity()).load(authorAvatarURL)
+						.placeholder(R.drawable.personal_50px)
+						.error(R.drawable.personal_50px)
+						.into(authorAvatarView);
+				
+				((TextView) thisView.findViewById(R.id.bcPostContent)).setText(post.optString("content"));
+				
+				String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
+				String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
+				ImageView avatarView = (ImageView) thisView.findViewById(R.id.bcCommentPic);
+				Picasso.with(getActivity()).load(avatarURL)
+						.placeholder(R.drawable.personal_50px)
+						.error(R.drawable.personal_50px)
+						.into(avatarView);
+				
+				
+				ListView commentList = (ListView) thisView.findViewById(R.id.postsStream);
+				commentAdapter = new CardListAdapter();
+				commentList.setAdapter(commentAdapter);
+				
+				loadComments(thisView, post);
+			}
+
+			@Override
+			public void error(Throwable throwable) {
+				// TODO Auto-generated method stub
+				
+			}
+		}, channelJid, postId);
 	}
 
-	public void sync(final String channelJid, final String postId) {
+	public void refresh(final String channelJid, final String postId) {
 		commentAdapter.clear();
 		
 		final View progress = getView().findViewById(R.id.subscribedProgress);
 		progress.setVisibility(View.VISIBLE);
 		
-		SyncModel.getInstance().refresh(getActivity(), new ModelCallback<JSONObject>() {
+		PostsModel.getInstance().getPostAsync(getActivity(), new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
 				progress.setVisibility(View.GONE);
-				loadComments(getView(), postId);
+				loadComments(getView(), response);
 			}
-			
+
 			@Override
 			public void error(Throwable throwable) {
-				System.err.println(throwable);
-				
+				// TODO Auto-generated method stub
 			}
-		}, channelJid);
+		}, channelJid, postId);
 	}
 	
-	private void loadComments(final View view, final String postId) {
-		List<JSONObject> comments = PostsModel.getInstance().cachedCommentsFromPost(postId);
-		for (JSONObject comment : comments) {
+	private void loadComments(final View view, final JSONObject post) {
+		JSONArray comments = post.optJSONArray("replies");
+		for (int i = 0; i < comments.length(); i++) {
+			JSONObject comment = comments.optJSONObject(i);
 			commentAdapter.addCard(toCard(comment));
 			commentAdapter.notifyDataSetChanged();
 		}
@@ -164,13 +173,6 @@ public class PostDetailsFragment extends ContentFragment {
 		
 		CommentCard commentCard = new CommentCard(postAuthor, avatarURL, postContent, published);
 		return commentCard;
-	}
-
-	@Override
-	public void syncd(Context context) {
-		final String postId = getArguments().getString(POST_ID);
-		final String channelJid = getArguments().getString(GenericChannelsFragment.CHANNEL);
-		updateView(getView(), postId, channelJid);
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package com.buddycloud.model.dao;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -92,21 +90,42 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 		return false;
 	}
 	
-	public void get(String channel, DAOCallback<JSONArray> callback) {
+	public JSONArray get(String channel) {
 		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
 		String orderBy = "date(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
 
-		DAOHelper.query(db, false, PostsTableHelper.TABLE_NAME, null, filter,
-				null, null, null, orderBy, null, cursorParser(), callback);
+		return DAOHelper.queryOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
+				null, null, null, orderBy, null, cursorParser());
 	}
 
-	public void get(String channel, int limit, DAOCallback<JSONArray> callback) {
+	public JSONObject get(String channel, String itemId) {
+		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\" AND " 
+						+ PostsTableHelper.COLUMN_ID + "=\"" + itemId + "\"";
+		return DAOHelper.queryUniqueOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
+				null, null, null, null, null, cursorParser());
+	}
+
+	public JSONArray getReplies(String channel, String itemId) {
+		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\" AND " 
+						+ PostsTableHelper.COLUMN_REPLY_TO + "=\"" + itemId + "\"";
+		return DAOHelper.queryOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
+				null, null, null, null, null, cursorParser());
+	}
+	
+	public JSONArray get(String channel, int limit) {
 		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
 		String orderBy = "date(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
 
-		DAOHelper.query(db, false, PostsTableHelper.TABLE_NAME, null, filter,
+		return DAOHelper.queryOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
 				null, null, null, orderBy, String.valueOf(limit), 
-				cursorParser(), callback);
+				cursorParser());
+	}
+
+	public JSONObject getMostRecent() {
+		String orderBy = "date(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
+		return DAOHelper.queryUniqueOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, null,
+				null, null, null, orderBy, String.valueOf(1), 
+				cursorParser());
 	}
 	
 	private DAOCursorParser cursorParser() {
@@ -117,21 +136,6 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 			}
 		};
 		return cursorParser;
-	}
-	
-	public List<String> getChannels() {
-		List<String> channels = new LinkedList<String>();
-		Cursor cursor = db.query(true, PostsTableHelper.TABLE_NAME, new String[]{PostsTableHelper.COLUMN_CHANNEL}, null,
-				null, null, null, null, null);
-		
-		cursor.moveToFirst();
-	    while (!cursor.isAfterLast()) {
-	    	channels.add(getString(cursor, PostsTableHelper.COLUMN_CHANNEL));
-	    	cursor.moveToNext();
-	    }
-		cursor.close();
-		
-		return channels;
 	}
 	
 	private JSONObject cursorToJSON(Cursor cursor) {
@@ -157,7 +161,7 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 
 
 	@Override
-	public void getAll(DAOCallback<Map<String, JSONArray>> callback) {
-		// TODO Auto-generated method stub
+	public Map<String, JSONArray> getAll() {
+		return null;
 	}
 }

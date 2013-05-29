@@ -48,7 +48,7 @@ public class ChannelAdapterHelper {
 		loadAvatar(context, holder, channelJid);
 		
 		// Counters
-		loadCounters(holder, channelJid);
+		loadCounters(context, holder, channelJid);
 		
 	    return convertView;
 	}
@@ -69,10 +69,11 @@ public class ChannelAdapterHelper {
 		return viewHolder;
 	}
 	
-	private static void loadTitleAndDescription(Context parent, ViewHolder holder, String channelJid) {
+	private static void loadTitleAndDescription(Context parent, final ViewHolder holder, final String channelJid) {
+		JSONObject metadata = ChannelMetadataModel.getInstance().get(parent, channelJid);
+		
 		String channelTitle = channelJid;
 		String channelDescription = null;
-		JSONObject metadata = ChannelMetadataModel.getInstance().get(parent, channelJid);
 		
 		if (metadata != null) {
 			channelTitle = metadata.optString("title");
@@ -81,6 +82,8 @@ public class ChannelAdapterHelper {
 		
 		holder.title.setText(channelTitle);
 		holder.description.setText(channelDescription);
+		
+		
 	}
 
 	private static void loadAvatar(Context parent, ViewHolder holder, String channelJid) {
@@ -91,8 +94,9 @@ public class ChannelAdapterHelper {
 				.into(holder.avatar);
 	}
 	
-	private static void loadCounters(ViewHolder holder, String channelJid) {
-		JSONObject counters = SyncModel.getInstance().countersFromChannel(channelJid);
+	private static void loadCounters(Context context, final ViewHolder holder, final String channelJid) {
+		JSONObject allCounters = SyncModel.getInstance().get(context, channelJid);
+		JSONObject counters = allCounters.optJSONObject(channelJid);
 		if (counters != null) {
 			Integer totalCount = counters.optInt("totalCount");
 			if (totalCount > 30) {

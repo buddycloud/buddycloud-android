@@ -1,13 +1,6 @@
 package com.buddycloud.model;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
@@ -18,20 +11,15 @@ import android.content.Context;
 import android.util.Log;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
-import com.buddycloud.model.dao.DAOCallback;
 import com.buddycloud.model.dao.PostsDAO;
 import com.buddycloud.preferences.Preferences;
 
-public class PostsModel implements Model<List<String>, JSONObject, String> {
+public class PostsModel implements Model<JSONArray, JSONObject, String> {
 
 	private static final String TAG = PostsModel.class.getName();
 	private static PostsModel instance;
 	private static final int PAGE_SIZE = 31;
 	private static final String POSTS_ENDPOINT = "/content/posts";
-	
-	private Map<String, List<String>> channelStreams = new HashMap<String, List<String>>();
-	private Map<String, JSONObject> posts = new HashMap<String, JSONObject>();
-	private Map<String, List<JSONObject>> postsComments = new HashMap<String, List<JSONObject>>();
 	
 	private PostsModel() {}
 
@@ -42,49 +30,21 @@ public class PostsModel implements Model<List<String>, JSONObject, String> {
 		return instance;
 	}
 	
-	
-	private boolean isPost(JSONObject item) {
-		return item.opt("replyTo") == null;
-	}
-	
-	private void parse(PostsDAO postsDAO, String channelJid, JSONArray response, boolean updateDatabase) {
-		parseChannelPosts(postsDAO, channelJid, response, updateDatabase);
-	}
-	
-	public void parseChannelPosts(PostsDAO postsDAO, String channel, JSONArray jsonPosts, boolean updateDatabase) {
-		List<String> stream = channelStreams.get(channel);
-		if (stream == null) {
-			stream = new ArrayList<String>();
-		}
-		channelStreams.put(channel, stream);
-		
+	public void normalizeAndPersistChannelPosts(PostsDAO postsDAO, String channel, JSONArray jsonPosts) {
+		normalizeChannelPosts(postsDAO, channel, jsonPosts);
 		for (int i = 0; i < jsonPosts.length(); i++) {
 			JSONObject item = jsonPosts.optJSONObject(i);
-			String postId = item.optString("id");
-			
-			normalize(item);
-			if (updateDatabase) {
+			if (postsDAO.get(channel, item.optString("id")) == null) {
 				postsDAO.insert(channel, item);
 			}
-			
-			if (isPost(item)) {
-				stream.add(postId);
-			} else {
-				addReply(item);
-			}
-			this.posts.put(postId, item);
 		}
-		
 	}
-
-	private void addReply(JSONObject item) {
-		String origPostId = item.optString("replyTo");
-		List<JSONObject> comments = postsComments.get(origPostId);
-		if (comments == null) {
-			comments = new ArrayList<JSONObject>();
+	
+	public void normalizeChannelPosts(PostsDAO postsDAO, String channel, JSONArray jsonPosts) {
+		for (int i = 0; i < jsonPosts.length(); i++) {
+			JSONObject item = jsonPosts.optJSONObject(i);
+			normalize(item);
 		}
-		comments.add(0, item);
-		postsComments.put(origPostId, comments);
 	}
 
 	private void normalize(JSONObject item) {
@@ -100,45 +60,33 @@ public class PostsModel implements Model<List<String>, JSONObject, String> {
 		}
 	}
 	
-	private void lookupPostsFromDatabase(final Context context, 
-			final String channelJid, 
-			final ModelCallback<List<String>> callback) {
+	private JSONArray lookupPostsFromDatabase(final Context context, final String channelJid) {
 		final PostsDAO postsDAO = PostsDAO.getInstance(context);
-		
-		DAOCallback<JSONArray> postCallback = new DAOCallback<JSONArray>() {
-			@Override
-			public void onResponse(JSONArray response) {
-				if (response != null && response.length() > 0) {
-					parseChannelPosts(postsDAO, channelJid, response, false);
-				}
-				fetchPosts(context, channelJid, callback);
-			}
-		};
-		postsDAO.get(channelJid, PAGE_SIZE, postCallback);
+		JSONArray postStream = postsDAO.get(channelJid, PAGE_SIZE);
+		normalizeAndPersistChannelPosts(postsDAO, channelJid, postStream);
+		return postStream;
 	}
 	
 	@Override
-	public void refresh(Context context, final ModelCallback<List<String>> callback, String... p) {
+	public JSONArray get(Context context, String... p) {
 		String channelJid = p[0];
-		expire(channelJid);
-		lookupPostsFromDatabase(context, channelJid, callback);
+		return lookupPostsFromDatabase(context, channelJid);
 	}
 
-	public void refreshPost(Context context, final ModelCallback<List<String>> callback, String... p) {
+	public void getPostAsync(Context context, final ModelCallback<JSONObject> callback, String... p) {
 		String channelJid = p[0];
 		String itemId = p[1];
 		fetchPost(context, channelJid, itemId, callback);
 	}
 	
 	public void fetchPost(final Context context, final String channelJid, 
-			final String itemId, final ModelCallback<List<String>> callback) {
+			final String itemId, final ModelCallback<JSONObject> callback) {
 		BuddycloudHTTPHelper.getObject(postUrl(context, channelJid, itemId), context,
 				new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
 				normalize(response);
-				posts.put(response.optString("id"), response);
-				fetchComments(context, channelJid, itemId, callback);
+				fetchComments(context, channelJid, response, callback);
 			}
 
 			@Override
@@ -151,7 +99,10 @@ public class PostsModel implements Model<List<String>, JSONObject, String> {
 	}
 	
 	private void fetchComments(final Context context, final String channelJid, 
-			final String itemId, final ModelCallback<List<String>> callback) {
+			final JSONObject item, final ModelCallback<JSONObject> callback) {
+		String itemId = item.optString("id");
+		appendReplies(item);
+		
 		BuddycloudHTTPHelper.getArray(repliesUrl(context, channelJid, itemId), context,
 				new ModelCallback<JSONArray>() {
 			@Override
@@ -159,11 +110,12 @@ public class PostsModel implements Model<List<String>, JSONObject, String> {
 				for (int i = 0; i < response.length(); i++) {
 					JSONObject reply = response.optJSONObject(i);
 					normalize(reply);
-					addReply(reply);
+					JSONArray replies = item.optJSONArray("replies");
+					replies.put(reply);
 				}
 				
 				if (callback != null) {
-					callback.success(null);
+					callback.success(item);
 				}
 			}
 
@@ -175,19 +127,25 @@ public class PostsModel implements Model<List<String>, JSONObject, String> {
 			}
 		});
 	}
+
+	private void appendReplies(final JSONObject item) {
+		try {
+			item.put("replies", new JSONArray());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+	}
 	
 	private void fetchPosts(final Context context, final String channelJid, 
-			final ModelCallback<List<String>> callback) {
+			final ModelCallback<Void> callback) {
 		BuddycloudHTTPHelper.getArray(postsUrl(context, channelJid), context,
 				new ModelCallback<JSONArray>() {
 
 			@Override
 			public void success(JSONArray response) {
 				final PostsDAO postsDAO = PostsDAO.getInstance(context);
-				parse(postsDAO, channelJid, response, true);
-				if (callback != null) {
-					callback.success(channelStreams.get(channelJid));
-				}
+				normalizeAndPersistChannelPosts(postsDAO, channelJid, response);
+				callback.success(null);
 			}
 
 			@Override
@@ -232,66 +190,15 @@ public class PostsModel implements Model<List<String>, JSONObject, String> {
 	}
 
 	@Override
-	public List<String> get(Context context, String... p) {
-		if (p != null && p.length == 1) {
-			String channelJid = p[0];
-			if (channelStreams.containsKey(channelJid)) {
-				return channelStreams.get(channelJid);
-			}
-		}
-		return new ArrayList<String>();
-	}
-	
-	public List<String> cachedPostsFromChannel(String channel) {
-		if (channel != null) {
-			if (channelStreams.containsKey(channel)) {
-				return channelStreams.get(channel);
-			}
-		}
-		return new ArrayList<String>();
-	}
-	
-	public Set<String> cachedChannels() {
-		return channelStreams.keySet();
-	}
-	
-	public void expire() {
-		channelStreams.clear();
-		postsComments.clear();
-	}
-	
-	public void expire(String channelJid) {
-		Iterator<Entry<String, List<JSONObject>>> iterator = postsComments.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Entry<String, List<JSONObject>> entry = iterator.next();
-			String postId = entry.getKey();
-			JSONObject postWithId = postWithId(postId, channelJid);
-			if (postWithId != null) {
-				iterator.remove();
-			}
-		}
-		channelStreams.remove(channelJid);
-	}
-	
-	public void expire(String channelJid, String itemId) {
-		channelStreams.remove(channelJid);
-	}
-	
-	public List<JSONObject> cachedCommentsFromPost(String postId) {
-		if (postId != null) {
-			if (postsComments.containsKey(postId)) {
-				return postsComments.get(postId);
-			}
-		}
+	public void getAsync(Context context, ModelCallback<JSONArray> callback,
+			String... p) {
+		// TODO Auto-generated method stub
 		
-		return new ArrayList<JSONObject>();
 	}
-	
-	public JSONObject postWithId(String postId, String channel) {
-		return posts.get(postId);
-	}
-	
-	public void selectChannel(Context context, String channel) {
-		
+
+	@Override
+	public void fill(Context context, ModelCallback<Void> callback, String... p) {
+		String channelJid = p[0];
+		fetchPosts(context, channelJid, callback);
 	}
 }

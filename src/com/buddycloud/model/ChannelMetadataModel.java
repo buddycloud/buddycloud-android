@@ -1,8 +1,6 @@
 package com.buddycloud.model;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -10,15 +8,12 @@ import android.content.Context;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.model.dao.ChannelMetadataDAO;
-import com.buddycloud.model.dao.DAOCallback;
 import com.buddycloud.preferences.Preferences;
 
 public class ChannelMetadataModel implements Model<JSONObject, JSONObject, String> {
 
 	private static ChannelMetadataModel instance;
 	private static final String ENDPOINT = "/metadata/posts"; 
-	
-	private Map<String, JSONObject> channelsMetadataMap = new HashMap<String, JSONObject>();
 	
 	private ChannelMetadataModel() {}
 	
@@ -31,7 +26,7 @@ public class ChannelMetadataModel implements Model<JSONObject, JSONObject, Strin
 	
 	@SuppressWarnings("unchecked")
 	private void updateMetadata(ChannelMetadataDAO dao, String channel, JSONObject oldMetadata, 
-			JSONObject newMetadata, ModelCallback<JSONObject> callback) {
+			JSONObject newMetadata, ModelCallback<Void> callback) {
 
 		// Verify if any of the data has changed
 		boolean update = false;
@@ -47,7 +42,6 @@ public class ChannelMetadataModel implements Model<JSONObject, JSONObject, Strin
 		
 		// Update, if necessary
 		if (update) {
-			channelsMetadataMap.put(channel, newMetadata);
 			dao.update(channel, newMetadata);
 			
 			if (callback != null) {
@@ -57,36 +51,34 @@ public class ChannelMetadataModel implements Model<JSONObject, JSONObject, Strin
 	}
 	
 	private void insertMetadata(ChannelMetadataDAO dao, String channel, JSONObject newMetadata, 
-			ModelCallback<JSONObject> callback) {
-		
-		channelsMetadataMap.put(channel, newMetadata);
+			ModelCallback<Void> callback) {
 		dao.insert(channel, newMetadata);
-		
 		if (callback != null) {
 			callback.success(null);
 		}
 	}
 	
 	@Override
-	public void refresh(Context context, final ModelCallback<JSONObject> callback, String... p) {
-		if (p != null && p.length == 1) {
-			final String channel = p[0];
-			lookupStoredData(context, callback, channel);
+	public JSONObject get(Context context, String... p) {
+		if (p == null || p.length != 1) {
+			return null;
 		}
+		String channel = p[0];
+		return ChannelMetadataDAO.getInstance(context).get(channel);
 	}
 
 	private void fetchFromServer(Context context,
-			final ModelCallback<JSONObject> callback, final String channel) {
+			final ModelCallback<Void> callback, final String channel) {
 		final ChannelMetadataDAO dao = ChannelMetadataDAO.getInstance(context);
 		BuddycloudHTTPHelper.getObject(url(context, channel), 
 				context, new ModelCallback<JSONObject>() {
 			@Override
-			public void success(JSONObject response) {
-				JSONObject metadata = channelsMetadataMap.get(channel);
-				if (metadata != null) {
-					updateMetadata(dao, channel, metadata, response, callback);
+			public void success(final JSONObject metadata) {
+				JSONObject oldMetadata = dao.get(channel);
+				if (oldMetadata != null) {
+					updateMetadata(dao, channel, oldMetadata, metadata, callback);
 				} else {
-					insertMetadata(dao, channel, response, callback);
+					insertMetadata(dao, channel, metadata, callback);
 				}
 			}
 			
@@ -95,21 +87,6 @@ public class ChannelMetadataModel implements Model<JSONObject, JSONObject, Strin
 				if (callback != null) {
 					callback.error(throwable);
 				}
-			}
-		});
-	}
-	
-	private void lookupStoredData(final Context context,
-			final ModelCallback<JSONObject> callback, final String channel) {
-		final ChannelMetadataDAO dao = ChannelMetadataDAO.getInstance(context);
-		dao.getAll(new DAOCallback<Map<String,JSONObject>>() {
-			@Override
-			public void onResponse(Map<String, JSONObject> response) {
-				channelsMetadataMap = response;
-				if (channelsMetadataMap != null && callback != null) {
-					callback.success(null);
-				}
-				fetchFromServer(context, callback, channel);
 			}
 		});
 	}
@@ -126,8 +103,13 @@ public class ChannelMetadataModel implements Model<JSONObject, JSONObject, Strin
 	}
 
 	@Override
-	public JSONObject get(Context context, String... p) {
-		return p != null && p.length == 1 ? channelsMetadataMap.get(p[0]) : null;
+	public void getAsync(Context context, ModelCallback<JSONObject> callback,
+			String... p) {
 	}
-	
+
+	@Override
+	public void fill(Context context, ModelCallback<Void> callback, String... p) {
+		fetchFromServer(context, callback, p[0]);
+	}
+
 }

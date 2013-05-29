@@ -1,7 +1,9 @@
 package com.buddycloud.fragments;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -74,7 +76,7 @@ public class ChannelStreamFragment extends ContentFragment {
 					public void success(JSONObject response) {
 						Toast.makeText(getActivity().getApplicationContext(), "Post created", Toast.LENGTH_LONG).show();
 						postContent.setText("");
-						syncd(getActivity());
+						syncd(null, getActivity());
 					}
 					
 					@Override
@@ -98,23 +100,66 @@ public class ChannelStreamFragment extends ContentFragment {
 		
 		configurePostSection(postContent, postButton);
 		
+		syncd(view, getActivity());
+		
 		return view;
 	}
 	
-	public void syncd(Context context) {
-		getView().findViewById(R.id.subscribedProgress).setVisibility(View.GONE);
-		List<String> postsIds = PostsModel.getInstance().cachedPostsFromChannel(channelJid);
-		ListView contentView = (ListView) getView().findViewById(R.id.postsStream);
-		CardListAdapter cardAdapter = new CardListAdapter();
-		contentView.setAdapter(cardAdapter);
+	private boolean isComment(JSONObject item) {
+		return item.has("replyTo");
+	}
+	
+	public void syncd(View view, Context context) {
 		
-		for (String postId : postsIds) {
-			JSONObject post = PostsModel.getInstance().postWithId(postId, channelJid);
-			PostCard card = toCard(post, channelJid);
-			cardAdapter.addCard(card);
+		if (view == null) {
+			view = getView();
 		}
 		
-		cardAdapter.notifyDataSetChanged();
+		view.findViewById(R.id.subscribedProgress).setVisibility(View.GONE);
+		ListView contentView = (ListView) view.findViewById(R.id.postsStream);
+		final CardListAdapter cardAdapter = new CardListAdapter();
+		contentView.setAdapter(cardAdapter);
+		
+		PostsModel.getInstance().fill(getActivity(), new ModelCallback<Void>() {
+
+			@Override
+			public void success(Void voidd) {
+				JSONArray response = PostsModel.getInstance().get(getActivity(), channelJid);
+				
+				Map<String, Integer> commentsPerItem = new HashMap<String, Integer>();
+				for (int i = 0; i < response.length(); i++) {
+					JSONObject post = response.optJSONObject(i);
+					if (isComment(post)) {
+						String topicId = post.optString("replyTo");
+						Integer replyCount = commentsPerItem.get(topicId);
+						commentsPerItem.put(topicId, replyCount == null ? 1 : replyCount + 1);
+					}
+				}
+				
+				for (int i = 0; i < response.length(); i++) {
+					JSONObject post = response.optJSONObject(i);
+					Integer commentCount = commentsPerItem.get(post.optString("id"));
+					try {
+						post.put("replyCount", commentCount == null ? 0 : commentCount);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					
+					if (!isComment(post)) {
+						PostCard card = toCard(post, channelJid);
+						cardAdapter.addCard(card);
+					}
+				}
+				
+				cardAdapter.notifyDataSetChanged();
+			}
+
+			@Override
+			public void error(Throwable throwable) {
+				// TODO Auto-generated method stub
+				
+			}
+		}, channelJid);
 	}
 	
 	private PostCard toCard(JSONObject post, final String channelJid) {
@@ -125,7 +170,7 @@ public class ChannelStreamFragment extends ContentFragment {
 		
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), postAuthor);
 		
-		Integer commentCount = PostsModel.getInstance().cachedCommentsFromPost(postId).size();
+		Integer commentCount = post.optInt("replyCount");
 		
 		PostCard postCard = new PostCard(postAuthor, avatarURL, postContent, published, commentCount);
 		postCard.setOnClickListener(new OnClickListener() {

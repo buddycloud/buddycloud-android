@@ -1,10 +1,7 @@
 package com.buddycloud.fragments;
 
-import java.util.List;
-
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,8 +14,6 @@ import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.SearchActivity;
 import com.buddycloud.fragments.adapter.SubscribedChannelsAdapter;
-import com.buddycloud.model.ModelCallback;
-import com.buddycloud.model.PostsModel;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class SubscribedChannelsFragment extends ContentFragment {
@@ -34,13 +29,10 @@ public class SubscribedChannelsFragment extends ContentFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		adapter.load(getActivity());
 		return genericChannelFrag.onCreateView(inflater, container, savedInstanceState);
 	}
-	
-	public void syncd(Context context) {
-		adapter.load(context);
-	}
-	
+
 	private void selectChannel(String channelJid) {
 		showChannelFragment(channelJid);
 		hideMenu();
@@ -55,19 +47,7 @@ public class SubscribedChannelsFragment extends ContentFragment {
 	
 	private void showChannelFragment(String channelJid) {
 		MainActivity activity = (MainActivity) getActivity();
-		final ChannelStreamFragment channelFragment = activity.showChannelFragment(channelJid);
-		PostsModel.getInstance().refresh(getActivity(), new ModelCallback<List<String>>() {
-			@Override
-			public void success(List<String> response) {
-				channelFragment.syncd(getActivity());
-			}
-
-			@Override
-			public void error(Throwable throwable) {
-				// TODO Auto-generated method stub
-				
-			}
-		}, channelJid);
+		activity.showChannelFragment(channelJid);
 	}
 
 	@Override
@@ -92,6 +72,10 @@ public class SubscribedChannelsFragment extends ContentFragment {
 		}
 		
 		return false;
+	}
+
+	public void syncd() {
+		adapter.load(getActivity());
 	}
 
 }

@@ -27,13 +27,11 @@ public class UnreadCountersDAO implements DAO<JSONObject, JSONObject> {
 			UnreadCountersTableHelper.COLUMN_MENTIONS_COUNT, 
 			UnreadCountersTableHelper.COLUMN_TOTAL_COUNT};
 	
-	
 	private UnreadCountersDAO(Context context) {
 		this.helper = new BuddycloudSQLiteOpenHelper(context);
 		this.db = helper.getWritableDatabase();
 		this.myJid = Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
 	}
-	
 	
 	public static UnreadCountersDAO getInstance(Context context) {
 		if (instance == null) {
@@ -43,7 +41,6 @@ public class UnreadCountersDAO implements DAO<JSONObject, JSONObject> {
 		return instance;
 	}
 
-	
 	private ContentValues buildValues(String channel, int mentionsCount, int totalCount) {
 		ContentValues values = new ContentValues();
 		values.put(UnreadCountersTableHelper.COLUMN_USER, myJid);
@@ -83,11 +80,11 @@ public class UnreadCountersDAO implements DAO<JSONObject, JSONObject> {
 		return false;
 	}
 	
-	public void get(String channel, final DAOCallback<JSONObject> callback) {
+	public JSONObject get(String channel) {
 		String filter = UnreadCountersTableHelper.COLUMN_USER + "=\"" + myJid + "\" AND " + 
 				UnreadCountersTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
-		DAOHelper.queryUnique(db, false, UnreadCountersTableHelper.TABLE_NAME, COLUMNS, filter,
-				null, null, null, null, null, cursorParser(), callback);
+		return DAOHelper.queryUniqueOnSameThread(db, false, UnreadCountersTableHelper.TABLE_NAME, COLUMNS, filter,
+				null, null, null, null, null, cursorParser());
 	}
 
 
@@ -101,11 +98,11 @@ public class UnreadCountersDAO implements DAO<JSONObject, JSONObject> {
 		return cursorParser;
 	}
 	
-	public void getAll(final DAOCallback<Map<String, JSONObject>> callback) {
+	public Map<String, JSONObject> getAll() {
 		String filter = UnreadCountersTableHelper.COLUMN_USER + "=\"" + myJid + "\"";
-		DAOHelper.queryMap(db, false, UnreadCountersTableHelper.TABLE_NAME,
+		return DAOHelper.queryMapOnSameThread(db, false, UnreadCountersTableHelper.TABLE_NAME,
 				COLUMNS, filter, null, null, null, null, null, cursorParser(), 
-				UnreadCountersTableHelper.COLUMN_CHANNEL, callback);
+				UnreadCountersTableHelper.COLUMN_CHANNEL);
 	}
 	
 	private JSONObject cursorToJSON(Cursor cursor) {

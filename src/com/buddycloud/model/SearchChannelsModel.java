@@ -31,7 +31,7 @@ public class SearchChannelsModel implements Model<JSONArray, JSONArray, String> 
 		return instance;
 	}
 	
-	public void refresh(final Context context, final ModelCallback<JSONArray> callback, String... p) {
+	public void getAsync(final Context context, final ModelCallback<JSONArray> callback, String... p) {
 		final String type = p[0];
 		final String q = p[1];
 		BuddycloudHTTPHelper.getObject(url(context, type, q), context, 
@@ -76,8 +76,13 @@ public class SearchChannelsModel implements Model<JSONArray, JSONArray, String> 
 
 	@Override
 	public JSONArray get(Context context, String... p) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
-	
+	@Override
+	public void fill(Context context, ModelCallback<Void> callback, String... p) {
+		// TODO Auto-generated method stub
+		
+	}
 }

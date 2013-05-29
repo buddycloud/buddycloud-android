@@ -1,9 +1,11 @@
 package com.buddycloud.fragments.adapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,6 +29,7 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 	private static final int SEARCH_THRESHOLD = 5;
 	
 	private final List<String> allSubscribedChannels = new ArrayList<String>();
+	private final Map<String, String> plainMetadata = new HashMap<String, String>();
 	private String myChannel;
 	
 	public SearchChannelsAdapter() {
@@ -35,15 +38,17 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 	
 	public void load(final Context context) {
 		this.myChannel = Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
-		SubscribedChannelsModel.getInstance().refresh(context, new ModelCallback<JSONArray>() {
+		SubscribedChannelsModel.getInstance().getAsync(context, new ModelCallback<JSONArray>() {
 			@Override
 			public void success(JSONArray response) {
 				for (int i = 0; i < response.length(); i++) {
-					String channel = response.optString(i);
+					final String channel = response.optString(i);
 					allSubscribedChannels.add(channel);
+					JSONObject metadata = ChannelMetadataModel.getInstance().get(context, channel);
+					plainMetadata.put(channel, getPlainMetadata(metadata));
 					filter(context, "");
+					notifyDataSetChanged();
 				}
-				notifyDataSetChanged();
 			}
 			
 			@Override
@@ -58,10 +63,10 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 		clearChannels();
 		int matchedChannels = 0;
 		for (String channel : allSubscribedChannels) {
-			String plainMetadata = getPlainMetadata(context, channel);
+			String channelPlainMetadata = plainMetadata.get(channel);
 			String lowerQ = low(q);
 			if (!low(channel).contains(lowerQ) 
-					&& !low(plainMetadata).contains(lowerQ)) {
+					&& !low(channelPlainMetadata).contains(lowerQ)) {
 				continue;
 			}
 			if (!channel.equals(myChannel)) {
@@ -82,8 +87,7 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 	}
 
 	@SuppressWarnings("unchecked")
-	private String getPlainMetadata(final Context context, String channel) {
-		JSONObject metadata = ChannelMetadataModel.getInstance().get(context, channel);
+	private String getPlainMetadata(JSONObject metadata) {
 		if (metadata == null) {
 			return "";
 		}
@@ -97,7 +101,7 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 	}
 
 	private void search(final Context context, String q, String type, final String category) {
-		SearchChannelsModel.getInstance().refresh(context, new ModelCallback<JSONArray>() {
+		SearchChannelsModel.getInstance().getAsync(context, new ModelCallback<JSONArray>() {
 			@Override
 			public void success(JSONArray response) {
 				for (int i = 0; i < response.length(); i++) {
@@ -105,7 +109,6 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 					String channelJid = channelItem.optString("jid");
 					if (!hasChannel(channelJid)) {
 						addChannel(category, channelItem);
-						fetchMetadata(context, channelJid);
 					}
 				}
 			}
@@ -115,20 +118,5 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 				
 			}
 		}, type, q);
-	}
-	
-	private void fetchMetadata(Context context, String channel) {
-		ChannelMetadataModel.getInstance().refresh(context,
-				new ModelCallback<JSONObject>() {
-					@Override
-					public void success(JSONObject response) {
-						notifyDataSetChanged();
-					}
-
-					@Override
-					public void error(Throwable throwable) {
-						// TODO Auto-generated method stub
-					}
-				}, channel);
 	}
 }

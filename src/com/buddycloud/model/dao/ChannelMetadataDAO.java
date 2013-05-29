@@ -92,10 +92,10 @@ public class ChannelMetadataDAO implements DAO<JSONObject, JSONObject> {
 		return false;
 	}
 	
-	public void get(String channel, DAOCallback<JSONObject> callback) {
+	public JSONObject get(String channel) {
 		String filter = ChannelMetadataTableHelper.COLUMN_ID + "=\"" + channel + "\"";
-		DAOHelper.queryUnique(db, false, ChannelMetadataTableHelper.TABLE_NAME, COLUMNS, filter,
-				null, null, null, null, null, cursorParser(), callback);
+		return DAOHelper.queryUniqueOnSameThread(db, false, ChannelMetadataTableHelper.TABLE_NAME, COLUMNS, filter,
+				null, null, null, null, null, cursorParser());
 	}
 
 	private DAOCursorParser cursorParser() {
@@ -108,10 +108,10 @@ public class ChannelMetadataDAO implements DAO<JSONObject, JSONObject> {
 		return cursorParser;
 	}
 	
-	public void getAll(final DAOCallback<Map<String, JSONObject>> callback) {
-		DAOHelper.queryMap(db, false, ChannelMetadataTableHelper.TABLE_NAME,
+	public Map<String, JSONObject> getAll() {
+		return DAOHelper.queryMapOnSameThread(db, false, ChannelMetadataTableHelper.TABLE_NAME,
 				COLUMNS, null, null, null, null, null, null, cursorParser(), 
-				ChannelMetadataTableHelper.COLUMN_ID, callback);
+				ChannelMetadataTableHelper.COLUMN_ID);
 	}
 	
 	private JSONObject cursorToJSON(Cursor cursor) {

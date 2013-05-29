@@ -1,9 +1,5 @@
 package com.buddycloud;
 
-import java.util.List;
-
-import org.json.JSONObject;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -20,8 +16,7 @@ import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.fragments.PostDetailsFragment;
 import com.buddycloud.fragments.SubscribedChannelsFragment;
 import com.buddycloud.model.ModelCallback;
-import com.buddycloud.model.PostsModel;
-import com.buddycloud.model.SyncModel;
+import com.buddycloud.model.ModelUtils;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.GCMUtils;
 import com.slidingmenu.lib.SlidingMenu;
@@ -129,27 +124,11 @@ public class MainActivity extends SlidingFragmentActivity {
 			if (data != null) {
 				final String channelJid = data.getStringExtra(GenericChannelsFragment.CHANNEL);
 				final String postId = data.getStringExtra(GenericChannelsFragment.POST_ID);
-				
-				ModelCallback<List<String>> callback = new ModelCallback<List<String>>() {
-					@Override
-					public void success(List<String> response) {
-						getCurrentFragment().syncd(MainActivity.this);
-					}
-					
-					@Override
-					public void error(Throwable throwable) {
-						
-					}
-				};
-				
 				if (postId != null) {
 					showPostDetailFragment(channelJid, postId);
-					PostsModel.getInstance().refreshPost(this, callback, channelJid, postId);
 				} else {
 					showChannelFragment(channelJid);
-					PostsModel.getInstance().refresh(this, callback, channelJid);
 				}
-				
 			}
 		}
 	}
@@ -157,20 +136,27 @@ public class MainActivity extends SlidingFragmentActivity {
 	private void startActivity() {
 		myJid = (String) Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
 		registerInGCM();
-		// Sync with server
 		addMenuFragment();
-		showChannelFragment(myJid);
-		sync();
 		customizeMenu();
+		sync();
+	}
+
+	@Override
+	public void onAttachedToWindow() {
+		showChannelFragment(myJid);
+		showMenu();
+		super.onAttachedToWindow();
+	}
+	
+	private void afterSync() {
+		subscribedChannelsFrag.syncd();
 	}
 
 	private void sync() {
-		SyncModel.getInstance().refresh(this, new ModelCallback<JSONObject>() {
+		ModelUtils.fillAll(this, new ModelCallback<Void>() {
 			@Override
-			public void success(JSONObject response) {
-				subscribedChannelsFrag.syncd(MainActivity.this);
-				pageAdapter.getLeftFragment().syncd(MainActivity.this);
-				getSlidingMenu().showMenu();
+			public void success(Void response) {
+				afterSync();
 			}
 
 			@Override

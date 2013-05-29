@@ -66,6 +66,9 @@ public class BuddycloudHTTPHelper {
 		new RequestAsyncTask<JSONObject>(method, url, entity, auth, acceptsJSON, parent, callback) {
 			@Override
 			protected JSONObject toJSON(String responseStr) throws JSONException {
+				if (responseStr == null || responseStr.length() == 0) {
+					return new JSONObject();
+				}
 				return new JSONObject(responseStr);
 			}
 		}.execute();
@@ -150,6 +153,10 @@ public class BuddycloudHTTPHelper {
 				}
 				
 				HttpEntity resEntityGet = ((HttpResponse)response).getEntity();
+				if (resEntityGet == null) {
+					return "";
+				}
+				
 				String responseStr = EntityUtils.toString(resEntityGet);
 				
 				return responseStr;

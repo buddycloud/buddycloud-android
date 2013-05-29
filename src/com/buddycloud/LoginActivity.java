@@ -1,7 +1,5 @@
 package com.buddycloud;
 
-import org.json.JSONArray;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,8 +9,8 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.buddycloud.model.LoginModel;
 import com.buddycloud.model.ModelCallback;
-import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.DNSUtils;
 
@@ -66,9 +64,9 @@ public class LoginActivity extends Activity {
 					}
 					
 					private void checkCredentials() {
-						SubscribedChannelsModel.getInstance().refresh(LoginActivity.this, new ModelCallback<JSONArray>() {
+						LoginModel.getInstance().getAsync(LoginActivity.this, new ModelCallback<Void>() {
 							@Override
-							public void success(JSONArray response) {
+							public void success(Void response) {
 								LoginActivity.this.finish();
 							}
 							

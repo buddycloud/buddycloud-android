@@ -25,7 +25,7 @@ public class NotificationSettingsModel implements Model<JSONObject, JSONObject, 
 	}
 	
 	@Override
-	public void refresh(final Context context, final ModelCallback<JSONObject> callback,
+	public void getAsync(final Context context, final ModelCallback<JSONObject> callback,
 			String... p) {
 		BuddycloudHTTPHelper.getObject(url(context) + "?type=gcm", true, true, context, callback);
 	}
@@ -48,10 +48,16 @@ public class NotificationSettingsModel implements Model<JSONObject, JSONObject, 
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
 		return apiAddress + ENDPOINT;
 	}
-	
+
 	@Override
 	public JSONObject get(Context context, String... p) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public void fill(Context context, ModelCallback<Void> callback, String... p) {
+		// TODO Auto-generated method stub
+		
+	}
 }

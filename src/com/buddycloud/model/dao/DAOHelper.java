@@ -56,26 +56,68 @@ public class DAOHelper {
 		new AsyncTask<Void, Void, JSONArray>() {
 			@Override
 			protected JSONArray doInBackground(Void... params) {
-				Cursor cursor = db.query(distinct, table, columns, selection, selectionArgs, 
-						groupBy, having, orderBy, limit);
-				cursor.moveToFirst();
-				JSONArray responseArray = new JSONArray();
-			    while (!cursor.isAfterLast()) {
-			    	JSONObject json = cursorParser.parse(cursor);
-			    	if (json != null) {
-			    		responseArray.put(json);
-			    	}
-			    	cursor.moveToNext();
-			    }
-				cursor.close();
-				return responseArray;
+				return queryOnSameThread(db, distinct, table, columns,
+						selection, selectionArgs, groupBy, having, orderBy,
+						limit, cursorParser);
 			}
-			
+
 			@Override
 			protected void onPostExecute(JSONArray result) {
 				callback.onResponse(result);
 			}
 		}.execute();
+	}
+	
+	static JSONObject queryUniqueOnSameThread(final SQLiteDatabase db,
+			final boolean distinct, final String table, final String[] columns,
+			final String selection, final String[] selectionArgs,
+			final String groupBy, final String having, final String orderBy,
+			final String limit, final DAOCursorParser cursorParser) {
+		JSONArray response = queryOnSameThread(db, distinct, table, columns, selection,
+				selectionArgs, groupBy, having, orderBy, limit, cursorParser);
+		if (response.length() == 0) {
+			return null;
+		}
+		return response.optJSONObject(0);
+	}
+	
+	static Map<String, JSONObject> queryMapOnSameThread(final SQLiteDatabase db, final boolean distinct, final String table, 
+			final String[] columns, final String selection, final String[] selectionArgs, 
+			final String groupBy, final String having, final String orderBy, final String limit, 
+			final DAOCursorParser cursorParser, final String keyColumn) {
+		
+		JSONArray response = queryOnSameThread(db, distinct, table, columns, selection,
+				selectionArgs, groupBy, having, orderBy, limit, cursorParser);
+		
+		Map<String, JSONObject> map = new HashMap<String, JSONObject>();
+		for (int i = 0; i < response.length(); i++) {
+			JSONObject json = response.optJSONObject(i);
+			map.put(json.optString(keyColumn), json);
+		}
+		
+		return map;
+	}
+	
+	static JSONArray queryOnSameThread(final SQLiteDatabase db,
+			final boolean distinct, final String table, final String[] columns,
+			final String selection, final String[] selectionArgs,
+			final String groupBy, final String having, final String orderBy,
+			final String limit, final DAOCursorParser cursorParser) {
+		
+		Cursor cursor = db.query(distinct, table, columns, selection,
+				selectionArgs, groupBy, having, orderBy, limit);
+		cursor.moveToFirst();
+		JSONArray responseArray = new JSONArray();
+		while (!cursor.isAfterLast()) {
+			JSONObject json = cursorParser.parse(cursor);
+			if (json != null) {
+				responseArray.put(json);
+			}
+			cursor.moveToNext();
+		}
+		cursor.close();
+		
+		return responseArray;
 	}
 	
 	static void queryUnique(final SQLiteDatabase db, final boolean distinct, final String table, 
