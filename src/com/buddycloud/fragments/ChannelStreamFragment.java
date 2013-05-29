@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,10 +23,12 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.buddycloud.GenericChannelActivity;
 import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.card.CardListAdapter;
 import com.buddycloud.card.PostCard;
+import com.buddycloud.fragments.adapter.SimilarChannelsAdapter;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
 import com.buddycloud.preferences.Preferences;
@@ -239,7 +242,15 @@ public class ChannelStreamFragment extends ContentFragment {
 
 	@Override
 	public boolean menuItemSelected(int featureId, MenuItem item) {
-		// TODO Auto-generated method stub
+		if (item.getItemId() == R.id.menu_similar_channels) {
+			Intent intent = new Intent();
+			intent.setClass(getActivity(), GenericChannelActivity.class);
+			intent.putExtra(GenericChannelActivity.ADAPTER_NAME, 
+					SimilarChannelsAdapter.ADAPTER_NAME);
+			intent.putExtra(GenericChannelsFragment.CHANNEL, channelJid);
+			getActivity().startActivityForResult(
+					intent, GenericChannelActivity.REQUEST_CODE);
+		} 
 		return false;
 	}
 }

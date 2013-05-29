@@ -31,9 +31,9 @@ public class SubscribedChannelsAdapter extends GenericChannelAdapter {
 				for (int i = 0; i < response.length(); i++) {
 					String channel = response.optString(i);
 					if (!channel.equals(myChannel)) {
-						addChannel(SUBSCRIBED, createChannelItem(channel));
+						addChannel(SUBSCRIBED, createChannelItem(channel), context);
 					} else {
-						addChannel(PERSONAL, createChannelItem(channel));
+						addChannel(PERSONAL, createChannelItem(channel), context);
 					}
 				}
 				sort(context);

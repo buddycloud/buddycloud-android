@@ -11,8 +11,11 @@ import android.view.ViewGroup;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.MainActivity;
+import com.buddycloud.GenericChannelActivity;
 import com.buddycloud.R;
 import com.buddycloud.SearchActivity;
+import com.buddycloud.fragments.adapter.MostActiveChannelsAdapter;
+import com.buddycloud.fragments.adapter.RecommendedChannelsAdapter;
 import com.buddycloud.fragments.adapter.SubscribedChannelsAdapter;
 import com.buddycloud.model.SyncModel;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
@@ -73,9 +76,23 @@ public class SubscribedChannelsFragment extends ContentFragment {
 			getActivity().startActivityForResult(
 					searchActivityIntent, SearchActivity.REQUEST_CODE);
 			return true;
-		}
+		} else if (item.getItemId() == R.id.menu_find_active) {
+			showGenericActivity(MostActiveChannelsAdapter.ADAPTER_NAME);
+			return true;
+		} else if (item.getItemId() == R.id.menu_find_recommended) {
+			showGenericActivity(RecommendedChannelsAdapter.ADAPTER_NAME);
+			return true;
+		} 
 		
 		return false;
+	}
+
+	private void showGenericActivity(String adapterName) {
+		Intent intent = new Intent();
+		intent.setClass(getActivity(), GenericChannelActivity.class);
+		intent.putExtra(GenericChannelActivity.ADAPTER_NAME, adapterName);
+		getActivity().startActivityForResult(
+				intent, GenericChannelActivity.REQUEST_CODE);
 	}
 
 	public void syncd() {

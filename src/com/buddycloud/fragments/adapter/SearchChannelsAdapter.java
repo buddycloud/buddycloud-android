@@ -70,9 +70,9 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 				continue;
 			}
 			if (!channel.equals(myChannel)) {
-				addChannel(SUBSCRIBED, createChannelItem(channel));
+				addChannel(SUBSCRIBED, createChannelItem(channel), context);
 			} else {
-				addChannel(PERSONAL, createChannelItem(channel));
+				addChannel(PERSONAL, createChannelItem(channel), context);
 			}
 			matchedChannels++;
 		}
@@ -108,7 +108,7 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 					JSONObject channelItem = response.optJSONObject(i);
 					String channelJid = channelItem.optString("jid");
 					if (!hasChannel(channelJid)) {
-						addChannel(category, channelItem);
+						addChannel(category, channelItem, context);
 					}
 				}
 			}

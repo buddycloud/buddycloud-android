@@ -130,6 +130,11 @@ public class MainActivity extends SlidingFragmentActivity {
 					showChannelFragment(channelJid);
 				}
 			}
+		} else if (requestCode == GenericChannelActivity.REQUEST_CODE) {
+			if (data != null) {
+				final String channelJid = data.getStringExtra(GenericChannelsFragment.CHANNEL);
+				showChannelFragment(channelJid);
+			}
 		}
 	}
 

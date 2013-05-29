@@ -9,11 +9,14 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 
+import com.buddycloud.model.ChannelMetadataModel;
+import com.buddycloud.model.ModelCallback;
 import com.buddycloud.utils.ChannelAdapterHelper;
 
 public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
@@ -64,10 +67,28 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 		notifyDataSetChanged();
 	}
 	
-	protected void addChannel(String category, JSONObject channelItem) {
+	protected void addChannel(String category, JSONObject channelItem, Context context) {
 		addCategory(category);
 		channelsPerCategory.get(category).add(channelItem);
+		fetchMetadata(channelItem, context);
 		notifyDataSetChanged();
+	}
+
+	private void fetchMetadata(JSONObject channelItem, Context context) {
+		String channelJid = channelItem.optString("jid");
+		JSONObject metadata = ChannelMetadataModel.getInstance().getFromCache(context, channelJid);
+		if (metadata == null)
+		ChannelMetadataModel.getInstance().fill(context, new ModelCallback<Void>() {
+			@Override
+			public void success(Void response) {
+				notifyDataSetChanged();
+			}
+
+			@Override
+			public void error(Throwable throwable) {
+				
+			}
+		}, channelJid);
 	}
 	
 	protected void clearChannels() {
@@ -148,5 +169,8 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 	@Override
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
 		return true;
+	}
+	
+	public void load(final Context context) {
 	}
 }
