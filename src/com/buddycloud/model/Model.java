@@ -4,9 +4,9 @@ import android.content.Context;
 
 public interface Model<RefreshType, SaveType, Params> {
 
-	RefreshType get(Context context, Params... p);
+	RefreshType getFromCache(Context context, Params... p);
 	
-	void getAsync(Context context, ModelCallback<RefreshType> callback, Params... p);
+	void getFromServer(Context context, ModelCallback<RefreshType> callback, Params... p);
 	
 	void fill(Context context, ModelCallback<Void> callback, Params... p);
 	

@@ -38,13 +38,13 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 	
 	public void load(final Context context) {
 		this.myChannel = Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
-		SubscribedChannelsModel.getInstance().getAsync(context, new ModelCallback<JSONArray>() {
+		SubscribedChannelsModel.getInstance().getFromServer(context, new ModelCallback<JSONArray>() {
 			@Override
 			public void success(JSONArray response) {
 				for (int i = 0; i < response.length(); i++) {
 					final String channel = response.optString(i);
 					allSubscribedChannels.add(channel);
-					JSONObject metadata = ChannelMetadataModel.getInstance().get(context, channel);
+					JSONObject metadata = ChannelMetadataModel.getInstance().getFromCache(context, channel);
 					plainMetadata.put(channel, getPlainMetadata(metadata));
 					filter(context, "");
 					notifyDataSetChanged();
@@ -101,7 +101,7 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 	}
 
 	private void search(final Context context, String q, String type, final String category) {
-		SearchChannelsModel.getInstance().getAsync(context, new ModelCallback<JSONArray>() {
+		SearchChannelsModel.getInstance().getFromServer(context, new ModelCallback<JSONArray>() {
 			@Override
 			public void success(JSONArray response) {
 				for (int i = 0; i < response.length(); i++) {

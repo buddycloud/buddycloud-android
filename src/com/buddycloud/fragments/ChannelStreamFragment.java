@@ -124,7 +124,7 @@ public class ChannelStreamFragment extends ContentFragment {
 
 			@Override
 			public void success(Void voidd) {
-				JSONArray response = PostsModel.getInstance().get(getActivity(), channelJid);
+				JSONArray response = PostsModel.getInstance().getFromCache(getActivity(), channelJid);
 				
 				Map<String, Integer> commentsPerItem = new HashMap<String, Integer>();
 				for (int i = 0; i < response.length(); i++) {

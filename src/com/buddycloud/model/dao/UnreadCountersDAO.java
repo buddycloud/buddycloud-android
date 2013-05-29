@@ -57,6 +57,12 @@ public class UnreadCountersDAO implements DAO<JSONObject, JSONObject> {
 		return buildValues(channel, mentionsCount, totalCount);
 	}
 	
+	public void delete(String channelJid) {
+		String filter = UnreadCountersTableHelper.COLUMN_USER + "=\"" + myJid + "\" AND " + 
+				UnreadCountersTableHelper.COLUMN_CHANNEL + "=\"" + channelJid + "\"";
+		db.delete(UnreadCountersTableHelper.TABLE_NAME, filter, null);
+	}
+	
 	public boolean insert(String channel, JSONObject counter) {
 		ContentValues values = buildValues(channel, counter);
 		if (values != null) {
@@ -128,4 +134,5 @@ public class UnreadCountersDAO implements DAO<JSONObject, JSONObject> {
 	private String getString(Cursor cursor, String columnName) {
 		return cursor.getString(cursor.getColumnIndex(columnName));
 	}
+
 }

@@ -68,7 +68,7 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 	}
 	
 	@Override
-	public JSONArray get(Context context, String... p) {
+	public JSONArray getFromCache(Context context, String... p) {
 		String channelJid = p[0];
 		return lookupPostsFromDatabase(context, channelJid);
 	}
@@ -190,7 +190,7 @@ public class PostsModel implements Model<JSONArray, JSONObject, String> {
 	}
 
 	@Override
-	public void getAsync(Context context, ModelCallback<JSONArray> callback,
+	public void getFromServer(Context context, ModelCallback<JSONArray> callback,
 			String... p) {
 		// TODO Auto-generated method stub
 		

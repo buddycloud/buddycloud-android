@@ -69,7 +69,7 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 			String channel = node.split("/")[2];
 			JSONArray newPosts = newCounters.optJSONArray(node);
 			int newPostsCount = newPosts.length();
-			String newPostUpdate = newPosts.optString(0, "updated");
+			String newPostUpdate = newPosts.optJSONObject(0).optString("updated");
 			
 			try {
 				if (TimeUtils.fromISOToDate(newPostUpdate).after(
@@ -86,17 +86,21 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 	}
 	
 	@Override
-	public JSONObject get(Context context, String... p) {
+	public JSONObject getFromCache(Context context, String... p) {
 		UnreadCountersDAO unreadCountersDAO = UnreadCountersDAO.getInstance(context);
 		Map<String, JSONObject> counters = unreadCountersDAO.getAll();
 		return new JSONObject(counters);
 	}
 	
 	@Override
-	public void getAsync(Context context, final ModelCallback<JSONObject> callback, String... p) {
+	public void getFromServer(Context context, final ModelCallback<JSONObject> callback, String... p) {
 	
 	}
 
+	public void resetCounter(Context context, String channelJid) {
+		UnreadCountersDAO.getInstance(context).delete(channelJid);
+	}
+	
 	public void fill(Context context, final ModelCallback<Void> callback, String... p) {
 		UnreadCountersDAO unreadCountersDAO = UnreadCountersDAO.getInstance(context);
 		sync(unreadCountersDAO.getAll(), context, callback);

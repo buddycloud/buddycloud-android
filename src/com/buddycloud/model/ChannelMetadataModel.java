@@ -59,7 +59,7 @@ public class ChannelMetadataModel implements Model<JSONObject, JSONObject, Strin
 	}
 	
 	@Override
-	public JSONObject get(Context context, String... p) {
+	public JSONObject getFromCache(Context context, String... p) {
 		if (p == null || p.length != 1) {
 			return null;
 		}
@@ -103,7 +103,7 @@ public class ChannelMetadataModel implements Model<JSONObject, JSONObject, Strin
 	}
 
 	@Override
-	public void getAsync(Context context, ModelCallback<JSONObject> callback,
+	public void getFromServer(Context context, ModelCallback<JSONObject> callback,
 			String... p) {
 	}
 

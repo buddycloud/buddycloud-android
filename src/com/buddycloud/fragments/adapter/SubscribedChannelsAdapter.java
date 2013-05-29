@@ -1,11 +1,15 @@
 package com.buddycloud.fragments.adapter;
 
+import java.util.Comparator;
+
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.content.Context;
 
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SubscribedChannelsModel;
+import com.buddycloud.model.SyncModel;
 import com.buddycloud.preferences.Preferences;
 
 public class SubscribedChannelsAdapter extends GenericChannelAdapter {
@@ -20,7 +24,7 @@ public class SubscribedChannelsAdapter extends GenericChannelAdapter {
 	
 	public void load(final Context context) {
 		this.myChannel = Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
-		SubscribedChannelsModel.getInstance().getAsync(context, new ModelCallback<JSONArray>() {
+		SubscribedChannelsModel.getInstance().getFromServer(context, new ModelCallback<JSONArray>() {
 			@Override
 			public void success(JSONArray response) {
 				clear();
@@ -32,6 +36,7 @@ public class SubscribedChannelsAdapter extends GenericChannelAdapter {
 						addChannel(PERSONAL, createChannelItem(channel));
 					}
 				}
+				sort(context);
 				notifyDataSetChanged();
 			}
 			
@@ -40,5 +45,38 @@ public class SubscribedChannelsAdapter extends GenericChannelAdapter {
 				// TODO Auto-generated method stub
 			}
 		});
+	}
+	
+	public void sort(final Context context) {
+		final JSONObject allCounters = SyncModel.getInstance().getFromCache(context);
+		sort(new Comparator<JSONObject>() {
+			@Override
+			public int compare(JSONObject lhs, JSONObject rhs) {
+				
+				int countA = getCounter(allCounters, lhs.optString("jid"), "mentionsCount");
+				int countB = getCounter(allCounters, rhs.optString("jid"), "mentionsCount");
+				int diff = countB - countA;
+				
+				if (diff == 0) {
+					countA = getCounter(allCounters, lhs.optString("jid"), "totalCount");
+					countB = getCounter(allCounters, rhs.optString("jid"), "totalCount");
+					diff = countB - countA;
+				}
+				
+				if (diff != 0) {
+					return diff;
+				}
+				
+				return rhs.optString("jid").compareTo(lhs.optString("jid"));
+			}
+		});
+	}
+	
+	private int getCounter(JSONObject allCounters, String channel, String key) {
+		JSONObject channelCounters = allCounters.optJSONObject(channel);
+		if (channelCounters == null) {
+			return 0;
+		}
+		return channelCounters.optInt(key);
 	}
 }

@@ -19,7 +19,7 @@ public class GCMUtils {
 		GCMRegistrar.checkManifest(context);
 		final String regId = GCMRegistrar.getRegistrationId(context);
 		if (regId.equals("")) {
-			NotificationMetadataModel.getInstance().getAsync(context, new ModelCallback<JSONObject>() {
+			NotificationMetadataModel.getInstance().getFromServer(context, new ModelCallback<JSONObject>() {
 				@Override
 				public void success(JSONObject response) {
 					String sender = response.optString("google_project_id", null);

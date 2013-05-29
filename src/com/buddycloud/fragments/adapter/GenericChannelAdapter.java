@@ -33,6 +33,12 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 		}
 	}
 
+	public void sort(Comparator<JSONObject> comparator) {
+		for (List<JSONObject> channels : channelsPerCategory.values()) {
+			Collections.sort(channels, comparator);
+		}
+	}
+	
 	public void clear() {
 		categories.clear();
 		channelsPerCategory.clear();

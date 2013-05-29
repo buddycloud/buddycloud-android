@@ -9,7 +9,7 @@ import android.content.Context;
 public class ModelUtils {
 
 	public static void fillAll(final Context context, final ModelCallback<Void> callback) {
-		SubscribedChannelsModel.getInstance().getAsync(context, new ModelCallback<JSONArray>() {
+		SubscribedChannelsModel.getInstance().getFromServer(context, new ModelCallback<JSONArray>() {
 			@Override
 			public void success(JSONArray response) {
 				final Semaphore semaphore = new Semaphore(response.length() - 1);

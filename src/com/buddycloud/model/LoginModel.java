@@ -21,7 +21,7 @@ public class LoginModel implements Model<Void, Void, Void> {
 		return instance;
 	}
 	
-	public void getAsync(final Context context, final ModelCallback<Void> callback, Void... p) {
+	public void getFromServer(final Context context, final ModelCallback<Void> callback, Void... p) {
 		BuddycloudHTTPHelper.getObject(url(context), context, 
 				new ModelCallback<JSONObject>() {
 					@Override
@@ -51,7 +51,7 @@ public class LoginModel implements Model<Void, Void, Void> {
 	}
 
 	@Override
-	public Void get(Context context, Void... p) {
+	public Void getFromCache(Context context, Void... p) {
 		// TODO Auto-generated method stub
 		return null;
 	}

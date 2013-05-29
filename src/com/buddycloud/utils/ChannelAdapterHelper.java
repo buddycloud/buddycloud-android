@@ -70,7 +70,7 @@ public class ChannelAdapterHelper {
 	}
 	
 	private static void loadTitleAndDescription(Context parent, final ViewHolder holder, final String channelJid) {
-		JSONObject metadata = ChannelMetadataModel.getInstance().get(parent, channelJid);
+		JSONObject metadata = ChannelMetadataModel.getInstance().getFromCache(parent, channelJid);
 		
 		String channelTitle = channelJid;
 		String channelDescription = null;
@@ -95,7 +95,7 @@ public class ChannelAdapterHelper {
 	}
 	
 	private static void loadCounters(Context context, final ViewHolder holder, final String channelJid) {
-		JSONObject allCounters = SyncModel.getInstance().get(context, channelJid);
+		JSONObject allCounters = SyncModel.getInstance().getFromCache(context, channelJid);
 		JSONObject counters = allCounters.optJSONObject(channelJid);
 		if (counters != null) {
 			Integer totalCount = counters.optInt("totalCount");
@@ -104,6 +104,8 @@ public class ChannelAdapterHelper {
 			} else {
 				holder.unreadCounter.setText(totalCount.toString());
 			}
+		} else {
+			holder.unreadCounter.setText("0");
 		}
 	}
 }

@@ -64,7 +64,7 @@ public class LoginActivity extends Activity {
 					}
 					
 					private void checkCredentials() {
-						LoginModel.getInstance().getAsync(LoginActivity.this, new ModelCallback<Void>() {
+						LoginModel.getInstance().getFromServer(LoginActivity.this, new ModelCallback<Void>() {
 							@Override
 							public void success(Void response) {
 								LoginActivity.this.finish();

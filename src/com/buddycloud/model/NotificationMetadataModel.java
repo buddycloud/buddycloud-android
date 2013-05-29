@@ -22,7 +22,7 @@ public class NotificationMetadataModel implements Model<JSONObject, JSONObject, 
 	}
 	
 	@Override
-	public void getAsync(final Context context, final ModelCallback<JSONObject> callback,
+	public void getFromServer(final Context context, final ModelCallback<JSONObject> callback,
 			String... p) {
 		BuddycloudHTTPHelper.getObject(url(context), true, true, context, callback);
 	}
@@ -39,7 +39,7 @@ public class NotificationMetadataModel implements Model<JSONObject, JSONObject, 
 	}
 
 	@Override
-	public JSONObject get(Context context, String... p) {
+	public JSONObject getFromCache(Context context, String... p) {
 		// TODO Auto-generated method stub
 		return null;
 	}
