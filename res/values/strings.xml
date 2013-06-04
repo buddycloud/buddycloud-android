@@ -11,6 +11,7 @@
     <string name="menu_find_recommended">Recommended channels</string>
     
     <string name="menu_follow">Follow</string>
+    <string name="menu_unfollow">Unfollow</string>
     <string name="menu_channel_details">Channel details</string>
     <string name="menu_channel_followers">Followers</string>
     <string name="menu_channel_banned">Banned</string>
@@ -28,5 +29,9 @@
 	<string name="avatar_desc">Channel avatar</string>
 	<string name="search_hint">Search</string>
 	<string name="share_button">Share</string>
-		
+	
+	<string name="action_followed">You\'re now following %1$s</string>
+	<string name="action_unfollowed">You unfollowed %1$s</string>
+	<string name="action_follow_failed">Couldn\'t change your role in %1$s</string>
+	
 </resources>

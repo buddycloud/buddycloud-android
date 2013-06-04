@@ -31,8 +31,10 @@ import com.buddycloud.card.PostCard;
 import com.buddycloud.fragments.adapter.SimilarChannelsAdapter;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
+import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
+import com.buddycloud.utils.JSONUtils;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.squareup.picasso.Picasso;
 
@@ -238,8 +240,20 @@ public class ChannelStreamFragment extends ContentFragment {
 		}
 		getSherlockActivity().getSupportMenuInflater().inflate(
 				R.menu.channel_fragment_options, menu);
+		
+		MenuItem followItem = menu.getItem(0);
+		if (isFollowing()) {
+			followItem.setTitle(R.string.menu_unfollow);
+		} else {
+			followItem.setTitle(R.string.menu_follow);
+		}
 	}
 
+	private boolean isFollowing() {
+		JSONArray subscribed = SubscribedChannelsModel.getInstance().getFromCache(getActivity());
+		return JSONUtils.contains(subscribed, channelJid);
+	}
+	
 	@Override
 	public boolean menuItemSelected(int featureId, MenuItem item) {
 		if (item.getItemId() == R.id.menu_similar_channels) {
@@ -250,7 +264,33 @@ public class ChannelStreamFragment extends ContentFragment {
 			intent.putExtra(GenericChannelsFragment.CHANNEL, channelJid);
 			getActivity().startActivityForResult(
 					intent, GenericChannelActivity.REQUEST_CODE);
-		} 
+		} else if (item.getItemId() == R.id.menu_follow) {
+			
+			final boolean isFollowing = isFollowing();
+			
+			Map<String, String> subscription = new HashMap<String, String>();
+			String newRole = isFollowing ? SubscribedChannelsModel.ROLE_NONE : SubscribedChannelsModel.ROLE_PRODUCER;
+			subscription.put(channelJid + SubscribedChannelsModel.POST_NODE_SUFIX, newRole);
+			
+			SubscribedChannelsModel.getInstance().save(getActivity(), new JSONObject(subscription), 
+					new ModelCallback<JSONObject>() {
+						@Override
+						public void success(JSONObject response) {
+							Toast.makeText(getActivity(),  
+									getString(isFollowing ? R.string.action_unfollowed : R.string.action_followed, channelJid), 
+									Toast.LENGTH_LONG).show();
+							getSherlockActivity().supportInvalidateOptionsMenu();
+							((MainActivity) getActivity()).afterSync();
+						}
+
+						@Override
+						public void error(Throwable throwable) {
+							Toast.makeText(getActivity(), 
+									getString(R.string.action_follow_failed, channelJid),
+									Toast.LENGTH_LONG).show();
+						}
+					});
+		}
 		return false;
 	}
 }

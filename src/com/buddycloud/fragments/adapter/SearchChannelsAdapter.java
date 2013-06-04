@@ -38,24 +38,16 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 	
 	public void load(final Context context) {
 		this.myChannel = Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
-		SubscribedChannelsModel.getInstance().getFromServer(context, new ModelCallback<JSONArray>() {
-			@Override
-			public void success(JSONArray response) {
-				for (int i = 0; i < response.length(); i++) {
-					final String channel = response.optString(i);
-					allSubscribedChannels.add(channel);
-					JSONObject metadata = ChannelMetadataModel.getInstance().getFromCache(context, channel);
-					plainMetadata.put(channel, getPlainMetadata(metadata));
-					filter(context, "");
-					notifyDataSetChanged();
-				}
-			}
-			
-			@Override
-			public void error(Throwable throwable) {
-				// TODO Auto-generated method stub
-			}
-		});
+		JSONArray response = SubscribedChannelsModel.getInstance().getFromCache(context);
+		
+		for (int i = 0; i < response.length(); i++) {
+			final String channel = response.optString(i);
+			allSubscribedChannels.add(channel);
+			JSONObject metadata = ChannelMetadataModel.getInstance().getFromCache(context, channel);
+			plainMetadata.put(channel, getPlainMetadata(metadata));
+			filter(context, "");
+			notifyDataSetChanged();
+		}
 	}
 
 	@SuppressLint("DefaultLocale")

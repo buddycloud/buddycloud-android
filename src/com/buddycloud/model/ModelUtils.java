@@ -9,9 +9,10 @@ import android.content.Context;
 public class ModelUtils {
 
 	public static void fillAll(final Context context, final ModelCallback<Void> callback) {
-		SubscribedChannelsModel.getInstance().getFromServer(context, new ModelCallback<JSONArray>() {
+		SubscribedChannelsModel.getInstance().fill(context, new ModelCallback<Void>() {
 			@Override
-			public void success(JSONArray response) {
+			public void success(Void voidd) {
+				JSONArray response = SubscribedChannelsModel.getInstance().getFromCache(context);
 				final Semaphore semaphore = new Semaphore(response.length() - 1);
 				for (int i = 0; i < response.length(); i++) {
 					String channelJid = response.optString(i);

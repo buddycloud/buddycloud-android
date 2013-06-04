@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
-import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.model.SyncModel;
 import com.buddycloud.preferences.Preferences;
@@ -24,27 +23,18 @@ public class SubscribedChannelsAdapter extends GenericChannelAdapter {
 	
 	public void load(final Context context) {
 		this.myChannel = Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
-		SubscribedChannelsModel.getInstance().getFromServer(context, new ModelCallback<JSONArray>() {
-			@Override
-			public void success(JSONArray response) {
-				clear();
-				for (int i = 0; i < response.length(); i++) {
-					String channel = response.optString(i);
-					if (!channel.equals(myChannel)) {
-						addChannel(SUBSCRIBED, createChannelItem(channel), context);
-					} else {
-						addChannel(PERSONAL, createChannelItem(channel), context);
-					}
-				}
-				sort(context);
-				notifyDataSetChanged();
+		JSONArray response = SubscribedChannelsModel.getInstance().getFromCache(context);
+		clear();
+		for (int i = 0; i < response.length(); i++) {
+			String channel = response.optString(i);
+			if (!channel.equals(myChannel)) {
+				addChannel(SUBSCRIBED, createChannelItem(channel), context);
+			} else {
+				addChannel(PERSONAL, createChannelItem(channel), context);
 			}
-			
-			@Override
-			public void error(Throwable throwable) {
-				// TODO Auto-generated method stub
-			}
-		});
+		}
+		sort(context);
+		notifyDataSetChanged();
 	}
 	
 	public void sort(final Context context) {

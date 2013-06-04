@@ -153,7 +153,7 @@ public class MainActivity extends SlidingFragmentActivity {
 		super.onAttachedToWindow();
 	}
 	
-	private void afterSync() {
+	public void afterSync() {
 		subscribedChannelsFrag.syncd();
 	}
 
