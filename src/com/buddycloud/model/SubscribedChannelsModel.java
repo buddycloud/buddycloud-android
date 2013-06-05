@@ -14,7 +14,7 @@ import android.util.Log;
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.preferences.Preferences;
 
-public class SubscribedChannelsModel implements Model<JSONArray, JSONObject, String> {
+public class SubscribedChannelsModel extends AbstractModel<JSONArray, JSONObject, String> {
 
 	private static SubscribedChannelsModel instance;
 	
@@ -96,7 +96,6 @@ public class SubscribedChannelsModel implements Model<JSONArray, JSONObject, Str
 	public void fill(Context context, final ModelCallback<Void> callback, String... p) {
 		BuddycloudHTTPHelper.getObject(url(context), context, 
 				new ModelCallback<JSONObject>() {
-
 					@SuppressWarnings("unchecked")
 					@Override
 					public void success(JSONObject response) {
@@ -109,6 +108,7 @@ public class SubscribedChannelsModel implements Model<JSONArray, JSONObject, Str
 							}
 						}
 						subscribed = new JSONArray(channels);
+						notifyChanged();
 						callback.success(null);
 					}
 					

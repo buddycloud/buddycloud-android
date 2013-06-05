@@ -10,17 +10,20 @@ import android.view.ViewGroup;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.buddycloud.MainActivity;
 import com.buddycloud.GenericChannelActivity;
+import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.SearchActivity;
 import com.buddycloud.fragments.adapter.MostActiveChannelsAdapter;
 import com.buddycloud.fragments.adapter.RecommendedChannelsAdapter;
 import com.buddycloud.fragments.adapter.SubscribedChannelsAdapter;
+import com.buddycloud.model.ChannelMetadataModel;
+import com.buddycloud.model.ModelListener;
+import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.model.SyncModel;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
-public class SubscribedChannelsFragment extends ContentFragment {
+public class SubscribedChannelsFragment extends ContentFragment implements ModelListener {
 
 	private SubscribedChannelsAdapter adapter = new SubscribedChannelsAdapter();
 	private GenericChannelsFragment genericChannelFrag = new GenericChannelsFragment(adapter) {
@@ -29,6 +32,12 @@ public class SubscribedChannelsFragment extends ContentFragment {
 			selectChannel(channelItem.optString("jid"));
 		}
 	};
+	
+	public SubscribedChannelsFragment() {
+		SubscribedChannelsModel.getInstance().addListener(this);
+		ChannelMetadataModel.getInstance().addListener(this);
+		SyncModel.getInstance().addListener(this);
+	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,8 +49,6 @@ public class SubscribedChannelsFragment extends ContentFragment {
 	private void selectChannel(String channelJid) {
 		showChannelFragment(channelJid);
 		SyncModel.getInstance().resetCounter(getActivity(), channelJid);
-		adapter.sort(getActivity());
-		adapter.notifyDataSetChanged();
 		hideMenu();
 	}
 
@@ -95,7 +102,8 @@ public class SubscribedChannelsFragment extends ContentFragment {
 				intent, GenericChannelActivity.REQUEST_CODE);
 	}
 
-	public void syncd() {
+	@Override
+	public void dataChanged() {
 		adapter.load(getActivity());
 	}
 

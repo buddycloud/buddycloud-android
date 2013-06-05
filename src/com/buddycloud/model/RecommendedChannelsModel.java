@@ -11,7 +11,7 @@ import android.content.Context;
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.preferences.Preferences;
 
-public class RecommendedChannelsModel implements Model<JSONArray, JSONArray, String> {
+public class RecommendedChannelsModel extends AbstractModel<JSONArray, JSONArray, String> {
 
 	private static final String ENDPOINT = "/recommendations"; 
 	private static final int MAX = 20;

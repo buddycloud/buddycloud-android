@@ -15,7 +15,6 @@ import com.buddycloud.fragments.ContentFragment;
 import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.fragments.PostDetailsFragment;
 import com.buddycloud.fragments.SubscribedChannelsFragment;
-import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.ModelUtils;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.GCMUtils;
@@ -153,22 +152,8 @@ public class MainActivity extends SlidingFragmentActivity {
 		super.onAttachedToWindow();
 	}
 	
-	public void afterSync() {
-		subscribedChannelsFrag.syncd();
-	}
-
 	private void sync() {
-		ModelUtils.fillAll(this, new ModelCallback<Void>() {
-			@Override
-			public void success(Void response) {
-				afterSync();
-			}
-
-			@Override
-			public void error(Throwable throwable) {
-				// TODO Auto-generated method stub
-			}
-		});
+		ModelUtils.fillAll(this);
 	}
 
 	private void registerInGCM() {

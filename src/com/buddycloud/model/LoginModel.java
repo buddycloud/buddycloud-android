@@ -7,7 +7,7 @@ import android.content.Context;
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.preferences.Preferences;
 
-public class LoginModel implements Model<Void, Void, Void> {
+public class LoginModel extends AbstractModel<Void, Void, Void> {
 
 	private static LoginModel instance;
 	private static final String ENDPOINT = "/"; 

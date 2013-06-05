@@ -14,7 +14,7 @@ import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.model.dao.PostsDAO;
 import com.buddycloud.preferences.Preferences;
 
-public class PostsModel implements Model<JSONArray, JSONObject, String> {
+public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 
 	private static final String TAG = PostsModel.class.getName();
 	private static PostsModel instance;

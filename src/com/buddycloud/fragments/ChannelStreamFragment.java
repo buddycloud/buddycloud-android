@@ -280,7 +280,6 @@ public class ChannelStreamFragment extends ContentFragment {
 									getString(isFollowing ? R.string.action_unfollowed : R.string.action_followed, channelJid), 
 									Toast.LENGTH_LONG).show();
 							getSherlockActivity().supportInvalidateOptionsMenu();
-							((MainActivity) getActivity()).afterSync();
 						}
 
 						@Override

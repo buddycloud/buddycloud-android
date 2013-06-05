@@ -10,7 +10,7 @@ import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.model.dao.ChannelMetadataDAO;
 import com.buddycloud.preferences.Preferences;
 
-public class ChannelMetadataModel implements Model<JSONObject, JSONObject, String> {
+public class ChannelMetadataModel extends AbstractModel<JSONObject, JSONObject, String> {
 
 	private static ChannelMetadataModel instance;
 	private static final String ENDPOINT = "/metadata/posts"; 
@@ -80,6 +80,7 @@ public class ChannelMetadataModel implements Model<JSONObject, JSONObject, Strin
 				} else {
 					insertMetadata(dao, channel, metadata, callback);
 				}
+				notifyChanged();
 			}
 			
 			@Override

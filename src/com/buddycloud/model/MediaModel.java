@@ -19,7 +19,7 @@ import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.FileUtils;
 
-public class MediaModel implements Model<JSONObject, JSONObject, String> {
+public class MediaModel extends AbstractModel<JSONObject, JSONObject, String> {
 
 	private static MediaModel instance;
 	private static final String ENDPOINT = "/media"; 

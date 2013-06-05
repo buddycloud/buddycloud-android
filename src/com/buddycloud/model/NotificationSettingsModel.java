@@ -10,7 +10,7 @@ import android.content.Context;
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.preferences.Preferences;
 
-public class NotificationSettingsModel implements Model<JSONObject, JSONObject, String> {
+public class NotificationSettingsModel extends AbstractModel<JSONObject, JSONObject, String> {
 
 	private static final String ENDPOINT = "/notification_settings";
 	private static NotificationSettingsModel instance;

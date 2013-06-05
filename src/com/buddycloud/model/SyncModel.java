@@ -15,7 +15,7 @@ import com.buddycloud.model.dao.UnreadCountersDAO;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.TimeUtils;
 
-public class SyncModel implements Model<JSONObject, JSONObject, String> {
+public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 
 	private static SyncModel instance;
 	private static final int PAGE_SIZE = 31;
@@ -99,6 +99,7 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 
 	public void resetCounter(Context context, String channelJid) {
 		UnreadCountersDAO.getInstance(context).delete(channelJid);
+		notifyChanged();
 	}
 	
 	public void fill(Context context, final ModelCallback<Void> callback, String... p) {
@@ -115,6 +116,7 @@ public class SyncModel implements Model<JSONObject, JSONObject, String> {
 			@Override
 			public void success(JSONObject newCounters) {
 				parse(context, newCounters, oldCounters);
+				notifyChanged();
 				if (callback != null) {
 					callback.success(null);
 				}

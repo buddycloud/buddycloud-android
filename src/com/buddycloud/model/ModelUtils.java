@@ -8,7 +8,7 @@ import android.content.Context;
 
 public class ModelUtils {
 
-	public static void fillAll(final Context context, final ModelCallback<Void> callback) {
+	public static void fillAll(final Context context) {
 		SubscribedChannelsModel.getInstance().fill(context, new ModelCallback<Void>() {
 			@Override
 			public void success(Void voidd) {
@@ -25,7 +25,6 @@ public class ModelUtils {
 							SyncModel.getInstance().fill(context, new ModelCallback<Void>() {
 								@Override
 								public void success(Void response) {
-									callback.success(null);
 								}
 
 								@Override

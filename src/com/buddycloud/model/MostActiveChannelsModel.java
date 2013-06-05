@@ -11,7 +11,7 @@ import android.content.Context;
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.preferences.Preferences;
 
-public class MostActiveChannelsModel implements Model<JSONArray, JSONArray, String> {
+public class MostActiveChannelsModel extends AbstractModel<JSONArray, JSONArray, String> {
 
 	private static final String ENDPOINT = "/most_active"; 
 	private static final int MAX = 20;

@@ -7,7 +7,7 @@ import android.content.Context;
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.preferences.Preferences;
 
-public class NotificationMetadataModel implements Model<JSONObject, JSONObject, String> {
+public class NotificationMetadataModel extends AbstractModel<JSONObject, JSONObject, String> {
 
 	private static final String ENDPOINT = "/notification_metadata?type=gcm";
 	private static NotificationMetadataModel instance;

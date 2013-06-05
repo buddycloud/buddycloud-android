@@ -13,7 +13,7 @@ import android.content.Context;
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.preferences.Preferences;
 
-public class SearchChannelsModel implements Model<JSONArray, JSONArray, String> {
+public class SearchChannelsModel extends AbstractModel<JSONArray, JSONArray, String> {
 
 	public static final String METADATA_TYPE = "metadata";
 	public static final String POST_TYPE = "content";
