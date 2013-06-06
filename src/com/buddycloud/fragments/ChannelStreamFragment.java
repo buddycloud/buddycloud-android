@@ -297,11 +297,11 @@ public class ChannelStreamFragment extends ContentFragment {
 	}
 
 	private void showFollowers() {
-		showGenericChannelActivity(SimilarChannelsAdapter.ADAPTER_NAME);
+		showGenericChannelActivity(FollowersAdapter.ADAPTER_NAME);
 	}
 	
 	private void showSimilarChannels() {
-		showGenericChannelActivity(FollowersAdapter.ADAPTER_NAME);
+		showGenericChannelActivity(SimilarChannelsAdapter.ADAPTER_NAME);
 	}
 	
 	private void showGenericChannelActivity(String adapterName) {

@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.fragments.GenericSelectableChannelsFragment;
+import com.buddycloud.fragments.adapter.FollowersAdapter;
 import com.buddycloud.fragments.adapter.GenericChannelAdapter;
 import com.buddycloud.fragments.adapter.MostActiveChannelsAdapter;
 import com.buddycloud.fragments.adapter.RecommendedChannelsAdapter;
@@ -39,6 +40,10 @@ public class GenericChannelActivity extends SherlockFragmentActivity {
 		if (adapterName.equals(SimilarChannelsAdapter.ADAPTER_NAME)) {
 			String channelJid = getIntent().getStringExtra(GenericChannelsFragment.CHANNEL);
 			return new SimilarChannelsAdapter(channelJid);
+		}
+		if (adapterName.equals(FollowersAdapter.ADAPTER_NAME)) {
+			String channelJid = getIntent().getStringExtra(GenericChannelsFragment.CHANNEL);
+			return new FollowersAdapter(channelJid);
 		}
 		
 		return null;
