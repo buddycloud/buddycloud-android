@@ -104,6 +104,14 @@ public class LoginActivity extends Activity {
 	}
     
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	if (requestCode == CreateAccountActivity.REQUEST_CODE && resultCode == CreateAccountActivity.ACCOUNT_CREATED_RESULT) {
+    		finish();
+    	}
+    	super.onActivityResult(requestCode, resultCode, data);
+    }
+    
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 //        getMenuInflater().inflate(R.menu.activity_share, menu);
         return true;
