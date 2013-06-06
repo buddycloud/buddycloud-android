@@ -2,11 +2,15 @@ package com.buddycloud.fragments;
 
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -18,9 +22,11 @@ import com.buddycloud.fragments.adapter.MostActiveChannelsAdapter;
 import com.buddycloud.fragments.adapter.RecommendedChannelsAdapter;
 import com.buddycloud.fragments.adapter.SubscribedChannelsAdapter;
 import com.buddycloud.model.ChannelMetadataModel;
+import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.ModelListener;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.model.SyncModel;
+import com.buddycloud.model.TopicChannelModel;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class SubscribedChannelsFragment extends ContentFragment implements ModelListener {
@@ -37,6 +43,7 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 		SubscribedChannelsModel.getInstance().addListener(this);
 		ChannelMetadataModel.getInstance().addListener(this);
 		SyncModel.getInstance().addListener(this);
+		TopicChannelModel.getInstance().addListener(this);
 	}
 	
 	@Override
@@ -89,9 +96,47 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 		} else if (item.getItemId() == R.id.menu_find_recommended) {
 			showGenericActivity(RecommendedChannelsAdapter.ADAPTER_NAME);
 			return true;
-		} 
+		} else if (item.getItemId() == R.id.menu_create_channel) {
+			createNewTopicChannel();
+			return true;
+		}
 		
 		return false;
+	}
+
+	private void createNewTopicChannel() {
+		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+
+		alert.setTitle("Create new topic channel");
+		alert.setMessage("Enter the channel name (channel@domain):");
+		final EditText input = new EditText(getActivity());
+		alert.setView(input);
+
+		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				String channelJid = input.getText().toString();
+				TopicChannelModel.getInstance().save(getActivity(), null, new ModelCallback<Void>() {
+					@Override
+					public void success(Void response) {
+						Toast.makeText(getActivity(), "Topic channel created.", 
+								Toast.LENGTH_LONG).show();
+					}
+					
+					@Override
+					public void error(Throwable throwable) {
+						Toast.makeText(getActivity(), "Could not create topic channel.", 
+								Toast.LENGTH_LONG).show();
+					}
+				}, channelJid);
+			}
+		});
+
+		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+			}
+		});
+
+		alert.show();
 	}
 
 	private void showGenericActivity(String adapterName) {
