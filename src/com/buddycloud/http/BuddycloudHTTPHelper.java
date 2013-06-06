@@ -1,5 +1,7 @@
 package com.buddycloud.http;
 
+import java.security.KeyStore;
+
 import javax.net.ssl.HostnameVerifier;
 
 import org.apache.http.HttpEntity;
@@ -8,12 +10,14 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.SingleClientConnManager;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -95,16 +99,24 @@ public class BuddycloudHTTPHelper {
 		method.setHeader("Authorization", "Basic " + Base64.encodeToString(auth.getBytes(), Base64.NO_WRAP));
 	}
 	
-	public static HttpClient createHttpClient() {
+	public static HttpClient createHttpClient() throws Exception {
+		KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        trustStore.load(null, null);
+		
 		HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
 		SchemeRegistry registry = new SchemeRegistry();
-		SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
+		SSLSocketFactory socketFactory = new TrustAllSSLSocketFactory(trustStore);
 		socketFactory.setHostnameVerifier((X509HostnameVerifier) hostnameVerifier);
+		
+		registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
 		registry.register(new Scheme("https", socketFactory, 443));
-		SingleClientConnManager connManager = new SingleClientConnManager(new DefaultHttpClient().getParams(), registry);
-		return new DefaultHttpClient(connManager, null);
+		
+		ClientConnectionManager ccm = new ThreadSafeClientConnManager(
+				new DefaultHttpClient().getParams(), registry);
+		
+		return new DefaultHttpClient(ccm, null);
 	}
-	
+
 	private static abstract class RequestAsyncTask<T extends Object> extends AsyncTask<Void, Void, Object> {
 
 		private String methodType;
