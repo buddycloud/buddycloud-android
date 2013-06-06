@@ -1,6 +1,7 @@
 package com.buddycloud;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -22,7 +23,8 @@ public class LoginActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        final RelativeLayout postBtn = (RelativeLayout) findViewById(R.id.loginBtn);
+        final RelativeLayout loginBtn = (RelativeLayout) findViewById(R.id.loginBtn);
+        final RelativeLayout createAccountBtn = (RelativeLayout) findViewById(R.id.createAccountBtn);
         final EditText myChannelTxt = (EditText) findViewById(R.id.loginTxt);
         final EditText passwordTxt = (EditText) findViewById(R.id.passwordTxt);
         final View progressBar = findViewById(R.id.progressBar);
@@ -37,11 +39,11 @@ public class LoginActivity extends Activity {
         	passwordTxt.setText(passPref);
         }
         
-        postBtn.setOnClickListener(new OnClickListener() {
+        loginBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				
-				postBtn.setVisibility(View.GONE);
+				loginBtn.setVisibility(View.GONE);
 				progressBar.setVisibility(View.VISIBLE);
 				
 				String myChannelJid = myChannelTxt.getText().toString();
@@ -78,6 +80,15 @@ public class LoginActivity extends Activity {
 					}
 					
 				}, myChannelJid.split("@")[1]);
+			}
+		});
+        
+        createAccountBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				intent.setClass(getApplicationContext(), CreateAccountActivity.class);
+				startActivityForResult(intent, CreateAccountActivity.REQUEST_CODE);
 			}
 		});
     }

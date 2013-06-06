@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true">
-    
+
     <ImageView
         android:id="@+id/logoSquare"
         android:layout_width="wrap_content"
@@ -17,16 +17,17 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:adjustViewBounds="true"
-        android:maxHeight="250dp"
-        android:maxWidth="250dp"
+        android:maxHeight="175dp"
+        android:maxWidth="175dp"
         android:src="@drawable/square_logo_500" />
-
+        
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/logoSquare"
-        android:layout_alignRight="@+id/logoSquare"
         android:layout_below="@+id/logoSquare"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:orientation="vertical" >
 
@@ -36,7 +37,27 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:ems="10"
-            android:hint="@string/login_hint"
+            android:hint="@string/channel_name" >
+            <requestFocus />
+		</EditText>
+
+        <EditText
+            android:id="@+id/domainTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:ems="10"
+            android:hint="@string/domain_name" >
+
+        </EditText>
+
+        <EditText
+            android:id="@+id/emailAddressTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:ems="10"
+            android:hint="@string/email_address"
             android:inputType="textEmailAddress" />
 
         <EditText
@@ -54,27 +75,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:visibility="gone" />
-        
-        <RelativeLayout
-            android:id="@+id/loginBtn"
+
+        <EditText
+            android:id="@+id/repeatPasswordTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/bc_green"
-            android:padding="@dimen/login_button_padding" >
-
-            <com.buddycloud.utils.TypefacedTextView
-                xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="@string/login_button"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                buddycloud:typeface="Roboto-Light.ttf" />
-
-        </RelativeLayout>
+            android:ems="10"
+            android:hint="@string/repeat_password"
+            android:inputType="textPassword" />
         
         <RelativeLayout
             android:id="@+id/createAccountBtn"
@@ -99,4 +107,5 @@
         </RelativeLayout>
     </LinearLayout>
 	</RelativeLayout>
+
 </RelativeLayout>

@@ -22,6 +22,7 @@
     <string name="login_password">password</string>
     <string name="post_button">Post</string>
     <string name="login_button">Login</string>
+    <string name="create_account_button">Create new account</string>
     <string name="apiAddressTxtHint">https://api.buddycloud.org</string>
     <string name="caption_hint">Type caption</string>
 	<string name="personal_channel_hint">PERSONAL</string>
@@ -33,5 +34,9 @@
 	<string name="action_followed">You\'re now following %1$s</string>
 	<string name="action_unfollowed">You unfollowed %1$s</string>
 	<string name="action_follow_failed">Couldn\'t change your role in %1$s</string>
+	<string name="repeat_password">repeat password</string>
+	<string name="channel_name">channel name</string>
+	<string name="domain_name">domain</string>
+	<string name="email_address">email address</string>
 	
 </resources>
