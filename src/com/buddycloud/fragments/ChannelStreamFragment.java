@@ -28,6 +28,7 @@ import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.card.CardListAdapter;
 import com.buddycloud.card.PostCard;
+import com.buddycloud.fragments.adapter.FollowersAdapter;
 import com.buddycloud.fragments.adapter.SimilarChannelsAdapter;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
@@ -257,39 +258,59 @@ public class ChannelStreamFragment extends ContentFragment {
 	@Override
 	public boolean menuItemSelected(int featureId, MenuItem item) {
 		if (item.getItemId() == R.id.menu_similar_channels) {
-			Intent intent = new Intent();
-			intent.setClass(getActivity(), GenericChannelActivity.class);
-			intent.putExtra(GenericChannelActivity.ADAPTER_NAME, 
-					SimilarChannelsAdapter.ADAPTER_NAME);
-			intent.putExtra(GenericChannelsFragment.CHANNEL, channelJid);
-			getActivity().startActivityForResult(
-					intent, GenericChannelActivity.REQUEST_CODE);
+			showSimilarChannels();
+			return true;
 		} else if (item.getItemId() == R.id.menu_follow) {
-			
-			final boolean isFollowing = isFollowing();
-			
-			Map<String, String> subscription = new HashMap<String, String>();
-			String newRole = isFollowing ? SubscribedChannelsModel.ROLE_NONE : SubscribedChannelsModel.ROLE_PRODUCER;
-			subscription.put(channelJid + SubscribedChannelsModel.POST_NODE_SUFIX, newRole);
-			
-			SubscribedChannelsModel.getInstance().save(getActivity(), new JSONObject(subscription), 
-					new ModelCallback<JSONObject>() {
-						@Override
-						public void success(JSONObject response) {
-							Toast.makeText(getActivity(),  
-									getString(isFollowing ? R.string.action_unfollowed : R.string.action_followed, channelJid), 
-									Toast.LENGTH_LONG).show();
-							getSherlockActivity().supportInvalidateOptionsMenu();
-						}
-
-						@Override
-						public void error(Throwable throwable) {
-							Toast.makeText(getActivity(), 
-									getString(R.string.action_follow_failed, channelJid),
-									Toast.LENGTH_LONG).show();
-						}
-					});
+			toogleRole();
+			return true;
+		} else if (item.getItemId() == R.id.menu_channel_followers) {
+			showFollowers();
+			return true;
 		}
 		return false;
+	}
+
+	private void toogleRole() {
+		final boolean isFollowing = isFollowing();
+		
+		Map<String, String> subscription = new HashMap<String, String>();
+		String newRole = isFollowing ? SubscribedChannelsModel.ROLE_NONE : SubscribedChannelsModel.ROLE_PRODUCER;
+		subscription.put(channelJid + SubscribedChannelsModel.POST_NODE_SUFIX, newRole);
+		
+		SubscribedChannelsModel.getInstance().save(getActivity(), new JSONObject(subscription), 
+				new ModelCallback<JSONObject>() {
+					@Override
+					public void success(JSONObject response) {
+						Toast.makeText(getActivity(),  
+								getString(isFollowing ? R.string.action_unfollowed : R.string.action_followed, channelJid), 
+								Toast.LENGTH_LONG).show();
+						getSherlockActivity().supportInvalidateOptionsMenu();
+					}
+
+					@Override
+					public void error(Throwable throwable) {
+						Toast.makeText(getActivity(), 
+								getString(R.string.action_follow_failed, channelJid),
+								Toast.LENGTH_LONG).show();
+					}
+				});
+	}
+
+	private void showFollowers() {
+		showGenericChannelActivity(SimilarChannelsAdapter.ADAPTER_NAME);
+	}
+	
+	private void showSimilarChannels() {
+		showGenericChannelActivity(FollowersAdapter.ADAPTER_NAME);
+	}
+	
+	private void showGenericChannelActivity(String adapterName) {
+		Intent intent = new Intent();
+		intent.setClass(getActivity(), GenericChannelActivity.class);
+		intent.putExtra(GenericChannelActivity.ADAPTER_NAME, 
+				adapterName);
+		intent.putExtra(GenericChannelsFragment.CHANNEL, channelJid);
+		getActivity().startActivityForResult(
+				intent, GenericChannelActivity.REQUEST_CODE);
 	}
 }
