@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.buddycloud.ChannelDetailActivity;
 import com.buddycloud.GenericChannelActivity;
 import com.buddycloud.MainActivity;
 import com.buddycloud.R;
@@ -68,39 +69,7 @@ public class ChannelStreamFragment extends ContentFragment {
 		postButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
-				if (!postButton.isEnabled()) {
-					return;
-				}
-				
-				final EditText postContent = (EditText) view.findViewById(R.id.postContentTxt);
-				
-				JSONObject post = createPost(postContent);
-				
-				PostsModel.getInstance().save(getActivity(), post, new ModelCallback<JSONObject>() {
-					@Override
-					public void success(JSONObject response) {
-						Toast.makeText(getActivity().getApplicationContext(), "Post created", Toast.LENGTH_LONG).show();
-						postContent.setText("");
-						syncd(null, getActivity());
-					}
-					
-					@Override
-					public void error(Throwable throwable) {
-						Toast.makeText(getActivity().getApplicationContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
-					}
-				}, channelJid);
-				
-			}
-
-			private JSONObject createPost(final EditText postContent) {
-				JSONObject post = new JSONObject();
-				try {
-					post.putOpt("content", postContent.getText().toString());
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				return post;
+				createPost(view);
 			}
 		});
 		
@@ -115,7 +84,7 @@ public class ChannelStreamFragment extends ContentFragment {
 		return item.has("replyTo");
 	}
 	
-	public void syncd(View view, Context context) {
+	private void syncd(View view, Context context) {
 		
 		if (view == null) {
 			view = getView();
@@ -162,7 +131,6 @@ public class ChannelStreamFragment extends ContentFragment {
 
 			@Override
 			public void error(Throwable throwable) {
-				// TODO Auto-generated method stub
 				
 			}
 		}, channelJid);
@@ -192,6 +160,43 @@ public class ChannelStreamFragment extends ContentFragment {
 			}
 		});
 		return postCard;
+	}
+	
+	private void createPost(final View view) {
+		
+		final ImageView postButton = (ImageView) view.findViewById(R.id.postButton);
+		
+		if (!postButton.isEnabled()) {
+			return;
+		}
+		
+		final EditText postContent = (EditText) view.findViewById(R.id.postContentTxt);
+		
+		JSONObject post = createJSONPost(postContent);
+		
+		PostsModel.getInstance().save(getActivity(), post, new ModelCallback<JSONObject>() {
+			@Override
+			public void success(JSONObject response) {
+				Toast.makeText(getActivity().getApplicationContext(), "Post created", Toast.LENGTH_LONG).show();
+				postContent.setText("");
+				syncd(null, getActivity());
+			}
+			
+			@Override
+			public void error(Throwable throwable) {
+				Toast.makeText(getActivity().getApplicationContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
+			}
+		}, channelJid);
+	}
+
+	private JSONObject createJSONPost(final EditText postContent) {
+		JSONObject post = new JSONObject();
+		try {
+			post.putOpt("content", postContent.getText().toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return post;
 	}
 	
 	private void loadTitle(String channelJid) {
@@ -257,17 +262,29 @@ public class ChannelStreamFragment extends ContentFragment {
 	
 	@Override
 	public boolean menuItemSelected(int featureId, MenuItem item) {
-		if (item.getItemId() == R.id.menu_similar_channels) {
+		switch (item.getItemId()) {
+		case R.id.menu_similar_channels:
 			showSimilarChannels();
 			return true;
-		} else if (item.getItemId() == R.id.menu_follow) {
+		case R.id.menu_follow:
 			toogleRole();
 			return true;
-		} else if (item.getItemId() == R.id.menu_channel_followers) {
+		case R.id.menu_channel_followers:
 			showFollowers();
 			return true;
+		case R.id.menu_channel_details:
+			showDetails();
+			return true;
+		default:
+			return false;
 		}
-		return false;
+	}
+
+	private void showDetails() {
+		Intent intent = new Intent();
+		intent.setClass(getActivity(), ChannelDetailActivity.class);
+		intent.putExtra(GenericChannelsFragment.CHANNEL, channelJid);
+		getActivity().startActivity(intent);
 	}
 
 	private void toogleRole() {

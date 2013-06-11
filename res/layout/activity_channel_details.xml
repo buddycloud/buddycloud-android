@@ -1,0 +1,127 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#555555" >
+
+    <ImageView
+        android:id="@+id/avatarView"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="8dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop" />
+
+    <EditText
+        android:id="@+id/jidTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/avatarView"
+        android:layout_marginRight="8dp"
+        android:layout_toRightOf="@+id/avatarView"
+        android:ems="10"
+        android:hint="jid"
+        android:textColor="#FFFFFF" />
+
+    <EditText
+        android:id="@+id/titleTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/jidTxt"
+        android:layout_alignRight="@+id/jidTxt"
+        android:layout_below="@+id/jidTxt"
+        android:ems="10"
+        android:hint="title"
+        android:textColor="#FFFFFF" />
+
+    <EditText
+        android:id="@+id/descriptionTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/titleTxt"
+        android:layout_alignRight="@+id/titleTxt"
+        android:layout_below="@+id/titleTxt"
+        android:ems="10"
+        android:hint="description"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/avatarView"
+        android:layout_below="@+id/avatarView"
+        android:text="Access model"
+        android:textColor="@color/stroke" />
+
+    <EditText
+        android:id="@+id/accessModelTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:ems="10"
+        android:hint="access model"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/accessModelTxt"
+        android:layout_below="@+id/accessModelTxt"
+        android:text="Creation date"
+        android:textColor="@color/stroke" />
+
+    <EditText
+        android:id="@+id/creationDateTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_below="@+id/textView2"
+        android:layout_centerVertical="true"
+        android:ems="10"
+        android:hint="creation date"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/creationDateTxt"
+        android:layout_below="@+id/creationDateTxt"
+        android:text="Channel type"
+        android:textColor="@color/stroke" />
+
+    <EditText
+        android:id="@+id/channelTypeTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextView01"
+        android:layout_below="@+id/TextView01"
+        android:ems="10"
+        android:hint="channel type"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/TextView02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/channelTypeTxt"
+        android:layout_below="@+id/channelTypeTxt"
+        android:text="Default affiliation"
+        android:textColor="@color/stroke" />
+
+    <EditText
+        android:id="@+id/defaultAffiliationTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextView02"
+        android:layout_below="@+id/TextView02"
+        android:ems="10"
+        android:hint="default affiliation"
+        android:textColor="#FFFFFF" />
+
+</RelativeLayout>
