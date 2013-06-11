@@ -2,18 +2,17 @@ package com.buddycloud;
 
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.utils.AvatarUtils;
 import com.squareup.picasso.Picasso;
 
-public class ChannelDetailActivity extends Activity {
+public class ChannelDetailActivity extends SherlockActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -21,8 +20,7 @@ public class ChannelDetailActivity extends Activity {
 		setContentView(R.layout.activity_channel_details);
 		
 		String channelJid = getIntent().getStringExtra(GenericChannelsFragment.CHANNEL);
-		EditText jidTxt = (EditText) findViewById(R.id.jidTxt);
-		jidTxt.setText(channelJid);
+		setTitle(channelJid);
 		
 		JSONObject metadata = ChannelMetadataModel.getInstance().getFromCache(this, channelJid);
 		EditText titleTxt = (EditText) findViewById(R.id.titleTxt);
@@ -32,16 +30,16 @@ public class ChannelDetailActivity extends Activity {
 		descriptionTxt.setText(metadata.optString("description"));
 		
 		EditText accessModelTxt = (EditText) findViewById(R.id.accessModelTxt);
-		accessModelTxt.setText(metadata.optString("access_model"));
+		accessModelTxt.setText(metadata.optString("accessModel"));
 		
 		EditText creationDateTxt = (EditText) findViewById(R.id.creationDateTxt);
-		creationDateTxt.setText(metadata.optString("creation_date"));
+		creationDateTxt.setText(metadata.optString("creationDate"));
 		
 		EditText channelTypeTxt = (EditText) findViewById(R.id.channelTypeTxt);
-		channelTypeTxt.setText(metadata.optString("channel_type"));
+		channelTypeTxt.setText(metadata.optString("channelType"));
 		
 		EditText defaultAffiliationTxt = (EditText) findViewById(R.id.defaultAffiliationTxt);
-		defaultAffiliationTxt.setText(metadata.optString("default_affiliation"));
+		defaultAffiliationTxt.setText(metadata.optString("defaultAffiliation"));
 		
 		ImageView avatarView = (ImageView) findViewById(R.id.avatarView);
 		String avatarURL = AvatarUtils.avatarURL(this, channelJid);
@@ -51,8 +49,4 @@ public class ChannelDetailActivity extends Activity {
 				.into(avatarView);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		return true;
-	}
 }

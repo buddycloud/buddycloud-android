@@ -3,56 +3,70 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#555555" >
-
+    
     <ImageView
         android:id="@+id/avatarView"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_margin="8dp"
+        android:layout_marginTop="15dp"
         android:adjustViewBounds="true"
+        android:background="@drawable/share_preview_border"
         android:scaleType="centerCrop" />
 
-    <EditText
-        android:id="@+id/jidTxt"
+    <TextView
+        android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/avatarView"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/avatarView"
+        android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_toRightOf="@+id/avatarView"
-        android:ems="10"
-        android:hint="jid"
-        android:textColor="#FFFFFF" />
-
+        android:text="Title"
+        android:textColor="@color/stroke" />
+    
     <EditText
         android:id="@+id/titleTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/jidTxt"
-        android:layout_alignRight="@+id/jidTxt"
-        android:layout_below="@+id/jidTxt"
+        android:layout_alignLeft="@+id/textViewTitle"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textViewTitle"
+        android:layout_marginRight="8dp"
         android:ems="10"
         android:hint="title"
+        android:inputType="textNoSuggestions"
         android:textColor="#FFFFFF" />
 
+    <TextView
+        android:id="@+id/textViewDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/titleTxt"
+        android:layout_below="@+id/titleTxt"
+        android:text="Description"
+        android:textColor="@color/stroke" />
+    
     <EditText
         android:id="@+id/descriptionTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/titleTxt"
+        android:layout_alignLeft="@+id/textViewDescription"
         android:layout_alignRight="@+id/titleTxt"
-        android:layout_below="@+id/titleTxt"
+        android:layout_below="@+id/textViewDescription"
         android:ems="10"
         android:hint="description"
+        android:inputType="textNoSuggestions"
         android:textColor="#FFFFFF" />
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/avatarView"
-        android:layout_below="@+id/avatarView"
+        android:layout_alignLeft="@+id/descriptionTxt"
+        android:layout_below="@+id/descriptionTxt"
         android:text="Access model"
         android:textColor="@color/stroke" />
 
@@ -61,10 +75,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView1"
+        android:layout_alignRight="@+id/descriptionTxt"
         android:layout_below="@+id/textView1"
         android:ems="10"
         android:hint="access model"
-        android:textColor="#FFFFFF" />
+        android:textColor="#FFFFFF"
+        android:inputType="textNoSuggestions" />
 
     <TextView
         android:id="@+id/textView2"
@@ -80,11 +96,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView2"
+        android:layout_alignRight="@+id/accessModelTxt"
         android:layout_below="@+id/textView2"
         android:layout_centerVertical="true"
         android:ems="10"
         android:hint="creation date"
-        android:textColor="#FFFFFF" />
+        android:textColor="#FFFFFF"
+        android:inputType="textNoSuggestions" />
 
     <TextView
         android:id="@+id/TextView01"
@@ -100,10 +118,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/TextView01"
+        android:layout_alignRight="@+id/creationDateTxt"
         android:layout_below="@+id/TextView01"
         android:ems="10"
         android:hint="channel type"
-        android:textColor="#FFFFFF" />
+        android:textColor="#FFFFFF"
+        android:inputType="textNoSuggestions" />
 
     <TextView
         android:id="@+id/TextView02"
@@ -119,9 +139,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/TextView02"
+        android:layout_alignRight="@+id/channelTypeTxt"
         android:layout_below="@+id/TextView02"
         android:ems="10"
         android:hint="default affiliation"
-        android:textColor="#FFFFFF" />
+        android:textColor="#FFFFFF"
+        android:inputType="textNoSuggestions" />
+
 
 </RelativeLayout>
