@@ -7,14 +7,12 @@ import android.util.Log;
 
 public class BuddycloudSQLiteOpenHelper extends SQLiteOpenHelper {
 	
-	public static final int DATABASE_VERSION = 1;
+	public static final int DATABASE_VERSION = 2;
 	public static final String DATABASE_NAME = "buddycloud.db";
-	
 	
 	public BuddycloudSQLiteOpenHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
-
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
@@ -35,7 +33,7 @@ public class BuddycloudSQLiteOpenHelper extends SQLiteOpenHelper {
 		Log.w(BuddycloudSQLiteOpenHelper.class.getName(),
 			  "Upgrading " + DATABASE_NAME + " from version " + oldVersion + " to "
 			  + newVersion + ", which will destroy all old data");
-		
+
 		// Drop old data
 		db.execSQL("DROP TABLE IF EXISTS " + ChannelMetadataTableHelper.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + UnreadCountersTableHelper.TABLE_NAME);

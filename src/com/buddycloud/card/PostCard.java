@@ -38,12 +38,13 @@ public class PostCard extends AbstractCard {
 	
 	private JSONObject post;
 	private String channelJid;
-	private CardListAdapter commentAdapter = new CardListAdapter();
+	private CardListAdapter repliesAdapter;
 	
-	public PostCard(String channelJid, JSONObject post, Context context) {
+	public PostCard(String channelJid, CardListAdapter repliesAdapter, 
+			JSONObject post, Context context) {
 		this.channelJid = channelJid;
 		this.post = post;
-		loadComments(post, context);
+		this.repliesAdapter = repliesAdapter;
 	}
 
 	@Override
@@ -83,8 +84,8 @@ public class PostCard extends AbstractCard {
 				.transform(ImageHelper.createRoundTransformation(context, 16, false, -1))
 				.into(avatarView);
 		
-		TextView contentView = holder.getView(R.id.bcPostContent);
-		TextView contentViewAlt = holder.getView(R.id.bcPostContentAlt);
+		TextView contentTextView = holder.getView(R.id.bcPostContent);
+		TextView contentTextViewAlt = holder.getView(R.id.bcPostContentAlt);
 		
 		ImageView mediaView = holder.getView(R.id.bcImageContent);
 		if (mediaArray != null) {
@@ -102,16 +103,16 @@ public class PostCard extends AbstractCard {
 						true, viewGroup.getWidth()))
 				.into(mediaView);
 			
-			contentViewAlt.setVisibility(View.VISIBLE);
-			contentView.setVisibility(View.INVISIBLE);
-			contentViewAlt.setText(content);
+			contentTextViewAlt.setVisibility(View.VISIBLE);
+			contentTextView.setVisibility(View.INVISIBLE);
+			contentTextViewAlt.setText(content);
 		} else {
 			mediaView.setVisibility(View.INVISIBLE);
 			mediaView.setImageBitmap(null);
 			
-			contentViewAlt.setVisibility(View.INVISIBLE);
-			contentView.setVisibility(View.VISIBLE);
-			contentView.setText(content);
+			contentTextViewAlt.setVisibility(View.INVISIBLE);
+			contentTextView.setVisibility(View.VISIBLE);
+			contentTextView.setText(content);
 		}
 		
 		try {
@@ -126,7 +127,7 @@ public class PostCard extends AbstractCard {
 		
 		// Replies section
 		LinearLayout commentList = holder.getView(R.id.replyListView);
-		ReplySectionView.configure(commentList, commentAdapter);
+		ReplySectionView.configure(commentList, repliesAdapter);
 		
 		// Create reply section
 		ImageView replyAuthorView = holder.getView(R.id.replyAuthorView);
@@ -162,7 +163,13 @@ public class PostCard extends AbstractCard {
 				if (replyBtn.isEnabled()) {
 					Toast.makeText(context, "Post created", Toast.LENGTH_LONG).show();
 					replyTxt.setText("");
-					loadComments(post, context);
+					loadReplies(post, channelJid, context, repliesAdapter, new ModelCallback<Void>() {
+						@Override
+						public void success(Void response) {}
+
+						@Override
+						public void error(Throwable throwable) {}
+					});
 				}
 			}
 			
@@ -209,17 +216,20 @@ public class PostCard extends AbstractCard {
 		return reply;
 	}
 	
-	private void loadComments(JSONObject post, final Context context) {
+	public static void loadReplies(JSONObject post, String channelJid, 
+			final Context context, final CardListAdapter adapter, 
+			final ModelCallback<Void> callback) {
 		PostsModel.getInstance().getPostAsync(context, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
-				commentAdapter.clear();
+				adapter.clear();
 				JSONArray comments = response.optJSONArray("replies");
 				for (int i = comments.length() - 1; i >= 0; i--) {
 					JSONObject comment = comments.optJSONObject(i);
-					commentAdapter.addCard(toCard(comment, context));
+					adapter.addCard(toReplyCard(comment, context));
 				}
-				commentAdapter.notifyDataSetChanged();
+				adapter.notifyDataSetChanged();
+				callback.success(null);
 			}
 			
 			@Override
@@ -229,7 +239,7 @@ public class PostCard extends AbstractCard {
 		}, channelJid, post.optString("id"));
 	}
 	
-	private CommentCard toCard(JSONObject comment, Context context) {
+	private static CommentCard toReplyCard(JSONObject comment, Context context) {
 		String postAuthor = comment.optString("author");
 		String postContent = comment.optString("content");
 		String published = comment.optString("published");
