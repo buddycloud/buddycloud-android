@@ -15,7 +15,6 @@ import com.buddycloud.fragments.ContentFragment;
 import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.fragments.PostDetailsFragment;
 import com.buddycloud.fragments.SubscribedChannelsFragment;
-import com.buddycloud.model.ModelUtils;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.GCMUtils;
 import com.slidingmenu.lib.SlidingMenu;
@@ -142,7 +141,6 @@ public class MainActivity extends SlidingFragmentActivity {
 		registerInGCM();
 		addMenuFragment();
 		customizeMenu();
-		sync();
 	}
 
 	@Override
@@ -152,10 +150,6 @@ public class MainActivity extends SlidingFragmentActivity {
 		super.onAttachedToWindow();
 	}
 	
-	private void sync() {
-		ModelUtils.fillAll(this);
-	}
-
 	private void registerInGCM() {
 		try {
 			GCMUtils.issueGCMRegistration(this);
@@ -235,7 +229,7 @@ public class MainActivity extends SlidingFragmentActivity {
 	}
 
 	private void fragmentChanged() {
-		getCurrentFragment().attached();
+		getCurrentFragment().attached(this);
 		supportInvalidateOptionsMenu();
 	}
 }

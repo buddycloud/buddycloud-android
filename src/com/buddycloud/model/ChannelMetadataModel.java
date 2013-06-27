@@ -12,8 +12,8 @@ import com.buddycloud.preferences.Preferences;
 
 public class ChannelMetadataModel extends AbstractModel<JSONObject, JSONObject, String> {
 
-	private static ChannelMetadataModel instance;
 	private static final String ENDPOINT = "/metadata/posts"; 
+	private static ChannelMetadataModel instance;
 	
 	private ChannelMetadataModel() {}
 	

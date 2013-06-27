@@ -70,26 +70,27 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 	protected void addChannel(String category, JSONObject channelItem, Context context) {
 		addCategory(category);
 		channelsPerCategory.get(category).add(channelItem);
-		fetchMetadata(channelItem, context);
+		if (ChannelMetadataModel.getInstance().getFromCache(
+				context, channelItem.optString("jid")) == null) {
+			fetchMetadata(channelItem, context);
+		}
 		notifyDataSetChanged();
 	}
 
 	private void fetchMetadata(JSONObject channelItem, Context context) {
 		String channelJid = channelItem.optString("jid");
-		JSONObject metadata = ChannelMetadataModel.getInstance().getFromCache(context, channelJid);
-		if (metadata == null) {
-			ChannelMetadataModel.getInstance().fill(context, new ModelCallback<Void>() {
-				@Override
-				public void success(Void response) {
-					notifyDataSetChanged();
-				}
-				
-				@Override
-				public void error(Throwable throwable) {
-					
-				}
-			}, channelJid);
-		}
+		ChannelMetadataModel.getInstance().fill(context,
+				new ModelCallback<Void>() {
+					@Override
+					public void success(Void response) {
+						notifyDataSetChanged();
+					}
+
+					@Override
+					public void error(Throwable throwable) {
+
+					}
+				}, channelJid);
 	}
 	
 	protected void clearChannels() {

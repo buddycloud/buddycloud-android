@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -171,12 +172,12 @@ public class PostDetailsFragment extends ContentFragment {
 		String published = comment.optString("published");
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), postAuthor);
 		
-		CommentCard commentCard = new CommentCard(postAuthor, avatarURL, postContent, published);
+		CommentCard commentCard = new CommentCard(avatarURL, postContent, published);
 		return commentCard;
 	}
 
 	@Override
-	public void attached() {
+	public void attached(Activity activity) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.buddycloud.R;
+import com.buddycloud.utils.ImageHelper;
 import com.buddycloud.utils.TimeUtils;
 import com.squareup.picasso.Picasso;
 
@@ -19,10 +20,8 @@ public class CommentCard extends AbstractCard {
 	private String avatarURL;
 	private String content;
 	private final String published;
-	private final String title;
 	
-	public CommentCard(String title, String avatarURL, String content, String published) {
-		this.title = title;
+	public CommentCard(String avatarURL, String content, String published) {
 		this.avatarURL = avatarURL;
 		this.content = content;
 		this.published = published;
@@ -44,13 +43,12 @@ public class CommentCard extends AbstractCard {
 			holder = (CardViewHolder) convertView.getTag();
 		}
 		
-		TextView titleView = holder.getView(R.id.title);
-		titleView.setText(title);
-		
 		ImageView avatarView = holder.getView(R.id.bcProfilePic);
 		Picasso.with(viewGroup.getContext()).load(avatarURL)
 				.placeholder(R.drawable.personal_50px)
 				.error(R.drawable.personal_50px)
+				.transform(ImageHelper.createRoundTransformation(
+						viewGroup.getContext(), 16, false, -1))
 				.into(avatarView);
 		
 		TextView contentView = holder.getView(R.id.bcPostContent);
@@ -70,7 +68,7 @@ public class CommentCard extends AbstractCard {
 	}
 
 	private static CardViewHolder fillHolder(View view) {
-		return CardViewHolder.create(view, R.id.title, 
-				R.id.bcProfilePic, R.id.bcPostContent, R.id.bcPostDate);
+		return CardViewHolder.create(view, R.id.bcProfilePic, 
+				R.id.bcPostContent, R.id.bcPostDate);
 	}
 }

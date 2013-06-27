@@ -22,7 +22,7 @@ import com.buddycloud.utils.FileUtils;
 public class MediaModel extends AbstractModel<JSONObject, JSONObject, String> {
 
 	private static MediaModel instance;
-	private static final String ENDPOINT = "/media"; 
+	public static final String ENDPOINT = "/media"; 
 	
 	private MediaModel() {}
 	

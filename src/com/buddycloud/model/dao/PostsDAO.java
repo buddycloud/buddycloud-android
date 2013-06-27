@@ -38,7 +38,7 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 
 	
 	private ContentValues buildValues(String id, String author, String published, String updated, 
-			String content, String channel, String replyTo) {
+			String content, String channel, String replyTo, String media) {
 		
 		ContentValues values = new ContentValues();
 		values.put(PostsTableHelper.COLUMN_ID, id);
@@ -47,9 +47,13 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 		values.put(PostsTableHelper.COLUMN_UPDATED, updated);
 		values.put(PostsTableHelper.COLUMN_CONTENT, content);
 		values.put(PostsTableHelper.COLUMN_CHANNEL, channel);
-
+		
 		if (replyTo != null && !replyTo.equals("")) {
 			values.put(PostsTableHelper.COLUMN_REPLY_TO, replyTo);
+		}
+		
+		if (media != null && !media.equals("")) {
+			values.put(PostsTableHelper.COLUMN_MEDIA, media);
 		}
 		
 		return values;
@@ -61,9 +65,10 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 		String published = json.optString("published");
 		String updated = json.optString("updated");
 		String content = json.optString("content");
-		String replyTo = json.optString("replyTo");
+		String replyTo = json.isNull("replyTo") ? null : json.optString("replyTo");
+		String mediaId = json.isNull("media") ? null : json.optJSONArray("media").toString();
 		
-		return buildValues(id, author, published, updated, content, channel, replyTo);
+		return buildValues(id, author, published, updated, content, channel, replyTo, mediaId);
 	}
 	
 	public boolean insert(String channel, JSONObject json) {
@@ -148,6 +153,7 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 			json.put(PostsTableHelper.COLUMN_CHANNEL, getString(cursor, PostsTableHelper.COLUMN_CHANNEL));
 			json.put(PostsTableHelper.COLUMN_CONTENT, getString(cursor, PostsTableHelper.COLUMN_CONTENT));
 			json.put(PostsTableHelper.COLUMN_REPLY_TO, getString(cursor, PostsTableHelper.COLUMN_REPLY_TO));
+			json.put(PostsTableHelper.COLUMN_MEDIA, getString(cursor, PostsTableHelper.COLUMN_MEDIA));
 		} catch (JSONException e) {
 			return null;
 		}

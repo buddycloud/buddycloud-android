@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +26,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.ChannelDetailActivity;
 import com.buddycloud.GenericChannelActivity;
-import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.card.CardListAdapter;
 import com.buddycloud.card.PostCard;
@@ -100,26 +100,8 @@ public class ChannelStreamFragment extends ContentFragment {
 			@Override
 			public void success(Void voidd) {
 				JSONArray response = PostsModel.getInstance().getFromCache(getActivity(), channelJid);
-				
-				Map<String, Integer> commentsPerItem = new HashMap<String, Integer>();
 				for (int i = 0; i < response.length(); i++) {
 					JSONObject post = response.optJSONObject(i);
-					if (isComment(post)) {
-						String topicId = post.optString("replyTo");
-						Integer replyCount = commentsPerItem.get(topicId);
-						commentsPerItem.put(topicId, replyCount == null ? 1 : replyCount + 1);
-					}
-				}
-				
-				for (int i = 0; i < response.length(); i++) {
-					JSONObject post = response.optJSONObject(i);
-					Integer commentCount = commentsPerItem.get(post.optString("id"));
-					try {
-						post.put("replyCount", commentCount == null ? 0 : commentCount);
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-					
 					if (!isComment(post)) {
 						PostCard card = toCard(post, channelJid);
 						cardAdapter.addCard(card);
@@ -137,26 +119,11 @@ public class ChannelStreamFragment extends ContentFragment {
 	}
 	
 	private PostCard toCard(JSONObject post, final String channelJid) {
-		final String postId = post.optString("id");
-		String postAuthor = post.optString("author");
-		String postContent = post.optString("content");
-		String published = post.optString("published");
-		
-		String avatarURL = AvatarUtils.avatarURL(getActivity(), postAuthor);
-		
-		Integer commentCount = post.optInt("replyCount");
-		
-		PostCard postCard = new PostCard(postAuthor, avatarURL, postContent, published, commentCount);
+		PostCard postCard = new PostCard(channelJid, post, getActivity());
 		postCard.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				showPostDetailFragment(channelJid, postId);
-			}
-
-			private void showPostDetailFragment(final String channelJid,
-					final String postId) {
-				MainActivity activity = (MainActivity) getActivity();
-				activity.showPostDetailFragment(channelJid, postId);
+				//TODO Show single post fragment
 			}
 		});
 		return postCard;
@@ -199,9 +166,9 @@ public class ChannelStreamFragment extends ContentFragment {
 		return post;
 	}
 	
-	private void loadTitle(String channelJid) {
-		SlidingFragmentActivity activity = (SlidingFragmentActivity) getActivity();
-		activity.getSupportActionBar().setTitle(channelJid);
+	private void loadTitle(Activity activity, String channelJid) {
+		SlidingFragmentActivity sherlockActivity = (SlidingFragmentActivity) activity;
+		sherlockActivity.getSupportActionBar().setTitle(channelJid);
 	}
 	
 	public static void configurePostSection(EditText postContent, final ImageView postButton) {
@@ -235,8 +202,8 @@ public class ChannelStreamFragment extends ContentFragment {
 	}
 
 	@Override
-	public void attached() {
-		loadTitle(channelJid);
+	public void attached(Activity activity) {
+		loadTitle(activity, channelJid);
 	}
 
 	@Override

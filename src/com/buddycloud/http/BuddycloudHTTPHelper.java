@@ -17,7 +17,7 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +34,7 @@ import com.buddycloud.preferences.Preferences;
 public class BuddycloudHTTPHelper {
 	
 	private static final String TAG = "BuddycloudHTTPHelper";
+	private static final HttpClient CLIENT = createHttpClient();
 	
 	public static void getObject(String url, Context parent, 
 			final ModelCallback<JSONObject> callback) {
@@ -96,25 +97,30 @@ public class BuddycloudHTTPHelper {
 		String loginPref = Preferences.getPreference(parent, Preferences.MY_CHANNEL_JID);
         String passPref = Preferences.getPreference(parent, Preferences.PASSWORD);
         String auth = loginPref.split("@")[0] + ":" + passPref;
-		method.setHeader("Authorization", "Basic " + Base64.encodeToString(auth.getBytes(), Base64.NO_WRAP));
+		String authToken = Base64.encodeToString(auth.getBytes(), Base64.NO_WRAP);
+		method.setHeader("Authorization", "Basic " + authToken);
 	}
 	
-	public static HttpClient createHttpClient() throws Exception {
-		KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        trustStore.load(null, null);
-		
-		HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
-		SchemeRegistry registry = new SchemeRegistry();
-		SSLSocketFactory socketFactory = new TrustAllSSLSocketFactory(trustStore);
-		socketFactory.setHostnameVerifier((X509HostnameVerifier) hostnameVerifier);
-		
-		registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-		registry.register(new Scheme("https", socketFactory, 443));
-		
-		ClientConnectionManager ccm = new ThreadSafeClientConnManager(
-				new DefaultHttpClient().getParams(), registry);
-		
-		return new DefaultHttpClient(ccm, null);
+	public static HttpClient createHttpClient() {
+		try {
+			KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+			trustStore.load(null, null);
+			
+			HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+			SchemeRegistry registry = new SchemeRegistry();
+			SSLSocketFactory socketFactory = new TrustAllSSLSocketFactory(trustStore);
+			socketFactory.setHostnameVerifier((X509HostnameVerifier) hostnameVerifier);
+			
+			registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+			registry.register(new Scheme("https", socketFactory, 443));
+			
+			ClientConnectionManager ccm = new SingleClientConnManager(
+					new DefaultHttpClient().getParams(), registry);
+			
+			return new DefaultHttpClient(ccm, null);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private static abstract class RequestAsyncTask<T extends Object> extends AsyncTask<Void, Void, Object> {
@@ -142,7 +148,7 @@ public class BuddycloudHTTPHelper {
 		@Override
 		protected Object doInBackground(Void... params) {
 			try {
-				HttpClient client = createHttpClient();
+				long t = System.currentTimeMillis();
 				HttpRequestBase method = null;
 				if (methodType.equals("get")) {
 					method = new HttpGet(url);
@@ -159,7 +165,7 @@ public class BuddycloudHTTPHelper {
 				if (auth) {
 					addAuthHeader(method, parent);
 				}
-				HttpResponse response = client.execute(method);
+				HttpResponse response = CLIENT.execute(method);
 				if (response.getStatusLine().getStatusCode() >= 400) {
 					throw new Exception(response.getStatusLine().toString());
 				}
@@ -170,6 +176,8 @@ public class BuddycloudHTTPHelper {
 				}
 				
 				String responseStr = EntityUtils.toString(resEntityGet);
+				
+				Log.d(TAG, "HTTP: {M: " + methodType + ", U: " + url + ", T: " + (System.currentTimeMillis() - t) + "}");
 				
 				return responseStr;
 			} catch (Throwable e) {

@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EEEEEE" >
+    android:background="#eeeeee" >
 
     <LinearLayout
         android:id="@+id/wrapperLayout"
@@ -34,17 +34,15 @@
                 android:layout_width="match_parent"
 		        android:layout_height="match_parent"
 		        android:divider="@android:color/transparent"
-		        android:layout_marginTop="8dp"
-		        android:layout_marginBottom="8dp"
 		        android:dividerHeight="8dp"
 		        android:listSelector="@android:color/transparent"
 		        android:overScrollMode="never"
-		        android:scrollbars="vertical"/>
+		        android:scrollbars="none"/>
 
         </LinearLayout>
         
         <include layout="@layout/layout_comment_box"/>
-        
+               
     </LinearLayout>
 
 </RelativeLayout>

@@ -6,11 +6,6 @@
 
         <View
         	android:layout_width="match_parent"
-        	android:layout_height="3dp"
-        	android:background="@color/bc_green"/>
-        
-        <View
-        	android:layout_width="match_parent"
         	android:layout_height="1dp"
         	android:background="#EEEEEE"/>
         
@@ -36,8 +31,10 @@
                     android:layout_alignBottom="@+id/bcCommentPic"
                     android:layout_toLeftOf="@+id/postButton"
                     android:layout_toRightOf="@+id/bcCommentPic"
-                    android:inputType="textMultiLine"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"
                     android:lines="1" >
+
                 </EditText>
 
                 <ImageView

@@ -14,7 +14,7 @@ public class PostsTableHelper {
 	public static final String COLUMN_CHANNEL = "channel";
 	public static final String COLUMN_CONTENT = "content";
 	public static final String COLUMN_REPLY_TO = "replyTo";
-	
+	public static final String COLUMN_MEDIA = "media";
 	
 	public static final String CREATE_TABLE = "CREATE TABLE "
 			+ TABLE_NAME + " ("
@@ -24,11 +24,13 @@ public class PostsTableHelper {
 			+ COLUMN_UPDATED + " TEXT NOT NULL," 
 			+ COLUMN_CONTENT + " TEXT NOT NULL,"
 			+ COLUMN_CHANNEL + " TEXT NOT NULL,"
-			+ COLUMN_REPLY_TO + " TEXT);";
+			+ COLUMN_REPLY_TO + " TEXT,"
+			+ COLUMN_MEDIA + " TEXT);";
 	
 	public static final String COLUMN_CHANNEL_IDX = "posts_channel_idx";
 	
 	public static final String CREATE_CHANNEL_INDEX = "CREATE INDEX "
 			+ COLUMN_CHANNEL_IDX + " ON " + TABLE_NAME + " ("
 			+ COLUMN_CHANNEL + ");";
+
 }

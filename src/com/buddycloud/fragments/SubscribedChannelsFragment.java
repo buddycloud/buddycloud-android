@@ -2,6 +2,7 @@ package com.buddycloud.fragments;
 
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.GenericChannelActivity;
@@ -40,10 +42,17 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 	};
 	
 	public SubscribedChannelsFragment() {
-		SubscribedChannelsModel.getInstance().addListener(this);
-		ChannelMetadataModel.getInstance().addListener(this);
-		SyncModel.getInstance().addListener(this);
 		TopicChannelModel.getInstance().addListener(this);
+		SubscribedChannelsModel.getInstance().addListener(this);
+		ModelListener notifyChangeListener = new ModelListener() {
+			@Override
+			public void dataChanged() {
+				adapter.sort(getActivity());
+				adapter.notifyDataSetChanged();
+			}
+		};
+		SyncModel.getInstance().addListener(notifyChangeListener);
+		ChannelMetadataModel.getInstance().addListener(notifyChangeListener);
 	}
 	
 	@Override
@@ -72,8 +81,9 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 	}
 
 	@Override
-	public void attached() {
-		getSherlockActivity().getSupportActionBar().setTitle("");
+	public void attached(Activity activity) {
+		SherlockFragmentActivity sherlockActivity = (SherlockFragmentActivity) activity;
+		sherlockActivity.getSupportActionBar().setTitle("");
 	}
 
 	@Override
@@ -149,7 +159,7 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 
 	@Override
 	public void dataChanged() {
-		adapter.load(getActivity());
+		adapter.reload(getActivity());
 	}
 
 }
