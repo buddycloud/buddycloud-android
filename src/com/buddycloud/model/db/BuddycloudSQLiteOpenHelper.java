@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class BuddycloudSQLiteOpenHelper extends SQLiteOpenHelper {
 	
-	public static final int DATABASE_VERSION = 2;
+	public static final int DATABASE_VERSION = 3;
 	public static final String DATABASE_NAME = "buddycloud.db";
 	
 	public BuddycloudSQLiteOpenHelper(Context context) {
@@ -18,6 +18,10 @@ public class BuddycloudSQLiteOpenHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		// Channel metadata table
 		db.execSQL(ChannelMetadataTableHelper.CREATE_TABLE);
+		
+		// Subscribed channels table
+		db.execSQL(SubscribedChannelsTableHelper.CREATE_TABLE);
+		db.execSQL(SubscribedChannelsTableHelper.CREATE_USER_INDEX);
 		
 		// Unread counters table
 		db.execSQL(UnreadCountersTableHelper.CREATE_TABLE);

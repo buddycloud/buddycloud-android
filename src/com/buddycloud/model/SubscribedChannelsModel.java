@@ -12,6 +12,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
+import com.buddycloud.model.dao.SubscribedChannelsDAO;
 import com.buddycloud.preferences.Preferences;
 
 public class SubscribedChannelsModel extends AbstractModel<JSONArray, JSONObject, String> {
@@ -25,8 +26,6 @@ public class SubscribedChannelsModel extends AbstractModel<JSONArray, JSONObject
 	
 	private static final String TAG = SubscribedChannelsModel.class.getName();
 	private static final String ENDPOINT = "/subscribed"; 
-	
-	private JSONArray subscribed;
 	
 	private SubscribedChannelsModel() {}
 	
@@ -86,6 +85,7 @@ public class SubscribedChannelsModel extends AbstractModel<JSONArray, JSONObject
 
 	@Override
 	public JSONArray getFromCache(Context context, String... p) {
+		JSONArray subscribed = SubscribedChannelsDAO.getInstance(context).get(null);
 		if (subscribed == null) {
 			return new JSONArray();
 		}
@@ -93,7 +93,7 @@ public class SubscribedChannelsModel extends AbstractModel<JSONArray, JSONObject
 	}
 
 	@Override
-	public void fill(Context context, final ModelCallback<Void> callback, String... p) {
+	public void fill(final Context context, final ModelCallback<Void> callback, String... p) {
 		BuddycloudHTTPHelper.getObject(url(context), context, 
 				new ModelCallback<JSONObject>() {
 					@SuppressWarnings("unchecked")
@@ -107,7 +107,12 @@ public class SubscribedChannelsModel extends AbstractModel<JSONArray, JSONObject
 								channels.add(node.split("/")[0]);
 							}
 						}
-						subscribed = new JSONArray(channels);
+						SubscribedChannelsDAO dao = SubscribedChannelsDAO.getInstance(context);
+						if (dao.get(null) == null) {
+							dao.insert(null, new JSONArray(channels));
+						} else {
+							dao.update(null, new JSONArray(channels));
+						}
 						notifyChanged();
 						callback.success(null);
 					}

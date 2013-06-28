@@ -2,15 +2,13 @@ package com.buddycloud.model.dao;
 
 import java.util.Map;
 
-import org.json.JSONObject;
-
 public interface DAO<Set, Get> {
 	
-	public boolean insert(String channel, Set json);
+	public boolean insert(String key, Set json);
 	
-	public boolean update(String channel, JSONObject json);
+	public boolean update(String key, Set json);
 	
-	public Get get(String channel);
+	public Get get(String key);
 	
 	public Map<String, Get> getAll();
 }
