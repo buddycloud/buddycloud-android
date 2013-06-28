@@ -1,5 +1,6 @@
 package com.buddycloud;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -97,9 +98,8 @@ public class ShareActivity extends Activity {
 		MediaModel.getInstance().save(getApplicationContext(), null, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
-				String mediaURL = MediaModel.url(getApplicationContext(), 
-						response.optString("entityId")) + "/" + response.optString("id");
-				postToBuddycloud(mediaURL);
+				postToBuddycloud(response.optString("entityId"), 
+						response.optString("id"));
 			}
 			
 			@Override
@@ -109,9 +109,9 @@ public class ShareActivity extends Activity {
 		}, uri.toString(), targetChannelView.getText().toString());
 	}
 
-	protected void postToBuddycloud(String picURL) {
+	protected void postToBuddycloud(String picChannel, String picId) {
 		EditText targetChannelView = (EditText) findViewById(R.id.channelText);
-		PostsModel.getInstance().save(this, createPost(picURL), new ModelCallback<JSONObject>() {
+		PostsModel.getInstance().save(this, createPost(picChannel, picId), new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
 				Toast.makeText(getApplicationContext(),
@@ -129,11 +129,17 @@ public class ShareActivity extends Activity {
 		
 	}
 
-	private JSONObject createPost(String picURL) {
+	private JSONObject createPost(String picChannel, String picId) {
 		EditText caption = (EditText) findViewById(R.id.captionText);
 		JSONObject post = new JSONObject();
 		try {
-			post.putOpt("content", caption.getText().toString() + " " + picURL);
+			post.putOpt("content", caption.getText().toString());
+			JSONArray mediaArray = new JSONArray();
+			JSONObject mediaObject = new JSONObject();
+			mediaObject.putOpt("id", picId);
+			mediaObject.putOpt("channel", picChannel);
+			mediaArray.put(mediaObject);
+			post.putOpt("media", mediaArray);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

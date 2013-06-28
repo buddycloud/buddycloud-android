@@ -37,7 +37,7 @@ public class MediaModel extends AbstractModel<JSONObject, JSONObject, String> {
 	public void getFromServer(Context context, final ModelCallback<JSONObject> callback, String... p) {
 	}
 
-	public static String url(Context context, String channel) {
+	private static String url(Context context, String channel) {
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
 		return apiAddress + "/" + channel + ENDPOINT;
 	}
