@@ -29,6 +29,8 @@ import com.buddycloud.model.PostsModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
+import com.buddycloud.utils.MeasuredMediaView;
+import com.buddycloud.utils.MeasuredMediaView.MeasureListener;
 import com.buddycloud.utils.TimeUtils;
 import com.squareup.picasso.Picasso;
 
@@ -38,13 +40,21 @@ public class PostCard extends AbstractCard {
 	
 	private JSONObject post;
 	private String channelJid;
-	private CardListAdapter repliesAdapter;
+	private CardListAdapter repliesAdapter = new CardListAdapter();
 	
-	public PostCard(String channelJid, CardListAdapter repliesAdapter, 
-			JSONObject post, Context context) {
+	public PostCard(String channelJid, JSONObject post, Context context) {
 		this.channelJid = channelJid;
 		this.post = post;
-		this.repliesAdapter = repliesAdapter;
+		fillReplyAdapter(context);
+	}
+
+	private void fillReplyAdapter(Context context) {
+		JSONArray comments = post.optJSONArray("replies");
+		for (int i = comments.length() - 1; i >= 0; i--) {
+			JSONObject comment = comments.optJSONObject(i);
+			repliesAdapter.addCard(toReplyCard(comment, context));
+		}
+		repliesAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -87,21 +97,27 @@ public class PostCard extends AbstractCard {
 		TextView contentTextView = holder.getView(R.id.bcPostContent);
 		TextView contentTextViewAlt = holder.getView(R.id.bcPostContentAlt);
 		
-		ImageView mediaView = holder.getView(R.id.bcImageContent);
+		final MeasuredMediaView mediaView = holder.getView(R.id.bcImageContent);
 		if (mediaArray != null) {
 			String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
 			
 			JSONObject mediaJson = mediaArray.optJSONObject(0);
 			
-			String userMediaURL = apiAddress + "/" + mediaJson.optString("channel") + 
+			final String userMediaURL = apiAddress + "/" + mediaJson.optString("channel") + 
 					MediaModel.ENDPOINT + "/" + mediaJson.optString("id");
 			
 			mediaView.setVisibility(View.VISIBLE);
-			Picasso.with(viewGroup.getContext())
-				.load(userMediaURL + MEDIA_URL_SUFIX)
-				.transform(ImageHelper.createRoundTransformation(context, 8, 
-						true, viewGroup.getWidth()))
-				.into(mediaView);
+			mediaView.setMeasureListener(new MeasureListener() {
+				@Override
+				public void measure(int widthMeasureSpec, int heightMeasureSpec) {
+					Picasso.with(context)
+						.load(userMediaURL + MEDIA_URL_SUFIX)
+						.transform(ImageHelper.createRoundTransformation(context, 8, 
+							true, widthMeasureSpec))
+						.into(mediaView);
+				}
+			});
+			
 			
 			contentTextViewAlt.setVisibility(View.VISIBLE);
 			contentTextView.setVisibility(View.INVISIBLE);
@@ -219,7 +235,7 @@ public class PostCard extends AbstractCard {
 	public static void loadReplies(JSONObject post, String channelJid, 
 			final Context context, final CardListAdapter adapter, 
 			final ModelCallback<Void> callback) {
-		PostsModel.getInstance().getPostAsync(context, new ModelCallback<JSONObject>() {
+		PostsModel.getInstance().getSinglePostFromServer(context, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
 				adapter.clear();

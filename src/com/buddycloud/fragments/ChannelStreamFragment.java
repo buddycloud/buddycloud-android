@@ -80,10 +80,6 @@ public class ChannelStreamFragment extends ContentFragment {
 		return view;
 	}
 	
-	private boolean isComment(JSONObject item) {
-		return item.has("replyTo");
-	}
-	
 	private void syncd(View view, Context context) {
 		
 		if (view == null) {
@@ -94,30 +90,12 @@ public class ChannelStreamFragment extends ContentFragment {
 		ListView contentView = (ListView) view.findViewById(R.id.postsStream);
 		final CardListAdapter cardAdapter = new CardListAdapter();
 		contentView.setAdapter(cardAdapter);
+		fillAdapter(context, cardAdapter);
 		
 		PostsModel.getInstance().fill(getActivity(), new ModelCallback<Void>() {
-
 			@Override
 			public void success(Void voidd) {
-				JSONArray response = PostsModel.getInstance().getFromCache(getActivity(), channelJid);
-				for (int i = 0; i < response.length(); i++) {
-					final JSONObject post = response.optJSONObject(i);
-					if (!isComment(post)) {
-						final CardListAdapter repliesAdapter = new CardListAdapter();
-						PostCard.loadReplies(post, channelJid, getActivity(), repliesAdapter, new ModelCallback<Void>() {
-							@Override
-							public void success(Void voidz) {
-								PostCard card = toCard(post, repliesAdapter, channelJid);
-								cardAdapter.addCard(card);
-								cardAdapter.notifyDataSetChanged();
-							}
-
-							@Override
-							public void error(Throwable throwable) {}
-						});
-					}
-				}
-				
+				fillAdapter(getActivity(), cardAdapter);
 			}
 
 			@Override
@@ -126,9 +104,20 @@ public class ChannelStreamFragment extends ContentFragment {
 			}
 		}, channelJid);
 	}
+
+	private void fillAdapter(Context context, final CardListAdapter cardAdapter) {
+		cardAdapter.clear();
+		JSONArray allPosts = PostsModel.getInstance().getFromCache(context, channelJid);
+		for (int i = 0; i < allPosts.length(); i++) {
+			JSONObject post = allPosts.optJSONObject(i);
+			PostCard card = toCard(post, channelJid);
+			cardAdapter.addCard(card);
+			cardAdapter.notifyDataSetChanged();
+		}
+	}
 	
-	private PostCard toCard(JSONObject post, CardListAdapter repliesAdapter, final String channelJid) {
-		PostCard postCard = new PostCard(channelJid, repliesAdapter, post, getActivity());
+	private PostCard toCard(JSONObject post, final String channelJid) {
+		PostCard postCard = new PostCard(channelJid, post, getActivity());
 		postCard.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

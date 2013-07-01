@@ -9,11 +9,14 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.squareup.picasso.Transformation;
 
 public class ImageHelper {
     
+	private static final String TAG = ImageHelper.class.getName();
+	
 	public static Transformation createRoundTransformation(final Context context, 
 			final int roundPixels, final boolean squareEnd, final int targetW) {
 		return new Transformation() {
@@ -42,6 +45,8 @@ public class ImageHelper {
 			w = targetW;
 			h = (int) (targetW * ratio);
 		}
+		
+		Log.d(TAG, "Scale w: " + w + ", h: " + h);
 		
 		bitmap = Bitmap.createScaledBitmap(bitmap, w, h, false);
 		
