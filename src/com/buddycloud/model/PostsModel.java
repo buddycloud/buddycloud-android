@@ -30,23 +30,17 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		return instance;
 	}
 	
-	public void normalizeAndPersistChannelPosts(PostsDAO postsDAO, String channel, JSONArray jsonPosts) {
-		normalizeChannelPosts(postsDAO, channel, jsonPosts);
-		for (int i = 0; i < jsonPosts.length(); i++) {
-			JSONObject item = jsonPosts.optJSONObject(i);
-			if (postsDAO.get(channel, item.optString("id")) == null) {
-				postsDAO.insert(channel, item);
-			}
-		}
-	}
-	
-	public void normalizeChannelPosts(PostsDAO postsDAO, String channel, JSONArray jsonPosts) {
+	private void persist(PostsDAO postsDAO, String channel, JSONArray jsonPosts) {
 		for (int i = 0; i < jsonPosts.length(); i++) {
 			JSONObject item = jsonPosts.optJSONObject(i);
 			normalize(item);
+			if (postsDAO.get(channel, item.optString("id")) == null) {
+				postsDAO.insert(channel, item);
+			}
+			
 		}
 	}
-
+	
 	private void normalize(JSONObject item) {
 		String author = item.optString("author");
 		
@@ -63,8 +57,24 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 	private JSONArray lookupPostsFromDatabase(final Context context, final String channelJid) {
 		final PostsDAO postsDAO = PostsDAO.getInstance(context);
 		JSONArray postStream = postsDAO.get(channelJid, PAGE_SIZE);
-		normalizeAndPersistChannelPosts(postsDAO, channelJid, postStream);
-		return postStream;
+		JSONArray onlyTopicStream = new JSONArray();
+		for (int i = 0; i < postStream.length(); i++) {
+			JSONObject eachPost = postStream.optJSONObject(i);
+			if (!isComment(eachPost)) {
+				JSONArray replies = postsDAO.getReplies(channelJid, eachPost.optString("id"));
+				try {
+					eachPost.putOpt("replies", replies);
+				} catch (JSONException e) {
+					throw new RuntimeException(e);
+				}
+				onlyTopicStream.put(eachPost);
+			}
+		}
+		return onlyTopicStream;
+	}
+	
+	private boolean isComment(JSONObject item) {
+		return item.has("replyTo");
 	}
 	
 	@Override
@@ -73,13 +83,13 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		return lookupPostsFromDatabase(context, channelJid);
 	}
 
-	public void getPostAsync(Context context, final ModelCallback<JSONObject> callback, String... p) {
+	public void getSinglePostFromServer(Context context, final ModelCallback<JSONObject> callback, String... p) {
 		String channelJid = p[0];
 		String itemId = p[1];
 		fetchPost(context, channelJid, itemId, callback);
 	}
 	
-	public void fetchPost(final Context context, final String channelJid, 
+	private void fetchPost(final Context context, final String channelJid, 
 			final String itemId, final ModelCallback<JSONObject> callback) {
 		BuddycloudHTTPHelper.getObject(postUrl(context, channelJid, itemId), context,
 				new ModelCallback<JSONObject>() {
@@ -101,8 +111,6 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 	private void fetchComments(final Context context, final String channelJid, 
 			final JSONObject item, final ModelCallback<JSONObject> callback) {
 		String itemId = item.optString("id");
-		appendReplies(item);
-		
 		BuddycloudHTTPHelper.getArray(repliesUrl(context, channelJid, itemId), context,
 				new ModelCallback<JSONArray>() {
 			@Override
@@ -110,8 +118,11 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 				for (int i = 0; i < response.length(); i++) {
 					JSONObject reply = response.optJSONObject(i);
 					normalize(reply);
-					JSONArray replies = item.optJSONArray("replies");
-					replies.put(reply);
+				}
+				try {
+					item.putOpt("replies", response);
+				} catch (JSONException e) {
+					e.printStackTrace();
 				}
 				
 				if (callback != null) {
@@ -128,14 +139,6 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		});
 	}
 
-	private void appendReplies(final JSONObject item) {
-		try {
-			item.put("replies", new JSONArray());
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		}
-	}
-	
 	private void fetchPosts(final Context context, final String channelJid, 
 			final ModelCallback<Void> callback) {
 		BuddycloudHTTPHelper.getArray(postsUrl(context, channelJid), context,
@@ -144,7 +147,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 			@Override
 			public void success(JSONArray response) {
 				final PostsDAO postsDAO = PostsDAO.getInstance(context);
-				normalizeAndPersistChannelPosts(postsDAO, channelJid, response);
+				persist(postsDAO, channelJid, response);
 				callback.success(null);
 			}
 
