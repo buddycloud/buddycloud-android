@@ -97,7 +97,7 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 	
 	public JSONArray get(String channel) {
 		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
-		String orderBy = "date(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
+		String orderBy = "datetime(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
 
 		return DAOHelper.queryOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
 				null, null, null, orderBy, null, cursorParser());
@@ -113,13 +113,14 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 	public JSONArray getReplies(String channel, String itemId) {
 		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\" AND " 
 						+ PostsTableHelper.COLUMN_REPLY_TO + "=\"" + itemId + "\"";
+		String orderBy = "datetime(" + PostsTableHelper.COLUMN_UPDATED + ") ASC";
 		return DAOHelper.queryOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
-				null, null, null, null, null, cursorParser());
+				null, null, null, orderBy, null, cursorParser());
 	}
 	
 	public JSONArray get(String channel, int limit) {
 		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
-		String orderBy = "date(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
+		String orderBy = "datetime(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
 
 		return DAOHelper.queryOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
 				null, null, null, orderBy, String.valueOf(limit), 
@@ -127,7 +128,7 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 	}
 
 	public JSONObject getMostRecent() {
-		String orderBy = "date(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
+		String orderBy = "datetime(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
 		return DAOHelper.queryUniqueOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, null,
 				null, null, null, orderBy, String.valueOf(1), 
 				cursorParser());
