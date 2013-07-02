@@ -37,7 +37,6 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 			if (postsDAO.get(channel, item.optString("id")) == null) {
 				postsDAO.insert(channel, item);
 			}
-			
 		}
 	}
 	
@@ -96,7 +95,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 			@Override
 			public void success(JSONObject response) {
 				normalize(response);
-				fetchComments(context, channelJid, response, callback);
+				fetchReplies(context, channelJid, response, callback);
 			}
 
 			@Override
@@ -108,7 +107,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		});
 	}
 	
-	private void fetchComments(final Context context, final String channelJid, 
+	private void fetchReplies(final Context context, final String channelJid, 
 			final JSONObject item, final ModelCallback<JSONObject> callback) {
 		String itemId = item.optString("id");
 		BuddycloudHTTPHelper.getArray(repliesUrl(context, channelJid, itemId), context,

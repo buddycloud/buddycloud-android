@@ -50,7 +50,7 @@ public class PostCard extends AbstractCard {
 
 	private void fillReplyAdapter(Context context) {
 		JSONArray comments = post.optJSONArray("replies");
-		for (int i = comments.length() - 1; i >= 0; i--) {
+		for (int i = 0; i < comments.length(); i++) {
 			JSONObject comment = comments.optJSONObject(i);
 			repliesAdapter.addCard(toReplyCard(comment, context));
 		}
