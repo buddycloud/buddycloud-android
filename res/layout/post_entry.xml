@@ -27,7 +27,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:adjustViewBounds="true"
-        android:src="@drawable/topic_50px"
         android:visibility="gone" />
     
     <ImageView
