@@ -145,8 +145,13 @@ public class MainActivity extends SlidingFragmentActivity {
 
 	@Override
 	public void onAttachedToWindow() {
-		showChannelFragment(myJid);
-		showMenu();
+		String channelJid = getIntent().getStringExtra(GenericChannelsFragment.CHANNEL);
+		if (channelJid == null) {
+			showChannelFragment(myJid);
+			showMenu();
+		} else {
+			showChannelFragment(channelJid);
+		}
 		super.onAttachedToWindow();
 	}
 	
