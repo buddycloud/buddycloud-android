@@ -169,7 +169,13 @@ public class MainActivity extends SlidingFragmentActivity {
 		args.putString(GenericChannelsFragment.CHANNEL, channelJid);
 		channelFrag.setArguments(args);
 		pageAdapter.setLeftFragment(channelFrag);
-		getSlidingMenu().showContent();
+		
+		if (getSlidingMenu().isMenuShowing()) {
+			getSlidingMenu().showContent();
+		} else {
+			fragmentChanged();
+		}
+		
 		return channelFrag;
 	}
 	

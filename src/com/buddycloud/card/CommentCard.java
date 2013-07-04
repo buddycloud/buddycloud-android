@@ -9,10 +9,13 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.buddycloud.MainActivity;
 import com.buddycloud.R;
+import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
 import com.buddycloud.utils.TextUtils;
 import com.buddycloud.utils.TimeUtils;
@@ -21,12 +24,15 @@ import com.squareup.picasso.Picasso;
 public class CommentCard extends AbstractCard {
 	
 	private final String published;
-	private String avatarURL;
 	private Spanned anchoredContent;
+	private MainActivity activity;
+	private String replyAuthor;
 	
-	public CommentCard(String avatarURL, String content, String published) {
-		this.avatarURL = avatarURL;
+	public CommentCard(String replyAuthor, String content, String published, 
+			MainActivity activity) {
+		this.replyAuthor = replyAuthor;
 		this.published = published;
+		this.activity = activity;
 		this.anchoredContent = TextUtils.anchor(content);
 	}
 
@@ -46,6 +52,7 @@ public class CommentCard extends AbstractCard {
 			holder = (CardViewHolder) convertView.getTag();
 		}
 		
+		String avatarURL = AvatarUtils.avatarURL(viewGroup.getContext(), replyAuthor);
 		ImageView avatarView = holder.getView(R.id.bcProfilePic);
 		Picasso.with(viewGroup.getContext()).load(avatarURL)
 				.placeholder(R.drawable.personal_50px)
@@ -53,6 +60,12 @@ public class CommentCard extends AbstractCard {
 				.transform(ImageHelper.createRoundTransformation(
 						viewGroup.getContext(), 16, false, -1))
 				.into(avatarView);
+		avatarView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				activity.showChannelFragment(replyAuthor);
+			}
+		});
 		
 		TextView contentView = holder.getView(R.id.bcPostContent);
 		contentView.setMovementMethod(LinkMovementMethod.getInstance());

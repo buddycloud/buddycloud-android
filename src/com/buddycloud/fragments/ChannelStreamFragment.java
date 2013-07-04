@@ -26,6 +26,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.ChannelDetailActivity;
 import com.buddycloud.GenericChannelActivity;
+import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.card.CardListAdapter;
 import com.buddycloud.card.PostCard;
@@ -117,7 +118,7 @@ public class ChannelStreamFragment extends ContentFragment {
 	}
 	
 	private PostCard toCard(JSONObject post, final String channelJid) {
-		PostCard postCard = new PostCard(channelJid, post, getActivity());
+		PostCard postCard = new PostCard(channelJid, post, (MainActivity) getActivity());
 		postCard.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

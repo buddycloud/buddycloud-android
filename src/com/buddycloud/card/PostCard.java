@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.model.MediaModel;
 import com.buddycloud.model.ModelCallback;
@@ -45,12 +46,14 @@ public class PostCard extends AbstractCard {
 	private String channelJid;
 	private CardListAdapter repliesAdapter = new CardListAdapter();
 	private Spanned anchoredContent;
+	private MainActivity activity;
 	
-	public PostCard(String channelJid, JSONObject post, Context context) {
+	public PostCard(String channelJid, JSONObject post, MainActivity activity) {
 		this.channelJid = channelJid;
 		this.post = post;
+		this.activity = activity;
 		this.anchoredContent = TextUtils.anchor(post.optString("content"));
-		fillReplyAdapter(context);
+		fillReplyAdapter(activity);
 	}
 
 	private void fillReplyAdapter(Context context) {
@@ -65,7 +68,7 @@ public class PostCard extends AbstractCard {
 	@Override
 	public View getContentView(int position, View convertView, ViewGroup viewGroup) {
 		
-		String postAuthor = post.optString("author");
+		final String postAuthor = post.optString("author");
 		String published = post.optString("published");
 		String mediaStr = post.optString("media");
 		
@@ -76,7 +79,6 @@ public class PostCard extends AbstractCard {
 			} catch (JSONException e) {}
 		}
 		
-		String avatarURL = AvatarUtils.avatarURL(viewGroup.getContext(), postAuthor);
 		
 		boolean reuse = convertView != null && convertView.getTag() != null; 
 		CardViewHolder holder = null;
@@ -90,6 +92,7 @@ public class PostCard extends AbstractCard {
 			holder = (CardViewHolder) convertView.getTag();
 		}
 		
+		String avatarURL = AvatarUtils.avatarURL(viewGroup.getContext(), postAuthor);
 		final Context context = viewGroup.getContext();
 		ImageView avatarView = holder.getView(R.id.bcProfilePic);
 		Picasso.with(viewGroup.getContext()).load(avatarURL)
@@ -97,6 +100,12 @@ public class PostCard extends AbstractCard {
 				.error(R.drawable.personal_50px)
 				.transform(ImageHelper.createRoundTransformation(context, 16, false, -1))
 				.into(avatarView);
+		avatarView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				activity.showChannelFragment(postAuthor);
+			}
+		});
 		
 		TextView contentTextView = holder.getView(R.id.bcPostContent);
 		TextView contentTextViewAlt = holder.getView(R.id.bcPostContentAlt);
@@ -238,7 +247,7 @@ public class PostCard extends AbstractCard {
 		return reply;
 	}
 	
-	public static void loadReplies(JSONObject post, String channelJid, 
+	private void loadReplies(JSONObject post, String channelJid, 
 			final Context context, final CardListAdapter adapter, 
 			final ModelCallback<Void> callback) {
 		PostsModel.getInstance().getSinglePostFromServer(context, new ModelCallback<JSONObject>() {
@@ -261,12 +270,11 @@ public class PostCard extends AbstractCard {
 		}, channelJid, post.optString("id"));
 	}
 	
-	private static CommentCard toReplyCard(JSONObject comment, Context context) {
+	private CommentCard toReplyCard(JSONObject comment, Context context) {
 		String postAuthor = comment.optString("author");
 		String postContent = comment.optString("content");
 		String published = comment.optString("published");
-		String avatarURL = AvatarUtils.avatarURL(context, postAuthor);
-		CommentCard commentCard = new CommentCard(avatarURL, postContent, published);
+		CommentCard commentCard = new CommentCard(postAuthor, postContent, published, activity);
 		return commentCard;
 	}
 	

@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.card.CardListAdapter;
 import com.buddycloud.card.CommentCard;
@@ -172,7 +173,7 @@ public class PostDetailsFragment extends ContentFragment {
 		String published = comment.optString("published");
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), postAuthor);
 		
-		CommentCard commentCard = new CommentCard(avatarURL, postContent, published);
+		CommentCard commentCard = new CommentCard(avatarURL, postContent, published, (MainActivity) getActivity());
 		return commentCard;
 	}
 
