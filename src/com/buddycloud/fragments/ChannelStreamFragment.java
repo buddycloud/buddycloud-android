@@ -186,14 +186,8 @@ public class ChannelStreamFragment extends ContentFragment {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
 					int arg3) {
-				boolean wasEnabled = postButton.isEnabled();
 				boolean enabled = arg0 != null && arg0.length() > 0;
 				postButton.setEnabled(enabled);
-				if (!enabled) {
-					postButton.setImageResource(R.drawable.speech_balloon_plus_disabled);
-				} else if (!wasEnabled) {
-					postButton.setImageResource(R.drawable.speech_balloon_plus);
-				}
 			}
 			
 		});
