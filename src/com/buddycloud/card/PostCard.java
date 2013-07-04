@@ -9,8 +9,10 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.text.Editable;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,6 +33,7 @@ import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
 import com.buddycloud.utils.MeasuredMediaView;
 import com.buddycloud.utils.MeasuredMediaView.MeasureListener;
+import com.buddycloud.utils.TextUtils;
 import com.buddycloud.utils.TimeUtils;
 import com.squareup.picasso.Picasso;
 
@@ -41,10 +44,12 @@ public class PostCard extends AbstractCard {
 	private JSONObject post;
 	private String channelJid;
 	private CardListAdapter repliesAdapter = new CardListAdapter();
+	private Spanned anchoredContent;
 	
 	public PostCard(String channelJid, JSONObject post, Context context) {
 		this.channelJid = channelJid;
 		this.post = post;
+		this.anchoredContent = TextUtils.anchor(post.optString("content"));
 		fillReplyAdapter(context);
 	}
 
@@ -61,7 +66,6 @@ public class PostCard extends AbstractCard {
 	public View getContentView(int position, View convertView, ViewGroup viewGroup) {
 		
 		String postAuthor = post.optString("author");
-		String content = post.optString("content");
 		String published = post.optString("published");
 		String mediaStr = post.optString("media");
 		
@@ -121,14 +125,16 @@ public class PostCard extends AbstractCard {
 			
 			contentTextViewAlt.setVisibility(View.VISIBLE);
 			contentTextView.setVisibility(View.INVISIBLE);
-			contentTextViewAlt.setText(content);
+			contentTextViewAlt.setText(anchoredContent);
+			contentTextViewAlt.setMovementMethod(LinkMovementMethod.getInstance());
 		} else {
 			mediaView.setVisibility(View.INVISIBLE);
 			mediaView.setImageBitmap(null);
 			
 			contentTextViewAlt.setVisibility(View.INVISIBLE);
 			contentTextView.setVisibility(View.VISIBLE);
-			contentTextView.setText(content);
+			contentTextView.setText(anchoredContent);
+			contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		}
 		
 		try {

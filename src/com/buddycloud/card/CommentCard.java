@@ -3,7 +3,9 @@ package com.buddycloud.card;
 import java.text.ParseException;
 import java.util.Date;
 
+import android.text.Spanned;
 import android.text.format.DateUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,19 +14,20 @@ import android.widget.TextView;
 
 import com.buddycloud.R;
 import com.buddycloud.utils.ImageHelper;
+import com.buddycloud.utils.TextUtils;
 import com.buddycloud.utils.TimeUtils;
 import com.squareup.picasso.Picasso;
 
 public class CommentCard extends AbstractCard {
 	
-	private String avatarURL;
-	private String content;
 	private final String published;
+	private String avatarURL;
+	private Spanned anchoredContent;
 	
 	public CommentCard(String avatarURL, String content, String published) {
 		this.avatarURL = avatarURL;
-		this.content = content;
 		this.published = published;
+		this.anchoredContent = TextUtils.anchor(content);
 	}
 
 	@Override
@@ -52,7 +55,8 @@ public class CommentCard extends AbstractCard {
 				.into(avatarView);
 		
 		TextView contentView = holder.getView(R.id.bcPostContent);
-		contentView.setText(content);
+		contentView.setMovementMethod(LinkMovementMethod.getInstance());
+		contentView.setText(anchoredContent);
 		
 		try {
 			long publishedTime = TimeUtils.fromISOToDate(published).getTime();
