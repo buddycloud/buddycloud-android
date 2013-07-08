@@ -171,6 +171,9 @@ public class BuddycloudHTTPHelper {
 				}
 				HttpResponse response = CLIENT.execute(method);
 				if (response.getStatusLine().getStatusCode() >= 400) {
+					// Make sure entity is consumed (released) so connection can be re-used
+					// this avoids the SingleClientConnManager warning about invalid status connection not released
+					response.getEntity().consumeContent();
 					throw new Exception(response.getStatusLine().toString());
 				}
 				
