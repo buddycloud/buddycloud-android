@@ -44,13 +44,9 @@ import com.squareup.picasso.Picasso;
 
 public class ChannelStreamFragment extends ContentFragment {
 
-	private String channelJid;
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		this.channelJid = getArguments().getString(GenericChannelsFragment.CHANNEL);
-	
 		final View view = inflater.inflate(R.layout.fragment_channel_stream, container, false);
 		
 		view.findViewById(R.id.subscribedProgress).setVisibility(View.VISIBLE);
@@ -81,6 +77,10 @@ public class ChannelStreamFragment extends ContentFragment {
 		
 		return view;
 	}
+
+	private String getChannelJid() {
+		return getArguments().getString(GenericChannelsFragment.CHANNEL);
+	}
 	
 	private void syncd(View view, Context context) {
 		
@@ -104,11 +104,12 @@ public class ChannelStreamFragment extends ContentFragment {
 			public void error(Throwable throwable) {
 				
 			}
-		}, channelJid);
+		}, getChannelJid());
 	}
 
 	private void fillAdapter(Context context, final CardListAdapter cardAdapter) {
 		cardAdapter.clear();
+		String channelJid = getChannelJid();
 		JSONArray allPosts = PostsModel.getInstance().getFromCache(context, channelJid);
 		for (int i = 0; i < allPosts.length(); i++) {
 			JSONObject post = allPosts.optJSONObject(i);
@@ -154,7 +155,7 @@ public class ChannelStreamFragment extends ContentFragment {
 			public void error(Throwable throwable) {
 				Toast.makeText(getActivity().getApplicationContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
 			}
-		}, channelJid);
+		}, getChannelJid());
 	}
 
 	private JSONObject createJSONPost(final EditText postContent) {
@@ -167,9 +168,9 @@ public class ChannelStreamFragment extends ContentFragment {
 		return post;
 	}
 	
-	private void loadTitle(Activity activity, String channelJid) {
+	private void loadTitle(Activity activity) {
 		SlidingFragmentActivity sherlockActivity = (SlidingFragmentActivity) activity;
-		sherlockActivity.getSupportActionBar().setTitle(channelJid);
+		sherlockActivity.getSupportActionBar().setTitle(getChannelJid());
 	}
 	
 	public static void configurePostSection(EditText postContent, final ImageView postButton) {
@@ -198,7 +199,7 @@ public class ChannelStreamFragment extends ContentFragment {
 
 	@Override
 	public void attached(Activity activity) {
-		loadTitle(activity, channelJid);
+		loadTitle(activity);
 	}
 
 	@Override
@@ -219,7 +220,7 @@ public class ChannelStreamFragment extends ContentFragment {
 
 	private boolean isFollowing() {
 		JSONArray subscribed = SubscribedChannelsModel.getInstance().getFromCache(getActivity());
-		return JSONUtils.contains(subscribed, channelJid);
+		return JSONUtils.contains(subscribed, getChannelJid());
 	}
 	
 	@Override
@@ -245,7 +246,7 @@ public class ChannelStreamFragment extends ContentFragment {
 	private void showDetails() {
 		Intent intent = new Intent();
 		intent.setClass(getActivity(), ChannelDetailActivity.class);
-		intent.putExtra(GenericChannelsFragment.CHANNEL, channelJid);
+		intent.putExtra(GenericChannelsFragment.CHANNEL, getChannelJid());
 		getActivity().startActivity(intent);
 	}
 
@@ -254,6 +255,7 @@ public class ChannelStreamFragment extends ContentFragment {
 		
 		Map<String, String> subscription = new HashMap<String, String>();
 		String newRole = isFollowing ? SubscribedChannelsModel.ROLE_NONE : SubscribedChannelsModel.ROLE_PRODUCER;
+		final String channelJid = getChannelJid();
 		subscription.put(channelJid + SubscribedChannelsModel.POST_NODE_SUFIX, newRole);
 		
 		SubscribedChannelsModel.getInstance().save(getActivity(), new JSONObject(subscription), 
@@ -288,7 +290,7 @@ public class ChannelStreamFragment extends ContentFragment {
 		intent.setClass(getActivity(), GenericChannelActivity.class);
 		intent.putExtra(GenericChannelActivity.ADAPTER_NAME, 
 				adapterName);
-		intent.putExtra(GenericChannelsFragment.CHANNEL, channelJid);
+		intent.putExtra(GenericChannelsFragment.CHANNEL, getChannelJid());
 		getActivity().startActivityForResult(
 				intent, GenericChannelActivity.REQUEST_CODE);
 	}
