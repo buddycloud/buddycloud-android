@@ -39,4 +39,7 @@
 	<string name="domain_name">domain</string>
 	<string name="email_address">email address</string>
 	
+	<string name="login_error_wrong_credentials">Wrong credentials</string>
+	<string name="login_error_bad_channel_format">Bad channel format. Expected format is user@domain.</string>
+	
 </resources>

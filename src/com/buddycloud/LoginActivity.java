@@ -52,6 +52,13 @@ public class LoginActivity extends Activity {
 				Preferences.setPreference(LoginActivity.this, Preferences.MY_CHANNEL_JID, myChannelJid);
 				Preferences.setPreference(LoginActivity.this, Preferences.PASSWORD, password);
 				
+				String[] myChannelJidSplit = myChannelJid.split("@");
+				
+				if (myChannelJidSplit.length < 2) {
+					showLoginError(R.string.login_error_bad_channel_format);
+					return;
+				}
+				
 				DNSUtils.resolveAPISRV(new ModelCallback<String>() {
 					
 					@Override
@@ -62,7 +69,7 @@ public class LoginActivity extends Activity {
 
 					@Override
 					public void error(Throwable throwable) {
-						showLoginError();
+						showLoginError(R.string.login_error_wrong_credentials);
 					}
 					
 					private void checkCredentials() {
@@ -74,12 +81,12 @@ public class LoginActivity extends Activity {
 							
 							@Override
 							public void error(Throwable throwable) {
-								showLoginError();
+								showLoginError(R.string.login_error_wrong_credentials);
 							}
 						});
 					}
 					
-				}, myChannelJid.split("@")[1]);
+				}, myChannelJidSplit[1]);
 			}
 		});
         
@@ -93,10 +100,10 @@ public class LoginActivity extends Activity {
 		});
     }
 
-    private void showLoginError() {
+    private void showLoginError(int stringId) {
     	final RelativeLayout postBtn = (RelativeLayout) findViewById(R.id.loginBtn);
         final View progressBar = findViewById(R.id.progressBar);
-		Toast.makeText(getApplicationContext(), "Wrong credentials", 
+		Toast.makeText(getApplicationContext(), getString(stringId), 
 				Toast.LENGTH_LONG).show();
 		Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, null);
 		postBtn.setVisibility(View.VISIBLE);
