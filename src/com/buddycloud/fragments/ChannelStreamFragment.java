@@ -37,6 +37,7 @@ import com.buddycloud.model.PostsModel;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
+import com.buddycloud.utils.InputUtils;
 import com.buddycloud.utils.JSONUtils;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.squareup.picasso.Picasso;
@@ -139,12 +140,13 @@ public class ChannelStreamFragment extends ContentFragment {
 		final EditText postContent = (EditText) view.findViewById(R.id.postContentTxt);
 		
 		JSONObject post = createJSONPost(postContent);
+		postContent.setText("");
+		InputUtils.hideKeyboard(getActivity(), postContent);
 		
 		PostsModel.getInstance().save(getActivity(), post, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
 				Toast.makeText(getActivity().getApplicationContext(), "Post created", Toast.LENGTH_LONG).show();
-				postContent.setText("");
 				syncd(null, getActivity());
 			}
 			

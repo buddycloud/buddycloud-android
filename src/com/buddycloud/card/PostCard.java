@@ -32,6 +32,7 @@ import com.buddycloud.model.PostsModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
+import com.buddycloud.utils.InputUtils;
 import com.buddycloud.utils.MeasuredMediaView;
 import com.buddycloud.utils.MeasuredMediaView.MeasureListener;
 import com.buddycloud.utils.TextUtils;
@@ -187,21 +188,25 @@ public class PostCard extends AbstractCard {
 	
 	private void reply(final Context context,
 			final FrameLayout replyBtn, final EditText replyTxt) {
+		
+		if (!replyBtn.isEnabled()) {
+			return;
+		}
+		
 		JSONObject replyPost = createReply(replyTxt);
+		replyTxt.setText("");
+		InputUtils.hideKeyboard(context, replyTxt);
 		PostsModel.getInstance().save(context, replyPost, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
-				if (replyBtn.isEnabled()) {
-					Toast.makeText(context, "Post created", Toast.LENGTH_LONG).show();
-					replyTxt.setText("");
-					loadReplies(post, channelJid, context, repliesAdapter, new ModelCallback<Void>() {
-						@Override
-						public void success(Void response) {}
+				Toast.makeText(context, "Post created", Toast.LENGTH_LONG).show();
+				loadReplies(post, channelJid, context, repliesAdapter, new ModelCallback<Void>() {
+					@Override
+					public void success(Void response) {}
 
-						@Override
-						public void error(Throwable throwable) {}
-					});
-				}
+					@Override
+					public void error(Throwable throwable) {}
+				});
 			}
 			
 			@Override
