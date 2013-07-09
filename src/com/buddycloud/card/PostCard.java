@@ -37,7 +37,6 @@ import com.buddycloud.utils.MeasuredMediaView;
 import com.buddycloud.utils.MeasuredMediaView.MeasureListener;
 import com.buddycloud.utils.TextUtils;
 import com.buddycloud.utils.TimeUtils;
-import com.squareup.picasso.Picasso;
 
 public class PostCard extends AbstractCard {
 	
@@ -96,7 +95,7 @@ public class PostCard extends AbstractCard {
 		String avatarURL = AvatarUtils.avatarURL(viewGroup.getContext(), postAuthor);
 		final Context context = viewGroup.getContext();
 		ImageView avatarView = holder.getView(R.id.bcProfilePic);
-		Picasso.with(viewGroup.getContext()).load(avatarURL)
+		ImageHelper.picasso(viewGroup.getContext()).load(avatarURL)
 				.placeholder(R.drawable.personal_50px)
 				.error(R.drawable.personal_50px)
 				.transform(ImageHelper.createRoundTransformation(context, 16, false, -1))
@@ -124,7 +123,7 @@ public class PostCard extends AbstractCard {
 			mediaView.setMeasureListener(new MeasureListener() {
 				@Override
 				public void measure(int widthMeasureSpec, int heightMeasureSpec) {
-					Picasso.with(context)
+					ImageHelper.picasso(context)
 						.load(userMediaURL + MEDIA_URL_SUFIX)
 						.transform(ImageHelper.createRoundTransformation(context, 8, 
 							true, widthMeasureSpec))
@@ -165,7 +164,7 @@ public class PostCard extends AbstractCard {
 		ImageView replyAuthorView = holder.getView(R.id.replyAuthorView);
 		String replyAuthorURL = AvatarUtils.avatarURL(viewGroup.getContext(), 
 				Preferences.getPreference(context, Preferences.MY_CHANNEL_JID));
-		Picasso.with(viewGroup.getContext()).load(replyAuthorURL)
+		ImageHelper.picasso(viewGroup.getContext()).load(replyAuthorURL)
 				.placeholder(R.drawable.personal_50px)
 				.error(R.drawable.personal_50px)
 				.transform(ImageHelper.createRoundTransformation(context, 16, false, -1))

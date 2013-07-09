@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.buddycloud.R;
 import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.model.SyncModel;
-import com.squareup.picasso.Picasso;
 
 public class ChannelAdapterHelper {
 
@@ -88,7 +87,7 @@ public class ChannelAdapterHelper {
 
 	private static void loadAvatar(Context parent, ViewHolder holder, String channelJid) {
 		String avatarURL = AvatarUtils.avatarURL(parent, channelJid);
-		Picasso.with(parent).load(avatarURL)
+		ImageHelper.picasso(parent).load(avatarURL)
 				.placeholder(R.drawable.personal_50px)
 				.error(R.drawable.personal_50px)
 				.into(holder.avatar);

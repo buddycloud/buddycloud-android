@@ -10,7 +10,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.utils.AvatarUtils;
-import com.squareup.picasso.Picasso;
+import com.buddycloud.utils.ImageHelper;
 
 public class ChannelDetailActivity extends SherlockActivity {
 
@@ -43,7 +43,7 @@ public class ChannelDetailActivity extends SherlockActivity {
 		
 		ImageView avatarView = (ImageView) findViewById(R.id.avatarView);
 		String avatarURL = AvatarUtils.avatarURL(this, channelJid);
-		Picasso.with(this).load(avatarURL)
+		ImageHelper.picasso(this).load(avatarURL)
 				.placeholder(R.drawable.personal_50px)
 				.error(R.drawable.personal_50px)
 				.into(avatarView);

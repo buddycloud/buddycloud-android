@@ -25,7 +25,7 @@ import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.FileUtils;
-import com.squareup.picasso.Picasso;
+import com.buddycloud.utils.ImageHelper;
 
 public class ShareActivity extends Activity {
 
@@ -57,7 +57,7 @@ public class ShareActivity extends Activity {
 		String mediaType = getContentResolver().getType(uri);
 		ImageView imageView = (ImageView) findViewById(R.id.shareImagePreview);
 		if (mediaType.contains("image/")) {
-			Picasso.with(this).load(uri.toString())
+			ImageHelper.picasso(this).load(uri.toString())
 			        .resize(512, 512)
 					.into(imageView);
 		} else if (mediaType.contains("video/")) {
