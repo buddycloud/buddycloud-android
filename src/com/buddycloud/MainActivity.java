@@ -21,7 +21,6 @@ import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.OnClosedListener;
 import com.slidingmenu.lib.SlidingMenu.OnOpenedListener;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
-import com.squareup.picasso.Picasso;
 
 public class MainActivity extends SlidingFragmentActivity {
 
@@ -34,8 +33,6 @@ public class MainActivity extends SlidingFragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Picasso.with(this).setDebugging(true);
-		
 		setSlidingActionBarEnabled(false);
 		setBehindContentView(R.layout.menu_frame);
 		
