@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -35,6 +36,7 @@ import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
 import com.buddycloud.utils.InputUtils;
 import com.buddycloud.utils.MeasuredMediaView;
+import com.buddycloud.utils.Typefaces;
 import com.buddycloud.utils.MeasuredMediaView.MeasureListener;
 import com.buddycloud.utils.TextUtils;
 import com.buddycloud.utils.TimeUtils;
@@ -172,10 +174,10 @@ public class PostCard extends AbstractCard {
 				.error(R.drawable.personal_50px)
 				.transform(ImageHelper.createRoundTransformation(context, 16, false, -1))
 				.into(replyAuthorView);
-		final FrameLayout replyBtn = holder.getView(R.id.replyBtn);
+		final Button replyBtn = holder.getView(R.id.replyBtn);
+		replyBtn.setTypeface(Typefaces.get(context,  "fonts/Roboto-Light.ttf"));
 		final EditText replyTxt = holder.getView(R.id.replyContentTxt);
 		replyBtn.setEnabled(false);
-		replyBtn.getChildAt(0).setEnabled(false);
 		
 		replyBtn.setOnClickListener(new OnClickListener() {
 			@Override
@@ -189,7 +191,7 @@ public class PostCard extends AbstractCard {
 	}
 	
 	private void reply(final Context context,
-			final FrameLayout replyBtn, final EditText replyTxt) {
+			final Button replyBtn, final EditText replyTxt) {
 		
 		if (!replyBtn.isEnabled()) {
 			return;
@@ -218,7 +220,7 @@ public class PostCard extends AbstractCard {
 		}, channelJid);
 	}
 	
-	public static void configureReplySection(final EditText replyContent, final FrameLayout replyButton) {
+	public static void configureReplySection(final EditText replyContent, final Button replyBtn) {
 		replyContent.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -236,8 +238,7 @@ public class PostCard extends AbstractCard {
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
 					int arg3) {
 				boolean enabled = arg0 != null && arg0.length() > 0;
-				replyButton.setEnabled(enabled);
-				replyButton.getChildAt(0).setEnabled(enabled);
+				replyBtn.setEnabled(enabled);
 			}
 			
 		});
