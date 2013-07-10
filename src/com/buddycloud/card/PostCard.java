@@ -19,7 +19,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -36,10 +35,10 @@ import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
 import com.buddycloud.utils.InputUtils;
 import com.buddycloud.utils.MeasuredMediaView;
-import com.buddycloud.utils.Typefaces;
 import com.buddycloud.utils.MeasuredMediaView.MeasureListener;
 import com.buddycloud.utils.TextUtils;
 import com.buddycloud.utils.TimeUtils;
+import com.buddycloud.utils.Typefaces;
 
 public class PostCard extends AbstractCard {
 	
