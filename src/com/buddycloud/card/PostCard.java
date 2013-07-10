@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -111,6 +112,8 @@ public class PostCard extends AbstractCard {
 		TextView contentTextViewAlt = holder.getView(R.id.bcPostContentAlt);
 		
 		final MeasuredMediaView mediaView = holder.getView(R.id.bcImageContent);
+		mediaView.setImageBitmap(null);
+		
 		if (mediaArray != null) {
 			String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
 			
@@ -131,20 +134,20 @@ public class PostCard extends AbstractCard {
 				}
 			});
 			
-			
 			contentTextViewAlt.setVisibility(View.VISIBLE);
 			contentTextView.setVisibility(View.INVISIBLE);
 			contentTextViewAlt.setText(anchoredContent);
 			contentTextViewAlt.setMovementMethod(LinkMovementMethod.getInstance());
 		} else {
-			mediaView.setVisibility(View.INVISIBLE);
-			mediaView.setImageBitmap(null);
-			
+			mediaView.setVisibility(View.GONE);
 			contentTextViewAlt.setVisibility(View.INVISIBLE);
 			contentTextView.setVisibility(View.VISIBLE);
 			contentTextView.setText(anchoredContent);
 			contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		}
+		
+		RelativeLayout topicWrapper = holder.getView(R.id.topicWrapper);
+		topicWrapper.forceLayout();
 		
 		try {
 			long publishedTime = TimeUtils.fromISOToDate(published).getTime();
@@ -288,6 +291,7 @@ public class PostCard extends AbstractCard {
 				R.id.bcPostContent, R.id.bcCommentCount, 
 				R.id.bcImageContent, R.id.bcPostDate, 
 				R.id.replyListView, R.id.replyAuthorView,
-				R.id.replyContentTxt, R.id.replyBtn);
+				R.id.replyContentTxt, R.id.replyBtn, 
+				R.id.topicWrapper);
 	}
 }
