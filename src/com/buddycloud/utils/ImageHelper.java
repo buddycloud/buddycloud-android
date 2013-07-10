@@ -1,5 +1,7 @@
 package com.buddycloud.utils;
 
+import java.io.File;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -11,11 +13,26 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
 
+import com.squareup.picasso.OkHttpLoader;
+import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 public class ImageHelper {
     
 	private static final String TAG = ImageHelper.class.getName();
+	private static final String PICASSO_CACHE = "picasso";
+	private static Picasso PICASSO = null;
+	
+	public static Picasso picasso(Context context) {
+		if (PICASSO == null) {
+			File cacheDir = new File(context.getExternalCacheDir(), PICASSO_CACHE);
+			cacheDir.mkdirs();
+			PICASSO = new Picasso.Builder(context)
+				.loader(new OkHttpLoader(cacheDir))
+				.build();
+		}
+		return PICASSO;
+	}
 	
 	public static Transformation createRoundTransformation(final Context context, 
 			final int roundPixels, final boolean squareEnd, final int targetW) {

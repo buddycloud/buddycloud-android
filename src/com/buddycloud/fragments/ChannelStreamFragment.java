@@ -37,10 +37,10 @@ import com.buddycloud.model.PostsModel;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
+import com.buddycloud.utils.ImageHelper;
 import com.buddycloud.utils.InputUtils;
 import com.buddycloud.utils.JSONUtils;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
-import com.squareup.picasso.Picasso;
 
 public class ChannelStreamFragment extends ContentFragment {
 
@@ -54,7 +54,7 @@ public class ChannelStreamFragment extends ContentFragment {
 		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
 		ImageView avatarView = (ImageView) view.findViewById(R.id.bcCommentPic);
-		Picasso.with(getActivity()).load(avatarURL)
+		ImageHelper.picasso(getActivity()).load(avatarURL)
 				.placeholder(R.drawable.personal_50px)
 				.error(R.drawable.personal_50px)
 				.into(avatarView);

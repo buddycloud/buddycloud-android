@@ -8,8 +8,8 @@ import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,7 +19,6 @@ import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
 import com.buddycloud.utils.TextUtils;
 import com.buddycloud.utils.TimeUtils;
-import com.squareup.picasso.Picasso;
 
 public class CommentCard extends AbstractCard {
 	
@@ -54,7 +53,7 @@ public class CommentCard extends AbstractCard {
 		
 		String avatarURL = AvatarUtils.avatarURL(viewGroup.getContext(), replyAuthor);
 		ImageView avatarView = holder.getView(R.id.bcProfilePic);
-		Picasso.with(viewGroup.getContext()).load(avatarURL)
+		ImageHelper.picasso(viewGroup.getContext()).load(avatarURL)
 				.placeholder(R.drawable.personal_50px)
 				.error(R.drawable.personal_50px)
 				.transform(ImageHelper.createRoundTransformation(

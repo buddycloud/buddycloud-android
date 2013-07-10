@@ -119,7 +119,7 @@ public class BuddycloudHTTPHelper {
 					new DefaultHttpClient().getParams(), registry);
 			
 			DefaultHttpClient client = new DefaultHttpClient(ccm, null);
-			client.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(1, false));
+			client.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(2, true));
 			
 			return client;
 		} catch (Exception e) {
