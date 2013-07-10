@@ -25,8 +25,8 @@ public class TypefacedTextView extends TextView {
         styledAttrs.recycle();
 
         if (fontName != null) {
-            Typeface typeface = Typeface.createFromAsset(context.getAssets(), FONTS_PATH + fontName);
-            setTypeface(typeface);
+        	// use typefaces cache to resolve memory leak issue
+            setTypeface(Typefaces.get(context, FONTS_PATH + fontName));
         }
     }
 
