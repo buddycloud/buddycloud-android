@@ -3,155 +3,152 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#eeeeee" >
-    
-<!-- Remove this Layout -->
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    android:paddingBottom="12dp"
-    android:background="@drawable/bc_shadow">
+
+    <!-- Remove this Layout -->
 
     <RelativeLayout
-        android:id="@+id/topicWrapper"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content">
-    
-    <com.buddycloud.utils.MeasuredMediaView
-        xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
-        android:id="@+id/bcImageContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:adjustViewBounds="true"
-        android:visibility="gone" />
-    
-    <ImageView
-        android:id="@+id/bcProfilePic"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/personal_50px" />
-
-    <com.buddycloud.utils.TypefacedTextView
-        xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
-        android:id="@+id/bcPostContent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/bcProfilePic"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_toRightOf="@+id/bcProfilePic"
-        android:text="Mussum ipsum cacilds, vidis litro abertis."
-        android:textColor="#424242"
-        android:textSize="16sp"
-        buddycloud:typeface="Roboto-Condensed.ttf" />
+        android:background="@drawable/bc_shadow"
+        android:paddingBottom="12dp" >
 
-    <com.buddycloud.utils.TypefacedTextView
-        xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
-        android:id="@+id/bcPostContentAlt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/bcImageContent"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Mussum ipsum cacilds, vidis litro abertis."
-        android:textColor="#424242"
-        android:textSize="16sp"
-        buddycloud:typeface="Roboto-Condensed.ttf" />
-    
-    <com.buddycloud.utils.TypefacedTextView
-        xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
-        android:id="@+id/bcPostDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/bcPostContent"
-        android:layout_marginRight="8dp"
-        android:text="2 hours ago"
-        android:textColor="#d2d2d2"
-        buddycloud:typeface="Roboto-Light.ttf" />
+        <RelativeLayout
+            android:id="@+id/topicWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
+            <com.buddycloud.utils.MeasuredMediaView
+                xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+                android:id="@+id/bcImageContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:adjustViewBounds="true"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/bcProfilePic"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/personal_50px" />
+
+            <com.buddycloud.utils.TypefacedTextView
+                xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+                android:id="@+id/bcPostContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/bcProfilePic"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_toRightOf="@+id/bcProfilePic"
+                android:text="Mussum ipsum cacilds, vidis litro abertis."
+                android:textColor="#424242"
+                android:textSize="16sp"
+                buddycloud:typeface="Roboto-Condensed.ttf" />
+
+            <com.buddycloud.utils.TypefacedTextView
+                xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+                android:id="@+id/bcPostContentAlt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/bcImageContent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Mussum ipsum cacilds, vidis litro abertis."
+                android:textColor="#424242"
+                android:textSize="16sp"
+                buddycloud:typeface="Roboto-Condensed.ttf" />
+
+            <com.buddycloud.utils.TypefacedTextView
+                xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+                android:id="@+id/bcPostDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/bcPostContent"
+                android:layout_marginRight="8dp"
+                android:text="2 hours ago"
+                android:textColor="#d2d2d2"
+                buddycloud:typeface="Roboto-Light.ttf" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/replyListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/topicWrapper"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="8dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false"
+            android:orientation="vertical" >
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/replyFrameView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/replyListView"
+            android:layout_marginTop="8dp"
+            android:gravity="bottom"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/replyAuthorView"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="8dp"
+                android:src="@drawable/personal_50px" />
+
+            <EditText
+                android:id="@+id/replyContentTxt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:hint="add your comment"
+                android:imeOptions="actionNone"
+                android:inputType="textMultiLine"
+                android:textSize="16sp" >
+            </EditText>
+
+            <LinearLayout
+                android:id="@+id/replyBtnWrapper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginRight="8dp" >
+
+                <Button
+                    android:id="@+id/replyBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/reply_btn_selector"
+                    android:padding="2dp"
+                    android:text="Comment"
+                    android:textSize="12sp" >
+                </Button>
+            </LinearLayout>
+        </LinearLayout>
     </RelativeLayout>
-    
-    <LinearLayout
-        android:id="@+id/replyListView"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/topicWrapper"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false" >
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/replyFrameView"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/replyListView"
-        android:layout_marginTop="8dp" >
-
-	    <ImageView
-	        android:id="@+id/replyAuthorView"
-	        android:layout_width="48dp"
-	        android:layout_height="48dp"
-	        android:layout_marginLeft="8dp"
-	        android:src="@drawable/personal_50px" />
-	    
-	    <EditText
-	        android:id="@+id/replyContentTxt"
-	        android:layout_height="wrap_content"
-	        android:layout_width="0dp"
-	        android:layout_weight="1"
-	        android:layout_gravity="bottom"
-	        android:layout_marginLeft="8dp"
-	        android:layout_marginRight="8dp"
-	        android:hint="add your comment"
-	        android:inputType="textMultiLine"
-	        android:imeOptions="actionNone"
-	        android:textSize="16sp" >
-	
-	    </EditText>
-	
-	    <FrameLayout
-	        android:id="@+id/replyBtn"
-	        android:layout_width="wrap_content"
-	        android:layout_height="match_parent"
-	        android:layout_marginRight="8dp"
-	        android:background="@drawable/reply_btn_selector" >
-	        
-	        <com.buddycloud.utils.TypefacedTextView
-	            xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="center"
-	            android:layout_marginLeft="4dp"
-	            android:layout_marginRight="4dp"
-	            android:text="comment"
-	            android:textColor="@color/reply_txt_selector"
-	            buddycloud:typeface="Roboto-Light.ttf" />
-	    </FrameLayout>
-        
-    </LinearLayout>
-    
-</RelativeLayout>
 
 </RelativeLayout>
