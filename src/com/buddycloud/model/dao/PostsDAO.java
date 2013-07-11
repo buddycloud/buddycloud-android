@@ -134,6 +134,14 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 				cursorParser());
 	}
 	
+	public JSONObject getOldest(String channelJid) {
+		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channelJid + "\"";
+		String orderBy = "datetime(" + PostsTableHelper.COLUMN_UPDATED + ") ASC";
+		return DAOHelper.queryUniqueOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
+				null, null, null, orderBy, String.valueOf(1), 
+				cursorParser());
+	}
+	
 	private DAOCursorParser cursorParser() {
 		DAOCursorParser cursorParser = new DAOCursorParser() {
 			@Override

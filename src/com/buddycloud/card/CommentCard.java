@@ -34,6 +34,11 @@ public class CommentCard extends AbstractCard {
 		this.activity = activity;
 		this.anchoredContent = TextUtils.anchor(content);
 	}
+	
+	@Override
+	public String getId() {
+		return null;
+	}
 
 	@Override
 	public View getContentView(int position, View convertView,

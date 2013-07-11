@@ -104,12 +104,13 @@ public class ChannelStreamFragment extends ContentFragment implements OnRefreshL
 		ListView contentView = (ListView) view.findViewById(R.id.postsStream);
 		this.cardAdapter = new CardListAdapter();
 		contentView.setAdapter(cardAdapter);
-		fillAdapter(context, cardAdapter);
+		fillAdapter(context);
+		contentView.setOnScrollListener(new EndlessScrollListener(this));
 		
 		PostsModel.getInstance().fill(getActivity(), new ModelCallback<Void>() {
 			@Override
 			public void success(Void voidd) {
-				fillAdapter(getActivity(), cardAdapter);
+				fillAdapter(getActivity());
 			}
 
 			@Override
@@ -119,8 +120,21 @@ public class ChannelStreamFragment extends ContentFragment implements OnRefreshL
 		}, getChannelJid());
 	}
 
-	private void fillAdapter(Context context, final CardListAdapter cardAdapter) {
-		cardAdapter.clear();
+	protected void fillMore() {
+		PostsModel.getInstance().fillMore(getActivity(), new ModelCallback<Void>() {
+			@Override
+			public void success(Void response) {
+				fillAdapter(getActivity());
+			}
+			
+			@Override
+			public void error(Throwable throwable) {
+				// TODO Auto-generated method stub
+			}
+		}, getChannelJid());
+	}
+	
+	private void fillAdapter(Context context) {
 		String channelJid = getChannelJid();
 		JSONArray allPosts = PostsModel.getInstance().getFromCache(context, channelJid);
 		for (int i = 0; i < allPosts.length(); i++) {
@@ -312,7 +326,7 @@ public class ChannelStreamFragment extends ContentFragment implements OnRefreshL
 		PostsModel.getInstance().fill(getActivity(), new ModelCallback<Void>() {
 			@Override
 			public void success(Void voidd) {
-				fillAdapter(getActivity(), cardAdapter);
+				fillAdapter(getActivity());
 				getPullToRefreshAttacher().setRefreshComplete();
 			}
 

@@ -58,6 +58,10 @@ public class PostCard extends AbstractCard {
 		fillReplyAdapter(activity);
 	}
 
+	public String getId() {
+		return post.optString("id");
+	}
+	
 	private void fillReplyAdapter(Context context) {
 		JSONArray comments = post.optJSONArray("replies");
 		for (int i = 0; i < comments.length(); i++) {

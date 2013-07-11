@@ -139,8 +139,8 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 	}
 
 	private void fetchPosts(final Context context, final String channelJid, 
-			final ModelCallback<Void> callback) {
-		BuddycloudHTTPHelper.getArray(postsUrl(context, channelJid), context,
+			final ModelCallback<Void> callback, String after) {
+		BuddycloudHTTPHelper.getArray(postsUrl(context, channelJid, after), context,
 				new ModelCallback<JSONArray>() {
 
 			@Override
@@ -157,6 +157,15 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 				}
 			}
 		});
+	}
+	
+	private String postsUrl(Context context, String channel, String after) {
+		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
+		String postsURL = apiAddress + "/" + channel + POSTS_ENDPOINT + "?max=" + PAGE_SIZE;
+		if (after != null) {
+			postsURL += "&after=" + after;
+		}
+		return postsURL;
 	}
 	
 	private String postsUrl(Context context, String channel) {
@@ -198,9 +207,16 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		
 	}
 
+	public void fillMore(Context context, ModelCallback<Void> callback, String... p) {
+		String channelJid = p[0];
+		JSONObject oldest = PostsDAO.getInstance(context).getOldest(channelJid);
+		String oldestPostId = oldest == null ? null : oldest.optString("id");
+		fetchPosts(context, channelJid, callback, oldestPostId);
+	}
+	
 	@Override
 	public void fill(Context context, ModelCallback<Void> callback, String... p) {
 		String channelJid = p[0];
-		fetchPosts(context, channelJid, callback);
+		fetchPosts(context, channelJid, callback, null);
 	}
 }
