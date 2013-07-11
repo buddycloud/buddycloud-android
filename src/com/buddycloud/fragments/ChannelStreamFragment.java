@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -42,7 +44,9 @@ import com.buddycloud.utils.InputUtils;
 import com.buddycloud.utils.JSONUtils;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
-public class ChannelStreamFragment extends ContentFragment {
+public class ChannelStreamFragment extends ContentFragment implements OnRefreshListener {
+
+	private CardListAdapter cardAdapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,7 +79,15 @@ public class ChannelStreamFragment extends ContentFragment {
 		
 		syncd(view, getActivity());
 		
+		getPullToRefreshAttacher().setRefreshableView((ListView) view.findViewById(R.id.postsStream), this);
+		
 		return view;
+	}
+
+	private PullToRefreshAttacher getPullToRefreshAttacher() {
+		MainActivity activity = (MainActivity) getActivity();
+        PullToRefreshAttacher attacher = activity.getPullToRefreshAttacher();
+		return attacher;
 	}
 
 	private String getChannelJid() {
@@ -90,7 +102,7 @@ public class ChannelStreamFragment extends ContentFragment {
 		
 		view.findViewById(R.id.subscribedProgress).setVisibility(View.GONE);
 		ListView contentView = (ListView) view.findViewById(R.id.postsStream);
-		final CardListAdapter cardAdapter = new CardListAdapter();
+		this.cardAdapter = new CardListAdapter();
 		contentView.setAdapter(cardAdapter);
 		fillAdapter(context, cardAdapter);
 		
@@ -294,4 +306,22 @@ public class ChannelStreamFragment extends ContentFragment {
 		getActivity().startActivityForResult(
 				intent, GenericChannelActivity.REQUEST_CODE);
 	}
+
+	@Override
+    public void onRefreshStarted(View view) {
+		PostsModel.getInstance().fill(getActivity(), new ModelCallback<Void>() {
+			@Override
+			public void success(Void voidd) {
+				fillAdapter(getActivity(), cardAdapter);
+				getPullToRefreshAttacher().setRefreshComplete();
+			}
+
+			@Override
+			public void error(Throwable throwable) {
+				Toast.makeText(getActivity(), 
+						getString(R.string.pull_to_refresh_error), Toast.LENGTH_LONG).show();
+				getPullToRefreshAttacher().setRefreshComplete();
+			}
+		}, getChannelJid());
+    }
 }

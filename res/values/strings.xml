@@ -42,4 +42,6 @@
 	<string name="login_error_wrong_credentials">Wrong credentials</string>
 	<string name="login_error_bad_channel_format">Bad channel format. Expected format is user@domain.</string>
 	
+	<string name="pull_to_refresh_error">Could not fetch latest posts.</string>
+	
 </resources>
