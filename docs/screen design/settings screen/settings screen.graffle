@@ -324,7 +324,7 @@
 					<array>
 						<dict>
 							<key>Bounds</key>
-							<string>{{908.70892, 1199.9999}, {254.56265, 52.721012}}</string>
+							<string>{{396.7088, 1216.0001}, {254.56265, 52.721012}}</string>
 							<key>Class</key>
 							<string>ShapedGraphic</string>
 							<key>FontInfo</key>
@@ -400,7 +400,7 @@
 						</dict>
 						<dict>
 							<key>Bounds</key>
-							<string>{{908.70697, 1204.1594}, {243.98692, 25.867537}}</string>
+							<string>{{396.70685, 1220.1597}, {243.98692, 25.867537}}</string>
 							<key>Class</key>
 							<string>ShapedGraphic</string>
 							<key>FontInfo</key>
@@ -461,7 +461,7 @@
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{831.99988, 1235.3038}, {408.00021, 196.69612}}</string>
+					<string>{{319.99976, 1251.3041}, {408.00021, 196.69612}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FontInfo</key>
@@ -1653,29 +1653,26 @@ schnouki@pouet.im (these are channel links)\
 						dHlwZXNldHRpbmcsIHJlbWFpbmlu
 						ZyBlc3NlbnRpYWxseSB1bmNoYW5n
 						ZWQuIIaEAmlJAYGhAJKEhIQMTlNE
-						aWN0aW9uYXJ5AJSEAWkEkoSWlhBO
-						U1BhcmFncmFwaFN0eWxlhpKEhIQQ
-						TlNQYXJhZ3JhcGhTdHlsZQCUhARD
-						Q0BTAACEhIQHTlNBcnJheQCUmQyS
-						hISECU5TVGV4dFRhYgCUhAJDZgAc
-						hpKEn54AOIaShJ+eAFSGkoSfngBw
-						hpKEn54AgYwAhpKEn54AgagAhpKE
-						n54AgcQAhpKEn54AgeAAhpKEn54A
-						gfwAhpKEn54AgRgBhpKEn54AgTQB
-						hpKEn54AgVABhoYAhpKElpYOTlNP
-						cmlnaW5hbEZvbnSGkoSEhAZOU0Zv
-						bnQelJkohAVbNDBjXQYAAAAeAAAA
-						//5SAG8AYgBvAHQAbwAtAFIAZQBn
-						AHUAbABhAHIAAACEAWYUhAFjAKIB
-						ogCiAIaShJaWBk5TRm9udIaSrJKE
-						lpYHTlNDb2xvcoaShISEB05TQ29s
-						b3IAlKIChARmZmZmg4GAgD2D5uRk
-						PoOPjo4+AYaGlwKBYwGShJiZBJKZ
-						koSEhBdOU011dGFibGVQYXJhZ3Jh
-						cGhTdHlsZQCbmwMAhJ2ZAIaBIgKE
-						BFszZl0ODiSGkquSrJKukqySr5KE
-						saICpIOBgIA9g+bkZD6Dj46OPgGG
-						hoY=
+						aWN0aW9uYXJ5AJSEAWkDkoSWlgdO
+						U0NvbG9yhpKEhIQHTlNDb2xvcgCU
+						hAFjAoQEZmZmZoOBgIA9g+bkZD6D
+						j46OPgGGkoSWlhBOU1BhcmFncmFw
+						aFN0eWxlhpKEhIQQTlNQYXJhZ3Jh
+						cGhTdHlsZQCUhARDQ0BTAACEhIQH
+						TlNBcnJheQCUmQyShISECU5TVGV4
+						dFRhYgCUhAJDZgAchpKEoqEAOIaS
+						hKKhAFSGkoSioQBwhpKEoqEAgYwA
+						hpKEoqEAgagAhpKEoqEAgcQAhpKE
+						oqEAgeAAhpKEoqEAgfwAhpKEoqEA
+						gRgBhpKEoqEAgTQBhpKEoqEAgVAB
+						hoYAhpKElpYGTlNGb250hpKEhIQG
+						TlNGb250HpSZKIQFWzQwY10GAAAA
+						HgAAAP/+UgBvAGIAbwB0AG8ALQBS
+						AGUAZwB1AGwAYQByAAAAhAFmFJsA
+						mwGbAJsAhoaXAoFjAZKEmJkDkpmS
+						hJubApyDgYCAPYPm5GQ+g4+Ojj4B
+						hpKckoSengMAhKCZAIaBIgKEBFsz
+						Zl0ODiSGkq6Sr4aG
 						</data>
 						<key>Text</key>
 						<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf390
@@ -2157,7 +2154,7 @@ schnouki@pouet.im (these are channel links)\
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
 
-\f0\fs48 \cf0 Learn about buddycloud}</string>
+\f0\fs48 \cf0 About buddycloud}</string>
 				<key>VerticalPad</key>
 				<integer>2</integer>
 			</dict>
@@ -2214,7 +2211,7 @@ schnouki@pouet.im (these are channel links)\
 {\colortbl;\red255\green255\blue255;\red153\green153\blue153;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
 
-\f0\fs40 \cf2 BUDDYCLOUD}</string>
+\f0\fs40 \cf2 ABOUT}</string>
 				<key>VerticalPad</key>
 				<integer>2</integer>
 			</dict>
@@ -2312,408 +2309,6 @@ schnouki@pouet.im (these are channel links)\
 					<real>2</real>
 				</dict>
 			</dict>
-		</dict>
-		<dict>
-			<key>Class</key>
-			<string>Group</string>
-			<key>Graphics</key>
-			<array>
-				<dict>
-					<key>Bounds</key>
-					<string>{{743.99988, 1100}, {183.95135, 28}}</string>
-					<key>Class</key>
-					<string>ShapedGraphic</string>
-					<key>FitText</key>
-					<string>Vertical</string>
-					<key>Flow</key>
-					<string>Resize</string>
-					<key>FontInfo</key>
-					<dict>
-						<key>Font</key>
-						<string>Roboto-Bold</string>
-						<key>Size</key>
-						<real>20</real>
-					</dict>
-					<key>ID</key>
-					<integer>90238</integer>
-					<key>Shape</key>
-					<string>Rectangle</string>
-					<key>Style</key>
-					<dict>
-						<key>fill</key>
-						<dict>
-							<key>Draws</key>
-							<string>NO</string>
-						</dict>
-						<key>shadow</key>
-						<dict>
-							<key>Draws</key>
-							<string>NO</string>
-						</dict>
-						<key>stroke</key>
-						<dict>
-							<key>Draws</key>
-							<string>NO</string>
-						</dict>
-					</dict>
-					<key>Text</key>
-					<dict>
-						<key>Align</key>
-						<integer>0</integer>
-						<key>Pad</key>
-						<integer>2</integer>
-						<key>Text</key>
-						<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf390
-\cocoascreenfonts1{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;\red153\green153\blue153;}
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
-
-\f0\fs40 \cf2 DANGER ZONE}</string>
-						<key>VerticalPad</key>
-						<integer>2</integer>
-					</dict>
-				</dict>
-				<dict>
-					<key>AllowConnections</key>
-					<string>NO</string>
-					<key>AllowToConnect</key>
-					<false/>
-					<key>Class</key>
-					<string>LineGraphic</string>
-					<key>FontInfo</key>
-					<dict>
-						<key>Font</key>
-						<string>Helvetica</string>
-						<key>Size</key>
-						<real>19</real>
-					</dict>
-					<key>ID</key>
-					<integer>90239</integer>
-					<key>Points</key>
-					<array>
-						<string>{743.99988, 1135.5}</string>
-						<string>{1272, 1135.5}</string>
-					</array>
-					<key>Style</key>
-					<dict>
-						<key>stroke</key>
-						<dict>
-							<key>Color</key>
-							<dict>
-								<key>a</key>
-								<string>0.23</string>
-								<key>b</key>
-								<string>0</string>
-								<key>g</key>
-								<string>0</string>
-								<key>r</key>
-								<string>0</string>
-							</dict>
-							<key>HeadArrow</key>
-							<string>0</string>
-							<key>TailArrow</key>
-							<string>0</string>
-							<key>Width</key>
-							<real>2</real>
-						</dict>
-					</dict>
-				</dict>
-				<dict>
-					<key>Bounds</key>
-					<string>{{1172.9999, 1104}, {99, 24}}</string>
-					<key>Class</key>
-					<string>ShapedGraphic</string>
-					<key>ID</key>
-					<integer>90240</integer>
-					<key>ImageID</key>
-					<integer>111</integer>
-					<key>Shape</key>
-					<string>Rectangle</string>
-					<key>Style</key>
-					<dict>
-						<key>fill</key>
-						<dict>
-							<key>Draws</key>
-							<string>NO</string>
-						</dict>
-						<key>shadow</key>
-						<dict>
-							<key>Draws</key>
-							<string>NO</string>
-						</dict>
-						<key>stroke</key>
-						<dict>
-							<key>Draws</key>
-							<string>NO</string>
-						</dict>
-					</dict>
-				</dict>
-				<dict>
-					<key>Class</key>
-					<string>Group</string>
-					<key>Graphics</key>
-					<array>
-						<dict>
-							<key>Bounds</key>
-							<string>{{905.99988, 1159}, {219, 26}}</string>
-							<key>Class</key>
-							<string>ShapedGraphic</string>
-							<key>FitText</key>
-							<string>YES</string>
-							<key>Flow</key>
-							<string>Resize</string>
-							<key>FontInfo</key>
-							<dict>
-								<key>Color</key>
-								<dict>
-									<key>b</key>
-									<string>0.182172</string>
-									<key>g</key>
-									<string>0.182211</string>
-									<key>r</key>
-									<string>0.182183</string>
-								</dict>
-								<key>Font</key>
-								<string>Roboto-Regular</string>
-								<key>Size</key>
-								<real>14</real>
-							</dict>
-							<key>ID</key>
-							<integer>90242</integer>
-							<key>Shape</key>
-							<string>Rectangle</string>
-							<key>Style</key>
-							<dict>
-								<key>fill</key>
-								<dict>
-									<key>Draws</key>
-									<string>NO</string>
-								</dict>
-								<key>shadow</key>
-								<dict>
-									<key>Draws</key>
-									<string>NO</string>
-								</dict>
-								<key>stroke</key>
-								<dict>
-									<key>Draws</key>
-									<string>NO</string>
-								</dict>
-							</dict>
-							<key>Text</key>
-							<dict>
-								<key>Align</key>
-								<integer>0</integer>
-								<key>Pad</key>
-								<integer>2</integer>
-								<key>RTFD</key>
-								<data>
-								BAtzdHJlYW10
-								eXBlZIHoA4QB
-								QISEhBJOU0F0
-								dHJpYnV0ZWRT
-								dHJpbmcAhIQI
-								TlNPYmplY3QA
-								hZKEhIQITlNT
-								dHJpbmcBlIQB
-								KxlkZWxldGUg
-								YnVkZHljbG91
-								ZCBhY2NvdW50
-								hoQCaUkBGZKE
-								hIQMTlNEaWN0
-								aW9uYXJ5AJSE
-								AWkDkoSWlgdO
-								U0NvbG9yhpKE
-								hIQHTlNDb2xv
-								cgCUhAFjAoQE
-								ZmZmZoPOzEw+
-								g87MTD6DzsxM
-								PgGGkoSWlhBO
-								U1BhcmFncmFw
-								aFN0eWxlhpKE
-								hIQQTlNQYXJh
-								Z3JhcGhTdHls
-								ZQCUhARDQ0BT
-								AACEhIQHTlNB
-								cnJheQCUmQyS
-								hISECU5TVGV4
-								dFRhYgCUhAJD
-								ZgAchpKEoqEA
-								OIaShKKhAFSG
-								koSioQBwhpKE
-								oqEAgYwAhpKE
-								oqEAgagAhpKE
-								oqEAgcQAhpKE
-								oqEAgeAAhpKE
-								oqEAgfwAhpKE
-								oqEAgRgBhpKE
-								oqEAgTQBhpKE
-								oqEAgVABhoYA
-								hpKElpYGTlNG
-								b250hpKEhIQG
-								TlNGb250HpSZ
-								HIQFWzI4Y10G
-								AAAAFAAAAP/+
-								SABlAGwAdgBl
-								AHQAaQBjAGEA
-								hAFmEpsAmwGb
-								AJsAhoaG
-								</data>
-								<key>Text</key>
-								<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf390
-\cocoascreenfonts1{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;\red38\green38\blue38;}
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
-
-\f0\fs36 \cf2 delete buddycloud account}</string>
-								<key>VerticalPad</key>
-								<integer>2</integer>
-							</dict>
-							<key>Wrap</key>
-							<string>NO</string>
-						</dict>
-						<dict>
-							<key>Class</key>
-							<string>Group</string>
-							<key>Graphics</key>
-							<array>
-								<dict>
-									<key>Bounds</key>
-									<string>{{893.99994, 1152}, {20.817204, 42}}</string>
-									<key>Class</key>
-									<string>ShapedGraphic</string>
-									<key>ID</key>
-									<integer>90244</integer>
-									<key>ImageID</key>
-									<integer>104</integer>
-									<key>Shape</key>
-									<string>Rectangle</string>
-									<key>Style</key>
-									<dict>
-										<key>shadow</key>
-										<dict>
-											<key>Draws</key>
-											<string>NO</string>
-										</dict>
-										<key>stroke</key>
-										<dict>
-											<key>Draws</key>
-											<string>NO</string>
-										</dict>
-									</dict>
-								</dict>
-								<dict>
-									<key>Bounds</key>
-									<string>{{1115.1825, 1152}, {20.817204, 42}}</string>
-									<key>Class</key>
-									<string>ShapedGraphic</string>
-									<key>ID</key>
-									<integer>90245</integer>
-									<key>ImageID</key>
-									<integer>101</integer>
-									<key>Shape</key>
-									<string>Rectangle</string>
-									<key>Style</key>
-									<dict>
-										<key>shadow</key>
-										<dict>
-											<key>Draws</key>
-											<string>NO</string>
-										</dict>
-										<key>stroke</key>
-										<dict>
-											<key>Draws</key>
-											<string>NO</string>
-										</dict>
-									</dict>
-								</dict>
-								<dict>
-									<key>Bounds</key>
-									<string>{{914.81702, 1152}, {200.36557, 42}}</string>
-									<key>Class</key>
-									<string>ShapedGraphic</string>
-									<key>ID</key>
-									<integer>90246</integer>
-									<key>ImageID</key>
-									<integer>107</integer>
-									<key>Shape</key>
-									<string>Rectangle</string>
-									<key>Style</key>
-									<dict>
-										<key>shadow</key>
-										<dict>
-											<key>Draws</key>
-											<string>NO</string>
-										</dict>
-										<key>stroke</key>
-										<dict>
-											<key>Draws</key>
-											<string>NO</string>
-										</dict>
-									</dict>
-								</dict>
-							</array>
-							<key>ID</key>
-							<integer>90243</integer>
-						</dict>
-					</array>
-					<key>ID</key>
-					<integer>90241</integer>
-				</dict>
-				<dict>
-					<key>Bounds</key>
-					<string>{{743.99988, 1136}, {528, 72}}</string>
-					<key>Class</key>
-					<string>ShapedGraphic</string>
-					<key>FontInfo</key>
-					<dict>
-						<key>Font</key>
-						<string>Oxygen-Regular</string>
-						<key>Size</key>
-						<real>29</real>
-					</dict>
-					<key>ID</key>
-					<integer>90247</integer>
-					<key>Shape</key>
-					<string>Rectangle</string>
-					<key>Style</key>
-					<dict>
-						<key>fill</key>
-						<dict>
-							<key>Color</key>
-							<dict>
-								<key>b</key>
-								<string>0.109196</string>
-								<key>g</key>
-								<string>0</string>
-								<key>r</key>
-								<string>0.731307</string>
-							</dict>
-						</dict>
-						<key>shadow</key>
-						<dict>
-							<key>Draws</key>
-							<string>NO</string>
-						</dict>
-						<key>stroke</key>
-						<dict>
-							<key>Draws</key>
-							<string>NO</string>
-						</dict>
-					</dict>
-					<key>Text</key>
-					<dict>
-						<key>Align</key>
-						<integer>0</integer>
-					</dict>
-					<key>TextPlacement</key>
-					<integer>0</integer>
-				</dict>
-			</array>
-			<key>ID</key>
-			<integer>90237</integer>
-			<key>Layer</key>
-			<integer>4</integer>
 		</dict>
 		<dict>
 			<key>Bounds</key>
@@ -3640,38 +3235,6 @@ schnouki@pouet.im (these are channel links)\
 			</dict>
 		</dict>
 		<dict>
-			<key>Bounds</key>
-			<string>{{518, 1104}, {98, 24}}</string>
-			<key>Class</key>
-			<string>ShapedGraphic</string>
-			<key>ID</key>
-			<integer>1964</integer>
-			<key>ImageID</key>
-			<integer>112</integer>
-			<key>Layer</key>
-			<integer>4</integer>
-			<key>Shape</key>
-			<string>Rectangle</string>
-			<key>Style</key>
-			<dict>
-				<key>fill</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-				<key>shadow</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-				<key>stroke</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-			</dict>
-		</dict>
-		<dict>
 			<key>Class</key>
 			<string>Group</string>
 			<key>Graphics</key>
@@ -4313,109 +3876,6 @@ schnouki@pouet.im (these are channel links)\
 			<key>Extension</key>
 			<string>png</string>
 			<key>ID</key>
-			<integer>112</integer>
-			<key>RawData</key>
-			<data>
-			iVBORw0KGgoAAAANSUhEUgAAAGIAAAAYCAYAAAABHCipAAAAGXRF
-			WHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0
-			WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i
-			77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4
-			OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1w
-			dGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3Nywg
-			MjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYg
-			eG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIy
-			LXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6
-			YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5j
-			b20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMu
-			YWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4
-			bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8i
-			IHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowMTgw
-			MTE3NDA3MjA2ODExOTQ1N0NBODhEMkUwODE0NSIgeG1wTU06RG9j
-			dW1lbnRJRD0ieG1wLmRpZDpGMTgyMzMzMUQ0NEYxMUUxQkNDRUM2
-			MEFGNjk5QzY5QyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpG
-			MTgyMzMzMEQ0NEYxMUUxQkNDRUM2MEFGNjk5QzY5QyIgeG1wOkNy
-			ZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9z
-			aCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlE
-			PSJ4bXAuaWlkOjIzQTM4QTZCNTYyNjY4MTE5MkIwOTM5OTFERDRE
-			MTRFIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjAxODAxMTc0
-			MDcyMDY4MTE5NDU3Q0E4OEQyRTA4MTQ1Ii8+IDwvcmRmOkRlc2Ny
-			aXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNr
-			ZXQgZW5kPSJyIj8+poCowAAAAoNJREFUeNrsWjFv2kAUtg22AxZm
-			YgFlahASHYAsiHZiSgusVAyMXfkt7KzsSI0QK0NpYQpCQACBxIDE
-			EJCgxoCNU9x3UV0hC6KmQUTX3DeAfCef3nvffffes00nk0l2u91+
-			VFWV1TTNqus6TWECmqZ1lmXveZ7XGIbRKYxhRT+IhGg0+i4QCPjB
-			OWyIgE2jNxqN23K5/N1ms22wJkKSJNpisXBAxlmr1Rotl8sN+IeD
-			GihBEB7sBkVzYLOGFIK1IsAJVpZlKzi0wUgNFNi8Wa1WLLKfwhwM
-			RUCIICBEECIIHknWzwGUvOd+v/+Nw+EQp9PppFartcfjsWTMeTwe
-			l/keRVHUbrc7CgaDF/vWLJVKN0QRT0AsFru8AkAJqTabzVtorPh0
-			Ov3J6/U+BB+R4PP53u671+VyOUOhUIRo4ZmKcLvdIgpksVi8hqZq
-			hMaq1eoAyJESicSHbDabR2PQl/zYt8ORWl7r7j+qItCxAjW8ZJBg
-			oFKptO12u2gEmuAEOQLtdvMYdOrq7jXLsmdmUnbJM88Nh8M78xqE
-			iCNAEAQxHA6HDhFhngOVVYGICSHiyJjP53e5XO760PxjcyRH/AVm
-			s5kElc+5KIr87ngkErkwjhgS3hMQgSok2O2TeDweMchAZesloNPp
-			3LzGc/7FjqZ8Pv8llUpdZTKZz+ha0zR1MBi0C4VClYT2aaChH+MY
-			hklBT/Aeyk7tXxdCauj3+ydPsugxeL1e/wZFwRzn9xFHe9b0EiT8
-			lzkCh7dy+4Cr3YeI+CnLMr9YLDicjEf2IruR/dgna6h49PV6rfR6
-			PRkqnQBuDoD9DY7jFJzzw5+qCRy5h7+y0+n8iuPnNL/txxq/BBgA
-			7lIujgb83J0AAAAASUVORK5CYII=
-			</data>
-		</dict>
-		<dict>
-			<key>Extension</key>
-			<string>png</string>
-			<key>ID</key>
-			<integer>111</integer>
-			<key>RawData</key>
-			<data>
-			iVBORw0KGgoAAAANSUhEUgAAAGMAAAAYCAYAAADu3kOXAAAAGXRF
-			WHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0
-			WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i
-			77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4
-			OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1w
-			dGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3Nywg
-			MjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYg
-			eG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIy
-			LXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6
-			YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5j
-			b20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMu
-			YWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4
-			bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8i
-			IHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowMTgw
-			MTE3NDA3MjA2ODExOTQ1N0NBODhEMkUwODE0NSIgeG1wTU06RG9j
-			dW1lbnRJRD0ieG1wLmRpZDpGMTk0RkNFOEQ0NEYxMUUxQkNDRUM2
-			MEFGNjk5QzY5QyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpG
-			MTgyMzMzOEQ0NEYxMUUxQkNDRUM2MEFGNjk5QzY5QyIgeG1wOkNy
-			ZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9z
-			aCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlE
-			PSJ4bXAuaWlkOjIzQTM4QTZCNTYyNjY4MTE5MkIwOTM5OTFERDRE
-			MTRFIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjAxODAxMTc0
-			MDcyMDY4MTE5NDU3Q0E4OEQyRTA4MTQ1Ii8+IDwvcmRmOkRlc2Ny
-			aXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNr
-			ZXQgZW5kPSJyIj8+xXjttQAAAqpJREFUeNpiDA0NZWVgYPBgGMLg
-			379/jD9//mT9/fs3y////xmHirsZGRn/s7Ky/mFnZ/+9du3aTSwM
-			wwCAIuKtS1KkuLK6OdCHTEPG4f///3t59+ZJ4T3zloO4Qz4yQDnh
-			KyMr53lWMX2e559+ffr1999QcTsfGzPTF6C7LRlZN4AyyrDIGb8Z
-			mdn+/f7N+Ok/w7+h5G5wwvnzmxHkfhCfiWEUDBowGhmjkTEKRiNj
-			kAOW0SCAABEOVqYsPUl+Bxl+zg8///zb/+Tjt8kXn32CydeZyQne
-			+/jj95Kbr74g68vVl+K7+/HHn20P3n0bzRlUiogTYfqyoIhYf/ft
-			lwuvv/7M15cSnOeiKgZTU20qK9xnpySmJsDJiqw3UFmYx0SMh320
-			mKIS6LJREHn05edvp3WXn4FyQ9OpR+8tVl187KMozANK+TB1/MB+
-			wQwnFdHROoOGABTooByBLPbmx+9/S2+8+ghK+TCxaZeev9cR5uZA
-			jqDRyKAyAKV4ULmPLv4eWHeg85tPPXpTayYnAiraRiNjgAGoGLvy
-			9uuPWc4qYqORMQhAxr47r22k+Lli1MV4RiODyuDK228/XWUFONHF
-			/ZWEeS4CW1bo4rc+fP895eKz96DWFT8bC/NoZFAR9J9/+j5aQ4zf
-			S0GIC7lfIcvLzjr98vNP2PSAWlyPP//8rSPMxU4td4x2+oAA1JET
-			5GBhWuCqJgGqzGG5xX/z1aegXIBLX86BO68OBOvJjkYGDSpmEAZ1
-			6t79+PMX1LRFlmefevQOup7jLz7/xCY+GhlUAvhyAq3BaJ0xiMCw
-			iAzm///+MPz+yQjGQwlA3Qx2/3AopkArLHj///rK/fDSxS/MXKZD
-			zf08f7+dBrkfyPw/LOoMNja2P9YPDi39/fv3yqG4VAfkfhAfIMAA
-			INwdecPtMwsAAAAASUVORK5CYII=
-			</data>
-		</dict>
-		<dict>
-			<key>Extension</key>
-			<string>png</string>
-			<key>ID</key>
 			<integer>110</integer>
 			<key>RawData</key>
 			<data>
@@ -4471,42 +3931,6 @@ schnouki@pouet.im (these are channel links)\
 			Jx0b5g6aMJXm3YSt5erXcVDcSLRknKCCuTFIgGJeol3Q7bCCpoMV
 			VrvhEyhJf/WjNBHE0FR/r88XQyD5p7vSO0M1nGAofw9Yar0J/3P/
 			BX4nQPj73/A/Ab8T+C7AALvEHikC1jhfAAAAAElFTkSuQmCC
-			</data>
-		</dict>
-		<dict>
-			<key>Extension</key>
-			<string>png</string>
-			<key>ID</key>
-			<integer>107</integer>
-			<key>RawData</key>
-			<data>
-			iVBORw0KGgoAAAANSUhEUgAAAJoAAAAqCAYAAABLNUJiAAAAGXRF
-			WHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0
-			WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i
-			77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4
-			OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1w
-			dGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwg
-			MjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYg
-			eG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIy
-			LXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6
-			YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29t
-			L3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2Jl
-			LmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9u
-			cy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMi
-			IHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNS4x
-			IE1hY2ludG9zaCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpD
-			RjZBMkE5NDU4RUIxMUUxOTQxOUU0QkNBRjUxNzRCMSIgeG1wTU06
-			RG9jdW1lbnRJRD0ieG1wLmRpZDpDRjZBMkE5NTU4RUIxMUUxOTQx
-			OUU0QkNBRjUxNzRCMSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJl
-			ZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkNGNkEyQTkyNThFQjExRTE5
-			NDE5RTRCQ0FGNTE3NEIxIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAu
-			ZGlkOkNGNkEyQTkzNThFQjExRTE5NDE5RTRCQ0FGNTE3NEIxIi8+
-			IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBt
-			ZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+g5dulgAAAIVJREFUeNrs
-			0jERgEAMRFGOOQHYoEMvRiIhDVUUgYlwzXsza2Dnj6q6N2g2M/Nx
-			A912FyA0hAZCQ2gIDYSG0EBoCA2hgdAQGggNoSE0EBpCA6EhNIQG
-			QkNoIDSEhtBAaAgNoYHQEBoIDaEhNBAaQgOhsdKMiNMNdBvfLjfw
-			R2iHG+j2CjAAyEwJFUe5j/gAAAAASUVORK5CYII=
 			</data>
 		</dict>
 		<dict>
@@ -4580,79 +4004,6 @@ schnouki@pouet.im (these are channel links)\
 			dgFCQ2ggNISG0EBoCA2EhtAQGggNoYHQEBpCA6EhNBAaQkNoIDSE
 			BkJDaAgNhIbQEBoIDaGB0BAaQgOhITQQGie1f9MN7AhtuIEdoT1u
 			oNonwACCswOBqy6SxgAAAABJRU5ErkJggg==
-			</data>
-		</dict>
-		<dict>
-			<key>Extension</key>
-			<string>png</string>
-			<key>ID</key>
-			<integer>104</integer>
-			<key>RawData</key>
-			<data>
-			iVBORw0KGgoAAAANSUhEUgAAABAAAAAqCAYAAAC6EtuqAAAAGXRF
-			WHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0
-			WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i
-			77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4
-			OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1w
-			dGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwg
-			MjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYg
-			eG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIy
-			LXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6
-			YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29t
-			L3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2Jl
-			LmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9u
-			cy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMi
-			IHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNS4x
-			IE1hY2ludG9zaCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo3
-			RTc4RTg0NTU4RUIxMUUxOTQxOUU0QkNBRjUxNzRCMSIgeG1wTU06
-			RG9jdW1lbnRJRD0ieG1wLmRpZDo3RTc4RTg0NjU4RUIxMUUxOTQx
-			OUU0QkNBRjUxNzRCMSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJl
-			ZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjkwMUIwMzA0NThFOTExRTE5
-			NDE5RTRCQ0FGNTE3NEIxIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAu
-			ZGlkOjdFNzhFODQ0NThFQjExRTE5NDE5RTRCQ0FGNTE3NEIxIi8+
-			IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBt
-			ZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+/OaFGQAAAItJREFUeNrs
-			1rsNgDAMBFCDzKejQihrMAQdA2eHbECXmiKfgg6wpTCAQXQ+6SSa
-			e1KojABQW2tXY8xC3w0Ig9TWez+FELYY43FRxEDOuaGdeMypS+HN
-			+AE+RQEFFFBAAQUUUOAfgG+klFL7BuAj63TO7Yg405lUSQEe9NSR
-			OhRQDPAzunJkiv/JLcAA9lgt9b0s1k4AAAAASUVORK5CYII=
-			</data>
-		</dict>
-		<dict>
-			<key>Extension</key>
-			<string>png</string>
-			<key>ID</key>
-			<integer>101</integer>
-			<key>RawData</key>
-			<data>
-			iVBORw0KGgoAAAANSUhEUgAAABAAAAAqCAYAAAC6EtuqAAAAGXRF
-			WHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0
-			WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i
-			77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4
-			OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1w
-			dGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwg
-			MjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYg
-			eG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIy
-			LXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6
-			YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29t
-			L3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2Jl
-			LmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9u
-			cy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMi
-			IHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNS4x
-			IE1hY2ludG9zaCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo3
-			RTc4RTg0RDU4RUIxMUUxOTQxOUU0QkNBRjUxNzRCMSIgeG1wTU06
-			RG9jdW1lbnRJRD0ieG1wLmRpZDo3RTc4RTg0RTU4RUIxMUUxOTQx
-			OUU0QkNBRjUxNzRCMSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJl
-			ZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjdFNzhFODRCNThFQjExRTE5
-			NDE5RTRCQ0FGNTE3NEIxIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAu
-			ZGlkOjdFNzhFODRDNThFQjExRTE5NDE5RTRCQ0FGNTE3NEIxIi8+
-			IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBt
-			ZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+VhYZ9gAAAJZJREFUeNrs
-			1jEOwyAMBdAEkaoLe67QLdfgir2Ij8CSiRN0YuqAQChSqOraGbNB
-			M9rSHzz4gTdr7/1zaCxE3EMIYK0F7ZxbW4ZHKmPMPcY4U3tTHa9j
-			SmnLOU/UTs3AqdS/wCCAAAIIIIAAAghwOaB7hvg+KqWMBwAAj/bD
-			SGGtla87ZGXp+MSHEilvXuHVAXwpO+cnwAA5HDH3Z377SwAAAABJ
-			RU5ErkJggg==
 			</data>
 		</dict>
 		<dict>
@@ -27236,7 +26587,7 @@ schnouki@pouet.im (these are channel links)\
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2013-07-11 16:38:22 +0000</string>
+	<string>2013-07-11 17:09:23 +0000</string>
 	<key>Modifier</key>
 	<string>Simon Tennant</string>
 	<key>NotesVisible</key>
@@ -27322,7 +26673,7 @@ schnouki@pouet.im (these are channel links)\
 			</dict>
 		</array>
 		<key>Frame</key>
-		<string>{{-0, 4}, {1200, 1894}}</string>
+		<string>{{1, 4}, {1200, 1894}}</string>
 		<key>ListView</key>
 		<false/>
 		<key>OutlineWidth</key>
@@ -27336,7 +26687,7 @@ schnouki@pouet.im (these are channel links)\
 		<key>SidebarWidth</key>
 		<integer>132</integer>
 		<key>VisibleRegion</key>
-		<string>{{-171, 1430}, {1039, 1740}}</string>
+		<string>{{593, 642}, {1039, 1740}}</string>
 		<key>Zoom</key>
 		<real>1</real>
 		<key>ZoomValues</key>
