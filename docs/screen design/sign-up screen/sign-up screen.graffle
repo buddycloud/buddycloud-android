@@ -2609,10 +2609,10 @@ typeface: roboto\
 						<key>Text</key>
 						<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf390
 \cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
-{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
 
-\f0\fs56 \cf2 \uc0\u9679  \u9679  \u9679  \u9679  \u9679  \u9679  \u9679  \u9679 }</string>
+\f0\fs56 \cf0 \uc0\u9679  \u9679  \u9679  \u9679  \u9679  \u9679  \u9679  \u9679 }</string>
 					</dict>
 					<key>TextPlacement</key>
 					<integer>0</integer>
@@ -2741,10 +2741,10 @@ typeface: roboto\
 				<key>Text</key>
 				<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf390
 \cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Roboto-Light;}
-{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
 
-\f0\fs56 \cf2 moxiemarlinspike}</string>
+\f0\fs56 \cf0 moxiemarlinspike}</string>
 			</dict>
 			<key>TextPlacement</key>
 			<integer>0</integer>
@@ -4023,7 +4023,13 @@ typeface: roboto\
 								ZYaEAmlJARGS
 								hISEDE5TRGlj
 								dGlvbmFyeQCU
-								hAFpBJKElpYQ
+								hAFpA5KElpYH
+								TlNDb2xvcoaS
+								hISEB05TQ29s
+								b3IAlIQBYwKE
+								BGZmZmaDgYCA
+								PYPm5GQ+g4+O
+								jj4BhpKElpYQ
 								TlNQYXJhZ3Jh
 								cGhTdHlsZYaS
 								hISEEE5TUGFy
@@ -4033,41 +4039,27 @@ typeface: roboto\
 								QXJyYXkAlJkM
 								koSEhAlOU1Rl
 								eHRUYWIAlIQC
-								Q2YAHIaShJ+e
-								ADiGkoSfngBU
-								hpKEn54AcIaS
-								hJ+eAIGMAIaS
-								hJ+eAIGoAIaS
-								hJ+eAIHEAIaS
-								hJ+eAIHgAIaS
-								hJ+eAIH8AIaS
-								hJ+eAIEYAYaS
-								hJ+eAIE0AYaS
-								hJ+eAIFQAYaG
-								AIaShJaWDk5T
-								T3JpZ2luYWxG
-								b250hpKEhIQG
-								TlNGb250HpSZ
-								JIQFWzM2Y10G
-								AAAAGgAAAP/+
-								UgBvAGIAbwB0
-								AG8ALQBMAGkA
-								ZwBoAHQAAACE
-								AWYkhAFjAKIB
-								ogCiAIaShJaW
-								Bk5TRm9udIaS
-								hK2ZJKAGAAAA
-								GgAAAP/+UgBv
-								AGIAbwB0AG8A
-								LQBMAGkAZwBo
-								AHQAAAChHKIA
-								ogGiAKIAhpKE
-								lpYHTlNDb2xv
-								coaShISEB05T
-								Q29sb3IAlKIC
-								hARmZmZmg4GA
-								gD2D5uRkPoOP
-								jo4+AYaGhg==
+								Q2YAHIaShKKh
+								ADiGkoSioQBU
+								hpKEoqEAcIaS
+								hKKhAIGMAIaS
+								hKKhAIGoAIaS
+								hKKhAIHEAIaS
+								hKKhAIHgAIaS
+								hKKhAIH8AIaS
+								hKKhAIEYAYaS
+								hKKhAIE0AYaS
+								hKKhAIFQAYaG
+								AIaShJaWBk5T
+								Rm9udIaShISE
+								Bk5TRm9udB6U
+								mSSEBVszNmNd
+								BgAAABoAAAD/
+								/lIAbwBiAG8A
+								dABvAC0ATABp
+								AGcAaAB0AAAA
+								hAFmHJsAmwGb
+								AJsAhoaG
 								</data>
 								<key>Text</key>
 								<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf390
@@ -4371,7 +4363,7 @@ typeface: roboto\
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{384, 1104}, {201.59999, 48}}</string>
+			<string>{{383.20001, 1040}, {201.59999, 48}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FontInfo</key>
@@ -4444,7 +4436,7 @@ typeface: roboto\
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{152, 1104}, {201.59999, 48}}</string>
+			<string>{{151.20001, 1040}, {201.59999, 48}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FontInfo</key>
@@ -46852,7 +46844,7 @@ The following sites are already buddycloud-enabled}</string>
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2013-07-11 13:02:04 +0000</string>
+	<string>2013-07-15 15:23:59 +0000</string>
 	<key>Modifier</key>
 	<string>Simon Tennant</string>
 	<key>NotesVisible</key>
@@ -46952,7 +46944,7 @@ The following sites are already buddycloud-enabled}</string>
 		<key>SidebarWidth</key>
 		<integer>132</integer>
 		<key>VisibleRegion</key>
-		<string>{{-68, 2222}, {1039, 1740}}</string>
+		<string>{{-99, 0}, {1039, 1740}}</string>
 		<key>Zoom</key>
 		<real>1</real>
 		<key>ZoomValues</key>
