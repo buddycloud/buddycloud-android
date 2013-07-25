@@ -1,6 +1,5 @@
 package com.buddycloud;
 
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -29,7 +28,6 @@ public class MainActivity extends SlidingFragmentActivity {
 	private ContentPageAdapter pageAdapter;
 	private String myJid;
 	private SubscribedChannelsFragment subscribedChannelsFrag;
-	private PullToRefreshAttacher mPullToRefreshAttacher;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,14 +53,9 @@ public class MainActivity extends SlidingFragmentActivity {
 			startActivity();
 		}
 
-		mPullToRefreshAttacher = new PullToRefreshAttacher(this);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 	
-	public PullToRefreshAttacher getPullToRefreshAttacher() {
-		return mPullToRefreshAttacher;
-	}
-
 	private boolean shouldLogin() {
 		//TODO Check credentials here too
 		return Preferences.getPreference(this, Preferences.MY_CHANNEL_JID) == null || 

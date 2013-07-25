@@ -7,8 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -46,7 +44,7 @@ import com.buddycloud.utils.InputUtils;
 import com.buddycloud.utils.JSONUtils;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
-public class ChannelStreamFragment extends ContentFragment implements OnRefreshListener {
+public class ChannelStreamFragment extends ContentFragment {
 
 	private CardListAdapter cardAdapter;
 	private EndlessScrollListener scrollListener;
@@ -82,15 +80,7 @@ public class ChannelStreamFragment extends ContentFragment implements OnRefreshL
 		
 		syncd(view, getActivity());
 		
-		getPullToRefreshAttacher().setRefreshableView((ListView) view.findViewById(R.id.postsStream), this);
-		
 		return view;
-	}
-
-	private PullToRefreshAttacher getPullToRefreshAttacher() {
-		MainActivity activity = (MainActivity) getActivity();
-        PullToRefreshAttacher attacher = activity.getPullToRefreshAttacher();
-		return attacher;
 	}
 
 	private String getChannelJid() {
@@ -337,22 +327,4 @@ public class ChannelStreamFragment extends ContentFragment implements OnRefreshL
 		getActivity().startActivityForResult(
 				intent, GenericChannelActivity.REQUEST_CODE);
 	}
-
-	@Override
-    public void onRefreshStarted(View view) {
-		PostsModel.getInstance().fill(getActivity(), new ModelCallback<Void>() {
-			@Override
-			public void success(Void voidd) {
-				fillAdapter(getActivity(), null);
-				getPullToRefreshAttacher().setRefreshComplete();
-			}
-
-			@Override
-			public void error(Throwable throwable) {
-				Toast.makeText(getActivity(), 
-						getString(R.string.pull_to_refresh_error), Toast.LENGTH_LONG).show();
-				getPullToRefreshAttacher().setRefreshComplete();
-			}
-		}, getChannelJid());
-    }
 }
