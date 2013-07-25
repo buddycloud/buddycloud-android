@@ -52,17 +52,22 @@ public class PostCard extends AbstractCard {
 	
 	public PostCard(String channelJid, JSONObject post, MainActivity activity) {
 		this.channelJid = channelJid;
-		this.post = post;
 		this.activity = activity;
-		this.anchoredContent = TextUtils.anchor(post.optString("content"));
-		fillReplyAdapter(activity);
+		setPost(post);
 	}
 
-	public String getId() {
-		return post.optString("id");
+	public JSONObject getPost() {
+		return post;
 	}
 	
+	public void setPost(JSONObject post) {
+		this.post = post;
+		this.anchoredContent = TextUtils.anchor(post.optString("content"));
+		fillReplyAdapter(this.activity);
+	}
+
 	private void fillReplyAdapter(Context context) {
+		repliesAdapter.clear();
 		JSONArray comments = post.optJSONArray("replies");
 		for (int i = 0; i < comments.length(); i++) {
 			JSONObject comment = comments.optJSONObject(i);
@@ -261,7 +266,7 @@ public class PostCard extends AbstractCard {
 	private void loadReplies(JSONObject post, String channelJid, 
 			final Context context, final CardListAdapter adapter, 
 			final ModelCallback<Void> callback) {
-		PostsModel.getInstance().getSinglePostFromServer(context, new ModelCallback<JSONObject>() {
+		PostsModel.getInstance().fetchSinglePost(context, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
 				adapter.clear();
@@ -286,6 +291,7 @@ public class PostCard extends AbstractCard {
 		String postContent = comment.optString("content");
 		String published = comment.optString("published");
 		CommentCard commentCard = new CommentCard(postAuthor, postContent, published, activity);
+		commentCard.setPost(comment);
 		return commentCard;
 	}
 	

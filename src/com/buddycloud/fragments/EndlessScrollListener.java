@@ -5,9 +5,8 @@ import android.widget.AbsListView.OnScrollListener;
 
 public class EndlessScrollListener implements OnScrollListener {
 
-	private int visibleThreshold = 5;
-	private int previousTotal = 0;
-	private boolean loading = true;
+	private static final int VISIBLE_THRESHOLD = 5;
+	private boolean loading;
 	private ChannelStreamFragment fragment;
 
 	public EndlessScrollListener(ChannelStreamFragment fragment) {
@@ -17,21 +16,16 @@ public class EndlessScrollListener implements OnScrollListener {
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
-		if (loading) {
-			if (totalItemCount > previousTotal) {
-				loading = false;
-				previousTotal = totalItemCount;
-			}
-		}
-		if (!loading
-				&& (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-			// I load the next page of gigs using a background task,
-			// but you can call any function here.
+		boolean loadMore = firstVisibleItem + visibleItemCount + VISIBLE_THRESHOLD >= totalItemCount;
+		if (loadMore && !loading) {
 			fragment.fillMore();
-			loading = true;
 		}
 	}
-
+	
+	public void setLoading(boolean loading) {
+		this.loading = loading;
+	}
+	
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 	}

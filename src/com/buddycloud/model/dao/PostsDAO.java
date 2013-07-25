@@ -16,6 +16,8 @@ import com.buddycloud.model.db.PostsTableHelper;
 
 public class PostsDAO implements DAO<JSONObject, JSONArray> {
 	
+	private static final int DEF_LIMIT = 30;
+
 	private static PostsDAO instance;
 	
 	private SQLiteDatabase db;
@@ -86,7 +88,7 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 		
 		if (values != null) {
 			String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"" + " AND " +
-							PostsTableHelper.COLUMN_ID + "=" + values.getAsString(PostsTableHelper.COLUMN_ID);
+							PostsTableHelper.COLUMN_ID + "=\"" + values.getAsString(PostsTableHelper.COLUMN_ID) + "\"";
 			int rowsAffected = db.update(PostsTableHelper.TABLE_NAME, 
 					values, filter, null);
 			return rowsAffected == 1;
@@ -96,11 +98,7 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 	}
 	
 	public JSONArray get(String channel) {
-		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
-		String orderBy = "datetime(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
-
-		return DAOHelper.queryOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
-				null, null, null, orderBy, null, cursorParser());
+		return get(channel, DEF_LIMIT);
 	}
 
 	public JSONObject get(String channel, String itemId) {
@@ -117,31 +115,23 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 		return DAOHelper.queryOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
 				null, null, null, orderBy, null, cursorParser());
 	}
-	
-	public JSONArray get(String channel, int limit) {
+
+	public JSONArray get(String channel, String after, int limit) {
 		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
+		filter += " AND " + PostsTableHelper.COLUMN_REPLY_TO + " IS NULL";
+		if (after != null) {
+			filter += " AND " + PostsTableHelper.COLUMN_UPDATED + "<\"" + after + "\"";
+		}
 		String orderBy = "datetime(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
 
 		return DAOHelper.queryOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
 				null, null, null, orderBy, String.valueOf(limit), 
 				cursorParser());
+	}	
+	public JSONArray get(String channel, int limit) {
+		return get(channel, null, limit);
 	}
 
-	public JSONObject getMostRecent() {
-		String orderBy = "datetime(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
-		return DAOHelper.queryUniqueOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, null,
-				null, null, null, orderBy, String.valueOf(1), 
-				cursorParser());
-	}
-	
-	public JSONObject getOldest(String channelJid) {
-		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channelJid + "\"";
-		String orderBy = "datetime(" + PostsTableHelper.COLUMN_UPDATED + ") ASC";
-		return DAOHelper.queryUniqueOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
-				null, null, null, orderBy, String.valueOf(1), 
-				cursorParser());
-	}
-	
 	private DAOCursorParser cursorParser() {
 		DAOCursorParser cursorParser = new DAOCursorParser() {
 			@Override

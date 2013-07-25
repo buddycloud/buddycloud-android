@@ -1,7 +1,9 @@
 package com.buddycloud.card;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.widget.BaseAdapter;
 public class CardListAdapter extends BaseAdapter {
 
 	private List<Card> cards = new ArrayList<Card>();
+	private Map<String, Card> cardsRef = new HashMap<String, Card>();
 	
 	@Override
 	public int getCount() {
@@ -32,11 +35,19 @@ public class CardListAdapter extends BaseAdapter {
 	}
 
 	public void addCard(Card card) {
-		cards.add(card);
+		String postId = card.getPost().optString("id");
+		Card oldCard = cardsRef.get(postId);
+		if (oldCard == null) {
+			cardsRef.put(postId, card);
+			cards.add(card);
+		} else {
+			oldCard.setPost(card.getPost());
+		}
 	}
 
 	public void clear() {
 		cards.clear();
+		cardsRef.clear();
 	}
 	
 }

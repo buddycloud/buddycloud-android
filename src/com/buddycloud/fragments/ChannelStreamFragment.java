@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +31,7 @@ import com.buddycloud.ChannelDetailActivity;
 import com.buddycloud.GenericChannelActivity;
 import com.buddycloud.MainActivity;
 import com.buddycloud.R;
+import com.buddycloud.card.Card;
 import com.buddycloud.card.CardListAdapter;
 import com.buddycloud.card.PostCard;
 import com.buddycloud.fragments.adapter.FollowersAdapter;
@@ -47,6 +49,7 @@ import com.slidingmenu.lib.app.SlidingFragmentActivity;
 public class ChannelStreamFragment extends ContentFragment implements OnRefreshListener {
 
 	private CardListAdapter cardAdapter;
+	private EndlessScrollListener scrollListener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -104,45 +107,59 @@ public class ChannelStreamFragment extends ContentFragment implements OnRefreshL
 		ListView contentView = (ListView) view.findViewById(R.id.postsStream);
 		this.cardAdapter = new CardListAdapter();
 		contentView.setAdapter(cardAdapter);
-		fillAdapter(context);
-		contentView.setOnScrollListener(new EndlessScrollListener(this));
+		this.scrollListener = new EndlessScrollListener(this);
+		contentView.setOnScrollListener(scrollListener);
 		
-		PostsModel.getInstance().fill(getActivity(), new ModelCallback<Void>() {
-			@Override
-			public void success(Void voidd) {
-				fillAdapter(getActivity());
-			}
-
-			@Override
-			public void error(Throwable throwable) {
-				
-			}
-		}, getChannelJid());
+		fillMore();
 	}
 
 	protected void fillMore() {
+		
+		scrollListener.setLoading(true);
+		String lastUpdated = null;
+		String lastId = null;
+		
+		if (cardAdapter.getCount() > 0) {
+			Card lastCard = (Card) cardAdapter.getItem(cardAdapter.getCount() - 1);
+			lastUpdated = lastCard.getPost().optString("updated");
+			lastId = lastCard.getPost().optString("id");
+		}
+		
+		fillAdapter(getActivity(), lastUpdated);
+		fillRemotely(lastId, lastUpdated);
+	}
+
+	private void fillRemotely(final String lastId, final String lastUpdated) {
 		PostsModel.getInstance().fillMore(getActivity(), new ModelCallback<Void>() {
 			@Override
 			public void success(Void response) {
-				fillAdapter(getActivity());
+				if (fillAdapter(getActivity(), lastUpdated)) {
+					scrollListener.setLoading(false);
+				} else {
+					// Hits the bottom
+					Log.d(getTag(), "Hit the bottom.");
+				}
 			}
 			
 			@Override
 			public void error(Throwable throwable) {
-				// TODO Auto-generated method stub
+				Toast.makeText(getActivity(), "Couldn't fetch older posts.", 
+						Toast.LENGTH_LONG).show();
+				scrollListener.setLoading(false);
 			}
-		}, getChannelJid());
+		}, getChannelJid(), lastId);
 	}
 	
-	private void fillAdapter(Context context) {
+	private boolean fillAdapter(Context context, String lastUpdated) {
 		String channelJid = getChannelJid();
-		JSONArray allPosts = PostsModel.getInstance().getFromCache(context, channelJid);
+		JSONArray allPosts = PostsModel.getInstance().getFromCache(context, channelJid, lastUpdated);
 		for (int i = 0; i < allPosts.length(); i++) {
 			JSONObject post = allPosts.optJSONObject(i);
 			PostCard card = toCard(post, channelJid);
 			cardAdapter.addCard(card);
 			cardAdapter.notifyDataSetChanged();
 		}
+		return allPosts.length() > 0;
 	}
 	
 	private PostCard toCard(JSONObject post, final String channelJid) {
@@ -326,7 +343,7 @@ public class ChannelStreamFragment extends ContentFragment implements OnRefreshL
 		PostsModel.getInstance().fill(getActivity(), new ModelCallback<Void>() {
 			@Override
 			public void success(Void voidd) {
-				fillAdapter(getActivity());
+				fillAdapter(getActivity(), null);
 				getPullToRefreshAttacher().setRefreshComplete();
 			}
 

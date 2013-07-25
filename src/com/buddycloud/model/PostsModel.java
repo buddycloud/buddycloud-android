@@ -18,7 +18,8 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 
 	private static final String TAG = PostsModel.class.getName();
 	private static PostsModel instance;
-	private static final int PAGE_SIZE = 31;
+	private static final int REMOTE_PAGE_SIZE = 30;
+	private static final int LOCAL_PAGE_SIZE = 30;
 	private static final String POSTS_ENDPOINT = "/content/posts";
 	
 	private PostsModel() {}
@@ -30,46 +31,67 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		return instance;
 	}
 	
-	private void persist(PostsDAO postsDAO, String channel, JSONArray jsonPosts) {
+	private boolean persist(PostsDAO postsDAO, String channel, JSONArray jsonPosts) throws JSONException {
+		boolean containsTopic = false;
 		for (int i = 0; i < jsonPosts.length(); i++) {
 			JSONObject item = jsonPosts.optJSONObject(i);
 			normalize(item);
 			if (postsDAO.get(channel, item.optString("id")) == null) {
+				updateTopicTimestamp(postsDAO, channel, item);
 				postsDAO.insert(channel, item);
+			} else {
+				postsDAO.update(channel, item);
+			}
+			if (!isComment(item)) {
+				containsTopic = true;
+			}
+		}
+		return containsTopic;
+	}
+
+	private void updateTopicTimestamp(PostsDAO postsDAO, String channel,
+			JSONObject item) throws JSONException {
+		String itemId = item.optString("id");
+		if (isComment(item)) {
+			JSONObject parent = postsDAO.get(channel, item.optString("replyTo"));
+			if (parent != null) {
+				parent.putOpt("updated", item.optString("updated"));
+				postsDAO.update(channel, parent);
+			}
+		} else {
+			JSONArray replies = postsDAO.getReplies(channel, itemId);
+			if (replies != null && replies.length() > 0) {
+				JSONObject lastReply = replies.optJSONObject(replies.length() - 1);
+				item.putOpt("updated", lastReply.optString("updated"));
 			}
 		}
 	}
 	
 	private void normalize(JSONObject item) {
 		String author = item.optString("author");
-		
 		if (author.contains("acct:")) {
 			String[] split = author.split(":");
 			author = split[1];
-			
 			try {
 				item.put("author", author);
 			} catch (JSONException e) {}
 		}
 	}
 	
-	private JSONArray lookupPostsFromDatabase(final Context context, final String channelJid) {
+	private JSONArray lookupPostsFromDatabase(final Context context, final String channelJid, String after) {
 		final PostsDAO postsDAO = PostsDAO.getInstance(context);
-		JSONArray postStream = postsDAO.get(channelJid, PAGE_SIZE);
-		JSONArray onlyTopicStream = new JSONArray();
+		JSONArray postStream = postsDAO.get(channelJid, after, LOCAL_PAGE_SIZE);
 		for (int i = 0; i < postStream.length(); i++) {
 			JSONObject eachPost = postStream.optJSONObject(i);
-			if (!isComment(eachPost)) {
-				JSONArray replies = postsDAO.getReplies(channelJid, eachPost.optString("id"));
-				try {
-					eachPost.putOpt("replies", replies);
-				} catch (JSONException e) {
-					throw new RuntimeException(e);
-				}
-				onlyTopicStream.put(eachPost);
+			JSONArray replies = postsDAO.getReplies(channelJid,
+					eachPost.optString("id"));
+			try {
+				eachPost.putOpt("replies", replies);
+			} catch (JSONException e) {
+				throw new RuntimeException(e);
 			}
 		}
-		return onlyTopicStream;
+		return postStream;
 	}
 	
 	private boolean isComment(JSONObject item) {
@@ -79,10 +101,14 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 	@Override
 	public JSONArray getFromCache(Context context, String... p) {
 		String channelJid = p[0];
-		return lookupPostsFromDatabase(context, channelJid);
+		String after = null;
+		if (p.length > 1) {
+			after = p[1];
+		}
+		return lookupPostsFromDatabase(context, channelJid, after);
 	}
 
-	public void getSinglePostFromServer(Context context, final ModelCallback<JSONObject> callback, String... p) {
+	public void fetchSinglePost(Context context, final ModelCallback<JSONObject> callback, String... p) {
 		String channelJid = p[0];
 		String itemId = p[1];
 		fetchPost(context, channelJid, itemId, callback);
@@ -145,23 +171,29 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 
 			@Override
 			public void success(JSONArray response) {
-				final PostsDAO postsDAO = PostsDAO.getInstance(context);
-				persist(postsDAO, channelJid, response);
-				callback.success(null);
+				try {
+					final PostsDAO postsDAO = PostsDAO.getInstance(context);
+					if (!persist(postsDAO, channelJid, response) && response.length() > 0) {
+						JSONObject lastReply = response.optJSONObject(response.length() - 1);
+						fetchPosts(context, channelJid, callback, lastReply.optString("id"));
+					} else {
+						callback.success(null);
+					}
+				} catch (Exception e) {
+					error(e);
+				}
 			}
 
 			@Override
 			public void error(Throwable throwable) {
-				if (callback != null) {
-					callback.error(throwable);
-				}
+				callback.error(throwable);
 			}
 		});
 	}
 	
 	private String postsUrl(Context context, String channel, String after) {
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
-		String postsURL = apiAddress + "/" + channel + POSTS_ENDPOINT + "?max=" + PAGE_SIZE;
+		String postsURL = apiAddress + "/" + channel + POSTS_ENDPOINT + "?max=" + REMOTE_PAGE_SIZE;
 		if (after != null) {
 			postsURL += "&after=" + after;
 		}
@@ -170,7 +202,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 	
 	private String postsUrl(Context context, String channel) {
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
-		return apiAddress + "/" + channel + POSTS_ENDPOINT + "?max=" + PAGE_SIZE;
+		return apiAddress + "/" + channel + POSTS_ENDPOINT + "?max=" + REMOTE_PAGE_SIZE;
 	}
 	
 	private String postUrl(Context context, String channel, String postId) {
@@ -209,8 +241,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 
 	public void fillMore(Context context, ModelCallback<Void> callback, String... p) {
 		String channelJid = p[0];
-		JSONObject oldest = PostsDAO.getInstance(context).getOldest(channelJid);
-		String oldestPostId = oldest == null ? null : oldest.optString("id");
+		String oldestPostId = p[1];
 		fetchPosts(context, channelJid, callback, oldestPostId);
 	}
 	

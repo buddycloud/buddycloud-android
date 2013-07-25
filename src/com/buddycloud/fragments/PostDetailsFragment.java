@@ -90,7 +90,7 @@ public class PostDetailsFragment extends ContentFragment {
 	}
 
 	private void updateView(final View view, final String postId, final String channelJid) {
-		PostsModel.getInstance().getSinglePostFromServer(getActivity(), new ModelCallback<JSONObject>() {
+		PostsModel.getInstance().fetchSinglePost(getActivity(), new ModelCallback<JSONObject>() {
 
 			@Override
 			public void success(JSONObject post) {
@@ -144,7 +144,7 @@ public class PostDetailsFragment extends ContentFragment {
 		final View progress = getView().findViewById(R.id.subscribedProgress);
 		progress.setVisibility(View.VISIBLE);
 		
-		PostsModel.getInstance().getSinglePostFromServer(getActivity(), new ModelCallback<JSONObject>() {
+		PostsModel.getInstance().fetchSinglePost(getActivity(), new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
 				progress.setVisibility(View.GONE);

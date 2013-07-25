@@ -3,6 +3,8 @@ package com.buddycloud.card;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.json.JSONObject;
+
 import android.text.Spanned;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
@@ -26,6 +28,7 @@ public class CommentCard extends AbstractCard {
 	private Spanned anchoredContent;
 	private MainActivity activity;
 	private String replyAuthor;
+	private JSONObject post;
 	
 	public CommentCard(String replyAuthor, String content, String published, 
 			MainActivity activity) {
@@ -36,8 +39,8 @@ public class CommentCard extends AbstractCard {
 	}
 	
 	@Override
-	public String getId() {
-		return null;
+	public JSONObject getPost() {
+		return post;
 	}
 
 	@Override
@@ -91,5 +94,10 @@ public class CommentCard extends AbstractCard {
 	private static CardViewHolder fillHolder(View view) {
 		return CardViewHolder.create(view, R.id.bcProfilePic, 
 				R.id.bcPostContent, R.id.bcPostDate);
+	}
+
+	@Override
+	public void setPost(JSONObject post) {
+		this.post = post;
 	}
 }
