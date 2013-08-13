@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.json.JSONObject;
+
 public class TimeUtils {
 	private TimeUtils() {}
 	
@@ -18,5 +20,9 @@ public class TimeUtils {
 	
 	public static Date fromISOToDate(String isoDate) throws ParseException {
 		return ISO_8601.parse(isoDate);
+	}
+	
+	public static Date updated(JSONObject post) throws ParseException {
+		return fromISOToDate(post.optString("updated"));
 	}
 }

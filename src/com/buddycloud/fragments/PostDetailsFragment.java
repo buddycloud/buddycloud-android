@@ -163,7 +163,6 @@ public class PostDetailsFragment extends ContentFragment {
 		for (int i = 0; i < comments.length(); i++) {
 			JSONObject comment = comments.optJSONObject(i);
 			commentAdapter.addCard(toCard(comment));
-			commentAdapter.notifyDataSetChanged();
 		}
 	}
 	

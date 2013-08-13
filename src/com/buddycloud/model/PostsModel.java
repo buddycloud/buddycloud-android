@@ -146,6 +146,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 				}
 				try {
 					item.putOpt("replies", response);
+					persist(PostsDAO.getInstance(context), channelJid, response);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}

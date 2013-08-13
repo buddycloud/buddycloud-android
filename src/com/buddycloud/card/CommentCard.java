@@ -100,4 +100,15 @@ public class CommentCard extends AbstractCard {
 	public void setPost(JSONObject post) {
 		this.post = post;
 	}
+	
+	@Override
+	public int compareTo(Card anotherCard) {
+		try {
+			Date otherUpdated = TimeUtils.updated(anotherCard.getPost());
+			Date thisUpdated = TimeUtils.updated(this.getPost());
+			return thisUpdated.compareTo(otherUpdated);
+		} catch (ParseException e) {
+			return 0;
+		}
+	}
 }

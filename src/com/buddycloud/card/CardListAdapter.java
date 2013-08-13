@@ -1,6 +1,7 @@
 package com.buddycloud.card;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,13 @@ public class CardListAdapter extends BaseAdapter {
 		} else {
 			oldCard.setPost(card.getPost());
 		}
+		card.setParentAdapter(this);
+		sort();
+	}
+
+	public void sort() {
+		Collections.sort(cards);
+		notifyDataSetChanged();
 	}
 
 	public void clear() {

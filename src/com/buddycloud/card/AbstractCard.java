@@ -7,6 +7,7 @@ import android.view.View.OnClickListener;
 public abstract class AbstractCard implements Card {
 
 	private OnClickListener onClickListener;
+	private CardListAdapter parent;
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
@@ -21,6 +22,16 @@ public abstract class AbstractCard implements Card {
 	
 	public void setOnClickListener(OnClickListener onClickListener) {
 		this.onClickListener = onClickListener;
+	}
+	
+	@Override
+	public void setParentAdapter(CardListAdapter parent) {
+		this.parent = parent;
+	}
+	
+	@Override
+	public CardListAdapter getParentAdapter() {
+		return parent;
 	}
 	
 }

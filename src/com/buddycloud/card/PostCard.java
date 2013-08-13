@@ -73,7 +73,6 @@ public class PostCard extends AbstractCard {
 			JSONObject comment = comments.optJSONObject(i);
 			repliesAdapter.addCard(toReplyCard(comment, context));
 		}
-		repliesAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -212,7 +211,7 @@ public class PostCard extends AbstractCard {
 			@Override
 			public void success(JSONObject response) {
 				Toast.makeText(context, "Post created", Toast.LENGTH_LONG).show();
-				loadReplies(post, channelJid, context, repliesAdapter, new ModelCallback<Void>() {
+				loadReplies(post, channelJid, context, new ModelCallback<Void>() {
 					@Override
 					public void success(Void response) {}
 
@@ -264,18 +263,16 @@ public class PostCard extends AbstractCard {
 	}
 	
 	private void loadReplies(JSONObject post, String channelJid, 
-			final Context context, final CardListAdapter adapter, 
-			final ModelCallback<Void> callback) {
+			final Context context, final ModelCallback<Void> callback) {
 		PostsModel.getInstance().fetchSinglePost(context, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
-				adapter.clear();
+				repliesAdapter.clear();
 				JSONArray comments = response.optJSONArray("replies");
 				for (int i = comments.length() - 1; i >= 0; i--) {
 					JSONObject comment = comments.optJSONObject(i);
-					adapter.addCard(toReplyCard(comment, context));
+					repliesAdapter.addCard(toReplyCard(comment, context));
 				}
-				adapter.notifyDataSetChanged();
 				callback.success(null);
 			}
 			
@@ -303,5 +300,16 @@ public class PostCard extends AbstractCard {
 				R.id.replyListView, R.id.replyAuthorView,
 				R.id.replyContentTxt, R.id.replyBtn, 
 				R.id.topicWrapper);
+	}
+
+	@Override
+	public int compareTo(Card anotherCard) {
+		try {
+			Date otherUpdated = TimeUtils.updated(anotherCard.getPost());
+			Date thisUpdated = TimeUtils.updated(this.getPost());
+			return otherUpdated.compareTo(thisUpdated);
+		} catch (ParseException e) {
+			return 0;
+		}
 	}
 }

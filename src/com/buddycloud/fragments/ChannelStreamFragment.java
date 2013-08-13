@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -95,10 +94,15 @@ public class ChannelStreamFragment extends ContentFragment {
 		
 		view.findViewById(R.id.subscribedProgress).setVisibility(View.GONE);
 		ListView contentView = (ListView) view.findViewById(R.id.postsStream);
-		this.cardAdapter = new CardListAdapter();
-		contentView.setAdapter(cardAdapter);
-		this.scrollListener = new EndlessScrollListener(this);
-		contentView.setOnScrollListener(scrollListener);
+		if (cardAdapter == null) {
+			this.cardAdapter = new CardListAdapter();
+			contentView.setAdapter(cardAdapter);
+			this.scrollListener = new EndlessScrollListener(this);
+			contentView.setOnScrollListener(scrollListener);
+		} else {
+			cardAdapter.clear();
+			cardAdapter.notifyDataSetChanged();
+		}
 		
 		fillMore();
 	}
@@ -124,10 +128,8 @@ public class ChannelStreamFragment extends ContentFragment {
 			@Override
 			public void success(Void response) {
 				if (fillAdapter(getActivity(), lastUpdated)) {
+					// Haven't hit the bottom
 					scrollListener.setLoading(false);
-				} else {
-					// Hits the bottom
-					Log.d(getTag(), "Hit the bottom.");
 				}
 			}
 			
@@ -147,7 +149,6 @@ public class ChannelStreamFragment extends ContentFragment {
 			JSONObject post = allPosts.optJSONObject(i);
 			PostCard card = toCard(post, channelJid);
 			cardAdapter.addCard(card);
-			cardAdapter.notifyDataSetChanged();
 		}
 		return allPosts.length() > 0;
 	}
@@ -181,7 +182,7 @@ public class ChannelStreamFragment extends ContentFragment {
 			@Override
 			public void success(JSONObject response) {
 				Toast.makeText(getActivity().getApplicationContext(), "Post created", Toast.LENGTH_LONG).show();
-				syncd(null, getActivity());
+				fillRemotely(null, null);
 			}
 			
 			@Override
