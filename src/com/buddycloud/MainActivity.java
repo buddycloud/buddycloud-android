@@ -1,7 +1,9 @@
 package com.buddycloud;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -25,12 +27,14 @@ import com.slidingmenu.lib.app.SlidingFragmentActivity;
 public class MainActivity extends SlidingFragmentActivity {
 
 	private static final String TAG = MainActivity.class.getName();
+	private static final boolean DEVELOPER_MODE = false;
 	private ContentPageAdapter pageAdapter;
 	private String myJid;
 	private SubscribedChannelsFragment subscribedChannelsFrag;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		strict();
 		super.onCreate(savedInstanceState);
 
 		setSlidingActionBarEnabled(false);
@@ -54,6 +58,24 @@ public class MainActivity extends SlidingFragmentActivity {
 		}
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+
+	@SuppressLint("NewApi")
+	private void strict() {
+		if (DEVELOPER_MODE) {
+	         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+	                 .detectDiskReads()
+	                 .detectDiskWrites()
+	                 .detectNetwork()   // or .detectAll() for all detectable problems
+	                 .penaltyLog()
+	                 .build());
+	         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+	                 .detectLeakedSqlLiteObjects()
+	                 .detectLeakedClosableObjects()
+	                 .penaltyLog()
+	                 .penaltyDeath()
+	                 .build());
+	     }
 	}
 	
 	private boolean shouldLogin() {
