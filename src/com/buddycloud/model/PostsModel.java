@@ -19,7 +19,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 	private static final String TAG = PostsModel.class.getName();
 	private static PostsModel instance;
 	private static final int REMOTE_PAGE_SIZE = 30;
-	private static final int LOCAL_PAGE_SIZE = 30;
+	private static final int LOCAL_PAGE_SIZE = 10;
 	private static final String POSTS_ENDPOINT = "/content/posts";
 	
 	private PostsModel() {}

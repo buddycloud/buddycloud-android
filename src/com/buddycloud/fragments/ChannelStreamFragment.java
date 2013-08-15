@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -119,18 +120,41 @@ public class ChannelStreamFragment extends ContentFragment {
 			lastId = lastCard.getPost().optString("id");
 		}
 		
-		fillAdapter(getActivity(), lastUpdated);
-		fillRemotely(lastId, lastUpdated);
+		fillAdapter(getActivity(), lastUpdated, fillAdapterCallback(lastUpdated, lastId));
+	}
+
+	private ModelCallback<Boolean> fillAdapterCallback(final String lastUpdated,
+			final String lastId) {
+		return new ModelCallback<Boolean>() {
+			@Override
+			public void success(Boolean response) {
+				fillRemotely(lastId, lastUpdated);
+			}
+
+			@Override
+			public void error(Throwable throwable) {}
+		};
 	}
 
 	private void fillRemotely(final String lastId, final String lastUpdated) {
 		PostsModel.getInstance().fillMore(getActivity(), new ModelCallback<Void>() {
 			@Override
 			public void success(Void response) {
-				if (fillAdapter(getActivity(), lastUpdated)) {
-					// Haven't hit the bottom
-					scrollListener.setLoading(false);
-				}
+				fillAdapter(getActivity(), lastUpdated, new ModelCallback<Boolean>() {
+					@Override
+					public void success(Boolean response) {
+						if (response) {
+							scrollListener.setLoading(false);
+						}
+					}
+
+					@Override
+					public void error(Throwable throwable) {
+						Toast.makeText(getActivity(), "Couldn't fetch older posts.", 
+								Toast.LENGTH_LONG).show();
+						scrollListener.setLoading(false);
+					}
+				});;
 			}
 			
 			@Override
@@ -142,15 +166,29 @@ public class ChannelStreamFragment extends ContentFragment {
 		}, getChannelJid(), lastId);
 	}
 	
-	private boolean fillAdapter(Context context, String lastUpdated) {
-		String channelJid = getChannelJid();
-		JSONArray allPosts = PostsModel.getInstance().getFromCache(context, channelJid, lastUpdated);
-		for (int i = 0; i < allPosts.length(); i++) {
-			JSONObject post = allPosts.optJSONObject(i);
-			PostCard card = toCard(post, channelJid);
-			cardAdapter.addCard(card);
-		}
-		return allPosts.length() > 0;
+	private void fillAdapter(final Context context, final String lastUpdated, 
+			final ModelCallback<Boolean> callback) {
+		new AsyncTask<Void, Void, JSONArray>() {
+
+			@Override
+			protected JSONArray doInBackground(Void... params) {
+				return PostsModel.getInstance().getFromCache(context, getChannelJid(), lastUpdated);
+			}
+			
+			@Override
+			protected void onPostExecute(JSONArray allPosts) {
+				for (int i = 0; i < allPosts.length(); i++) {
+					JSONObject post = allPosts.optJSONObject(i);
+					PostCard card = toCard(post, getChannelJid());
+					cardAdapter.addCard(card);
+				}
+				cardAdapter.sort();
+				if (callback != null) {
+					callback.success(allPosts.length() > 0);
+				}
+			}
+			
+		}.execute();
 	}
 	
 	private PostCard toCard(JSONObject post, final String channelJid) {

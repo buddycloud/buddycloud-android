@@ -45,7 +45,6 @@ public class CardListAdapter extends BaseAdapter {
 			oldCard.setPost(card.getPost());
 		}
 		card.setParentAdapter(this);
-		sort();
 	}
 
 	public void sort() {
@@ -57,5 +56,4 @@ public class CardListAdapter extends BaseAdapter {
 		cards.clear();
 		cardsRef.clear();
 	}
-	
 }

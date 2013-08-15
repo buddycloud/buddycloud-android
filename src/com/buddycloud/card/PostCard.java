@@ -273,6 +273,7 @@ public class PostCard extends AbstractCard {
 					JSONObject comment = comments.optJSONObject(i);
 					repliesAdapter.addCard(toReplyCard(comment, context));
 				}
+				repliesAdapter.notifyDataSetChanged();
 				callback.success(null);
 			}
 			
