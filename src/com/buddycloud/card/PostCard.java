@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.buddycloud.MainActivity;
 import com.buddycloud.R;
+import com.buddycloud.fragments.ChannelStreamFragment;
 import com.buddycloud.model.MediaModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
@@ -73,6 +74,7 @@ public class PostCard extends AbstractCard {
 			JSONObject comment = comments.optJSONObject(i);
 			repliesAdapter.addCard(toReplyCard(comment, context));
 		}
+		repliesAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -213,7 +215,11 @@ public class PostCard extends AbstractCard {
 				Toast.makeText(context, "Post created", Toast.LENGTH_LONG).show();
 				loadReplies(post, channelJid, context, new ModelCallback<Void>() {
 					@Override
-					public void success(Void response) {}
+					public void success(Void response) {
+						getParentAdapter().sort();
+						ChannelStreamFragment fragment = (ChannelStreamFragment) getParentAdapter().getFragment();
+						fragment.scrollUp();
+					}
 
 					@Override
 					public void error(Throwable throwable) {}
@@ -267,13 +273,7 @@ public class PostCard extends AbstractCard {
 		PostsModel.getInstance().fetchSinglePost(context, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
-				repliesAdapter.clear();
-				JSONArray comments = response.optJSONArray("replies");
-				for (int i = comments.length() - 1; i >= 0; i--) {
-					JSONObject comment = comments.optJSONObject(i);
-					repliesAdapter.addCard(toReplyCard(comment, context));
-				}
-				repliesAdapter.notifyDataSetChanged();
+				setPost(response);
 				callback.success(null);
 			}
 			

@@ -40,7 +40,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 				updateTopicTimestamp(postsDAO, channel, item);
 				postsDAO.insert(channel, item);
 			} else {
-				postsDAO.update(channel, item);
+//				postsDAO.update(channel, item);
 			}
 			if (!isComment(item)) {
 				containsTopic = true;
@@ -135,7 +135,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 	
 	private void fetchReplies(final Context context, final String channelJid, 
 			final JSONObject item, final ModelCallback<JSONObject> callback) {
-		String itemId = item.optString("id");
+		final String itemId = item.optString("id");
 		BuddycloudHTTPHelper.getArray(repliesUrl(context, channelJid, itemId), context,
 				new ModelCallback<JSONArray>() {
 			@Override
@@ -144,15 +144,20 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 					JSONObject reply = response.optJSONObject(i);
 					normalize(reply);
 				}
+				PostsDAO dao = PostsDAO.getInstance(context);
+				
+				JSONObject updatedItem = new JSONObject();
+				
 				try {
-					item.putOpt("replies", response);
-					persist(PostsDAO.getInstance(context), channelJid, response);
+					persist(dao, channelJid, response);
+					updatedItem = dao.get(channelJid, itemId);
+					updatedItem.putOpt("replies", dao.getReplies(channelJid, itemId));
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 				
 				if (callback != null) {
-					callback.success(item);
+					callback.success(updatedItem);
 				}
 			}
 

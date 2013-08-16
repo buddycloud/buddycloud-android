@@ -97,6 +97,7 @@ public class ChannelStreamFragment extends ContentFragment {
 		ListView contentView = (ListView) view.findViewById(R.id.postsStream);
 		if (cardAdapter == null) {
 			this.cardAdapter = new CardListAdapter();
+			cardAdapter.setFragment(this);
 			contentView.setAdapter(cardAdapter);
 			this.scrollListener = new EndlessScrollListener(this);
 			contentView.setOnScrollListener(scrollListener);
@@ -106,6 +107,11 @@ public class ChannelStreamFragment extends ContentFragment {
 		}
 		
 		fillMore();
+	}
+	
+	public void scrollUp() {
+		ListView postsStream = (ListView) getView().findViewById(R.id.postsStream);
+		postsStream.smoothScrollToPosition(0);
 	}
 
 	protected void fillMore() {

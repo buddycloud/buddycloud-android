@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -14,6 +15,15 @@ public class CardListAdapter extends BaseAdapter {
 
 	private List<Card> cards = new ArrayList<Card>();
 	private Map<String, Card> cardsRef = new HashMap<String, Card>();
+	private Fragment fragment;
+	
+	public void setFragment(Fragment fragment) {
+		this.fragment = fragment;
+	}
+	
+	public Fragment getFragment() {
+		return fragment;
+	}
 	
 	@Override
 	public int getCount() {
