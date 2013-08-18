@@ -41,7 +41,6 @@ import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
 import com.buddycloud.utils.InputUtils;
-import com.buddycloud.utils.JSONUtils;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class ChannelStreamFragment extends ContentFragment {
@@ -297,8 +296,8 @@ public class ChannelStreamFragment extends ContentFragment {
 	}
 
 	private boolean isFollowing() {
-		JSONArray subscribed = SubscribedChannelsModel.getInstance().getFromCache(getActivity());
-		return JSONUtils.contains(subscribed, getChannelJid());
+		JSONObject subscribed = SubscribedChannelsModel.getInstance().getFromCache(getActivity());
+		return subscribed.has(getChannelJid());
 	}
 	
 	@Override

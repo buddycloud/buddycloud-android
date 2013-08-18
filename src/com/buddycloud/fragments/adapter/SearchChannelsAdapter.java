@@ -38,10 +38,11 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 	
 	public void load(final Context context) {
 		this.myChannel = Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
-		JSONArray response = SubscribedChannelsModel.getInstance().getFromCache(context);
+		JSONObject subscriptions = SubscribedChannelsModel.getInstance().getFromCache(context);
+		JSONArray channels = subscriptions.names();
 		
-		for (int i = 0; i < response.length(); i++) {
-			final String channel = response.optString(i);
+		for (int i = 0; i < channels.length(); i++) {
+			final String channel = channels.optString(i);
 			allSubscribedChannels.add(channel);
 			JSONObject metadata = ChannelMetadataModel.getInstance().getFromCache(context, channel);
 			plainMetadata.put(channel, getPlainMetadata(metadata));

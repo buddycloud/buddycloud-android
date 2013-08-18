@@ -2,7 +2,6 @@ package com.buddycloud.model.dao;
 
 import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,7 +14,7 @@ import com.buddycloud.model.db.BuddycloudSQLiteOpenHelper;
 import com.buddycloud.model.db.SubscribedChannelsTableHelper;
 import com.buddycloud.preferences.Preferences;
 
-public class SubscribedChannelsDAO implements DAO<JSONArray, JSONArray> {
+public class SubscribedChannelsDAO implements DAO<JSONObject, JSONObject> {
 	
 	private static SubscribedChannelsDAO instance;
 	
@@ -40,7 +39,7 @@ public class SubscribedChannelsDAO implements DAO<JSONArray, JSONArray> {
 		return instance;
 	}
 
-	private ContentValues buildValues(JSONArray json) {
+	private ContentValues buildValues(JSONObject json) {
 		ContentValues values = new ContentValues();
 		values.put(SubscribedChannelsTableHelper.COLUMN_USER, myJid);
 		values.put(SubscribedChannelsTableHelper.COLUMN_SUBSCRIBED, json.toString());
@@ -50,7 +49,7 @@ public class SubscribedChannelsDAO implements DAO<JSONArray, JSONArray> {
 	public void delete(String key) {
 	}
 	
-	public boolean insert(String key, JSONArray json) {
+	public boolean insert(String key, JSONObject json) {
 		ContentValues values = buildValues(json);
 		if (values != null) {
 			long rowId = db.insert(SubscribedChannelsTableHelper.TABLE_NAME, null, values);
@@ -60,7 +59,7 @@ public class SubscribedChannelsDAO implements DAO<JSONArray, JSONArray> {
 		return false;
 	}
 	
-	public boolean update(String key, JSONArray json) {
+	public boolean update(String key, JSONObject json) {
 		ContentValues values = buildValues(json);
 		if (values != null) {
 			String filter = SubscribedChannelsTableHelper.COLUMN_USER + "=\"" + myJid + "\"";
@@ -71,7 +70,7 @@ public class SubscribedChannelsDAO implements DAO<JSONArray, JSONArray> {
 		return false;
 	}
 	
-	public JSONArray get(String key) {
+	public JSONObject get(String key) {
 		String filter = SubscribedChannelsTableHelper.COLUMN_USER + "=\"" + myJid + "\"";
 		JSONObject response = DAOHelper.queryUniqueOnSameThread(db, false, SubscribedChannelsTableHelper.TABLE_NAME, COLUMNS, filter,
 				null, null, null, null, null, cursorParser());
@@ -79,7 +78,7 @@ public class SubscribedChannelsDAO implements DAO<JSONArray, JSONArray> {
 			return null;
 		}
 		try {
-			return new JSONArray(response.optString(SubscribedChannelsTableHelper.COLUMN_SUBSCRIBED));
+			return new JSONObject(response.optString(SubscribedChannelsTableHelper.COLUMN_SUBSCRIBED));
 		} catch (JSONException e) {
 			return null;
 		}
@@ -96,7 +95,7 @@ public class SubscribedChannelsDAO implements DAO<JSONArray, JSONArray> {
 		return cursorParser;
 	}
 	
-	public Map<String, JSONArray> getAll() {
+	public Map<String, JSONObject> getAll() {
 		return null;
 	}
 	

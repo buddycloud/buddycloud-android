@@ -1,11 +1,10 @@
 package com.buddycloud.model;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 
 import org.apache.http.entity.StringEntity;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -15,7 +14,7 @@ import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.model.dao.SubscribedChannelsDAO;
 import com.buddycloud.preferences.Preferences;
 
-public class SubscribedChannelsModel extends AbstractModel<JSONArray, JSONObject, String> {
+public class SubscribedChannelsModel extends AbstractModel<JSONObject, JSONObject, String> {
 
 	private static SubscribedChannelsModel instance;
 	
@@ -36,7 +35,7 @@ public class SubscribedChannelsModel extends AbstractModel<JSONArray, JSONObject
 		return instance;
 	}
 	
-	public void getFromServer(final Context context, final ModelCallback<JSONArray> callback, String... p) {
+	public void getFromServer(final Context context, final ModelCallback<JSONObject> callback, String... p) {
 		
 	}
 
@@ -84,10 +83,10 @@ public class SubscribedChannelsModel extends AbstractModel<JSONArray, JSONObject
 	}
 
 	@Override
-	public JSONArray getFromCache(Context context, String... p) {
-		JSONArray subscribed = SubscribedChannelsDAO.getInstance(context).get(null);
+	public JSONObject getFromCache(Context context, String... p) {
+		JSONObject subscribed = SubscribedChannelsDAO.getInstance(context).get(null);
 		if (subscribed == null) {
-			return new JSONArray();
+			return new JSONObject();
 		}
 		return subscribed;
 	}
@@ -99,19 +98,21 @@ public class SubscribedChannelsModel extends AbstractModel<JSONArray, JSONObject
 					@SuppressWarnings("unchecked")
 					@Override
 					public void success(JSONObject response) {
-						final List<String> channels = new ArrayList<String>();
+						final Map<String, String> subscriptions = new HashMap<String, String>();
 						Iterator<String> keyIterator = response.keys();
 						while (keyIterator.hasNext()) {
 							String node = (String) keyIterator.next();
 							if (node.endsWith(POST_NODE_SUFIX)) {
-								channels.add(node.split("/")[0]);
+								subscriptions.put(node.split("/")[0], 
+										response.optString(node));
 							}
 						}
+						
 						SubscribedChannelsDAO dao = SubscribedChannelsDAO.getInstance(context);
 						if (dao.get(null) == null) {
-							dao.insert(null, new JSONArray(channels));
+							dao.insert(null, new JSONObject(subscriptions));
 						} else {
-							dao.update(null, new JSONArray(channels));
+							dao.update(null, new JSONObject(subscriptions));
 						}
 						notifyChanged();
 						callback.success(null);

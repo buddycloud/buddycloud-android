@@ -29,7 +29,7 @@ public class SubscribedChannelsAdapter extends GenericChannelAdapter {
 
 	public void reload(final Context context) {
 		this.myChannel = Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
-		JSONArray response = SubscribedChannelsModel.getInstance().getFromCache(context);
+		JSONArray response = SubscribedChannelsModel.getInstance().getFromCache(context).names();
 		clear();
 		for (int i = 0; i < response.length(); i++) {
 			String channel = response.optString(i);
