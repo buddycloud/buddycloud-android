@@ -18,9 +18,13 @@ public class SubscribedChannelsModel extends AbstractModel<JSONObject, JSONObjec
 
 	private static SubscribedChannelsModel instance;
 	
+	public static final String ROLE = "com.buddycloud.ROLE";
 	public static final String ROLE_MEMBER = "member";
 	public static final String ROLE_PRODUCER = "producer";
+	public static final String ROLE_MODERATOR = "moderator";
+	public static final String ROLE_OWNER = "owner";
 	public static final String ROLE_NONE = "none";
+	
 	public static final String POST_NODE_SUFIX = "/posts";
 	
 	private static final String TAG = SubscribedChannelsModel.class.getName();

@@ -29,16 +29,19 @@ public class SubscribedChannelsAdapter extends GenericChannelAdapter {
 
 	public void reload(final Context context) {
 		this.myChannel = Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
-		JSONArray response = SubscribedChannelsModel.getInstance().getFromCache(context).names();
+		JSONObject subscriptions = SubscribedChannelsModel.getInstance().getFromCache(context);
+		JSONArray channels = subscriptions.names();
 		clear();
-		for (int i = 0; i < response.length(); i++) {
-			String channel = response.optString(i);
+		
+		for (int i = 0; channels != null && i < channels.length(); i++) {
+			String channel = channels.optString(i);
 			if (!channel.equals(myChannel)) {
 				addChannel(SUBSCRIBED, createChannelItem(channel), context);
 			} else {
 				addChannel(PERSONAL, createChannelItem(channel), context);
 			}
 		}
+		
 		sort(context);
 		notifyDataSetChanged();
 	}

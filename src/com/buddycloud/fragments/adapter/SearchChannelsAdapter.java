@@ -40,6 +40,9 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 		this.myChannel = Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
 		JSONObject subscriptions = SubscribedChannelsModel.getInstance().getFromCache(context);
 		JSONArray channels = subscriptions.names();
+		if (channels == null) {
+			return;
+		}
 		
 		for (int i = 0; i < channels.length(); i++) {
 			final String channel = channels.optString(i);

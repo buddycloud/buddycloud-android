@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class BuddycloudSQLiteOpenHelper extends SQLiteOpenHelper {
 	
-	public static final int DATABASE_VERSION = 4;
+	public static final int DATABASE_VERSION = 6;
 	public static final String DATABASE_NAME = "buddycloud.db";
 	
 	public BuddycloudSQLiteOpenHelper(Context context) {
@@ -40,6 +40,7 @@ public class BuddycloudSQLiteOpenHelper extends SQLiteOpenHelper {
 
 		// Drop old data
 		db.execSQL("DROP TABLE IF EXISTS " + ChannelMetadataTableHelper.TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + SubscribedChannelsTableHelper.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + UnreadCountersTableHelper.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + PostsTableHelper.TABLE_NAME);
 		onCreate(db);

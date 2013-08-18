@@ -296,8 +296,16 @@ public class ChannelStreamFragment extends ContentFragment {
 	}
 
 	private boolean isFollowing() {
+		String role = getRole();
+		return role != null && !role.equals(SubscribedChannelsModel.ROLE_NONE);
+	}
+	
+	private String getRole() {
 		JSONObject subscribed = SubscribedChannelsModel.getInstance().getFromCache(getActivity());
-		return subscribed.has(getChannelJid());
+		if (!subscribed.has(getChannelJid())) {
+			return null;
+		}
+		return subscribed.optString(getChannelJid());
 	}
 	
 	@Override
@@ -324,6 +332,7 @@ public class ChannelStreamFragment extends ContentFragment {
 		Intent intent = new Intent();
 		intent.setClass(getActivity(), ChannelDetailActivity.class);
 		intent.putExtra(GenericChannelsFragment.CHANNEL, getChannelJid());
+		intent.putExtra(SubscribedChannelsModel.ROLE, getRole());
 		getActivity().startActivity(intent);
 	}
 
