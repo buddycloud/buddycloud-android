@@ -20,10 +20,15 @@ public class SubscribedChannelsModel extends AbstractModel<JSONObject, JSONObjec
 	
 	public static final String ROLE = "com.buddycloud.ROLE";
 	public static final String ROLE_MEMBER = "member";
-	public static final String ROLE_PRODUCER = "producer";
+	public static final String ROLE_PUBLISHER = "publisher";
+	public static final String ROLE_OUTCAST = "outcast";
 	public static final String ROLE_MODERATOR = "moderator";
 	public static final String ROLE_OWNER = "owner";
 	public static final String ROLE_NONE = "none";
+	
+	public static final String ACCESS_MODEL = "com.buddycloud.ACCESS_MODEL";
+	public static final String ACCESS_MODEL_OPEN = "open";
+	public static final String ACCESS_MODEL_WHITELIST = "whitelist";
 	
 	public static final String POST_NODE_SUFIX = "/posts";
 	

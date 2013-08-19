@@ -297,7 +297,8 @@ public class ChannelStreamFragment extends ContentFragment {
 
 	private boolean isFollowing() {
 		String role = getRole();
-		return role != null && !role.equals(SubscribedChannelsModel.ROLE_NONE);
+		return role != null && !role.equals(SubscribedChannelsModel.ROLE_NONE) 
+				&& !role.equals(SubscribedChannelsModel.ROLE_OUTCAST);
 	}
 	
 	private String getRole() {
@@ -340,7 +341,7 @@ public class ChannelStreamFragment extends ContentFragment {
 		final boolean isFollowing = isFollowing();
 		
 		Map<String, String> subscription = new HashMap<String, String>();
-		String newRole = isFollowing ? SubscribedChannelsModel.ROLE_NONE : SubscribedChannelsModel.ROLE_PRODUCER;
+		String newRole = isFollowing ? SubscribedChannelsModel.ROLE_NONE : SubscribedChannelsModel.ROLE_PUBLISHER;
 		final String channelJid = getChannelJid();
 		subscription.put(channelJid + SubscribedChannelsModel.POST_NODE_SUFIX, newRole);
 		

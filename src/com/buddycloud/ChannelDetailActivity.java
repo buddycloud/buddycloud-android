@@ -1,10 +1,21 @@
 package com.buddycloud;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.buddycloud.fragments.GenericChannelsFragment;
@@ -16,6 +27,15 @@ import com.buddycloud.utils.ImageHelper;
 
 public class ChannelDetailActivity extends SherlockActivity {
 
+	private final static List<String> ROLES = Arrays.asList(new String[] {
+			SubscribedChannelsModel.ROLE_MEMBER, 
+			SubscribedChannelsModel.ROLE_MODERATOR, 
+			SubscribedChannelsModel.ROLE_PUBLISHER});
+	
+	private final static List<String> ACCESS_MODELS = Arrays.asList(new String[] {
+			SubscribedChannelsModel.ACCESS_MODEL_OPEN,
+			SubscribedChannelsModel.ACCESS_MODEL_WHITELIST});
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -24,8 +44,7 @@ public class ChannelDetailActivity extends SherlockActivity {
 		final String channelJid = getIntent().getStringExtra(GenericChannelsFragment.CHANNEL);
 		final String role = getIntent().getStringExtra(SubscribedChannelsModel.ROLE);
 		
-		final boolean editable = role != null && (role.equals(SubscribedChannelsModel.ROLE_OWNER)
-				|| role.equals(SubscribedChannelsModel.ROLE_MODERATOR));
+		final boolean editable = role != null && role.equals(SubscribedChannelsModel.ROLE_OWNER);
 
 		setTitle(channelJid);
 		
@@ -48,8 +67,74 @@ public class ChannelDetailActivity extends SherlockActivity {
 				.placeholder(R.drawable.personal_50px)
 				.error(R.drawable.personal_50px)
 				.into(avatarView);
+		
+		final FrameLayout postMetadataBtn = (FrameLayout) findViewById(R.id.postMetadataBtn);
+		postMetadataBtn.setVisibility(editable ? View.VISIBLE : View.GONE);
+		
+		postMetadataBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				postMetadataBtn.setVisibility(View.GONE);
+				findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+				
+				JSONObject newMetadata = createMetadataJSON();
+				ChannelMetadataModel.getInstance().save(getApplicationContext(), newMetadata, 
+						new ModelCallback<JSONObject>() {
+					@Override
+					public void success(JSONObject response) {
+						Toast.makeText(getApplicationContext(), 
+								"Channel metadata updated", 
+								Toast.LENGTH_SHORT).show();
+						finish();
+					}
+
+					@Override
+					public void error(Throwable throwable) {
+						postMetadataBtn.setVisibility(View.VISIBLE);
+						findViewById(R.id.progressBar).setVisibility(View.GONE);
+						Toast.makeText(getApplicationContext(), 
+								"Could update channel metadata. " + throwable.getMessage(), 
+								Toast.LENGTH_SHORT).show();
+					}
+					
+				}, channelJid);
+			}
+
+		});
 	}
 
+	private JSONObject createMetadataJSON() {
+		Map<String, String> metadata = new HashMap<String, String>();
+		
+		metadata.put("title", getEditText(R.id.titleTxt));
+		metadata.put("description", getEditText(R.id.descriptionTxt));
+		metadata.put("accessModel", getSpinnerText(R.id.accessModelTxt));
+		metadata.put("defaultAffiliation", getSpinnerText(R.id.defaultAffiliationTxt));
+		
+		return new JSONObject(metadata);
+	}
+
+	private String getEditText(int resId) {
+		return ((EditText) findViewById(resId)).getText().toString();
+	}
+	
+	private String getSpinnerText(int resId) {
+		Spinner spinner = (Spinner) findViewById(resId);
+		return spinner.getSelectedItem().toString();
+	}
+	
+	private void setSpinnerText(Spinner spinner, List<String> values, String selectedValue) {
+		ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
+				this, R.layout.spinner_item_layout);
+		for (String value : values) {
+			adapter.add(value);
+		}
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(adapter);
+		spinner.setSelection(values.indexOf(selectedValue));
+	}
+	
 	private boolean fillFields(boolean editable, String channelJid) {
 		
 		JSONObject metadata = ChannelMetadataModel.getInstance().getFromCache(this, channelJid);
@@ -66,8 +151,8 @@ public class ChannelDetailActivity extends SherlockActivity {
 		descriptionTxt.setText(metadata.optString("description"));
 		setEditable(editable, descriptionTxt);
 		
-		EditText accessModelTxt = (EditText) findViewById(R.id.accessModelTxt);
-		accessModelTxt.setText(metadata.optString("accessModel"));
+		Spinner accessModelTxt = (Spinner) findViewById(R.id.accessModelTxt);
+		setSpinnerText(accessModelTxt, ACCESS_MODELS, metadata.optString("accessModel"));
 		setEditable(editable, accessModelTxt);
 		
 		EditText creationDateTxt = (EditText) findViewById(R.id.creationDateTxt);
@@ -78,8 +163,8 @@ public class ChannelDetailActivity extends SherlockActivity {
 		channelTypeTxt.setText(metadata.optString("channelType"));
 		setEditable(false, channelTypeTxt);
 		
-		EditText defaultAffiliationTxt = (EditText) findViewById(R.id.defaultAffiliationTxt);
-		defaultAffiliationTxt.setText(metadata.optString("defaultAffiliation"));
+		Spinner defaultAffiliationTxt = (Spinner) findViewById(R.id.defaultAffiliationTxt);
+		setSpinnerText(defaultAffiliationTxt, ROLES, metadata.optString("defaultAffiliation"));
 		setEditable(editable, defaultAffiliationTxt);
 		
 		return true;
@@ -88,6 +173,13 @@ public class ChannelDetailActivity extends SherlockActivity {
 	private void setEditable(boolean editable, EditText editText) {
 		if (!editable) {
 			editText.setKeyListener(null);
+		}
+	}
+	
+	private void setEditable(boolean editable, Spinner spinner) {
+		if (!editable) {
+			spinner.setEnabled(false);
+			spinner.setClickable(false);
 		}
 	}
 

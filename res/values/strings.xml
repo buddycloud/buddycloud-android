@@ -44,4 +44,6 @@
 	
 	<string name="pull_to_refresh_error">Could not fetch latest posts.</string>
 	
+	<string name="details_save">Save settings</string>
+	
 </resources>

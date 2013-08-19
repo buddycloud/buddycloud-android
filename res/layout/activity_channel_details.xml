@@ -1,8 +1,14 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:id="@+id/ScrollView01"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="#555555" >
+    
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="8dp" >
     
     <ImageView
         android:id="@+id/avatarView"
@@ -70,7 +76,7 @@
         android:text="Access model"
         android:textColor="@color/stroke" />
 
-    <EditText
+    <Spinner
         android:id="@+id/accessModelTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -79,8 +85,7 @@
         android:layout_below="@+id/textView1"
         android:ems="10"
         android:hint="access model"
-        android:textColor="#FFFFFF"
-        android:inputType="textNoSuggestions" />
+        android:textColor="#FFFFFF" />
 
     <TextView
         android:id="@+id/textView2"
@@ -134,7 +139,7 @@
         android:text="Default affiliation"
         android:textColor="@color/stroke" />
 
-    <EditText
+    <Spinner
         android:id="@+id/defaultAffiliationTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -143,8 +148,38 @@
         android:layout_below="@+id/TextView02"
         android:ems="10"
         android:hint="default affiliation"
-        android:textColor="#FFFFFF"
-        android:inputType="textNoSuggestions" />
+        android:textColor="#FFFFFF" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
+    
+    <FrameLayout
+        android:id="@+id/postMetadataBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/defaultAffiliationTxt"
+        android:layout_centerHorizontal="true"
+        android:background="@color/bc_green"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:padding="@dimen/login_button_padding" >
+
+        <com.buddycloud.utils.TypefacedTextView
+                xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/details_save"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                buddycloud:typeface="Roboto-Light.ttf" />
+
+    </FrameLayout>
 
 </RelativeLayout>
+
+</ScrollView>

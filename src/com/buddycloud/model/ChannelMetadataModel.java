@@ -2,6 +2,7 @@ package com.buddycloud.model;
 
 import java.util.Iterator;
 
+import org.apache.http.entity.StringEntity;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -98,9 +99,36 @@ public class ChannelMetadataModel extends AbstractModel<JSONObject, JSONObject, 
 	}
 
 	@Override
-	public void save(Context context, JSONObject object,
-			ModelCallback<JSONObject> callback, String... p) {
-		// TODO Auto-generated method stub
+	public void save(final Context context, JSONObject object,
+			final ModelCallback<JSONObject> callback, String... p) {
+		try {
+			StringEntity requestEntity = new StringEntity(object.toString(), "UTF-8");
+			requestEntity.setContentType("application/json");
+			final String channelJid = p[0];
+			BuddycloudHTTPHelper.post(url(context, channelJid), requestEntity, context, new ModelCallback<JSONObject>() {
+				@Override
+				public void success(final JSONObject metadataUpdated) {
+					fetchFromServer(context, new ModelCallback<Void>() {
+						@Override
+						public void success(Void response) {
+							callback.success(metadataUpdated);
+						}
+
+						@Override
+						public void error(Throwable throwable) {
+							callback.error(throwable);
+						}
+					}, channelJid);
+				}
+				
+				@Override
+				public void error(Throwable throwable) {
+					callback.error(throwable);
+				}
+			});
+		} catch (Exception e) {
+			callback.error(e);
+		}
 	}
 
 	@Override
