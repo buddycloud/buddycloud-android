@@ -133,4 +133,18 @@ public class SubscribedChannelsModel extends AbstractModel<JSONObject, JSONObjec
 					}
 				});
 	}
+
+	public static boolean canPost(String role) {
+		if (role == null) {
+			return false;
+		}
+		return role.equals(ROLE_OWNER)
+				|| role.equals(ROLE_MODERATOR)
+				|| role.equals(ROLE_PUBLISHER);
+	}
+
+	public static boolean isFollowing(String role) {
+		return role != null && !role.equals(ROLE_NONE) 
+				&& !role.equals(ROLE_OUTCAST);
+	}
 }

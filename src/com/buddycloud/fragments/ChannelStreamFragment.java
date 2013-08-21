@@ -65,23 +65,24 @@ public class ChannelStreamFragment extends ContentFragment {
 		
 		final ImageView postButton = (ImageView) view.findViewById(R.id.postButton);
 		postButton.setEnabled(false);
-		
-		EditText postContent = (EditText) view.findViewById(R.id.postContentTxt);
-		
-		postButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				createPost(view);
-			}
-		});
-		
-		configurePostSection(postContent, postButton);
+		if (SubscribedChannelsModel.canPost(getRole())) {
+			EditText postContent = (EditText) view.findViewById(R.id.postContentTxt);
+			postButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					createPost(view);
+				}
+			});
+			configurePostSection(postContent, postButton);
+		} else {
+			view.findViewById(R.id.bcCommentSection).setVisibility(View.GONE);
+		}
 		
 		syncd(view, getActivity());
 		
 		return view;
 	}
-
+	
 	private String getChannelJid() {
 		return getArguments().getString(GenericChannelsFragment.CHANNEL);
 	}
@@ -197,14 +198,7 @@ public class ChannelStreamFragment extends ContentFragment {
 	}
 	
 	private PostCard toCard(JSONObject post, final String channelJid) {
-		PostCard postCard = new PostCard(channelJid, post, (MainActivity) getActivity());
-		postCard.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				//TODO Show single post fragment
-			}
-		});
-		return postCard;
+		return new PostCard(channelJid, post, (MainActivity) getActivity(), getRole());
 	}
 	
 	private void createPost(final View view) {
@@ -288,19 +282,13 @@ public class ChannelStreamFragment extends ContentFragment {
 				R.menu.channel_fragment_options, menu);
 		
 		MenuItem followItem = menu.getItem(0);
-		if (isFollowing()) {
+		if (SubscribedChannelsModel.isFollowing(getRole())) {
 			followItem.setTitle(R.string.menu_unfollow);
 		} else {
 			followItem.setTitle(R.string.menu_follow);
 		}
 	}
 
-	private boolean isFollowing() {
-		String role = getRole();
-		return role != null && !role.equals(SubscribedChannelsModel.ROLE_NONE) 
-				&& !role.equals(SubscribedChannelsModel.ROLE_OUTCAST);
-	}
-	
 	private String getRole() {
 		JSONObject subscribed = SubscribedChannelsModel.getInstance().getFromCache(getActivity());
 		if (!subscribed.has(getChannelJid())) {
@@ -338,7 +326,7 @@ public class ChannelStreamFragment extends ContentFragment {
 	}
 
 	private void toogleRole() {
-		final boolean isFollowing = isFollowing();
+		final boolean isFollowing = SubscribedChannelsModel.isFollowing(getRole());
 		
 		Map<String, String> subscription = new HashMap<String, String>();
 		String newRole = isFollowing ? SubscribedChannelsModel.ROLE_NONE : SubscribedChannelsModel.ROLE_PUBLISHER;

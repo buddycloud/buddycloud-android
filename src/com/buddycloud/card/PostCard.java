@@ -31,6 +31,7 @@ import com.buddycloud.fragments.ChannelStreamFragment;
 import com.buddycloud.model.MediaModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
+import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
@@ -50,10 +51,12 @@ public class PostCard extends AbstractCard {
 	private CardListAdapter repliesAdapter = new CardListAdapter();
 	private Spanned anchoredContent;
 	private MainActivity activity;
-	
-	public PostCard(String channelJid, JSONObject post, MainActivity activity) {
+	private String role;
+
+	public PostCard(String channelJid, JSONObject post, MainActivity activity, String role) {
 		this.channelJid = channelJid;
 		this.activity = activity;
+		this.role = role;
 		setPost(post);
 	}
 
@@ -175,26 +178,32 @@ public class PostCard extends AbstractCard {
 		ReplySectionView.configure(commentList, repliesAdapter);
 		
 		// Create reply section
-		ImageView replyAuthorView = holder.getView(R.id.replyAuthorView);
-		String replyAuthorURL = AvatarUtils.avatarURL(viewGroup.getContext(), 
-				Preferences.getPreference(context, Preferences.MY_CHANNEL_JID));
-		ImageHelper.picasso(viewGroup.getContext()).load(replyAuthorURL)
-				.placeholder(R.drawable.personal_50px)
-				.error(R.drawable.personal_50px)
-				.transform(ImageHelper.createRoundTransformation(context, 16, false, -1))
-				.into(replyAuthorView);
-		final Button replyBtn = holder.getView(R.id.replyBtn);
-		replyBtn.setTypeface(Typefaces.get(context,  "fonts/Roboto-Light.ttf"));
-		final EditText replyTxt = holder.getView(R.id.replyContentTxt);
-		replyBtn.setEnabled(false);
-		
-		replyBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				reply(context, replyBtn, replyTxt);
-			}
-		});
-		configureReplySection(replyTxt, replyBtn);
+		View replyFrame = holder.getView(R.id.replyFrameView);
+		if (!SubscribedChannelsModel.canPost(role)) {
+			replyFrame.setVisibility(View.GONE);
+		} else {
+			replyFrame.setVisibility(View.VISIBLE);
+			ImageView replyAuthorView = holder.getView(R.id.replyAuthorView);
+			String replyAuthorURL = AvatarUtils.avatarURL(viewGroup.getContext(), 
+					Preferences.getPreference(context, Preferences.MY_CHANNEL_JID));
+			ImageHelper.picasso(viewGroup.getContext()).load(replyAuthorURL)
+					.placeholder(R.drawable.personal_50px)
+					.error(R.drawable.personal_50px)
+					.transform(ImageHelper.createRoundTransformation(context, 16, false, -1))
+					.into(replyAuthorView);
+			final Button replyBtn = holder.getView(R.id.replyBtn);
+			replyBtn.setTypeface(Typefaces.get(context,  "fonts/Roboto-Light.ttf"));
+			final EditText replyTxt = holder.getView(R.id.replyContentTxt);
+			replyBtn.setEnabled(false);
+			
+			replyBtn.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					reply(context, replyBtn, replyTxt);
+				}
+			});
+			configureReplySection(replyTxt, replyBtn);
+		}
 		
 		return convertView;
 	}
@@ -300,7 +309,7 @@ public class PostCard extends AbstractCard {
 				R.id.bcImageContent, R.id.bcPostDate, 
 				R.id.replyListView, R.id.replyAuthorView,
 				R.id.replyContentTxt, R.id.replyBtn, 
-				R.id.topicWrapper);
+				R.id.topicWrapper, R.id.replyFrameView);
 	}
 
 	@Override
