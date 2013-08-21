@@ -7,7 +7,13 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -27,6 +33,8 @@ import com.buddycloud.utils.ImageHelper;
 
 public class ChannelDetailActivity extends SherlockActivity {
 
+	private static final int SELECT_PHOTO_REQUEST_CODE = 110;
+	
 	private final static List<String> ROLES = Arrays.asList(new String[] {
 			SubscribedChannelsModel.ROLE_MEMBER, 
 			SubscribedChannelsModel.ROLE_MODERATOR, 
@@ -36,6 +44,30 @@ public class ChannelDetailActivity extends SherlockActivity {
 			SubscribedChannelsModel.ACCESS_MODEL_OPEN,
 			SubscribedChannelsModel.ACCESS_MODEL_WHITELIST});
 	
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent imageReturnedIntent) {
+		super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+
+		switch (requestCode) {
+		case SELECT_PHOTO_REQUEST_CODE:
+			if (resultCode == RESULT_OK) {
+				Uri selectedImage = imageReturnedIntent.getData();
+				String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+				Cursor cursor = getContentResolver().query(selectedImage,
+						filePathColumn, null, null, null);
+				cursor.moveToFirst();
+
+				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+				String filePath = cursor.getString(columnIndex);
+				cursor.close();
+
+				Bitmap selectedBitmap = BitmapFactory.decodeFile(filePath);
+				// TODO Downsample and upload
+			}
+		}
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,7 +76,7 @@ public class ChannelDetailActivity extends SherlockActivity {
 		final String channelJid = getIntent().getStringExtra(GenericChannelsFragment.CHANNEL);
 		final String role = getIntent().getStringExtra(SubscribedChannelsModel.ROLE);
 		
-		final boolean editable = role != null && role.equals(SubscribedChannelsModel.ROLE_OWNER);
+		final boolean editable = SubscribedChannelsModel.canEditMetadata(role);
 
 		setTitle(channelJid);
 		
@@ -67,6 +99,16 @@ public class ChannelDetailActivity extends SherlockActivity {
 				.placeholder(R.drawable.personal_50px)
 				.error(R.drawable.personal_50px)
 				.into(avatarView);
+		if (editable) {
+			avatarView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+					photoPickerIntent.setType("image/*");
+					startActivityForResult(photoPickerIntent, SELECT_PHOTO_REQUEST_CODE);  
+				}
+			});
+		}
 		
 		final FrameLayout postMetadataBtn = (FrameLayout) findViewById(R.id.postMetadataBtn);
 		postMetadataBtn.setVisibility(editable ? View.VISIBLE : View.GONE);

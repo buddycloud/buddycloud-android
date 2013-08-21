@@ -134,6 +134,10 @@ public class SubscribedChannelsModel extends AbstractModel<JSONObject, JSONObjec
 				});
 	}
 
+	public static boolean canEditMetadata(final String role) {
+		return role != null && role.equals(ROLE_OWNER);
+	}
+
 	public static boolean canPost(String role) {
 		if (role == null) {
 			return false;
