@@ -1,5 +1,6 @@
 package com.buddycloud;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -7,13 +8,10 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -26,10 +24,12 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.model.ChannelMetadataModel;
+import com.buddycloud.model.MediaModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
+import com.squareup.picasso.RequestBuilder;
 
 public class ChannelDetailActivity extends SherlockActivity {
 
@@ -52,20 +52,37 @@ public class ChannelDetailActivity extends SherlockActivity {
 		case SELECT_PHOTO_REQUEST_CODE:
 			if (resultCode == RESULT_OK) {
 				Uri selectedImage = imageReturnedIntent.getData();
-				String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-				Cursor cursor = getContentResolver().query(selectedImage,
-						filePathColumn, null, null, null);
-				cursor.moveToFirst();
-
-				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-				String filePath = cursor.getString(columnIndex);
-				cursor.close();
-
-				Bitmap selectedBitmap = BitmapFactory.decodeFile(filePath);
-				// TODO Downsample and upload
+				Context context = getApplicationContext();
+				File tempAvatar = null;
+				try {
+					tempAvatar = AvatarUtils.downSample(context, selectedImage);
+				} catch (Exception e) {
+					Toast.makeText(getApplicationContext(), "Failed to load new avatar file.", 
+							Toast.LENGTH_SHORT).show();
+					return;
+				}
+				uploadAvatar(tempAvatar);
 			}
 		}
+	}
+
+	private void uploadAvatar(final File tempAvatar) {
+		final String channelJid = getIntent().getStringExtra(GenericChannelsFragment.CHANNEL);
+		MediaModel.getInstance().saveAvatar(this, null, new ModelCallback<JSONObject>() {
+			@Override
+			public void success(JSONObject response) {
+				tempAvatar.delete();
+				loadAvatar(channelJid, true);
+				Toast.makeText(getApplicationContext(), "Upload successful.", 
+						Toast.LENGTH_SHORT).show();
+			}
+			
+			@Override
+			public void error(Throwable throwable) {
+				Toast.makeText(getApplicationContext(), "Failed to upload new avatar.", 
+						Toast.LENGTH_SHORT).show();
+			}
+		}, Uri.fromFile(tempAvatar).toString(), channelJid);
 	}
 	
 	@Override
@@ -93,12 +110,7 @@ public class ChannelDetailActivity extends SherlockActivity {
 			}, channelJid);
 		}
 		
-		ImageView avatarView = (ImageView) findViewById(R.id.avatarView);
-		String avatarURL = AvatarUtils.avatarURL(this, channelJid);
-		ImageHelper.picasso(this).load(avatarURL)
-				.placeholder(R.drawable.personal_50px)
-				.error(R.drawable.personal_50px)
-				.into(avatarView);
+		ImageView avatarView = loadAvatar(channelJid, false);
 		if (editable) {
 			avatarView.setOnClickListener(new OnClickListener() {
 				@Override
@@ -144,6 +156,19 @@ public class ChannelDetailActivity extends SherlockActivity {
 			}
 
 		});
+	}
+
+	private ImageView loadAvatar(final String channelJid, boolean skipCache) {
+		ImageView avatarView = (ImageView) findViewById(R.id.avatarView);
+		String avatarURL = AvatarUtils.avatarURL(this, channelJid);
+		RequestBuilder builder = ImageHelper.picasso(this).load(avatarURL)
+				.placeholder(R.drawable.personal_50px)
+				.error(R.drawable.personal_50px);
+		if (skipCache) {
+			builder = builder.skipCache();
+		}
+		builder.into(avatarView);
+		return avatarView;
 	}
 
 	private JSONObject createMetadataJSON() {

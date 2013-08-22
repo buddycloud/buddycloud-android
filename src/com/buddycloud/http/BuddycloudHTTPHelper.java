@@ -7,8 +7,10 @@ import javax.net.ssl.HostnameVerifier;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -52,6 +54,11 @@ public class BuddycloudHTTPHelper {
 		post(url, true, true, entity, parent, callback);
 	}
 
+	public static void put(String url, HttpEntity entity, Context parent, 
+			final ModelCallback<JSONObject> callback) {
+		reqObject("put", url, true, true, entity, parent, callback);
+	}
+	
 	public static void getObject(String url, boolean auth, boolean acceptsJSON, Context parent, 
 			final ModelCallback<JSONObject> callback) {
 		reqObject("get", url, auth, acceptsJSON, null, parent, callback);
@@ -157,10 +164,14 @@ public class BuddycloudHTTPHelper {
 				if (methodType.equals("get")) {
 					method = new HttpGet(url);
 					method.setHeader("Accept", "application/json");
-				} else if (methodType.equals("post")) {
-					method = new HttpPost(url);
+				} else if (methodType.equals("post") || methodType.equals("put")) {
+					if (methodType.equals("post")) {
+						method = new HttpPost(url);
+					} else {
+						method = new HttpPut(url);
+					}
 					if (entity != null) {
-						((HttpPost)method).setEntity(entity);
+						((HttpEntityEnclosingRequestBase)method).setEntity(entity);
 					}
 				}
 				if (acceptsJSON) {
