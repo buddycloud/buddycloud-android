@@ -130,7 +130,6 @@ public class ChannelDetailActivity extends SherlockActivity {
 			@Override
 			public void onClick(View v) {
 				postMetadataBtn.setVisibility(View.GONE);
-				findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 				
 				JSONObject newMetadata = createMetadataJSON();
 				ChannelMetadataModel.getInstance().save(getApplicationContext(), newMetadata, 
@@ -160,6 +159,7 @@ public class ChannelDetailActivity extends SherlockActivity {
 
 	private ImageView loadAvatar(final String channelJid, boolean skipCache) {
 		ImageView avatarView = (ImageView) findViewById(R.id.avatarView);
+		avatarView.setImageBitmap(null);
 		String avatarURL = AvatarUtils.avatarURL(this, channelJid);
 		RequestBuilder builder = ImageHelper.picasso(this).load(avatarURL)
 				.placeholder(R.drawable.personal_50px)
