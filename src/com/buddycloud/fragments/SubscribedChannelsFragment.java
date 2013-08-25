@@ -20,6 +20,7 @@ import com.buddycloud.GenericChannelActivity;
 import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.SearchActivity;
+import com.buddycloud.SettingsActivity;
 import com.buddycloud.fragments.adapter.MostActiveChannelsAdapter;
 import com.buddycloud.fragments.adapter.RecommendedChannelsAdapter;
 import com.buddycloud.fragments.adapter.SubscribedChannelsAdapter;
@@ -108,6 +109,12 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 			return true;
 		} else if (item.getItemId() == R.id.menu_create_channel) {
 			createNewTopicChannel();
+			return true;
+		} else if (item.getItemId() == R.id.menu_settings) {
+			Intent settingsActivityIntent = new Intent();
+			settingsActivityIntent.setClass(getActivity(), SettingsActivity.class);
+			getActivity().startActivityForResult(
+					settingsActivityIntent, SettingsActivity.REQUEST_CODE);
 			return true;
 		}
 		

@@ -61,8 +61,12 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_share"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:screenOrientation="portrait">
+        </activity>
+        
+        <activity
+            android:name=".SettingsActivity"
             android:screenOrientation="portrait">
         </activity>
         
