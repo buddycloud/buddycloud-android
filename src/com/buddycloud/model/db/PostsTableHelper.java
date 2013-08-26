@@ -22,7 +22,7 @@ public class PostsTableHelper {
 			+ COLUMN_AUTHOR + " TEXT NOT NULL, " 
 			+ COLUMN_PUBLISHED + " TEXT NOT NULL, " 
 			+ COLUMN_UPDATED + " TEXT NOT NULL," 
-			+ COLUMN_CONTENT + " TEXT NOT NULL,"
+			+ COLUMN_CONTENT + " TEXT,"
 			+ COLUMN_CHANNEL + " TEXT NOT NULL,"
 			+ COLUMN_REPLY_TO + " TEXT,"
 			+ COLUMN_MEDIA + " TEXT);";

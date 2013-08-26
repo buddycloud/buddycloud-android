@@ -66,7 +66,7 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 		String author = json.optString("author");
 		String published = json.optString("published");
 		String updated = json.optString("updated");
-		String content = json.optString("content");
+		String content = json.isNull("content") ? null : json.optString("content");
 		String replyTo = json.isNull("replyTo") ? null : json.optString("replyTo");
 		String mediaId = json.isNull("media") ? null : json.optJSONArray("media").toString();
 		
