@@ -193,7 +193,7 @@ public class BuddycloudHTTPHelper {
 					return "";
 				}
 				
-				String responseStr = EntityUtils.toString(resEntityGet);
+				String responseStr = EntityUtils.toString(resEntityGet, "utf-8");
 				
 				Log.d(TAG, "HTTP: {M: " + methodType + ", U: " + url + ", T: " + (System.currentTimeMillis() - t) + "}");
 				
