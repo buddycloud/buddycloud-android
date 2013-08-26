@@ -1,21 +1,70 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory 
-        android:title="Category"
-        android:key="pref_key_storage_settings">
+        android:title="Notifications"
+        android:key="pref_key_notifications_settings">
         <CheckBoxPreference
-            android:key="pref_key_auto_delete"
-            android:summary="Notifications"
-            android:title="Notifications"
-            android:defaultValue="false"/>
+            android:key="pref_key_enable_mention_notification"
+            android:summary="When someone mentions me in a channel I follow"
+            android:title="\@mentions"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="pref_key_enable_post_mychannel_notification"
+            android:summary="When someone posts in a channel I own"
+            android:title="Post into my channel"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="pref_key_enable_new_follower_notification"
+            android:summary="When someone follows any of my channels"
+            android:title="New followers"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="pref_key_enable_comments_notification"
+            android:summary="When someone posts into the same topic as me"
+            android:title="Comments in topics"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="pref_key_enable_post_anychannel_notification"
+            android:summary="When someone posts into a channel I follow"
+            android:title="Posts into any channel I follow"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+    
+    <PreferenceCategory 
+        android:title="Vibration and sound"
+        android:key="pref_key_vibration_sound_settings">
+        <CheckBoxPreference
+            android:key="pref_key_enable_vibration"
+            android:summary="Your phone will vibrate when you get a notification"
+            android:title="Vibration"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="pref_key_enable_sound"
+            android:summary="Listen to a nice bird singing when you get a notification"
+            android:title="Audio notification"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+    
+    <PreferenceCategory 
+        android:title="About"
+        android:key="pref_key_about_settings">
+        <Preference
+            android:key="pref_key_about_bc"
+            android:title="About buddycloud"/>
         <Preference 
-            android:key="pref_key_sms_delete_limit"
-            android:dependency="pref_key_auto_delete"
-            android:summary="About"
-            android:title="About"/>
+            android:key="pref_key_debug_report"
+            android:summary="Send a debug report via email to help us diagnose problems"
+            android:title="Debug report"/>
         <Preference 
-            android:key="pref_key_mms_delete_limit"
-            android:dependency="pref_key_auto_delete"
-            android:summary="Buddycloud"
-            android:title="Buddycloud"/>
+            android:key="pref_key_rate_buddycloud"
+            android:summary="We love you. Love us back on the Play store"
+            android:title="Rate buddycloud"/>
+    </PreferenceCategory>
+    
+    <PreferenceCategory 
+        android:title="Danger zone"
+        android:key="pref_key_danger_zone">
+        <Preference
+            android:key="pref_key_delete_account"
+            android:title="Delete buddycloud account"/>
     </PreferenceCategory>
 </PreferenceScreen>

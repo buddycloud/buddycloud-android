@@ -9,9 +9,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -44,16 +46,25 @@ public class GCMIntentService extends GCMBaseIntentService {
 			return;
 		}
 		
-		Uri soundUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.cp);
-		
 		NotificationCompat.Builder mBuilder =
 		        new NotificationCompat.Builder(this)
 		        .setSmallIcon(R.drawable.notification_icon)
 		        .setContentTitle("Post from " + authorJid)
 		        .setLights(Color.GREEN, 1000, 1000)
-		        .setVibrate(new long[] {500, 500, 500})
-		        .setSound(soundUri)
 		        .setContentText(content);
+		
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		boolean doVibrate = sharedPrefs.getBoolean("pref_key_enable_vibration", true);
+		if (doVibrate) {
+			mBuilder.setVibrate(new long[] {500, 500, 500});
+		}
+		
+		boolean playAudio = sharedPrefs.getBoolean("pref_key_enable_sound", true);
+		if (playAudio) {
+			Uri soundUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.cp);
+			mBuilder.setSound(soundUri);
+		}
 		
 		setPriority(mBuilder);
 		
@@ -96,7 +107,6 @@ public class GCMIntentService extends GCMBaseIntentService {
 		try {
 			settings.put("type", "gcm");
 			settings.put("target", regId);
-			settings.put("postOnSubscribedChannel", true);
 		} catch (JSONException e) {
 			Log.e(TAG, "Failure to register GCM settings.", e);
 			return;

@@ -1,5 +1,7 @@
 package com.buddycloud;
 
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +19,8 @@ import com.buddycloud.fragments.ContentFragment;
 import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.fragments.PostDetailsFragment;
 import com.buddycloud.fragments.SubscribedChannelsFragment;
+import com.buddycloud.model.ModelCallback;
+import com.buddycloud.model.NotificationSettingsModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.GCMUtils;
 import com.slidingmenu.lib.SlidingMenu;
@@ -155,6 +159,16 @@ public class MainActivity extends SlidingFragmentActivity {
 				final String channelJid = data.getStringExtra(GenericChannelsFragment.CHANNEL);
 				showChannelFragment(channelJid);
 			}
+		}  else if (requestCode == SettingsActivity.REQUEST_CODE) {
+			NotificationSettingsModel.getInstance().saveFromPreferences(this, new ModelCallback<JSONObject>() {
+				@Override
+				public void success(JSONObject response) {
+				}
+
+				@Override
+				public void error(Throwable throwable) {
+				}
+			});
 		}
 	}
 
