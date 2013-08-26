@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Editable;
 import android.text.Spanned;
 import android.text.TextWatcher;
@@ -25,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.buddycloud.FullScreenImageActivity;
 import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.fragments.ChannelStreamFragment;
@@ -145,6 +147,16 @@ public class PostCard extends AbstractCard {
 						.transform(ImageHelper.createRoundTransformation(context, 8, 
 							true, widthMeasureSpec))
 						.into(mediaView);
+				}
+			});
+			
+			mediaView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent();
+					intent.setClass(context, FullScreenImageActivity.class);
+					intent.putExtra(FullScreenImageActivity.IMAGE_URL, userMediaURL);
+					activity.startActivityForResult(intent, FullScreenImageActivity.REQUEST_CODE);
 				}
 			});
 			
