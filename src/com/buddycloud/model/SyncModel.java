@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.model.dao.UnreadCountersDAO;
@@ -18,6 +19,7 @@ import com.buddycloud.utils.TimeUtils;
 public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 
 	private static SyncModel instance;
+	private static String TAG = SyncModel.class.toString();
 	private static final int PAGE_SIZE = 31;
 	private static final String SYNC_ENDPOINT = "/sync";
 	
@@ -30,8 +32,8 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 		return instance;
 	}
 	
-	private void parseChannelCounters(UnreadCountersDAO unreadCountersDAO, String channel, JSONObject oldCounter, 
-			int newPostsCount) {
+	private void parseChannelCounters(UnreadCountersDAO unreadCountersDAO, String channel, 
+			JSONObject oldCounter, int newPostsCount) {
 		
 		int oldTotalCount = 0;
 		int oldMentionsCount = 0;
@@ -61,28 +63,42 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 	private void parse(Context context, JSONObject newCounters, Map<String, JSONObject> oldCounters) {
 		
 		final UnreadCountersDAO unreadCountersDAO = UnreadCountersDAO.getInstance(context);
-		String syncTimestamp = TimeUtils.OLDEST_DATE;
+		String lastUpdate = Preferences.getPreference(context, Preferences.LAST_UPDATE, TimeUtils.OLDEST_DATE);
+		String syncTimestamp = lastUpdate;
 		
 		Iterator<String> keys = newCounters.keys();
 		while (keys.hasNext()) {
 			String node = keys.next();
 			String channel = node.split("/")[2];
 			JSONArray newPosts = newCounters.optJSONArray(node);
-			int newPostsCount = newPosts.length();
 			String newPostUpdate = newPosts.optJSONObject(0).optString("updated");
 			
-			try {
-				if (TimeUtils.fromISOToDate(newPostUpdate).after(
-						TimeUtils.fromISOToDate(syncTimestamp))) {
-					syncTimestamp = newPostUpdate;
-				}
-			} catch (ParseException e) {
-				// TODO Log exception
+			if (after(newPostUpdate, syncTimestamp)) {
+				syncTimestamp = newPostUpdate;
 			}
+			
+			int newPostsCount = 0;
+			for (int i = 0; i < newPosts.length(); i++) {
+				String update = newPosts.optJSONObject(i).optString("updated");
+				if (after(update, lastUpdate)) {
+					newPostsCount++;
+				}
+			}
+			
 			parseChannelCounters(unreadCountersDAO, channel, oldCounters.get(channel), newPostsCount);
 		}
 		
 		Preferences.setPreference(context, Preferences.LAST_UPDATE, syncTimestamp);
+	}
+
+	private boolean after(String dateA, String dateB) {
+		try {
+			return TimeUtils.fromISOToDate(dateA).after(
+					TimeUtils.fromISOToDate(dateB));
+		} catch (ParseException e) {
+			Log.e(TAG, "Could not parse dates.", e);
+			return false;
+		}
 	}
 	
 	@Override

@@ -19,8 +19,12 @@ public class Preferences {
 	public static final String FALLBACK_TOPIC_AVATAR = "https://demo.buddycloud.org/img/topic-75px.jpg";	
 	
 	public static String getPreference(Context parent, String key) {
+		return getPreference(parent, key, null);
+	}
+	
+	public static String getPreference(Context parent, String key, String defValue) {
 		SharedPreferences preferences = parent.getSharedPreferences(PREFS_NAME, 0);
-		return preferences.getString(key, null);
+		return preferences.getString(key, defValue);
 	}
 	
 	public static void setPreference(Context context, String key, String value) {
