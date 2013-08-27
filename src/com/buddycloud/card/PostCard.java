@@ -47,6 +47,7 @@ import com.buddycloud.utils.Typefaces;
 public class PostCard extends AbstractCard {
 	
 	private static final String MEDIA_URL_SUFIX = "?maxwidth=600";
+	private static final String MEDIA_URL_SUFIX_FULL = "?maxwidth=1024";
 	
 	private JSONObject post;
 	private String channelJid;
@@ -155,7 +156,7 @@ public class PostCard extends AbstractCard {
 				public void onClick(View v) {
 					Intent intent = new Intent();
 					intent.setClass(context, FullScreenImageActivity.class);
-					intent.putExtra(FullScreenImageActivity.IMAGE_URL, userMediaURL);
+					intent.putExtra(FullScreenImageActivity.IMAGE_URL, userMediaURL + MEDIA_URL_SUFIX_FULL);
 					activity.startActivityForResult(intent, FullScreenImageActivity.REQUEST_CODE);
 				}
 			});

@@ -29,7 +29,6 @@ import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
-import com.squareup.picasso.RequestBuilder;
 
 public class ChannelDetailActivity extends SherlockActivity {
 
@@ -68,6 +67,10 @@ public class ChannelDetailActivity extends SherlockActivity {
 
 	private void uploadAvatar(final File tempAvatar) {
 		final String channelJid = getIntent().getStringExtra(GenericChannelsFragment.CHANNEL);
+		
+		Toast.makeText(getApplicationContext(), "Uploading avatar...", 
+				Toast.LENGTH_LONG).show();
+		
 		MediaModel.getInstance().saveAvatar(this, null, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
@@ -159,15 +162,11 @@ public class ChannelDetailActivity extends SherlockActivity {
 
 	private ImageView loadAvatar(final String channelJid, boolean skipCache) {
 		ImageView avatarView = (ImageView) findViewById(R.id.avatarView);
-		avatarView.setImageBitmap(null);
 		String avatarURL = AvatarUtils.avatarURL(this, channelJid);
-		RequestBuilder builder = ImageHelper.picasso(this).load(avatarURL)
+		ImageHelper.picassoSkipCache(this).load(avatarURL)
 				.placeholder(R.drawable.personal_50px)
-				.error(R.drawable.personal_50px);
-		if (skipCache) {
-			builder = builder.skipCache();
-		}
-		builder.into(avatarView);
+				.error(R.drawable.personal_50px)
+				.into(avatarView);
 		return avatarView;
 	}
 

@@ -13,7 +13,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
 
-import com.squareup.picasso.OkHttpLoader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -21,17 +20,26 @@ public class ImageHelper {
     
 	private static final String TAG = ImageHelper.class.getName();
 	private static final String PICASSO_CACHE = "picasso";
+	private static final Long PICASSO_CACHE_SIZE = 20L * 1024L * 1024L; // 20MB
 	private static Picasso PICASSO = null;
 	
 	public static Picasso picasso(Context context) {
 		if (PICASSO == null) {
-			File cacheDir = new File(context.getExternalCacheDir(), PICASSO_CACHE);
-			cacheDir.mkdirs();
-			PICASSO = new Picasso.Builder(context)
-				.loader(new OkHttpLoader(cacheDir))
-				.build();
+			PICASSO = createPicasso(context, false);
 		}
 		return PICASSO;
+	}
+
+	private static Picasso createPicasso(Context context, boolean skipCache) {
+		File cacheDir = new File(context.getExternalCacheDir(), PICASSO_CACHE);
+		cacheDir.mkdirs();
+		return new Picasso.Builder(context)
+			.downloader(new PicassoDownloader(cacheDir, PICASSO_CACHE_SIZE, skipCache))
+			.build();
+	}
+
+	public static Picasso picassoSkipCache(Context context) {
+		return createPicasso(context, true);
 	}
 	
 	public static Transformation createRoundTransformation(final Context context, 
