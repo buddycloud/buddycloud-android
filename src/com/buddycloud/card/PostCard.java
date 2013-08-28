@@ -138,25 +138,30 @@ public class PostCard extends AbstractCard {
 			
 			final String userMediaURL = apiAddress + "/" + mediaJson.optString("channel") + 
 					MediaModel.ENDPOINT + "/" + mediaJson.optString("id");
+			final String imageURLLo = userMediaURL + MEDIA_URL_SUFIX;
 			
 			mediaView.setVisibility(View.VISIBLE);
 			mediaView.setMeasureListener(new MeasureListener() {
 				@Override
 				public void measure(int widthMeasureSpec, int heightMeasureSpec) {
 					ImageHelper.picasso(context)
-						.load(userMediaURL + MEDIA_URL_SUFIX)
+						.load(imageURLLo)
 						.transform(ImageHelper.createRoundTransformation(context, 8, 
 							true, widthMeasureSpec))
 						.into(mediaView);
 				}
 			});
 			
+			final String imageURLHi = userMediaURL + MEDIA_URL_SUFIX_FULL;
+			ImageHelper.picasso(context).load(imageURLHi).fetch();
+			
 			mediaView.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					Intent intent = new Intent();
 					intent.setClass(context, FullScreenImageActivity.class);
-					intent.putExtra(FullScreenImageActivity.IMAGE_URL, userMediaURL + MEDIA_URL_SUFIX_FULL);
+					intent.putExtra(FullScreenImageActivity.IMAGE_URL, imageURLLo);
+					intent.putExtra(FullScreenImageActivity.IMAGE_URL_HIGH_RES, imageURLHi);
 					activity.startActivityForResult(intent, FullScreenImageActivity.REQUEST_CODE);
 				}
 			});
