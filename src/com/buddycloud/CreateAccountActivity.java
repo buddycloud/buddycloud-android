@@ -1,20 +1,31 @@
 package com.buddycloud;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.model.AccountModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.preferences.Preferences;
@@ -22,6 +33,7 @@ import com.buddycloud.utils.DNSUtils;
 
 public class CreateAccountActivity extends Activity {
 
+	private static final String DOMAIN_SUGGESTION_URL = "http://buddycloud.com/registration-helper/sign-up-domains.json";
 	public static final int REQUEST_CODE = 105;
 	public static final int ACCOUNT_CREATED_RESULT = 205;
 	
@@ -29,6 +41,20 @@ public class CreateAccountActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
+        
+        final AutoCompleteTextView actv = (AutoCompleteTextView) findViewById(R.id.domainTxt);
+        
+        actv.setOnFocusChangeListener(new OnFocusChangeListener() {
+			
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					actv.showDropDown();
+				}
+			}
+		});
+        
+        fillSuggestions(actv);
         
         final RelativeLayout createAccountBtn = (RelativeLayout) findViewById(R.id.createAccountBtn);
         createAccountBtn.setOnClickListener(new OnClickListener() {
@@ -79,6 +105,36 @@ public class CreateAccountActivity extends Activity {
         
     }
 
+	private void fillSuggestions(final AutoCompleteTextView actv) {
+		BuddycloudHTTPHelper.getArray(
+        		DOMAIN_SUGGESTION_URL, false, true, this, 
+        		new ModelCallback<JSONArray>() {
+
+					@Override
+					public void success(JSONArray response) {
+						List<Domain> domains = new ArrayList<Domain>();
+						for (int i = 0; i < response.length(); i++) {
+							JSONObject domainJson = response.optJSONObject(i);
+							domains.add(new Domain(domainJson));
+						}
+						
+						DomainAdapter adapter = new DomainAdapter(
+								getApplicationContext(), 
+								R.layout.domain_spinner_item, 
+								domains);
+						
+						actv.setAdapter(adapter);
+						actv.setThreshold(256);
+						actv.showDropDown();
+					}
+
+					@Override
+					public void error(Throwable throwable) {
+						// TODO Auto-generated method stub
+					}
+		});
+	}
+
     private static boolean isEmpty(String string) {
     	return string.length() == 0;
     }
@@ -122,4 +178,49 @@ public class CreateAccountActivity extends Activity {
 					}
 				}, apiAddress);
 	}
+	
+	private static class Domain {
+		
+		private JSONObject domainObject;
+
+		public Domain(JSONObject domainObject) {
+			this.domainObject = domainObject;
+		}
+		
+		JSONObject getJSON() {
+			return domainObject;
+		}
+		
+		@Override
+		public String toString() {
+			return domainObject.optString("domain");
+		}
+	}
+	
+	private class DomainAdapter extends ArrayAdapter<Domain> {
+		 
+        public DomainAdapter(Context context, int textViewResourceId, List<Domain> objects) {
+            super(context, textViewResourceId, objects);
+        }
+ 
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+        	return getCustomView(position, convertView, parent);
+        }
+        
+        public View getCustomView(int position, View convertView, ViewGroup parent) {
+ 
+        	Domain domain = getItem(position);
+        	
+			LayoutInflater inflater = getLayoutInflater();
+			View row = inflater.inflate(R.layout.domain_spinner_item, parent, false);
+			TextView label = (TextView) row.findViewById(R.id.textHeader);
+			label.setText(domain.getJSON().optString("domain"));
+
+			TextView sub = (TextView) row.findViewById(R.id.textSub);
+			sub.setText(domain.getJSON().optString("name"));
+
+			return row;
+        }
+   }
 }

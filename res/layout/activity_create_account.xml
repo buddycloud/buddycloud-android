@@ -41,7 +41,7 @@
             <requestFocus />
 		</EditText>
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/domainTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
             android:ems="10"
             android:hint="@string/domain_name" >
 
-        </EditText>
+        </AutoCompleteTextView>
 
         <EditText
             android:id="@+id/emailAddressTxt"
