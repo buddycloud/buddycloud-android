@@ -56,4 +56,10 @@ public class AccountModel extends AbstractModel<Void, JSONObject, String> {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void delete(Context context, ModelCallback<Void> callback, String... p) {
+		// TODO Auto-generated method stub
+		
+	}
 }

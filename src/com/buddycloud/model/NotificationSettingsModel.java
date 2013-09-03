@@ -109,4 +109,10 @@ public class NotificationSettingsModel extends AbstractModel<JSONObject, JSONObj
 		editor.putBoolean("pref_key_enable_post_anychannel_notification", 
 				object.optBoolean("postOnSubscribedChannel"));
 	}
+
+	@Override
+	public void delete(Context context, ModelCallback<Void> callback, String... p) {
+		// TODO Auto-generated method stub
+		
+	}
 }

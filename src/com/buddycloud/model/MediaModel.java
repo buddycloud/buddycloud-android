@@ -121,4 +121,10 @@ public class MediaModel extends AbstractModel<JSONObject, JSONObject, String> {
 		
 	}
 
+	@Override
+	public void delete(Context context, ModelCallback<Void> callback, String... p) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

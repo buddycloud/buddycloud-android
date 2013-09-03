@@ -73,4 +73,10 @@ public class FollowersModel extends AbstractModel<JSONArray, JSONArray, String> 
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void delete(Context context, ModelCallback<Void> callback, String... p) {
+		// TODO Auto-generated method stub
+		
+	}
 }

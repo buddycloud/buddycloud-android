@@ -3,6 +3,9 @@
     <string name="app_name">buddycloud</string>
     <string name="hello_world">Hello world!</string>
     
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    
     <string name="menu_search">Search</string>
     <string name="menu_create_channel">Create channel</string>
     <string name="menu_settings">Settings</string>

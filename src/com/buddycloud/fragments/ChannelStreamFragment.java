@@ -198,7 +198,8 @@ public class ChannelStreamFragment extends ContentFragment {
 	}
 	
 	private PostCard toCard(JSONObject post, final String channelJid) {
-		return new PostCard(channelJid, post, (MainActivity) getActivity(), getRole());
+		return new PostCard(channelJid, post, (MainActivity) getActivity(), 
+				cardAdapter, getRole());
 	}
 	
 	private void createPost(final View view) {

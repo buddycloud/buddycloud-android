@@ -61,4 +61,10 @@ public class LoginModel extends AbstractModel<Void, Void, Void> {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void delete(Context context, ModelCallback<Void> callback, Void... p) {
+		// TODO Auto-generated method stub
+		
+	}
 }

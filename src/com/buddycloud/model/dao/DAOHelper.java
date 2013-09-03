@@ -81,6 +81,11 @@ public class DAOHelper {
 		return response.optJSONObject(0);
 	}
 	
+	static int deleteOnSameThread(final SQLiteDatabase db,
+			final String table, final String selection, final String[] selectionArgs) {
+		return db.delete(table, selection, selectionArgs);
+	}
+	
 	static Map<String, JSONObject> queryMapOnSameThread(final SQLiteDatabase db, final boolean distinct, final String table, 
 			final String[] columns, final String selection, final String[] selectionArgs, 
 			final String groupBy, final String having, final String orderBy, final String limit, 

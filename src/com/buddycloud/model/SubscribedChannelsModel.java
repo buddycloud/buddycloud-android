@@ -147,8 +147,22 @@ public class SubscribedChannelsModel extends AbstractModel<JSONObject, JSONObjec
 				|| role.equals(ROLE_PUBLISHER);
 	}
 
+	public static boolean canDelete(String role) {
+		if (role == null) {
+			return false;
+		}
+		return role.equals(ROLE_OWNER)
+				|| role.equals(ROLE_MODERATOR);
+	}
+	
 	public static boolean isFollowing(String role) {
 		return role != null && !role.equals(ROLE_NONE) 
 				&& !role.equals(ROLE_OUTCAST);
+	}
+
+	@Override
+	public void delete(Context context, ModelCallback<Void> callback, String... p) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -256,4 +256,24 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		String channelJid = p[0];
 		fetchPosts(context, channelJid, callback, null);
 	}
+
+	@Override
+	public void delete(final Context context, final ModelCallback<Void> callback, String... p) {
+		final String channelJid = p[0];
+		final String itemId = p[1];
+		String url = postUrl(context, channelJid, itemId);
+		BuddycloudHTTPHelper.delete(url, true, false, context, 
+				new ModelCallback<JSONObject>() {
+			@Override
+			public void success(JSONObject response) {
+				PostsDAO.getInstance(context).delete(channelJid, itemId);
+				callback.success(null);
+			}
+			
+			@Override
+			public void error(Throwable throwable) {
+				callback.error(throwable);
+			}
+		});
+	}
 }

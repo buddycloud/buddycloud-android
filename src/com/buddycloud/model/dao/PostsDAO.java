@@ -108,6 +108,12 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 				null, null, null, null, null, cursorParser());
 	}
 
+	public int delete(String channel, String itemId) {
+		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\" AND " 
+						+ PostsTableHelper.COLUMN_ID + "=\"" + itemId + "\"";
+		return DAOHelper.deleteOnSameThread(db, PostsTableHelper.TABLE_NAME, filter, null);
+	}
+	
 	public JSONArray getReplies(String channel, String itemId) {
 		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\" AND " 
 						+ PostsTableHelper.COLUMN_REPLY_TO + "=\"" + itemId + "\"";

@@ -7,6 +7,7 @@ import javax.net.ssl.HostnameVerifier;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -72,6 +73,11 @@ public class BuddycloudHTTPHelper {
 	public static void post(String url, boolean auth, boolean acceptsJSON, HttpEntity entity, Context parent, 
 			final ModelCallback<JSONObject> callback) {
 		reqObject("post", url, auth, acceptsJSON, entity, parent, callback);
+	}
+	
+	public static void delete(String url, boolean auth, boolean acceptsJSON, Context parent, 
+			final ModelCallback<JSONObject> callback) {
+		reqObject("delete", url, auth, acceptsJSON, null, parent, callback);
 	}
 	
 	private static void reqObject(String method, String url, boolean auth, boolean acceptsJSON, 
@@ -173,6 +179,8 @@ public class BuddycloudHTTPHelper {
 					if (entity != null) {
 						((HttpEntityEnclosingRequestBase)method).setEntity(entity);
 					}
+				} else if (methodType.equals("delete")) {
+					method = new HttpDelete(url);
 				}
 				if (acceptsJSON) {
 					addAcceptJSONHeader(method);
@@ -188,15 +196,14 @@ public class BuddycloudHTTPHelper {
 					throw new Exception(response.getStatusLine().toString());
 				}
 				
+				Log.d(TAG, "HTTP: {M: " + methodType + ", U: " + url + ", T: " + (System.currentTimeMillis() - t) + "}");
+				
 				HttpEntity resEntityGet = ((HttpResponse)response).getEntity();
 				if (resEntityGet == null) {
 					return "";
 				}
 				
 				String responseStr = EntityUtils.toString(resEntityGet, "utf-8");
-				
-				Log.d(TAG, "HTTP: {M: " + methodType + ", U: " + url + ", T: " + (System.currentTimeMillis() - t) + "}");
-				
 				return responseStr;
 			} catch (Throwable e) {
 				Log.e(TAG, e.getLocalizedMessage(), e);

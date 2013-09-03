@@ -163,4 +163,10 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 			ModelCallback<JSONObject> callback, String... p) {
 	}
 
+	@Override
+	public void delete(Context context, ModelCallback<Void> callback, String... p) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

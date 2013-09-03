@@ -66,4 +66,12 @@ public class CardListAdapter extends BaseAdapter {
 		cards.clear();
 		cardsRef.clear();
 	}
+
+	public void remove(String postId) {
+		Card removed = cardsRef.remove(postId);
+		if (removed != null) {
+			cards.remove(removed);
+		}
+		notifyDataSetChanged();
+	}
 }

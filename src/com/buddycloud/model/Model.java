@@ -12,6 +12,8 @@ public interface Model<RefreshType, SaveType, Params> {
 	
 	void save(Context context, SaveType object, ModelCallback<SaveType> callback, Params... p);
 	
+	void delete(Context context, ModelCallback<Void> callback, Params... p);
+	
 	void addListener(ModelListener listener);
 	
 }

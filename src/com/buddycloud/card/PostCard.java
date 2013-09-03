@@ -1,13 +1,17 @@
 package com.buddycloud.card;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.Spanned;
@@ -49,16 +53,22 @@ public class PostCard extends AbstractCard {
 	private static final String MEDIA_URL_SUFIX = "?maxwidth=600";
 	private static final String MEDIA_URL_SUFIX_FULL = "?maxwidth=1024";
 	
+	private static final String CONTEXT_DELETE = "Delete";
+	private static final String CONTEXT_SHARE = "Share";
+	
 	private JSONObject post;
 	private String channelJid;
 	private CardListAdapter repliesAdapter = new CardListAdapter();
 	private Spanned anchoredContent;
 	private MainActivity activity;
 	private String role;
+	private CardListAdapter cardAdapter;
 
-	public PostCard(String channelJid, JSONObject post, MainActivity activity, String role) {
+	public PostCard(String channelJid, JSONObject post, MainActivity activity, 
+			CardListAdapter cardAdapter, String role) {
 		this.channelJid = channelJid;
 		this.activity = activity;
+		this.cardAdapter = cardAdapter;
 		this.role = role;
 		setPost(post);
 	}
@@ -191,6 +201,14 @@ public class PostCard extends AbstractCard {
 			e.printStackTrace();
 		}
 		
+		View contextArrowDown = holder.getView(R.id.bcArrowDown);
+		contextArrowDown.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showPostContextActions(context);
+			}
+		});
+		
 		// Replies section
 		LinearLayout commentList = holder.getView(R.id.replyListView);
 		ReplySectionView.configure(commentList, repliesAdapter);
@@ -224,6 +242,61 @@ public class PostCard extends AbstractCard {
 		}
 		
 		return convertView;
+	}
+	
+	private void showPostContextActions(final Context context) {
+		
+		final List<String> contextItems = new ArrayList<String>();
+		if (SubscribedChannelsModel.canDelete(role)) {
+			contextItems.add(CONTEXT_DELETE);
+		}
+		contextItems.add(CONTEXT_SHARE);
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		builder.setTitle("Post actions");
+		builder.setItems(contextItems.toArray(new String[]{}), 
+				new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int item) {
+		        if (contextItems.get(item).equals(CONTEXT_DELETE)) {
+		        	confirmDelete(context);
+		        }
+		    }
+		});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+	
+	private void confirmDelete(final Context context) {
+		new AlertDialog.Builder(context)
+				.setIcon(android.R.drawable.ic_dialog_alert)
+				.setTitle("Confirm deletion")
+				.setMessage("Are you sure you want to delete this post?")
+				.setPositiveButton(R.string.yes,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								delete(context);
+							}
+						}).setNegativeButton(R.string.no, null).show();
+	}
+	
+	private void delete(final Context context) {
+		final String postId = post.optString("id");
+		PostsModel.getInstance().delete(context, new ModelCallback<Void>() {
+			@Override
+			public void success(Void response) {
+				cardAdapter.remove(postId);
+				Toast.makeText(context, "Post deleted",
+						Toast.LENGTH_LONG).show();
+			}
+
+			@Override
+			public void error(Throwable throwable) {
+				Toast.makeText(context, "Could not delete post.",
+						Toast.LENGTH_LONG).show();
+			}
+		}, channelJid, postId);
 	}
 	
 	private void reply(final Context context,
@@ -327,7 +400,8 @@ public class PostCard extends AbstractCard {
 				R.id.bcImageContent, R.id.bcPostDate, 
 				R.id.replyListView, R.id.replyAuthorView,
 				R.id.replyContentTxt, R.id.replyBtn, 
-				R.id.topicWrapper, R.id.replyFrameView);
+				R.id.topicWrapper, R.id.replyFrameView, 
+				R.id.bcArrowDown);
 	}
 
 	@Override

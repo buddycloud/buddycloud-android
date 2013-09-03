@@ -85,4 +85,10 @@ public class SearchChannelsModel extends AbstractModel<JSONArray, JSONArray, Str
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void delete(Context context, ModelCallback<Void> callback, String... p) {
+		// TODO Auto-generated method stub
+		
+	}
 }
