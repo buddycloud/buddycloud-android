@@ -49,5 +49,21 @@
         android:text="2 hours ago"
         android:textColor="#d2d2d2"
         buddycloud:typeface="Roboto-Light.ttf" />
+    
+    <RelativeLayout
+	    android:id="@+id/bcArrowDown"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true">
+	    <ImageView
+	        android:layout_height="12dp"
+	        android:layout_width="12dp"
+	        android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+	        android:layout_marginRight="8dp"
+	        android:layout_marginTop="8dp"
+	        android:src="@drawable/bc_arrow_down" />
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -24,28 +24,31 @@ import com.buddycloud.utils.TimeUtils;
 
 public class CommentCard extends AbstractCard {
 	
-	private final String published;
 	private Spanned anchoredContent;
 	private MainActivity activity;
-	private String replyAuthor;
-	private JSONObject post;
+	private JSONObject comment;
+	private String channelJid;
+	private String role;
+	private CardListAdapter cardAdapter;
 	
-	public CommentCard(String replyAuthor, String content, String published, 
-			MainActivity activity) {
-		this.replyAuthor = replyAuthor;
-		this.published = published;
+	public CommentCard(String channelJid, JSONObject comment, MainActivity activity, 
+			CardListAdapter cardAdapter, String role) {
+		this.channelJid = channelJid;
+		this.comment = comment;
 		this.activity = activity;
-		this.anchoredContent = TextUtils.anchor(content);
+		this.cardAdapter = cardAdapter;
+		this.role = role;
+		this.anchoredContent = TextUtils.anchor(comment.optString("content"));
 	}
 	
 	@Override
 	public JSONObject getPost() {
-		return post;
+		return comment;
 	}
 
 	@Override
 	public View getContentView(int position, View convertView,
-			ViewGroup viewGroup) {
+			final ViewGroup viewGroup) {
 		
 		boolean reuse = convertView != null && convertView.getTag() != null; 
 		CardViewHolder holder = null;
@@ -58,6 +61,10 @@ public class CommentCard extends AbstractCard {
 		} else {
 			holder = (CardViewHolder) convertView.getTag();
 		}
+		
+		final String replyAuthor = comment.optString("author");
+		String published = comment.optString("published");
+		final String replyId = comment.optString("id");
 		
 		String avatarURL = AvatarUtils.avatarURL(viewGroup.getContext(), replyAuthor);
 		ImageView avatarView = holder.getView(R.id.bcProfilePic);
@@ -88,17 +95,27 @@ public class CommentCard extends AbstractCard {
 			e.printStackTrace();
 		}
 		
+		View contextArrowDown = holder.getView(R.id.bcArrowDown);
+		contextArrowDown.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				PostContextUtils.showPostContextActions(viewGroup.getContext(), 
+						channelJid, replyId, cardAdapter, role);
+			}
+		});
+		
 		return convertView;
 	}
 
 	private static CardViewHolder fillHolder(View view) {
 		return CardViewHolder.create(view, R.id.bcProfilePic, 
-				R.id.bcPostContent, R.id.bcPostDate);
+				R.id.bcPostContent, R.id.bcPostDate, 
+				R.id.bcArrowDown);
 	}
 
 	@Override
 	public void setPost(JSONObject post) {
-		this.post = post;
+		this.comment = post;
 	}
 	
 	@Override

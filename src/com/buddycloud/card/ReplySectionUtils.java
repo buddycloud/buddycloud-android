@@ -3,7 +3,7 @@ package com.buddycloud.card;
 import android.database.DataSetObserver;
 import android.widget.LinearLayout;
 
-public class ReplySectionView {
+public class ReplySectionUtils {
 
 	public static void configure(final LinearLayout layout, final CardListAdapter adapter) {
 		reloadLayout(layout, adapter);

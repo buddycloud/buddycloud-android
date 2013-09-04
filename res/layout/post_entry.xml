@@ -80,7 +80,6 @@
                 android:textColor="#d2d2d2"
                 buddycloud:typeface="Roboto-Light.ttf" />
 
-
             <RelativeLayout
 	            android:id="@+id/bcArrowDown"
                 android:layout_width="28dp"
