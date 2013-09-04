@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.text.Editable;
 import android.text.Spanned;
 import android.text.TextWatcher;
@@ -43,6 +44,8 @@ import com.buddycloud.utils.MeasuredMediaView.MeasureListener;
 import com.buddycloud.utils.TextUtils;
 import com.buddycloud.utils.TimeUtils;
 import com.buddycloud.utils.Typefaces;
+import com.squareup.picasso.Picasso.LoadedFrom;
+import com.squareup.picasso.Target;
 
 public class PostCard extends AbstractCard {
 	
@@ -135,51 +138,11 @@ public class PostCard extends AbstractCard {
 		final MeasuredMediaView mediaView = holder.getView(R.id.bcImageContent);
 		mediaView.setImageBitmap(null);
 		
+		drawNoMediaLayout(contentTextView, contentTextViewAlt, mediaView);
+		
 		if (mediaArray != null) {
-			String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
-			
-			JSONObject mediaJson = mediaArray.optJSONObject(0);
-			
-			final String userMediaURL = apiAddress + "/" + mediaJson.optString("channel") + 
-					MediaModel.ENDPOINT + "/" + mediaJson.optString("id");
-			final String imageURLLo = userMediaURL + MEDIA_URL_SUFIX;
-			
-			mediaView.setVisibility(View.VISIBLE);
-			mediaView.setMeasureListener(new MeasureListener() {
-				@Override
-				public void measure(int widthMeasureSpec, int heightMeasureSpec) {
-					ImageHelper.picasso(context)
-						.load(imageURLLo)
-						.transform(ImageHelper.createRoundTransformation(context, 8, 
-							true, widthMeasureSpec))
-						.into(mediaView);
-				}
-			});
-			
-			final String imageURLHi = userMediaURL + MEDIA_URL_SUFIX_FULL;
-			ImageHelper.picasso(context).load(imageURLHi).fetch();
-			
-			mediaView.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent();
-					intent.setClass(context, FullScreenImageActivity.class);
-					intent.putExtra(FullScreenImageActivity.IMAGE_URL, imageURLLo);
-					intent.putExtra(FullScreenImageActivity.IMAGE_URL_HIGH_RES, imageURLHi);
-					activity.startActivityForResult(intent, FullScreenImageActivity.REQUEST_CODE);
-				}
-			});
-			
-			contentTextViewAlt.setVisibility(View.VISIBLE);
-			contentTextView.setVisibility(View.INVISIBLE);
-			contentTextViewAlt.setText(anchoredContent);
-			contentTextViewAlt.setMovementMethod(LinkMovementMethod.getInstance());
-		} else {
-			mediaView.setVisibility(View.GONE);
-			contentTextViewAlt.setVisibility(View.INVISIBLE);
-			contentTextView.setVisibility(View.VISIBLE);
-			contentTextView.setText(anchoredContent);
-			contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
+			drawMediaLayout(mediaArray, context, contentTextView,
+					contentTextViewAlt, mediaView);
 		}
 		
 		RelativeLayout topicWrapper = holder.getView(R.id.topicWrapper);
@@ -237,6 +200,91 @@ public class PostCard extends AbstractCard {
 		}
 		
 		return convertView;
+	}
+
+	private void drawNoMediaLayout(TextView contentTextView,
+			TextView contentTextViewAlt, final MeasuredMediaView mediaView) {
+		mediaView.setVisibility(View.GONE);
+		contentTextViewAlt.setVisibility(View.INVISIBLE);
+		contentTextView.setVisibility(View.VISIBLE);
+		contentTextView.setText(anchoredContent);
+		contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
+	}
+
+	private void drawMediaLayout(final JSONArray mediaArray, final Context context,
+			final TextView contentTextView, final TextView contentTextViewAlt,
+			final MeasuredMediaView mediaView) {
+		
+		mediaView.setMeasureListener(new MeasureListener() {
+			@Override
+			public void measure(int widthMeasureSpec, int heightMeasureSpec) {
+				drawMediaLayout(mediaArray, context, contentTextView,
+						contentTextViewAlt, mediaView, widthMeasureSpec);
+			}
+		});
+		mediaView.setVisibility(View.VISIBLE);
+	}
+
+	private void drawMediaLayout(final JSONArray mediaArray,
+			final Context context, final TextView contentTextView,
+			final TextView contentTextViewAlt,
+			final MeasuredMediaView mediaView, int widthMeasureSpec) {
+		final String imageURLLo = getMediaLoURL(mediaArray, context);
+		
+		ImageHelper.picasso(context)
+			.load(imageURLLo)
+			.transform(ImageHelper.createRoundTransformation(context, 8, 
+					true, widthMeasureSpec))
+			.into(new Target() {
+			
+				@Override
+				public void onBitmapLoaded(Bitmap arg0, LoadedFrom arg1) {
+					contentTextViewAlt.setVisibility(View.VISIBLE);
+					contentTextView.setVisibility(View.INVISIBLE);
+					contentTextViewAlt.setText(anchoredContent);
+					contentTextViewAlt.setMovementMethod(LinkMovementMethod.getInstance());
+					
+					mediaView.setImageBitmap(arg0);
+					mediaView.forceLayout();
+					
+					final String imageURLHi = getMediaHiURL(mediaArray, context);
+					ImageHelper.picasso(context).load(imageURLHi).fetch();
+					
+					mediaView.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Intent intent = new Intent();
+							intent.setClass(context, FullScreenImageActivity.class);
+							intent.putExtra(FullScreenImageActivity.IMAGE_URL, imageURLLo);
+							intent.putExtra(FullScreenImageActivity.IMAGE_URL_HIGH_RES, imageURLHi);
+							activity.startActivityForResult(intent, FullScreenImageActivity.REQUEST_CODE);
+						}
+					});
+				}
+				
+				@Override
+				public void onBitmapFailed() {
+					// TODO Auto-generated method stub
+				}
+		});
+	}
+	
+	private String getMediaLoURL(JSONArray mediaArray, final Context context) {
+		String userMediaURL = getMediaURL(mediaArray, context);
+		return userMediaURL + MEDIA_URL_SUFIX;
+	}
+
+	private String getMediaHiURL(JSONArray mediaArray, final Context context) {
+		String userMediaURL = getMediaURL(mediaArray, context);
+		return userMediaURL + MEDIA_URL_SUFIX_FULL;
+	}
+	
+	private String getMediaURL(JSONArray mediaArray, final Context context) {
+		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
+		JSONObject mediaJson = mediaArray.optJSONObject(0);
+		String userMediaURL = apiAddress + "/" + mediaJson.optString("channel") + 
+				MediaModel.ENDPOINT + "/" + mediaJson.optString("id");
+		return userMediaURL;
 	}
 	
 	private void reply(final Context context,

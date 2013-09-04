@@ -80,6 +80,19 @@ public class BuddycloudHTTPHelper {
 		reqObject("delete", url, auth, acceptsJSON, null, parent, callback);
 	}
 	
+	public static void reqStatus(String url, boolean auth, 
+			Context parent, ModelCallback<Integer> callback) {
+		RequestAsyncTask<Integer> task = new RequestAsyncTask<Integer>("get", url, null, auth, 
+				false, parent, callback) {
+					@Override
+					protected Integer toJSON(String responseStr) throws JSONException {
+						return Integer.valueOf(responseStr);
+					}
+				};
+		task.returnCodeOnly = true;
+		task.execute();
+	}
+	
 	private static void reqObject(String method, String url, boolean auth, boolean acceptsJSON, 
 			HttpEntity entity, Context parent, ModelCallback<JSONObject> callback) {
 		new RequestAsyncTask<JSONObject>(method, url, entity, auth, acceptsJSON, parent, callback) {
@@ -140,6 +153,10 @@ public class BuddycloudHTTPHelper {
 		}
 	}
 
+	public static boolean isError(int statusCode) {
+		return statusCode >= 400;
+	}
+	
 	private static abstract class RequestAsyncTask<T extends Object> extends AsyncTask<Void, Void, Object> {
 
 		private String methodType;
@@ -149,6 +166,7 @@ public class BuddycloudHTTPHelper {
 		private boolean acceptsJSON;
 		private Context parent;
 		private ModelCallback<T> callback;
+		private boolean returnCodeOnly;
 		
 		public RequestAsyncTask(String methodType, String url, HttpEntity entity,
 				boolean auth, boolean acceptsJSON, Context parent,
@@ -188,15 +206,22 @@ public class BuddycloudHTTPHelper {
 				if (auth) {
 					addAuthHeader(method, parent);
 				}
+				
 				HttpResponse response = CLIENT.execute(method);
-				if (response.getStatusLine().getStatusCode() >= 400) {
+				Log.d(TAG, "HTTP: {M: " + methodType + ", U: " + url + ", T: " + (System.currentTimeMillis() - t) + "}");
+				
+				int statusCode = response.getStatusLine().getStatusCode();
+				
+				if (isError(statusCode)) {
 					// Make sure entity is consumed (released) so connection can be re-used
 					// this avoids the SingleClientConnManager warning about invalid status connection not released
 					response.getEntity().consumeContent();
 					throw new Exception(response.getStatusLine().toString());
 				}
 				
-				Log.d(TAG, "HTTP: {M: " + methodType + ", U: " + url + ", T: " + (System.currentTimeMillis() - t) + "}");
+				if (returnCodeOnly) {
+					return statusCode;
+				}
 				
 				HttpEntity resEntityGet = ((HttpResponse)response).getEntity();
 				if (resEntityGet == null) {
@@ -210,7 +235,7 @@ public class BuddycloudHTTPHelper {
 				return e;
 			}
 		}
-		
+
 		@Override
 		protected void onPostExecute(Object response) {
 			if (response instanceof Throwable) {
