@@ -93,7 +93,8 @@ public class ShareActivity extends Activity {
 		findViewById(R.id.uploadProgress).setVisibility(View.VISIBLE);
 		
 		Toast.makeText(getApplicationContext(),
-				"Uploading media...", Toast.LENGTH_LONG).show();
+				getString(R.string.message_media_uploading), 
+				Toast.LENGTH_LONG).show();
 		EditText targetChannelView = (EditText) findViewById(R.id.channelText);
 		MediaModel.getInstance().save(getApplicationContext(), null, new ModelCallback<JSONObject>() {
 			@Override
@@ -115,14 +116,16 @@ public class ShareActivity extends Activity {
 			@Override
 			public void success(JSONObject response) {
 				Toast.makeText(getApplicationContext(),
-						"Media uploaded", Toast.LENGTH_LONG).show();
+						getString(R.string.message_media_uploaded),
+						Toast.LENGTH_LONG).show();
 				finish();
 			}
 			
 			@Override
 			public void error(Throwable throwable) {
 				Toast.makeText(getApplicationContext(),
-						"Error during file upload", Toast.LENGTH_LONG).show();
+						getString(R.string.message_media_upload_failed), 
+						Toast.LENGTH_LONG).show();
 				finish();
 			}
 		}, targetChannelView.getText().toString());

@@ -124,24 +124,27 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 	private void createNewTopicChannel() {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 
-		alert.setTitle("Create new topic channel");
-		alert.setMessage("Enter the channel name (channel@domain):");
+		alert.setTitle(getString(R.string.title_topic_channel_create));
+		alert.setMessage(getString(R.string.message_topic_channel_hint));
 		final EditText input = new EditText(getActivity());
 		alert.setView(input);
 
-		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		alert.setPositiveButton(getString(R.string.ok), 
+				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				String channelJid = input.getText().toString();
 				TopicChannelModel.getInstance().save(getActivity(), null, new ModelCallback<Void>() {
 					@Override
 					public void success(Void response) {
-						Toast.makeText(getActivity(), "Topic channel created.", 
+						Toast.makeText(getActivity(), 
+								getString(R.string.message_topic_channel_create), 
 								Toast.LENGTH_LONG).show();
 					}
 					
 					@Override
 					public void error(Throwable throwable) {
-						Toast.makeText(getActivity(), "Could not create topic channel.", 
+						Toast.makeText(getActivity(), 
+								getString(R.string.message_topic_channel_creation_failed), 
 								Toast.LENGTH_LONG).show();
 					}
 				}, channelJid);

@@ -300,7 +300,8 @@ public class PostCard extends AbstractCard {
 		PostsModel.getInstance().save(context, replyPost, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
-				Toast.makeText(context, "Post created", Toast.LENGTH_LONG).show();
+				Toast.makeText(context, context.getString(R.string.message_post_created), 
+						Toast.LENGTH_LONG).show();
 				loadReplies(post, channelJid, context, new ModelCallback<Void>() {
 					@Override
 					public void success(Void response) {

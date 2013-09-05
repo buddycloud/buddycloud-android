@@ -31,7 +31,8 @@ public class SettingsActivity extends SherlockPreferenceActivity {
 			
 			@Override
 			public void error(Throwable throwable) {
-				Toast.makeText(getApplicationContext(), "Could not load notification settings.", 
+				Toast.makeText(getApplicationContext(), 
+						getString(R.string.message_notifications_settings_load_failed), 
 						Toast.LENGTH_SHORT).show();
 			}
 		});

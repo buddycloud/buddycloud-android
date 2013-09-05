@@ -5,6 +5,7 @@
     
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="ok">Ok</string>
     
     <string name="menu_search">Search</string>
     <string name="menu_create_channel">Create channel</string>
@@ -45,8 +46,37 @@
 	<string name="login_error_wrong_credentials">Wrong credentials</string>
 	<string name="login_error_bad_channel_format">Bad channel format. Expected format is user@domain.</string>
 	
-	<string name="pull_to_refresh_error">Could not fetch latest posts.</string>
-	
 	<string name="details_save">Save settings</string>
+	
+	<string name="message_post_created">Post created</string>
+	<string name="title_confirm_delete">Confirm deletion</string>
+	<string name="message_confirm_delete">Are you sure you want to delete this post?</string>
+	<string name="message_post_deleted">Post deleted</string>
+	<string name="message_post_delete_failed">Could not delete post</string>
+	<string name="message_post_fetch_failed">Could not retrieve posts from the server</string>
+	
+	<string name="title_topic_channel_create">Create new topic channel</string>
+	<string name="message_topic_channel_hint">Enter the channel name (channel@domain)</string>
+	<string name="message_topic_channel_create">Topic channel created</string>
+	<string name="message_topic_channel_creation_failed">Could not create topic channel</string>
+	
+	<string name="message_avatar_upload_failed">Failed to load new avatar file</string>
+	<string name="message_avatar_uploading">Uploading avatar</string>
+	<string name="message_avatar_uploaded">Upload successful</string>
+	
+	<string name="message_metadata_updated">Channel metadata updated</string>
+	<string name="message_metadata_update_failed">Could not update channel metadata</string>
+
+	<string name="message_account_fields_mandatory">All fields are mandatory</string>
+	<string name="message_account_passwords_donot_match">Your password and confirmation password do not match</string>
+	<string name="message_account_invalid_domain">Domain name is not valid</string>
+	<string name="message_api_discovery_failed">Could not find an API for this domain</string>
+	<string name="message_account_creation_failed">Could not register account. Account unavailable</string>
+	
+	<string name="message_notifications_settings_load_failed">Could not load notification settings</string>
+	
+	<string name="message_media_upload_failed">Error during media upload</string>
+	<string name="message_media_uploading">Uploading media</string>
+	<string name="message_media_uploaded">Media uploaded</string>
 	
 </resources>

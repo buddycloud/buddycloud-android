@@ -69,20 +69,23 @@ public class CreateAccountActivity extends Activity {
 				if (isEmpty(accountNameTxt) || isEmpty(domainTxt) || 
 						isEmpty(emailAddressTxt) || isEmpty(repeatPasswordTxt) || isEmpty(passwordTxt)) {
 					Toast.makeText(getApplicationContext(), 
-							"All fields are mandatory.", Toast.LENGTH_LONG).show();
+							getString(R.string.message_account_fields_mandatory),
+							Toast.LENGTH_LONG).show();
 					return;
 				}
 				
 				if (!passwordTxt.equals(repeatPasswordTxt)) {
 					Toast.makeText(getApplicationContext(), 
-							"Your password and confirmation password do not match.", Toast.LENGTH_LONG).show();
+							getString(R.string.message_account_passwords_donot_match),
+							Toast.LENGTH_LONG).show();
 					return;
 				}
 				
 				final String bareJid = accountNameTxt + "@" + domainTxt;
 				if (!isBareJid(bareJid)) {
 					Toast.makeText(getApplicationContext(), 
-							"Domain name is not valid.", Toast.LENGTH_LONG).show();
+							getString(R.string.message_account_invalid_domain),
+							Toast.LENGTH_LONG).show();
 					return;
 				}
 				
@@ -95,7 +98,8 @@ public class CreateAccountActivity extends Activity {
 					@Override
 					public void error(Throwable throwable) {
 						Toast.makeText(getApplicationContext(), 
-								"Could not find an API for this domain.", Toast.LENGTH_LONG).show();
+								getString(R.string.message_api_discovery_failed),
+								Toast.LENGTH_LONG).show();
 						return;
 					}
 				}, domainTxt);
@@ -173,7 +177,7 @@ public class CreateAccountActivity extends Activity {
 					public void error(Throwable throwable) {
 						Toast.makeText(
 								getApplicationContext(),
-								"Could not register account. Account unavailable.",
+								getString(R.string.message_account_creation_failed),
 								Toast.LENGTH_LONG).show();
 					}
 				}, apiAddress);

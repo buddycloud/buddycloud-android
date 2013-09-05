@@ -46,8 +46,8 @@ public class PostContextUtils {
 			final String postId, final CardListAdapter cardAdapter) {
 		new AlertDialog.Builder(context)
 				.setIcon(android.R.drawable.ic_dialog_alert)
-				.setTitle("Confirm deletion")
-				.setMessage("Are you sure you want to delete this post?")
+				.setTitle(context.getString(R.string.title_confirm_delete))
+				.setMessage(context.getString(R.string.message_confirm_delete))
 				.setPositiveButton(R.string.yes,
 						new DialogInterface.OnClickListener() {
 							@Override
@@ -64,13 +64,13 @@ public class PostContextUtils {
 			@Override
 			public void success(Void response) {
 				cardAdapter.remove(postId);
-				Toast.makeText(context, "Post deleted",
+				Toast.makeText(context, context.getString(R.string.message_post_deleted),
 						Toast.LENGTH_LONG).show();
 			}
 
 			@Override
 			public void error(Throwable throwable) {
-				Toast.makeText(context, "Could not delete post.",
+				Toast.makeText(context, context.getString(R.string.message_post_delete_failed),
 						Toast.LENGTH_LONG).show();
 			}
 		}, channelJid, postId);

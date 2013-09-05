@@ -156,7 +156,8 @@ public class ChannelStreamFragment extends ContentFragment {
 
 					@Override
 					public void error(Throwable throwable) {
-						Toast.makeText(getActivity(), "Couldn't fetch older posts.", 
+						Toast.makeText(getActivity(), 
+								getString(R.string.message_post_fetch_failed), 
 								Toast.LENGTH_LONG).show();
 						scrollListener.setLoading(false);
 					}
@@ -165,7 +166,8 @@ public class ChannelStreamFragment extends ContentFragment {
 			
 			@Override
 			public void error(Throwable throwable) {
-				Toast.makeText(getActivity(), "Couldn't fetch older posts.", 
+				Toast.makeText(getActivity(), 
+						getString(R.string.message_post_fetch_failed), 
 						Toast.LENGTH_LONG).show();
 				scrollListener.setLoading(false);
 			}
@@ -219,13 +221,15 @@ public class ChannelStreamFragment extends ContentFragment {
 		PostsModel.getInstance().save(getActivity(), post, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
-				Toast.makeText(getActivity().getApplicationContext(), "Post created", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity().getApplicationContext(), 
+						getString(R.string.message_post_created), Toast.LENGTH_LONG).show();
 				fillRemotely(null, null);
 			}
 			
 			@Override
 			public void error(Throwable throwable) {
-				Toast.makeText(getActivity().getApplicationContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity().getApplicationContext(), 
+						throwable.getMessage(), Toast.LENGTH_LONG).show();
 			}
 		}, getChannelJid());
 	}

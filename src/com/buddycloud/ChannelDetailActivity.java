@@ -56,7 +56,8 @@ public class ChannelDetailActivity extends SherlockActivity {
 				try {
 					tempAvatar = AvatarUtils.downSample(context, selectedImage);
 				} catch (Exception e) {
-					Toast.makeText(getApplicationContext(), "Failed to load new avatar file.", 
+					Toast.makeText(getApplicationContext(), 
+							getString(R.string.message_avatar_upload_failed), 
 							Toast.LENGTH_SHORT).show();
 					return;
 				}
@@ -68,7 +69,8 @@ public class ChannelDetailActivity extends SherlockActivity {
 	private void uploadAvatar(final File tempAvatar) {
 		final String channelJid = getIntent().getStringExtra(GenericChannelsFragment.CHANNEL);
 		
-		Toast.makeText(getApplicationContext(), "Uploading avatar...", 
+		Toast.makeText(getApplicationContext(), 
+				getString(R.string.message_avatar_uploading), 
 				Toast.LENGTH_LONG).show();
 		
 		MediaModel.getInstance().saveAvatar(this, null, new ModelCallback<JSONObject>() {
@@ -76,13 +78,15 @@ public class ChannelDetailActivity extends SherlockActivity {
 			public void success(JSONObject response) {
 				tempAvatar.delete();
 				loadAvatar(channelJid, true);
-				Toast.makeText(getApplicationContext(), "Upload successful.", 
+				Toast.makeText(getApplicationContext(), 
+						getString(R.string.message_avatar_uploaded), 
 						Toast.LENGTH_SHORT).show();
 			}
 			
 			@Override
 			public void error(Throwable throwable) {
-				Toast.makeText(getApplicationContext(), "Failed to upload new avatar.", 
+				Toast.makeText(getApplicationContext(), 
+						getString(R.string.message_avatar_upload_failed), 
 						Toast.LENGTH_SHORT).show();
 			}
 		}, Uri.fromFile(tempAvatar).toString(), channelJid);
@@ -140,7 +144,7 @@ public class ChannelDetailActivity extends SherlockActivity {
 					@Override
 					public void success(JSONObject response) {
 						Toast.makeText(getApplicationContext(), 
-								"Channel metadata updated", 
+								getString(R.string.message_metadata_updated), 
 								Toast.LENGTH_SHORT).show();
 						finish();
 					}
@@ -150,7 +154,7 @@ public class ChannelDetailActivity extends SherlockActivity {
 						postMetadataBtn.setVisibility(View.VISIBLE);
 						findViewById(R.id.progressBar).setVisibility(View.GONE);
 						Toast.makeText(getApplicationContext(), 
-								"Could update channel metadata. " + throwable.getMessage(), 
+								getString(R.string.message_metadata_update_failed) + throwable.getMessage(), 
 								Toast.LENGTH_SHORT).show();
 					}
 					
