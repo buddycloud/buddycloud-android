@@ -1,8 +1,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.buddycloud"
-    android:versionCode="12"
-    android:versionName="1.0.11" >
+    android:versionCode="13"
+    android:versionName="1.0.12" >
 
     <uses-sdk
         android:minSdkVersion="8"
