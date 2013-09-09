@@ -91,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="@string/create_account_button"
+                android:text="@string/login_create_account_button"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 buddycloud:typeface="Roboto-Light.ttf" />

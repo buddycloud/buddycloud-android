@@ -22,7 +22,7 @@
         android:layout_alignRight="@+id/captionText"
         android:layout_below="@+id/shareImagePreview"
         android:ems="10"
-        android:hint="channel"
+        android:hint="@string/share_channel_hint"
         android:inputType="textEmailAddress"
         android:textColor="#FFFFFF" />
 
@@ -35,7 +35,7 @@
         android:layout_marginRight="8dp"
         android:layout_toRightOf="@+id/shareImagePreview"
         android:ems="10"
-        android:hint="caption"
+        android:hint="@string/share_caption_hint"
         android:inputType="textMultiLine"
         android:maxLines="5"
         android:textColor="#FFFFFF" />

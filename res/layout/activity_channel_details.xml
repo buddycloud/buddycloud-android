@@ -30,7 +30,7 @@
         android:layout_below="@+id/avatarView"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:text="Title"
+        android:text="@string/channel_details_title"
         android:textColor="@color/stroke" />
     
     <EditText
@@ -42,7 +42,7 @@
         android:layout_below="@+id/textViewTitle"
         android:layout_marginRight="8dp"
         android:ems="10"
-        android:hint="title"
+        android:hint="@string/channel_details_title_hint"
         android:inputType="textNoSuggestions"
         android:textColor="#FFFFFF" />
 
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/titleTxt"
         android:layout_below="@+id/titleTxt"
-        android:text="Description"
+        android:text="@string/channel_details_description"
         android:textColor="@color/stroke" />
     
     <EditText
@@ -63,7 +63,7 @@
         android:layout_alignRight="@+id/titleTxt"
         android:layout_below="@+id/textViewDescription"
         android:ems="10"
-        android:hint="description"
+        android:hint="@string/channel_details_description_hint"
         android:inputType="textNoSuggestions"
         android:textColor="#FFFFFF" />
 
@@ -73,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/descriptionTxt"
         android:layout_below="@+id/descriptionTxt"
-        android:text="Access model"
+        android:text="@string/channel_details_access_model"
         android:textColor="@color/stroke" />
 
     <Spinner
@@ -84,7 +84,7 @@
         android:layout_alignRight="@+id/descriptionTxt"
         android:layout_below="@+id/textView1"
         android:ems="10"
-        android:hint="access model"
+        android:hint="@string/channel_details_access_model_hint"
         android:textColor="#FFFFFF" />
 
     <TextView
@@ -93,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/accessModelTxt"
         android:layout_below="@+id/accessModelTxt"
-        android:text="Creation date"
+        android:text="@string/channel_details_creation_date"
         android:textColor="@color/stroke" />
 
     <EditText
@@ -105,7 +105,7 @@
         android:layout_below="@+id/textView2"
         android:layout_centerVertical="true"
         android:ems="10"
-        android:hint="creation date"
+        android:hint="@string/channel_details_creation_date_hint"
         android:textColor="#FFFFFF"
         android:inputType="textNoSuggestions" />
 
@@ -115,7 +115,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/creationDateTxt"
         android:layout_below="@+id/creationDateTxt"
-        android:text="Channel type"
+        android:text="@string/channel_details_channel_type"
         android:textColor="@color/stroke" />
 
     <EditText
@@ -126,7 +126,7 @@
         android:layout_alignRight="@+id/creationDateTxt"
         android:layout_below="@+id/TextView01"
         android:ems="10"
-        android:hint="channel type"
+        android:hint="@string/channel_details_channel_type_hint"
         android:textColor="#FFFFFF"
         android:inputType="textNoSuggestions" />
 
@@ -136,7 +136,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/channelTypeTxt"
         android:layout_below="@+id/channelTypeTxt"
-        android:text="Default affiliation"
+        android:text="@string/channel_details_default_affiliation"
         android:textColor="@color/stroke" />
 
     <Spinner
@@ -147,7 +147,7 @@
         android:layout_alignRight="@+id/channelTypeTxt"
         android:layout_below="@+id/TextView02"
         android:ems="10"
-        android:hint="default affiliation"
+        android:hint="@string/channel_details_default_affiliation_hint"
         android:textColor="#FFFFFF" />
 
     <ProgressBar
@@ -175,7 +175,7 @@
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/details_save"
+                android:text="@string/channel_details_save"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 buddycloud:typeface="Roboto-Light.ttf" />

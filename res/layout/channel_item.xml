@@ -10,7 +10,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:scaleType="fitXY" 
-        android:contentDescription="@string/avatar_desc"/>
+        android:contentDescription="@string/comment_box_avatar_desc"/>
     
     <LinearLayout
         android:id="@+id/contentWrapper"

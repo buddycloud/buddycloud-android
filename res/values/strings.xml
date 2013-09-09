@@ -1,7 +1,6 @@
 <resources>
 
     <string name="app_name">buddycloud</string>
-    <string name="hello_world">Hello world!</string>
     
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -21,32 +20,13 @@
     <string name="menu_channel_banned">Banned</string>
     <string name="menu_similar_channels">Similar channels</string>
     
-    <string name="title_activity_share">buddycloud</string>
-    <string name="login_hint">personal channel</string>
-    <string name="login_password">password</string>
     <string name="post_button">Post</string>
-    <string name="login_button">Login</string>
-    <string name="create_account_button">Create new account</string>
     <string name="apiAddressTxtHint">https://api.buddycloud.org</string>
     <string name="caption_hint">Type caption</string>
-	<string name="personal_channel_hint">PERSONAL</string>
-	<string name="subscribed_channel_hint">SUBSCRIBED</string>
-	<string name="avatar_desc">Channel avatar</string>
-	<string name="search_hint">Search</string>
-	<string name="share_button">Share</string>
 	
 	<string name="action_followed">You\'re now following %1$s</string>
 	<string name="action_unfollowed">You unfollowed %1$s</string>
 	<string name="action_follow_failed">Couldn\'t change your role in %1$s</string>
-	<string name="repeat_password">repeat password</string>
-	<string name="channel_name">channel name</string>
-	<string name="domain_name">domain</string>
-	<string name="email_address">email address</string>
-	
-	<string name="login_error_wrong_credentials">Wrong credentials</string>
-	<string name="login_error_bad_channel_format">Bad channel format. Expected format is user@domain.</string>
-	
-	<string name="details_save">Save settings</string>
 	
 	<string name="message_post_created">Post created</string>
 	<string name="title_confirm_delete">Confirm deletion</string>
@@ -78,5 +58,49 @@
 	<string name="message_media_upload_failed">Error during media upload</string>
 	<string name="message_media_uploading">Uploading media</string>
 	<string name="message_media_uploaded">Media uploaded</string>
+	
+	<string name="post_button">Post</string>
+	
+	<string name="channel_details_title">Title</string>
+	<string name="channel_details_title_hint">title</string>
+	<string name="channel_details_description">Description</string>
+	<string name="channel_details_description_hint">description</string>
+	<string name="channel_details_access_model">Access model</string>
+	<string name="channel_details_access_model_hint">access model</string>
+	<string name="channel_details_creation_date">Creation date</string>
+	<string name="channel_details_creation_date_hint">creation date</string>
+	<string name="channel_details_channel_type">Channel type</string>
+	<string name="channel_details_channel_type_hint">channel type</string>
+	<string name="channel_details_default_affiliation">Default affiliation</string>
+	<string name="channel_details_default_affiliation_hint">default affiliation</string>
+	<string name="channel_details_save">Save settings</string>
+	
+	<string name="create_account_channel_name">channel name</string>
+	<string name="create_account_domain_name">domain</string>
+	<string name="create_account_email_address">email address</string>
+	<string name="create_account_password">password</string>
+	<string name="create_account_repeat_password">repeat password</string>
+	
+	<string name="login_hint">personal channel</string>
+	<string name="login_password">password</string>
+    <string name="login_button">Login</string>
+    <string name="login_create_account_button">Create new account</string>
+    <string name="login_error_wrong_credentials">Wrong credentials</string>
+	<string name="login_error_bad_channel_format">Bad channel format. Expected format is user@domain.</string>
+	
+	<string name="search_hint">Search</string>
+	
+	<string name="share_activity_title">buddycloud</string>
+	<string name="share_channel_hint">channel</string>
+	<string name="share_caption_hint">caption</string>
+	<string name="share_button">Share</string>
+	
+	<string name="channel_list_personal_hint">PERSONAL</string>
+	<string name="channel_list_subscribed_hint">SUBSCRIBED</string>
+	
+	<string name="comment_box_avatar_desc">Channel avatar</string>
+	
+	<string name="post_comment_hint">add your comment</string>
+	<string name="post_comment_button">Comment</string>
 	
 </resources>

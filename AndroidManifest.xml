@@ -55,7 +55,7 @@
         </activity>
         <activity
             android:name=".CreateAccountActivity"
-            android:label="@string/title_activity_share"
+            android:label="@string/share_activity_title"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait">
         </activity>
@@ -75,7 +75,7 @@
         
         <activity
             android:name=".ShareActivity"
-            android:label="@string/title_activity_share" >
+            android:label="@string/share_activity_title" >
             <intent-filter>
             	<action android:name="android.intent.action.SEND" />
             	<category android:name="android.intent.category.DEFAULT" />

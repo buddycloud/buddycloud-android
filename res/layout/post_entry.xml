@@ -141,7 +141,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
-                android:hint="add your comment"
+                android:hint="@string/post_comment_hint"
                 android:imeOptions="actionNone"
                 android:inputType="textMultiLine"
                 android:textSize="16sp" >
@@ -161,7 +161,7 @@
                     android:layout_gravity="bottom"
                     android:background="@drawable/reply_btn_selector"
                     android:padding="2dp"
-                    android:text="Comment"
+                    android:text="@string/post_comment_button"
                     android:textSize="12sp" >
                 </Button>
             </LinearLayout>
