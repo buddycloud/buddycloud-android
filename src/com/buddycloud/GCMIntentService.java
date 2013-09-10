@@ -21,6 +21,7 @@ import android.util.Log;
 import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.NotificationSettingsModel;
+import com.buddycloud.model.PostsModel;
 import com.google.android.gcm.GCMBaseIntentService;
 import com.google.android.gcm.GCMRegistrar;
 
@@ -88,6 +89,18 @@ public class GCMIntentService extends GCMBaseIntentService {
 		NotificationManager mNotificationManager =
 				(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		mNotificationManager.notify(NOTIFICATION_ID, notification);
+		
+		PostsModel.getInstance().fillMoreAfterLatest(this, new ModelCallback<Void>() {
+			@Override
+			public void success(Void response) {
+				// Pretty much best effort here
+			}
+
+			@Override
+			public void error(Throwable throwable) {
+				// Pretty much best effort here
+			}
+		}, channelJid);
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)

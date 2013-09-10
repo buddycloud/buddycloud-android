@@ -133,7 +133,16 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 		return DAOHelper.queryOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
 				null, null, null, orderBy, String.valueOf(limit), 
 				cursorParser());
-	}	
+	}
+	
+	public JSONObject getLatest(String channel) {
+		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
+		String orderBy = "datetime(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
+		return DAOHelper.queryUniqueOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
+				null, null, null, orderBy, String.valueOf(1), 
+				cursorParser());
+	}
+	
 	public JSONArray get(String channel, int limit) {
 		return get(channel, null, limit);
 	}

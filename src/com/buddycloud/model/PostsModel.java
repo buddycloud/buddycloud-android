@@ -251,6 +251,16 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		fetchPosts(context, channelJid, callback, oldestPostId);
 	}
 	
+	public void fillMoreAfterLatest(Context context, ModelCallback<Void> callback, String... p) {
+		String channelJid = p[0];
+		String oldestPostId = null;
+		JSONObject latest = PostsDAO.getInstance(context).getLatest(channelJid);
+		if (latest != null) {
+			oldestPostId = latest.optString("id");
+		}
+		fetchPosts(context, channelJid, callback, oldestPostId);
+	}
+	
 	@Override
 	public void fill(Context context, ModelCallback<Void> callback, String... p) {
 		String channelJid = p[0];
