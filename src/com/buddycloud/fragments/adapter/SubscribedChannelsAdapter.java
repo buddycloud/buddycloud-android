@@ -6,7 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.widget.Toast;
 
+import com.buddycloud.R;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.model.SyncModel;
@@ -56,12 +58,20 @@ public class SubscribedChannelsAdapter extends GenericChannelAdapter {
 					}
 
 					@Override
-					public void error(Throwable throwable) {}
+					public void error(Throwable throwable) {
+						Toast.makeText(context, context.getString(
+								R.string.message_sync_failed), 
+								Toast.LENGTH_LONG).show();
+					}
 				});
 			}
 			
 			@Override
-			public void error(Throwable throwable) {}
+			public void error(Throwable throwable) {
+				Toast.makeText(context, context.getString(
+						R.string.message_fetch_subscribed_failed), 
+						Toast.LENGTH_LONG).show();
+			}
 		});
 	}
 	

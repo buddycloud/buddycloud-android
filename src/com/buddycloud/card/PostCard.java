@@ -311,7 +311,11 @@ public class PostCard extends AbstractCard {
 					}
 
 					@Override
-					public void error(Throwable throwable) {}
+					public void error(Throwable throwable) {
+						Toast.makeText(context,
+								context.getString(R.string.message_reply_created), 
+								Toast.LENGTH_LONG).show();
+					}
 				});
 			}
 			
@@ -368,7 +372,8 @@ public class PostCard extends AbstractCard {
 			
 			@Override
 			public void error(Throwable throwable) {
-				// TODO Auto-generated method stub
+				Toast.makeText(context, context.getString(R.string.message_post_details_load_failed), 
+						Toast.LENGTH_LONG).show();
 			}
 		}, channelJid, post.optString("id"));
 	}

@@ -12,7 +12,9 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.widget.Toast;
 
+import com.buddycloud.R;
 import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SearchChannelsModel;
@@ -111,7 +113,9 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 
 			@Override
 			public void error(Throwable throwable) {
-				
+				Toast.makeText(context, context.getString(
+						R.string.message_search_failed), 
+						Toast.LENGTH_LONG).show();
 			}
 		}, type, q);
 	}

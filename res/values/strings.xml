@@ -29,6 +29,7 @@
 	<string name="action_follow_failed">Couldn\'t change your role in %1$s</string>
 	
 	<string name="message_post_created">Post created</string>
+	<string name="message_reply_created">Reply created</string>
 	<string name="title_confirm_delete">Confirm deletion</string>
 	<string name="message_confirm_delete">Are you sure you want to delete this post?</string>
 	<string name="message_post_deleted">Post deleted</string>
@@ -52,6 +53,16 @@
 	<string name="message_account_invalid_domain">Domain name is not valid</string>
 	<string name="message_api_discovery_failed">Could not find an API for this domain</string>
 	<string name="message_account_creation_failed">Could not register account. Account unavailable</string>
+	
+	<string name="message_replies_load_failed">Could not fetch replies of this post</string>
+	<string name="message_followers_load_failed">Could not fetch followers of this channel</string>
+	<string name="message_most_active_load_failed">Could not fetch most active channels</string>
+	<string name="message_recommended_load_failed">Could not fetch recommended channels</string>
+	<string name="message_similar_load_failed">Could not fetch similar channels</string>
+	<string name="message_search_failed">Could not contact server to search for channels</string>
+	<string name="message_fetch_subscribed_failed">Could not fetch list of subscribed</string>
+	<string name="message_sync_failed">Could not synchronize unread counters</string>
+	<string name="message_post_details_load_failed">Could not fetch post details</string>
 	
 	<string name="message_notifications_settings_load_failed">Could not load notification settings</string>
 	

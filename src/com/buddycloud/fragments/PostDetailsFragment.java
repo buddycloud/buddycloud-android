@@ -132,8 +132,9 @@ public class PostDetailsFragment extends ContentFragment {
 
 			@Override
 			public void error(Throwable throwable) {
-				// TODO Auto-generated method stub
-				
+				Toast.makeText(getActivity(), getString(
+						R.string.message_post_details_load_failed), 
+						Toast.LENGTH_LONG).show();
 			}
 		}, channelJid, postId);
 	}
