@@ -20,9 +20,7 @@
     <string name="menu_channel_banned">Banned</string>
     <string name="menu_similar_channels">Similar channels</string>
     
-    <string name="post_button">Post</string>
     <string name="apiAddressTxtHint">https://api.buddycloud.org</string>
-    <string name="caption_hint">Type caption</string>
 	
 	<string name="action_followed">You\'re now following %1$s</string>
 	<string name="action_unfollowed">You unfollowed %1$s</string>
