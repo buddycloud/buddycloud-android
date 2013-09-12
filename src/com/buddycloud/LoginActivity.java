@@ -73,6 +73,7 @@ public class LoginActivity extends Activity {
 							@Override
 							public void error(Throwable throwable) {
 								// Do nothing, SSL error not tolerable
+								hideProgress();
 							}
 						});
 					}
@@ -111,12 +112,16 @@ public class LoginActivity extends Activity {
     }
 
     private void showLoginError(int stringId) {
-    	final RelativeLayout postBtn = (RelativeLayout) findViewById(R.id.loginBtn);
+    	Toast.makeText(getApplicationContext(), getString(stringId), 
+    			Toast.LENGTH_LONG).show();
+    	Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, null);
+    	hideProgress();
+	}
+
+	private void hideProgress() {
+		final RelativeLayout postBtn = (RelativeLayout) findViewById(R.id.loginBtn);
         final View progressBar = findViewById(R.id.progressBar);
-		Toast.makeText(getApplicationContext(), getString(stringId), 
-				Toast.LENGTH_LONG).show();
-		Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, null);
-		postBtn.setVisibility(View.VISIBLE);
+        postBtn.setVisibility(View.VISIBLE);
 		progressBar.setVisibility(View.GONE);
 	}
     

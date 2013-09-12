@@ -46,21 +46,27 @@ public class CreateAccountActivity extends Activity {
         final AutoCompleteTextView actv = (AutoCompleteTextView) findViewById(R.id.domainTxt);
         
         actv.setOnFocusChangeListener(new OnFocusChangeListener() {
-			
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (hasFocus) {
 					actv.showDropDown();
+				} else {
+					actv.dismissDropDown();
 				}
 			}
 		});
         
         fillSuggestions(actv);
         
+        final View progressBar = findViewById(R.id.progressBar);
         final RelativeLayout createAccountBtn = (RelativeLayout) findViewById(R.id.createAccountBtn);
         createAccountBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				
+				createAccountBtn.setVisibility(View.INVISIBLE);
+				progressBar.setVisibility(View.VISIBLE);
+				
 				final String accountNameTxt = getValue(R.id.loginTxt);
 				final String domainTxt = getValue(R.id.domainTxt);
 				final String emailAddressTxt = getValue(R.id.emailAddressTxt);
@@ -69,6 +75,7 @@ public class CreateAccountActivity extends Activity {
 				
 				if (isEmpty(accountNameTxt) || isEmpty(domainTxt) || 
 						isEmpty(emailAddressTxt) || isEmpty(repeatPasswordTxt) || isEmpty(passwordTxt)) {
+					hideProgress();
 					Toast.makeText(getApplicationContext(), 
 							getString(R.string.message_account_fields_mandatory),
 							Toast.LENGTH_LONG).show();
@@ -76,6 +83,7 @@ public class CreateAccountActivity extends Activity {
 				}
 				
 				if (!passwordTxt.equals(repeatPasswordTxt)) {
+					hideProgress();
 					Toast.makeText(getApplicationContext(), 
 							getString(R.string.message_account_passwords_donot_match),
 							Toast.LENGTH_LONG).show();
@@ -84,6 +92,7 @@ public class CreateAccountActivity extends Activity {
 				
 				final String bareJid = accountNameTxt + "@" + domainTxt;
 				if (!isBareJid(bareJid)) {
+					hideProgress();
 					Toast.makeText(getApplicationContext(), 
 							getString(R.string.message_account_invalid_domain),
 							Toast.LENGTH_LONG).show();
@@ -104,12 +113,14 @@ public class CreateAccountActivity extends Activity {
 									@Override
 									public void error(Throwable throwable) {
 										// Do nothing, SSL error not tolerable
+										hideProgress();
 									}
 						});
 					}
 					
 					@Override
 					public void error(Throwable throwable) {
+						hideProgress();
 						Toast.makeText(getApplicationContext(), 
 								getString(R.string.message_api_discovery_failed),
 								Toast.LENGTH_LONG).show();
@@ -117,11 +128,17 @@ public class CreateAccountActivity extends Activity {
 					}
 				}, domainTxt);
 			}
-
 		});
         
     }
 
+    private void hideProgress() {
+    	View progressBar = findViewById(R.id.progressBar);
+        RelativeLayout createAccountBtn = (RelativeLayout) findViewById(R.id.createAccountBtn);
+		createAccountBtn.setVisibility(View.VISIBLE);
+		progressBar.setVisibility(View.GONE);
+	}
+    
 	private void fillSuggestions(final AutoCompleteTextView actv) {
 		BuddycloudHTTPHelper.getArray(
         		DOMAIN_SUGGESTION_URL, false, true, this, 
@@ -188,6 +205,7 @@ public class CreateAccountActivity extends Activity {
 
 					@Override
 					public void error(Throwable throwable) {
+						hideProgress();
 						Toast.makeText(
 								getApplicationContext(),
 								getString(R.string.message_account_creation_failed),

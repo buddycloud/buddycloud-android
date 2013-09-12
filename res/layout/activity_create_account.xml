@@ -37,7 +37,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:ems="10"
-            android:hint="@string/create_account_channel_name" >
+            android:hint="@string/create_account_channel_name" 
+            android:inputType="text"
+            android:imeOptions="actionNext">
             <requestFocus />
 		</EditText>
 
@@ -47,8 +49,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:ems="10"
-            android:hint="@string/create_account_domain_name" >
-
+            android:hint="@string/create_account_domain_name"
+            android:inputType="text"
+            android:imeOptions="actionNext">
         </AutoCompleteTextView>
 
         <EditText
@@ -69,13 +72,6 @@
             android:hint="@string/create_account_password"
             android:inputType="textPassword" />
 
-        <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:visibility="gone" />
-
         <EditText
             android:id="@+id/repeatPasswordTxt"
             android:layout_width="match_parent"
@@ -83,6 +79,13 @@
             android:ems="10"
             android:hint="@string/create_account_repeat_password"
             android:inputType="textPassword" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone" />
         
         <RelativeLayout
             android:id="@+id/createAccountBtn"
