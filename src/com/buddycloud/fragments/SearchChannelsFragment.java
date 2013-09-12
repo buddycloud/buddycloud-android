@@ -18,7 +18,11 @@ public class SearchChannelsFragment extends SherlockFragment {
 
 	public static final String FILTER = "com.buddycloud.FILTER";
 	
+	private IBinder windowToken;
+	private String lastFilter;
+	private String initialFilter;
 	private SearchChannelsAdapter adapter = new SearchChannelsAdapter();
+	
 	private GenericChannelsFragment genericChannelFrag = new GenericChannelsFragment(adapter) {
 		@Override
 		public void channelSelected(JSONObject channelItem) {
@@ -30,14 +34,15 @@ public class SearchChannelsFragment extends SherlockFragment {
 			}
 		}
 	};
-	private IBinder windowToken;
-	private String lastFilter;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = genericChannelFrag.onCreateView(inflater, container, savedInstanceState);
 		adapter.load(container.getContext());
+		if (initialFilter != null) {
+			filter(getActivity(), initialFilter);
+		}
 		return view;
 	}
 	
@@ -73,5 +78,9 @@ public class SearchChannelsFragment extends SherlockFragment {
 
 	public void setWindowToken(IBinder windowToken) {
 		this.windowToken = windowToken;
+	}
+
+	public void setInitialFilter(String q) {
+		initialFilter = q;
 	}
 }

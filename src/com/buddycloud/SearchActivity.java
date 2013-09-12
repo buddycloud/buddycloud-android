@@ -21,9 +21,12 @@ public class SearchActivity extends SherlockFragmentActivity {
         setContentView(R.layout.activity_search);
         
         TextView searchView = (TextView)findViewById(R.id.searchTxt);
-		
+        String q = getIntent().getStringExtra(SearchChannelsFragment.FILTER);
+        searchView.setText(q);
+        
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		final SearchChannelsFragment searchChannelsFragment = new SearchChannelsFragment();
+		searchChannelsFragment.setInitialFilter(q);
 		searchChannelsFragment.setWindowToken(searchView.getWindowToken());
 		transaction.replace(R.id.contentFrame, searchChannelsFragment);
 		transaction.commitAllowingStateLoss();
@@ -47,8 +50,6 @@ public class SearchActivity extends SherlockFragmentActivity {
 			}
 		});
 		
-		String filter = getIntent().getStringExtra(SearchChannelsFragment.FILTER);
-		searchView.setText(filter);
     }
     
     @Override
