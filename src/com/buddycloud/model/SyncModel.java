@@ -71,6 +71,10 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 			String node = keys.next();
 			String channel = node.split("/")[2];
 			JSONArray newPosts = newCounters.optJSONArray(node);
+			if (newPosts.length() == 0) {
+				continue;
+			}
+			
 			String newPostUpdate = newPosts.optJSONObject(0).optString("updated");
 			
 			if (after(newPostUpdate, syncTimestamp)) {

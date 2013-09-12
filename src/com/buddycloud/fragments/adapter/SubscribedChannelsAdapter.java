@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.buddycloud.R;
@@ -59,6 +60,8 @@ public class SubscribedChannelsAdapter extends GenericChannelAdapter {
 
 					@Override
 					public void error(Throwable throwable) {
+						Log.w(SubscribedChannelsAdapter.class.toString(), 
+								throwable.getLocalizedMessage(), throwable);
 						Toast.makeText(context, context.getString(
 								R.string.message_sync_failed), 
 								Toast.LENGTH_LONG).show();
