@@ -30,6 +30,16 @@
     </PreferenceCategory>
     
     <PreferenceCategory 
+        android:title="Security"
+        android:key="pref_key_security_settings">
+        <CheckBoxPreference
+            android:key="pref_key_disable_ssl_check"
+            android:summary="Do not check for HTTP and HTTPS-with-invalid-certificate/self-signed/expired certificates"
+            android:title="Allow insecure connections"
+            android:defaultValue="false"/>
+    </PreferenceCategory>
+    
+    <PreferenceCategory 
         android:title="Vibration and sound"
         android:key="pref_key_vibration_sound_settings">
         <CheckBoxPreference

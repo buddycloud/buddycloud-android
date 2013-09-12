@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.buddycloud.http.SSLUtils;
 import com.buddycloud.model.LoginModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.preferences.Preferences;
@@ -64,7 +65,16 @@ public class LoginActivity extends Activity {
 					@Override
 					public void success(String apiAddress) {
 						Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, apiAddress);
-						checkCredentials();
+						SSLUtils.checkSSL(getApplicationContext(), apiAddress, new ModelCallback<Void>() {
+							@Override
+							public void success(Void response) {
+								checkCredentials();
+							}
+							@Override
+							public void error(Throwable throwable) {
+								// Do nothing, SSL error not tolerable
+							}
+						});
 					}
 
 					@Override

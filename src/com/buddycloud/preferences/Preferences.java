@@ -12,6 +12,7 @@ public class Preferences {
 	public static final String API_ADDRESS = "com.buddycloud.APIADDRESS";
 	public static final String PASSWORD = "com.buddycloud.PASSWORD";
 	public static final String LAST_UPDATE = "com.buddycloud.LASTUPDATE";
+	public static final String TRUST_SSL_PREFIX = "com.buddycloud.LASTUPDATE.";
 	
 	public static final String DEFAUL_LAST_UPDATE = "2013-01-01T00:00:00Z";
 	

@@ -28,6 +28,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
@@ -93,6 +95,19 @@ public class BuddycloudHTTPHelper {
 		task.execute();
 	}
 	
+	public static void checkSSL(String url, Context parent, ModelCallback<Integer> callback) {
+		RequestAsyncTask<Integer> task = new RequestAsyncTask<Integer>("get", url, null, false, 
+				false, parent, callback) {
+					@Override
+					protected Integer toJSON(String responseStr) throws JSONException {
+						return Integer.valueOf(responseStr);
+					}
+				};
+		task.client = createSecureHttpClient();
+		task.returnCodeOnly = true;
+		task.execute();
+	}
+	
 	private static void reqObject(String method, String url, boolean auth, boolean acceptsJSON, 
 			HttpEntity entity, Context parent, ModelCallback<JSONObject> callback) {
 		new RequestAsyncTask<JSONObject>(method, url, entity, auth, acceptsJSON, parent, callback) {
@@ -126,6 +141,28 @@ public class BuddycloudHTTPHelper {
         String auth = loginPref.split("@")[0] + ":" + passPref;
 		String authToken = Base64.encodeToString(auth.getBytes(), Base64.NO_WRAP);
 		method.setHeader("Authorization", "Basic " + authToken);
+	}
+	
+	protected static void addUserAgentHeader(HttpRequestBase method, Context parent) {
+		try {
+			PackageInfo pInfo = parent.getPackageManager().getPackageInfo(
+					parent.getPackageName(), 0);
+			method.setHeader("User-Agent", "buddycloud for Android v" + pInfo.versionCode);
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static HttpClient createSecureHttpClient() {
+		try {
+			SchemeRegistry registry = new SchemeRegistry();
+			registry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+			ClientConnectionManager ccm = new SingleClientConnManager(
+					new DefaultHttpClient().getParams(), registry);
+			return new DefaultHttpClient(ccm, null);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	public static HttpClient createHttpClient() {
@@ -167,6 +204,7 @@ public class BuddycloudHTTPHelper {
 		private Context parent;
 		private ModelCallback<T> callback;
 		private boolean returnCodeOnly;
+		private HttpClient client;
 		
 		public RequestAsyncTask(String methodType, String url, HttpEntity entity,
 				boolean auth, boolean acceptsJSON, Context parent,
@@ -178,6 +216,7 @@ public class BuddycloudHTTPHelper {
 			this.acceptsJSON = acceptsJSON;
 			this.parent = parent;
 			this.callback = callback;
+			this.client = CLIENT;
 		}
 
 		@Override
@@ -207,7 +246,9 @@ public class BuddycloudHTTPHelper {
 					addAuthHeader(method, parent);
 				}
 				
-				HttpResponse response = CLIENT.execute(method);
+				addUserAgentHeader(method, parent);
+				
+				HttpResponse response = client.execute(method);
 				Log.d(TAG, "HTTP: {M: " + methodType + ", U: " + url + ", T: " + (System.currentTimeMillis() - t) + "}");
 				
 				int statusCode = response.getStatusLine().getStatusCode();

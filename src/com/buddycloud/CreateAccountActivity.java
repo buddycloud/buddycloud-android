@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
+import com.buddycloud.http.SSLUtils;
 import com.buddycloud.model.AccountModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.preferences.Preferences;
@@ -91,8 +92,20 @@ public class CreateAccountActivity extends Activity {
 				
 				DNSUtils.resolveAPISRV(new ModelCallback<String>() {
 					@Override
-					public void success(String apiAddress) {
-						createAccount(emailAddressTxt, passwordTxt, bareJid, apiAddress);
+					public void success(final String apiAddress) {
+						SSLUtils.checkSSL(getApplicationContext(), apiAddress, 
+								new ModelCallback<Void>() {
+									@Override
+									public void success(Void response) {
+										createAccount(emailAddressTxt, passwordTxt, 
+												bareJid, apiAddress);
+									}
+
+									@Override
+									public void error(Throwable throwable) {
+										// Do nothing, SSL error not tolerable
+									}
+						});
 					}
 					
 					@Override
@@ -155,8 +168,8 @@ public class CreateAccountActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
     }
-
-	private void createAccount(final String emailAddressTxt,
+    
+    private void createAccount(final String emailAddressTxt,
 			final String passwordTxt, final String bareJid, final String apiAddress) {
 		Map<String, String> accountInfo = new HashMap<String, String>();
 		accountInfo.put("username", bareJid);

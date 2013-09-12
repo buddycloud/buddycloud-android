@@ -3,6 +3,7 @@
     <string name="app_name">buddycloud</string>
     
     <string name="yes">Yes</string>
+    <string name="yes_and_remember">Yes (Remember this choice)</string>
     <string name="no">No</string>
     <string name="ok">Ok</string>
     
@@ -96,6 +97,9 @@
     <string name="login_create_account_button">Create new account</string>
     <string name="login_error_wrong_credentials">Wrong credentials</string>
 	<string name="login_error_bad_channel_format">Bad channel format. Expected format is user@domain.</string>
+	
+	<string name="ssl_error_title">SSL error</string>
+	<string name="ssl_error_message">Insecure connection or invalid certificate. Trust %1$s?</string>
 	
 	<string name="search_hint">Search</string>
 	
