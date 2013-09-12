@@ -18,10 +18,12 @@ import com.buddycloud.fragments.ChannelStreamFragment;
 import com.buddycloud.fragments.ContentFragment;
 import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.fragments.PostDetailsFragment;
+import com.buddycloud.fragments.SearchChannelsFragment;
 import com.buddycloud.fragments.SubscribedChannelsFragment;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.NotificationSettingsModel;
 import com.buddycloud.preferences.Preferences;
+import com.buddycloud.utils.Backstack;
 import com.buddycloud.utils.GCMUtils;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.OnClosedListener;
@@ -35,6 +37,7 @@ public class MainActivity extends SlidingFragmentActivity {
 	private ContentPageAdapter pageAdapter;
 	private String myJid;
 	private SubscribedChannelsFragment subscribedChannelsFrag;
+	private Backstack backStack;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -51,8 +54,9 @@ public class MainActivity extends SlidingFragmentActivity {
 
 		viewPager.setOnPageChangeListener(createPageChangeListener());
 
+		this.backStack = new Backstack(this);
 		setContentView(viewPager);
-
+		
 		if (shouldLogin()) {
 			Intent loginActivity = new Intent();
 			loginActivity.setClass(getApplicationContext(), LoginActivity.class);
@@ -104,7 +108,9 @@ public class MainActivity extends SlidingFragmentActivity {
 		if (getSlidingMenu().isMenuShowing()) {
 			finish();
 		} else if (pageAdapter.getCurrentFragmentIndex() == 0) {
-			getSlidingMenu().showMenu();
+			if (!backStack.pop()) {
+				getSlidingMenu().showMenu();
+			}
 		} else {
 			pageAdapter.setCurrentFragment(pageAdapter.getCurrentFragmentIndex() - 1);
 		}
@@ -146,8 +152,12 @@ public class MainActivity extends SlidingFragmentActivity {
 			startActivity();
 		} else if (requestCode == SearchActivity.REQUEST_CODE) {
 			if (data != null) {
-				final String channelJid = data.getStringExtra(GenericChannelsFragment.CHANNEL);
-				final String postId = data.getStringExtra(GenericChannelsFragment.POST_ID);
+				String channelJid = data.getStringExtra(GenericChannelsFragment.CHANNEL);
+				String postId = data.getStringExtra(GenericChannelsFragment.POST_ID);
+				String filter = data.getStringExtra(SearchChannelsFragment.FILTER);
+				
+				backStack.pushSearch(filter);
+				
 				if (postId != null) {
 					showPostDetailFragment(channelJid, postId);
 				} else {
@@ -198,12 +208,18 @@ public class MainActivity extends SlidingFragmentActivity {
 			Log.e(TAG, "Failed to register in GCM.", e);
 		}
 	}
+	
+	public Backstack getBackStack() {
+		return backStack;
+	}
 
 	public ChannelStreamFragment showChannelFragment(String channelJid) {
+		
 		ChannelStreamFragment channelFrag = new ChannelStreamFragment();
 		Bundle args = new Bundle();
 		args.putString(GenericChannelsFragment.CHANNEL, channelJid);
 		channelFrag.setArguments(args);
+		
 		pageAdapter.setLeftFragment(channelFrag);
 		
 		if (getSlidingMenu().isMenuShowing()) {

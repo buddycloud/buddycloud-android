@@ -78,6 +78,7 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 	
 	private void showChannelFragment(String channelJid) {
 		MainActivity activity = (MainActivity) getActivity();
+		activity.getBackStack().clear();
 		activity.showChannelFragment(channelJid);
 	}
 

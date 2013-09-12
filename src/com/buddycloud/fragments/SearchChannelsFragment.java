@@ -16,6 +16,8 @@ import com.buddycloud.fragments.adapter.SearchChannelsAdapter;
 
 public class SearchChannelsFragment extends SherlockFragment {
 
+	public static final String FILTER = "com.buddycloud.FILTER";
+	
 	private SearchChannelsAdapter adapter = new SearchChannelsAdapter();
 	private GenericChannelsFragment genericChannelFrag = new GenericChannelsFragment(adapter) {
 		@Override
@@ -29,6 +31,7 @@ public class SearchChannelsFragment extends SherlockFragment {
 		}
 	};
 	private IBinder windowToken;
+	private String lastFilter;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,6 +55,7 @@ public class SearchChannelsFragment extends SherlockFragment {
 		Intent returnIntent = new Intent();
 		returnIntent.putExtra(GenericChannelsFragment.CHANNEL, channelJid);
 		returnIntent.putExtra(GenericChannelsFragment.POST_ID, itemId);
+		returnIntent.putExtra(SearchChannelsFragment.FILTER, lastFilter);
 		getActivity().setResult(0, returnIntent);
 		getActivity().finish();
 	}
@@ -63,6 +67,7 @@ public class SearchChannelsFragment extends SherlockFragment {
 	}
 
 	public void filter(Context context, String q) {
+		lastFilter = q;
 		adapter.filter(context, q);
 	}
 

@@ -46,6 +46,9 @@ public class SearchActivity extends SherlockFragmentActivity {
 				searchChannelsFragment.filter(SearchActivity.this, q);
 			}
 		});
+		
+		String filter = getIntent().getStringExtra(SearchChannelsFragment.FILTER);
+		searchView.setText(filter);
     }
     
     @Override
