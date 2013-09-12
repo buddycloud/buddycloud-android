@@ -51,9 +51,10 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 			allSubscribedChannels.add(channel);
 			JSONObject metadata = ChannelMetadataModel.getInstance().getFromCache(context, channel);
 			plainMetadata.put(channel, getPlainMetadata(metadata));
-			filter(context, "");
-			notifyDataSetChanged();
 		}
+		
+		filter(context, "");
+		notifyDataSetChanged();
 	}
 
 	@SuppressLint("DefaultLocale")
