@@ -43,8 +43,8 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 	};
 	
 	public SubscribedChannelsFragment() {
-		TopicChannelModel.getInstance().addListener(this);
-		SubscribedChannelsModel.getInstance().addListener(this);
+		TopicChannelModel.getInstance().setListener(this);
+		SubscribedChannelsModel.getInstance().setListener(this);
 		ModelListener notifyChangeListener = new ModelListener() {
 			@Override
 			public void dataChanged() {
@@ -52,8 +52,8 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 				adapter.notifyDataSetChanged();
 			}
 		};
-		SyncModel.getInstance().addListener(notifyChangeListener);
-		ChannelMetadataModel.getInstance().addListener(notifyChangeListener);
+		SyncModel.getInstance().setListener(notifyChangeListener);
+		ChannelMetadataModel.getInstance().setListener(notifyChangeListener);
 	}
 	
 	@Override

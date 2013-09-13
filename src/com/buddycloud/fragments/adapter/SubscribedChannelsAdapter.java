@@ -71,6 +71,8 @@ public class SubscribedChannelsAdapter extends GenericChannelAdapter {
 			
 			@Override
 			public void error(Throwable throwable) {
+				Log.w(SubscribedChannelsAdapter.class.toString(), 
+						throwable.getLocalizedMessage(), throwable);
 				Toast.makeText(context, context.getString(
 						R.string.message_fetch_subscribed_failed), 
 						Toast.LENGTH_LONG).show();

@@ -1,19 +1,17 @@
 package com.buddycloud.model;
 
-import java.util.LinkedList;
-import java.util.List;
 
 public abstract class AbstractModel<RefreshType, SaveType, Params> implements Model<RefreshType, SaveType, Params> {
 
-	private List<ModelListener> listeners = new LinkedList<ModelListener>();
+	private ModelListener listener;
 	
 	@Override
-	public void addListener(ModelListener listener) {
-		listeners.add(listener);
+	public void setListener(ModelListener listener) {
+		this.listener = listener;
 	}
 	
 	protected void notifyChanged() {
-		for (ModelListener listener : listeners) {
+		if (listener != null) {
 			listener.dataChanged();
 		}
 	}
