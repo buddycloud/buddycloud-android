@@ -41,7 +41,14 @@ import com.buddycloud.preferences.Preferences;
 public class BuddycloudHTTPHelper {
 	
 	private static final String TAG = "BuddycloudHTTPHelper";
-	private static final HttpClient CLIENT = createHttpClient();
+	private static HttpClient client = null;
+	
+	private static HttpClient getClient(Context context) {
+		if (client == null) {
+			client = createHttpClient(context);
+		}
+		return client;
+	}
 	
 	public static void getObject(String url, Context parent, 
 			final ModelCallback<JSONObject> callback) {
@@ -166,14 +173,15 @@ public class BuddycloudHTTPHelper {
 		}
 	}
 	
-	public static HttpClient createHttpClient() {
+	public static HttpClient createHttpClient(Context context) {
 		try {
 			KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
 			trustStore.load(null, null);
 			
 			HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
 			SchemeRegistry registry = new SchemeRegistry();
-			SSLSocketFactory socketFactory = new TrustAllSSLSocketFactory(trustStore);
+			
+			SSLSocketFactory socketFactory = new AndroidInsecureSSLSocketFactory(trustStore, context);
 			socketFactory.setHostnameVerifier((X509HostnameVerifier) hostnameVerifier);
 			
 			registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
@@ -217,7 +225,7 @@ public class BuddycloudHTTPHelper {
 			this.acceptsJSON = acceptsJSON;
 			this.parent = parent;
 			this.callback = callback;
-			this.client = CLIENT;
+			this.client = getClient(parent);
 		}
 
 		@Override
