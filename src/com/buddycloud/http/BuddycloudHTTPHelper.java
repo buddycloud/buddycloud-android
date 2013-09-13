@@ -22,6 +22,7 @@ import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.conn.SingleClientConnManager;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -178,7 +179,7 @@ public class BuddycloudHTTPHelper {
 			registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
 			registry.register(new Scheme("https", socketFactory, 443));
 			
-			ClientConnectionManager ccm = new SingleClientConnManager(
+			ClientConnectionManager ccm = new ThreadSafeClientConnManager(
 					new DefaultHttpClient().getParams(), registry);
 			
 			DefaultHttpClient client = new DefaultHttpClient(ccm, null);
