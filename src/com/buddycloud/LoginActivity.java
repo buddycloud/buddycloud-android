@@ -65,7 +65,7 @@ public class LoginActivity extends Activity {
 					@Override
 					public void success(String apiAddress) {
 						Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, apiAddress);
-						SSLUtils.checkSSL(getApplicationContext(), apiAddress, new ModelCallback<Void>() {
+						SSLUtils.checkSSL(LoginActivity.this, apiAddress, new ModelCallback<Void>() {
 							@Override
 							public void success(Void response) {
 								checkCredentials();
@@ -73,6 +73,7 @@ public class LoginActivity extends Activity {
 							@Override
 							public void error(Throwable throwable) {
 								// Do nothing, SSL error not tolerable
+								clearAPIAddress();
 								hideProgress();
 							}
 						});
@@ -114,8 +115,12 @@ public class LoginActivity extends Activity {
     private void showLoginError(int stringId) {
     	Toast.makeText(getApplicationContext(), getString(stringId), 
     			Toast.LENGTH_LONG).show();
-    	Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, null);
+    	clearAPIAddress();
     	hideProgress();
+	}
+
+	private void clearAPIAddress() {
+		Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, null);
 	}
 
 	private void hideProgress() {

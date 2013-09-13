@@ -1,5 +1,11 @@
 package com.buddycloud;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,11 +28,13 @@ import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.NotificationSettingsModel;
 import com.buddycloud.model.PostsModel;
+import com.buddycloud.utils.GCMUtils;
 import com.google.android.gcm.GCMBaseIntentService;
 import com.google.android.gcm.GCMRegistrar;
 
 public class GCMIntentService extends GCMBaseIntentService {
 
+	public static final String GCM_NOTIFICATION = "com.buddycloud.GCM_NOTIFICATION";
 	private static final String TAG = GCMIntentService.class.getName();
 	private static final int NOTIFICATION_ID = 1001;
 	
@@ -47,12 +55,47 @@ public class GCMIntentService extends GCMBaseIntentService {
 			return;
 		}
 		
+		GCMUtils.addGCMAuthor(this, authorJid);
+		JSONArray gcmAuthors = GCMUtils.getGCMAuthors(this);
+		
 		NotificationCompat.Builder mBuilder =
 		        new NotificationCompat.Builder(this)
 		        .setSmallIcon(R.drawable.notification_icon)
-		        .setContentTitle("Post from " + authorJid)
-		        .setLights(Color.GREEN, 1000, 1000)
-		        .setContentText(content);
+		        .setLights(Color.GREEN, 1000, 1000);
+		
+		boolean isAggregate = gcmAuthors.length() > 1;
+		
+		if (isAggregate) {
+			
+			StringBuilder contentTitleBuilder = new StringBuilder();
+			contentTitleBuilder.append(gcmAuthors.length());
+			contentTitleBuilder.append(" new posts");
+			mBuilder.setContentTitle(contentTitleBuilder.toString());
+			
+			Set<String> gcmAuthorsUnique = new HashSet<String>();
+			for (int i = 0; i < gcmAuthors.length(); i++) {
+				gcmAuthorsUnique.add(gcmAuthors.optString(i));
+			}
+			List<String> gcmAuthorsUniqueList = new ArrayList<String>(
+					gcmAuthorsUnique);
+			
+			StringBuilder contentTextBuilder = new StringBuilder("From ");
+			contentTextBuilder.append(gcmAuthorsUniqueList.get(0));
+			
+			for (int i = 1; i < gcmAuthorsUniqueList.size(); i++) {
+				if (i == gcmAuthors.length() - 1) {
+					contentTextBuilder.append(" and ");
+				} else {
+					contentTextBuilder.append(", ");
+				}
+				String gcmAuthor = gcmAuthorsUniqueList.get(i);
+				contentTextBuilder.append(gcmAuthor);
+			}
+			mBuilder.setContentText(contentTextBuilder.toString());
+		} else {
+			mBuilder.setContentTitle("Post from " + authorJid);
+			mBuilder.setContentText(content);
+		}
 		
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
@@ -70,7 +113,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 		setPriority(mBuilder);
 		
 		Intent resultIntent = new Intent(this, MainActivity.class);
-		resultIntent.putExtra(GenericChannelsFragment.CHANNEL, channelJid);
+		if (!isAggregate) {
+			resultIntent.putExtra(GenericChannelsFragment.CHANNEL, channelJid);
+		}
+		resultIntent.putExtra(GCMIntentService.GCM_NOTIFICATION, true);
 		
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		stackBuilder.addParentStack(MainActivity.class);
@@ -81,6 +127,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 		            PendingIntent.FLAG_UPDATE_CURRENT
 		        );
 		mBuilder.setContentIntent(resultPendingIntent);
+		
+		mBuilder.setDeleteIntent(getDeleteIntent());
 		
 		Notification notification = mBuilder.build();
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
@@ -108,6 +156,12 @@ public class GCMIntentService extends GCMBaseIntentService {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 			mBuilder.setPriority(Notification.PRIORITY_DEFAULT);
 	    }
+	}
+	
+	private PendingIntent getDeleteIntent() {
+	    Intent intent = new Intent(this, GCMBroadcastReceiver.class);
+	    intent.setAction("com.buddycloud.NOTIFICATION_CANCELLED");
+	    return PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 
 	@Override

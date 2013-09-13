@@ -107,6 +107,12 @@
                 <category android:name="com.buddycloud" />
             </intent-filter>
         </receiver>
+        
+        <receiver android:name=".GCMBroadcastReceiver">
+            <intent-filter>
+               <action android:name="com.buddycloud.NOTIFICATION_CANCELLED"/>
+            </intent-filter>
+        </receiver>
 		
         <service android:name=".GCMIntentService" />
         

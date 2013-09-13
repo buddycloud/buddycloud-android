@@ -198,6 +198,11 @@ public class MainActivity extends SlidingFragmentActivity {
 		} else {
 			showChannelFragment(channelJid);
 		}
+		boolean isNotification = getIntent().getBooleanExtra(
+				GCMIntentService.GCM_NOTIFICATION, false);
+		if (isNotification) {
+			GCMUtils.clearGCMAuthors(this);
+		}
 		super.onAttachedToWindow();
 	}
 	

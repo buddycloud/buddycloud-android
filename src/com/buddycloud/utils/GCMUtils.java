@@ -1,5 +1,7 @@
 package com.buddycloud.utils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -8,6 +10,7 @@ import android.util.Log;
 import com.buddycloud.GCMIntentService;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.NotificationMetadataModel;
+import com.buddycloud.preferences.Preferences;
 import com.google.android.gcm.GCMRegistrar;
 
 public class GCMUtils {
@@ -37,6 +40,30 @@ public class GCMUtils {
 		} else {
 			GCMIntentService.sendToPusher(context, regId);
 		}
+	}
+
+	public static void clearGCMAuthors(Context context) {
+		Preferences.setPreference(context, 
+				GCMIntentService.GCM_NOTIFICATION, 
+				new JSONArray().toString());
+	}
+
+	public static JSONArray getGCMAuthors(Context context) {
+		String gcmStrArray = Preferences.getPreference(context, 
+				GCMIntentService.GCM_NOTIFICATION, 
+				new JSONArray().toString());
+		try {
+			return new JSONArray(gcmStrArray);
+		} catch (JSONException e) {
+			return new JSONArray();
+		}
+	}
+	
+	public static void addGCMAuthor(Context context, String author) {
+		JSONArray gcmAuthors = getGCMAuthors(context);
+		gcmAuthors.put(author);
+		Preferences.setPreference(context, GCMIntentService.GCM_NOTIFICATION, 
+				gcmAuthors.toString());
 	}
 
 }
