@@ -89,10 +89,6 @@ public class ChannelStreamFragment extends ContentFragment {
 	
 	private void syncd(View view, Context context) {
 		
-		if (view == null) {
-			view = getView();
-		}
-		
 		ListView contentView = (ListView) view.findViewById(R.id.postsStream);
 		if (cardAdapter == null) {
 			this.cardAdapter = new CardListAdapter();
@@ -125,12 +121,13 @@ public class ChannelStreamFragment extends ContentFragment {
 			lastId = lastCard.getPost().optString("id");
 		}
 		
-		fillAdapter(getActivity(), lastUpdated, fillAdapterCallback(lastUpdated, lastId));
+		fillAdapter(getActivity(), lastUpdated, 
+				fillAdapterCallback(lastUpdated, lastId));
 	}
 
 	private ModelCallback<Boolean> fillAdapterCallback(final String lastUpdated,
 			final String lastId) {
-		return new ModelCallback<Boolean>() {
+		return smartify(new ModelCallback<Boolean>() {
 			@Override
 			public void success(Boolean response) {
 				fillRemotely(lastId, lastUpdated);
@@ -138,14 +135,14 @@ public class ChannelStreamFragment extends ContentFragment {
 
 			@Override
 			public void error(Throwable throwable) {}
-		};
+		});
 	}
 
 	private void fillRemotely(final String lastId, final String lastUpdated) {
-		PostsModel.getInstance().fillMore(getActivity(), new ModelCallback<Void>() {
+		PostsModel.getInstance().fillMore(getActivity(), smartify(new ModelCallback<Void>() {
 			@Override
 			public void success(Void response) {
-				fillAdapter(getActivity(), lastUpdated, new ModelCallback<Boolean>() {
+				fillAdapter(getActivity(), lastUpdated, smartify(new ModelCallback<Boolean>() {
 					@Override
 					public void success(Boolean response) {
 						if (response) {
@@ -162,7 +159,7 @@ public class ChannelStreamFragment extends ContentFragment {
 						scrollListener.setLoading(false);
 						hideProgress(getView());
 					}
-				});;
+				}));
 			}
 			
 			@Override
@@ -171,8 +168,9 @@ public class ChannelStreamFragment extends ContentFragment {
 						getString(R.string.message_post_fetch_failed), 
 						Toast.LENGTH_LONG).show();
 				scrollListener.setLoading(false);
+				hideProgress(getView());
 			}
-		}, getChannelJid(), lastId);
+		}), getChannelJid(), lastId);
 	}
 	
 	private void fillAdapter(final Context context, final String lastUpdated, 
@@ -186,6 +184,9 @@ public class ChannelStreamFragment extends ContentFragment {
 			
 			@Override
 			protected void onPostExecute(JSONArray allPosts) {
+				if (isDetached()) {
+					return;
+				}
 				for (int i = 0; i < allPosts.length(); i++) {
 					JSONObject post = allPosts.optJSONObject(i);
 					PostCard card = toCard(post, getChannelJid());
@@ -221,7 +222,8 @@ public class ChannelStreamFragment extends ContentFragment {
 		postContent.setText("");
 		InputUtils.hideKeyboard(getActivity(), postContent);
 		
-		PostsModel.getInstance().save(getActivity(), post, new ModelCallback<JSONObject>() {
+		PostsModel.getInstance().save(getActivity(), post, smartify(
+				new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
 				Toast.makeText(getActivity().getApplicationContext(), 
@@ -234,8 +236,9 @@ public class ChannelStreamFragment extends ContentFragment {
 			public void error(Throwable throwable) {
 				Toast.makeText(getActivity().getApplicationContext(), 
 						throwable.getMessage(), Toast.LENGTH_LONG).show();
+				hideProgress(view);
 			}
-		}, getChannelJid());
+		}), getChannelJid());
 	}
 
 	private JSONObject createJSONPost(final EditText postContent) {
@@ -343,7 +346,7 @@ public class ChannelStreamFragment extends ContentFragment {
 		subscription.put(channelJid + SubscribedChannelsModel.POST_NODE_SUFIX, newRole);
 		
 		SubscribedChannelsModel.getInstance().save(getActivity(), new JSONObject(subscription), 
-				new ModelCallback<JSONObject>() {
+				smartify(new ModelCallback<JSONObject>() {
 					@Override
 					public void success(JSONObject response) {
 						Toast.makeText(getActivity(),  
@@ -358,7 +361,7 @@ public class ChannelStreamFragment extends ContentFragment {
 								getString(R.string.action_follow_failed, channelJid),
 								Toast.LENGTH_LONG).show();
 					}
-				});
+				}));
 	}
 
 	private void showFollowers() {

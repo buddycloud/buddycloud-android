@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.buddycloud.model.ModelCallback;
 
 public abstract class ContentFragment extends SherlockFragment {
 
@@ -12,6 +13,36 @@ public abstract class ContentFragment extends SherlockFragment {
 
 	public abstract void createOptions(Menu menu);
 
-	public abstract boolean menuItemSelected(int featureId, MenuItem item);	
+	public abstract boolean menuItemSelected(int featureId, MenuItem item);
+	
+	protected <T> SmartCallback<T> smartify(ModelCallback<T> callback) {
+		return new SmartCallback<T>(callback);
+	}
+	
+	protected class SmartCallback<T> implements ModelCallback<T> {
+
+		private ModelCallback<T> innerCallback;
+
+		public SmartCallback(ModelCallback<T> innerCallback) {
+			this.innerCallback = innerCallback;
+		}
+		
+		@Override
+		public void success(T response) {
+			if (isDetached()) {
+				return;
+			}
+			innerCallback.success(response);
+		}
+
+		@Override
+		public void error(Throwable throwable) {
+			if (isDetached()) {
+				return;
+			}
+			innerCallback.error(throwable);
+		}
+		
+	}
 	
 }
