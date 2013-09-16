@@ -1,80 +1,80 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory 
-        android:title="Notifications"
+        android:title="@string/pref_notifications_category_title"
         android:key="pref_key_notifications_settings">
         <CheckBoxPreference
             android:key="pref_key_enable_mention_notification"
-            android:summary="When someone mentions me in a channel I follow"
-            android:title="\@mentions"
+            android:summary="@string/pref_enable_mention_notification_summary"
+            android:title="@string/pref_enable_mention_notification_title"
             android:defaultValue="true"/>
         <CheckBoxPreference
             android:key="pref_key_enable_post_mychannel_notification"
-            android:summary="When someone posts in a channel I own"
-            android:title="Post into my channel"
+            android:summary="@string/pref_enable_post_mychannel_notification_summary"
+            android:title="@string/pref_enable_post_mychannel_notification_title"
             android:defaultValue="true"/>
         <CheckBoxPreference
             android:key="pref_key_enable_new_follower_notification"
-            android:summary="When someone follows any of my channels"
-            android:title="New followers"
+            android:summary="@string/pref_enable_new_follower_notification_summary"
+            android:title="@string/pref_enable_new_follower_notification_title"
             android:defaultValue="true"/>
         <CheckBoxPreference
             android:key="pref_key_enable_comments_notification"
-            android:summary="When someone posts into the same topic as me"
-            android:title="Comments in topics"
+            android:summary="@string/pref_enable_comments_notification_summary"
+            android:title="@string/pref_enable_comments_notification_title"
             android:defaultValue="true"/>
         <CheckBoxPreference
             android:key="pref_key_enable_post_anychannel_notification"
-            android:summary="When someone posts into a channel I follow"
-            android:title="Posts into any channel I follow"
+            android:summary="@string/pref_enable_post_anychannel_notification_summary"
+            android:title="@string/pref_enable_post_anychannel_notification_title"
             android:defaultValue="true"/>
     </PreferenceCategory>
     
     <PreferenceCategory 
-        android:title="Security"
+        android:title="@string/pref_security_category_title"
         android:key="pref_key_security_settings">
         <CheckBoxPreference
             android:key="pref_key_disable_ssl_check"
-            android:summary="Do not check for HTTP and HTTPS-with-invalid-certificate/self-signed/expired certificates"
-            android:title="Allow insecure connections"
+            android:summary="@string/pref_disable_ssl_check_summary"
+            android:title="@string/pref_disable_ssl_check_title"
             android:defaultValue="false"/>
     </PreferenceCategory>
     
     <PreferenceCategory 
-        android:title="Vibration and sound"
+        android:title="@string/pref_vibration_sound_category_title"
         android:key="pref_key_vibration_sound_settings">
         <CheckBoxPreference
             android:key="pref_key_enable_vibration"
-            android:summary="Your phone will vibrate when you get a notification"
-            android:title="Vibration"
+            android:summary="@string/pref_enable_vibration_summary"
+            android:title="@string/pref_enable_vibration_title"
             android:defaultValue="true"/>
         <CheckBoxPreference
             android:key="pref_key_enable_sound"
-            android:summary="Listen to a nice bird singing when you get a notification"
-            android:title="Audio notification"
+            android:summary="@string/pref_enable_sound_summary"
+            android:title="@string/pref_enable_sound_title"
             android:defaultValue="true"/>
     </PreferenceCategory>
     
     <PreferenceCategory 
-        android:title="About"
+        android:title="@string/pref_about_category_title"
         android:key="pref_key_about_settings">
         <Preference
             android:key="pref_key_about_bc"
-            android:title="About buddycloud"/>
+            android:title="@string/pref_about_bc_title"/>
         <Preference 
             android:key="pref_key_debug_report"
-            android:summary="Send a debug report via email to help us diagnose problems"
-            android:title="Debug report"/>
+            android:summary="@string/pref_debug_report_summary"
+            android:title="@string/pref_debug_report_title"/>
         <Preference 
             android:key="pref_key_rate_buddycloud"
-            android:summary="We love you. Love us back on the Play store"
-            android:title="Rate buddycloud"/>
+            android:summary="@string/pref_rate_buddycloud_summary"
+            android:title="@string/pref_rate_buddycloud_title"/>
     </PreferenceCategory>
     
     <PreferenceCategory 
-        android:title="Danger zone"
+        android:title="@string/pref_danger_zone_category_title"
         android:key="pref_key_danger_zone">
         <Preference
             android:key="pref_key_delete_account"
-            android:title="Delete buddycloud account"/>
+            android:title="@string/pref_delete_account_title"/>
     </PreferenceCategory>
 </PreferenceScreen>

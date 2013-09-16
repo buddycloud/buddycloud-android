@@ -67,10 +67,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 		
 		if (isAggregate) {
 			
-			StringBuilder contentTitleBuilder = new StringBuilder();
-			contentTitleBuilder.append(gcmAuthors.length());
-			contentTitleBuilder.append(" new posts");
-			mBuilder.setContentTitle(contentTitleBuilder.toString());
+			Integer gcmAuthorCount = gcmAuthors.length();
+			mBuilder.setContentTitle(getString(
+					R.string.gcm_multi_notification_title, 
+					gcmAuthorCount.toString()));
 			
 			Set<String> gcmAuthorsUnique = new HashSet<String>();
 			for (int i = 0; i < gcmAuthors.length(); i++) {
@@ -79,21 +79,23 @@ public class GCMIntentService extends GCMBaseIntentService {
 			List<String> gcmAuthorsUniqueList = new ArrayList<String>(
 					gcmAuthorsUnique);
 			
-			StringBuilder contentTextBuilder = new StringBuilder("From ");
-			contentTextBuilder.append(gcmAuthorsUniqueList.get(0));
+			StringBuilder allAuthorsButLastBuilder = new StringBuilder();
+			allAuthorsButLastBuilder.append(gcmAuthorsUniqueList.get(0));
 			
-			for (int i = 1; i < gcmAuthorsUniqueList.size(); i++) {
-				if (i == gcmAuthors.length() - 1) {
-					contentTextBuilder.append(" and ");
-				} else {
-					contentTextBuilder.append(", ");
-				}
+			for (int i = 1; i < gcmAuthorsUniqueList.size() - 1; i++) {
+				allAuthorsButLastBuilder.append(", ");
 				String gcmAuthor = gcmAuthorsUniqueList.get(i);
-				contentTextBuilder.append(gcmAuthor);
+				allAuthorsButLastBuilder.append(gcmAuthor);
 			}
-			mBuilder.setContentText(contentTextBuilder.toString());
+			
+			String lastAuthor = gcmAuthorsUniqueList.get(
+					gcmAuthorsUniqueList.size() - 1);
+			
+			mBuilder.setContentText(getString(R.string.gcm_multi_notification_content, 
+					allAuthorsButLastBuilder.toString(), lastAuthor));
 		} else {
-			mBuilder.setContentTitle("Post from " + authorJid);
+			mBuilder.setContentTitle(getString(
+					R.string.gcm_single_notification_title, authorJid));
 			mBuilder.setContentText(content);
 		}
 		
