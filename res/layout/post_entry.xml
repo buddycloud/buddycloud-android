@@ -115,13 +115,21 @@
             android:orientation="vertical" >
         </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/replyStreamProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/replyListView"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone" />
+        
         <LinearLayout
             android:id="@+id/replyFrameView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/replyListView"
+            android:layout_below="@+id/replyStreamProgress"
             android:layout_marginTop="8dp"
             android:gravity="bottom"
             android:orientation="horizontal" >

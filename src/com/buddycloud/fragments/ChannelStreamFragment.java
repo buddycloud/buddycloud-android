@@ -53,7 +53,7 @@ public class ChannelStreamFragment extends ContentFragment {
 			Bundle savedInstanceState) {
 		final View view = inflater.inflate(R.layout.fragment_channel_stream, container, false);
 		
-		view.findViewById(R.id.subscribedProgress).setVisibility(View.VISIBLE);
+		showProgress(view);
 		
 		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
@@ -93,7 +93,6 @@ public class ChannelStreamFragment extends ContentFragment {
 			view = getView();
 		}
 		
-		view.findViewById(R.id.subscribedProgress).setVisibility(View.GONE);
 		ListView contentView = (ListView) view.findViewById(R.id.postsStream);
 		if (cardAdapter == null) {
 			this.cardAdapter = new CardListAdapter();
@@ -152,6 +151,7 @@ public class ChannelStreamFragment extends ContentFragment {
 						if (response) {
 							scrollListener.setLoading(false);
 						}
+						hideProgress(getView());
 					}
 
 					@Override
@@ -160,6 +160,7 @@ public class ChannelStreamFragment extends ContentFragment {
 								getString(R.string.message_post_fetch_failed), 
 								Toast.LENGTH_LONG).show();
 						scrollListener.setLoading(false);
+						hideProgress(getView());
 					}
 				});;
 			}
@@ -212,6 +213,8 @@ public class ChannelStreamFragment extends ContentFragment {
 			return;
 		}
 		
+		showProgress(view);
+		
 		final EditText postContent = (EditText) view.findViewById(R.id.postContentTxt);
 		
 		JSONObject post = createJSONPost(postContent);
@@ -224,6 +227,7 @@ public class ChannelStreamFragment extends ContentFragment {
 				Toast.makeText(getActivity().getApplicationContext(), 
 						getString(R.string.message_post_created), Toast.LENGTH_LONG).show();
 				fillRemotely(null, null);
+				scrollUp();
 			}
 			
 			@Override
@@ -363,6 +367,14 @@ public class ChannelStreamFragment extends ContentFragment {
 	
 	private void showSimilarChannels() {
 		showGenericChannelActivity(SimilarChannelsAdapter.ADAPTER_NAME);
+	}
+	
+	private void showProgress(View container) {
+		container.findViewById(R.id.channelStreamProgress).setVisibility(View.VISIBLE);
+	}
+	
+	private void hideProgress(View container) {
+		container.findViewById(R.id.channelStreamProgress).setVisibility(View.GONE);
 	}
 	
 	private void showGenericChannelActivity(String adapterName) {

@@ -23,7 +23,7 @@
             android:orientation="vertical" >
 
             <ProgressBar
-                android:id="@+id/subscribedProgress"
+                android:id="@+id/channelStreamProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

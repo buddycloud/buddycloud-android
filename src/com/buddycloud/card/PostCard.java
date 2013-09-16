@@ -30,7 +30,6 @@ import android.widget.Toast;
 import com.buddycloud.FullScreenImageActivity;
 import com.buddycloud.MainActivity;
 import com.buddycloud.R;
-import com.buddycloud.fragments.ChannelStreamFragment;
 import com.buddycloud.model.MediaModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
@@ -191,10 +190,12 @@ public class PostCard extends AbstractCard {
 			final EditText replyTxt = holder.getView(R.id.replyContentTxt);
 			replyBtn.setEnabled(false);
 			
+			final View thisView = convertView;
+			
 			replyBtn.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					reply(context, replyBtn, replyTxt);
+					reply(thisView, context, replyBtn, replyTxt);
 				}
 			});
 			configureReplySection(replyTxt, replyBtn);
@@ -288,12 +289,22 @@ public class PostCard extends AbstractCard {
 		return userMediaURL;
 	}
 	
-	private void reply(final Context context,
+	private void showProgress(View container) {
+		container.findViewById(R.id.replyStreamProgress).setVisibility(View.VISIBLE);
+	}
+	
+	private void hideProgress(View container) {
+		container.findViewById(R.id.replyStreamProgress).setVisibility(View.GONE);
+	}
+	
+	private void reply(final View convertView, final Context context,
 			final Button replyBtn, final EditText replyTxt) {
 		
 		if (!replyBtn.isEnabled()) {
 			return;
 		}
+		
+		showProgress(convertView);
 		
 		JSONObject replyPost = createReply(replyTxt);
 		replyTxt.setText("");
@@ -307,8 +318,7 @@ public class PostCard extends AbstractCard {
 					@Override
 					public void success(Void response) {
 						getParentAdapter().sort();
-						ChannelStreamFragment fragment = (ChannelStreamFragment) getParentAdapter().getFragment();
-						fragment.scrollUp();
+						hideProgress(convertView);
 					}
 
 					@Override
@@ -316,6 +326,7 @@ public class PostCard extends AbstractCard {
 						Toast.makeText(context,
 								context.getString(R.string.message_reply_created), 
 								Toast.LENGTH_LONG).show();
+						hideProgress(convertView);
 					}
 				});
 			}
