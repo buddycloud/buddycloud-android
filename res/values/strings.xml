@@ -69,6 +69,9 @@
 	<string name="message_media_uploading">Uploading media</string>
 	<string name="message_media_uploaded">Media uploaded</string>
 	
+	<string name="message_affiliation_change_success">Affiliations were successfully changed</string>
+	<string name="message_affiliation_change_failed">Could not change affiliations</string>
+	
 	<string name="post_button">Post</string>
 	
 	<string name="channel_details_title">Title</string>

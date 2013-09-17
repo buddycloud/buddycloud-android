@@ -30,6 +30,7 @@ public class GenericSelectableChannelsFragment extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = genericChannelFrag.onCreateView(inflater, container, savedInstanceState);
+		adapter.configure(this, view);
 		adapter.load(container.getContext());
 		return view;
 	}

@@ -1,10 +1,8 @@
 package com.buddycloud.model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.io.UnsupportedEncodingException;
 
-import org.json.JSONArray;
+import org.apache.http.entity.StringEntity;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -12,7 +10,7 @@ import android.content.Context;
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.preferences.Preferences;
 
-public class FollowersModel extends AbstractModel<JSONArray, JSONArray, String> {
+public class FollowersModel extends AbstractModel<JSONObject, JSONObject, String> {
 
 	private static final String ENDPOINT = "/subscribers"; 
 	private static FollowersModel instance;
@@ -26,27 +24,10 @@ public class FollowersModel extends AbstractModel<JSONArray, JSONArray, String> 
 		return instance;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public void getFromServer(final Context context, final ModelCallback<JSONArray> callback, String... p) {
+	public void getFromServer(final Context context, final ModelCallback<JSONObject> callback, String... p) {
 		String channelJid = p[0];
 		BuddycloudHTTPHelper.getObject(url(channelJid, context), context, 
-				new ModelCallback<JSONObject>() {
-					@Override
-					public void success(JSONObject response) {
-						List<String> channels = new ArrayList<String>();
-						Iterator<String> keyIterator = response.keys();
-						while (keyIterator.hasNext()) {
-							String key = keyIterator.next();
-							channels.add(key);
-						}
-						callback.success(new JSONArray(channels));
-					}
-					
-					@Override
-					public void error(Throwable throwable) {
-						callback.error(throwable);
-					}
-				});
+				callback);
 	}
 
 	private static String url(String channelJid, Context context) {
@@ -56,14 +37,21 @@ public class FollowersModel extends AbstractModel<JSONArray, JSONArray, String> 
 
 
 	@Override
-	public void save(Context context, JSONArray object,
-			ModelCallback<JSONArray> callback, String... p) {
-		// TODO Auto-generated method stub
-		
+	public void save(Context context, JSONObject object,
+			ModelCallback<JSONObject> callback, String... p) {
+		String channelJid = p[0];
+		try {
+			StringEntity requestEntity = new StringEntity(object.toString(), "UTF-8");
+			requestEntity.setContentType("application/json");
+			BuddycloudHTTPHelper.post(url(channelJid, context), requestEntity, context, 
+					callback);
+		} catch (UnsupportedEncodingException e) {
+			callback.error(e);
+		}
 	}
 
 	@Override
-	public JSONArray getFromCache(Context context, String... p) {
+	public JSONObject getFromCache(Context context, String... p) {
 		// TODO Auto-generated method stub
 		return null;
 	}

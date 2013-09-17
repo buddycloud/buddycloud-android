@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 
+import com.buddycloud.fragments.GenericSelectableChannelsFragment;
 import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.utils.ChannelAdapterHelper;
@@ -49,9 +50,20 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 	
 	@Override
 	public long getChildId(int groupPosition, int childPosition) {
-		return getChild(groupPosition, childPosition).hashCode();
+		return getChild(groupPosition, childPosition).optString("jid").hashCode();
 	}
 
+	public JSONObject getChildById(long id) {
+		for (List<JSONObject> channels : channelsPerCategory.values()) {
+			for (JSONObject channel : channels) {
+				if (channel.optString("jid").hashCode() == id) {
+					return channel;
+				}
+			}
+		}
+		return null;
+	}
+	
 	private void addCategory(String category) {
 		if (channelsPerCategory.containsKey(category)) {
 			return;
@@ -174,5 +186,8 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 	}
 	
 	public void load(final Context context) {
+	}
+
+	public void configure(GenericSelectableChannelsFragment fragment, View view) {
 	}
 }
