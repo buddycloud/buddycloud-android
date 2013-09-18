@@ -159,7 +159,19 @@ public class SubscribedChannelsModel extends AbstractModel<JSONObject, JSONObjec
 		return role != null && !role.equals(ROLE_NONE) 
 				&& !role.equals(ROLE_OUTCAST);
 	}
+	
+	public static boolean canMakeModerator(String role) {
+		return role != null && role.equals(ROLE_OWNER);
+	}
 
+	public static boolean canChangeAffiliation(String role) {
+		if (role == null) {
+			return false;
+		}
+		return role.equals(ROLE_OWNER) 
+				|| role.equals(ROLE_MODERATOR);
+	}
+	
 	@Override
 	public void delete(Context context, ModelCallback<Void> callback, String... p) {
 		// TODO Auto-generated method stub

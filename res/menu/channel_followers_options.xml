@@ -1,14 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:id="@+id/menu_role_moderator"
-        android:title="Change to moderator"
+        android:title="@string/menu_role_moderator"
         android:showAsAction="never" />
     <item android:id="@+id/menu_role_member"
-        android:title="Change to follower (can't post)"
+        android:title="@string/menu_role_member"
         android:showAsAction="never" />
     <item android:id="@+id/menu_role_publisher"
-        android:title="Change to follower+post"
+        android:title="@string/menu_role_publisher"
         android:showAsAction="never" />
     <item android:id="@+id/menu_role_outcast"
-        android:title="Ban"
+        android:title="@string/menu_role_outcast"
         android:showAsAction="never" />
 </menu>

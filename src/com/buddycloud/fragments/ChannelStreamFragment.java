@@ -287,13 +287,13 @@ public class ChannelStreamFragment extends ContentFragment {
 
 	@Override
 	public void createOptions(Menu menu) {
-		if (getSherlockActivity() == null) {
+		if (isDetached()) {
 			return;
 		}
 		getSherlockActivity().getSupportMenuInflater().inflate(
 				R.menu.channel_fragment_options, menu);
 		
-		MenuItem followItem = menu.getItem(0);
+		MenuItem followItem = menu.findItem(R.id.menu_follow);
 		if (SubscribedChannelsModel.isFollowing(getRole())) {
 			followItem.setTitle(R.string.menu_unfollow);
 		} else {
@@ -386,6 +386,7 @@ public class ChannelStreamFragment extends ContentFragment {
 		intent.putExtra(GenericChannelActivity.ADAPTER_NAME, 
 				adapterName);
 		intent.putExtra(GenericChannelsFragment.CHANNEL, getChannelJid());
+		intent.putExtra(SubscribedChannelsModel.ROLE, getRole());
 		getActivity().startActivityForResult(
 				intent, GenericChannelActivity.REQUEST_CODE);
 	}

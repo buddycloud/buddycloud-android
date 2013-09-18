@@ -11,10 +11,6 @@
         android:title="@string/menu_channel_followers"
         android:showAsAction="never" />
     
-    <item android:id="@+id/menu_channel_banned"
-        android:title="@string/menu_channel_banned"
-        android:showAsAction="never" />
-    
     <item android:id="@+id/menu_similar_channels"
         android:title="@string/menu_similar_channels"
         android:showAsAction="never" />

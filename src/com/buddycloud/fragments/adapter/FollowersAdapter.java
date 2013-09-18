@@ -35,15 +35,16 @@ public class FollowersAdapter extends GenericChannelAdapter {
 	private static final String BANNED = "BANNED";
 	
 	private String channelJid;
+	private String role;
 	private Map<String, JSONObject> selection = new HashMap<String, JSONObject>();
-	
 	protected ActionMode mActionMode;
 
 	private GenericSelectableChannelsFragment fragment;
 	private View parentView;
 	
-	public FollowersAdapter(String channelJid) {
+	public FollowersAdapter(String channelJid, String role) {
 		this.channelJid = channelJid;
+		this.role = role;
 		setCategoryOrder(OWNER, MODERATOR, FOLLOW_POST, FOLLOW, BANNED);
 	}
 	
@@ -89,6 +90,10 @@ public class FollowersAdapter extends GenericChannelAdapter {
 			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 				MenuInflater inflater = mode.getMenuInflater();
 				inflater.inflate(R.menu.channel_followers_options, menu);
+				if (!SubscribedChannelsModel.canMakeModerator(role)) {
+					MenuItem menuModerator = menu.findItem(R.id.menu_role_moderator);
+					menuModerator.setVisible(false);
+				}
 				return true;
 			}
 
@@ -139,6 +144,11 @@ public class FollowersAdapter extends GenericChannelAdapter {
 			boolean isLastChild, View convertView, final ViewGroup viewGroup) {
 		final View childView = super.getChildView(groupPosition, childPosition, isLastChild,
 						convertView, viewGroup);
+		
+		if (!SubscribedChannelsModel.canChangeAffiliation(role)) {
+			return childView;
+		}
+		
 		childView.setBackgroundResource(R.drawable.channel_item_background_selector);
 		childView.setOnLongClickListener(new OnLongClickListener() {
 			@Override

@@ -11,6 +11,7 @@ import com.buddycloud.fragments.adapter.GenericChannelAdapter;
 import com.buddycloud.fragments.adapter.MostActiveChannelsAdapter;
 import com.buddycloud.fragments.adapter.RecommendedChannelsAdapter;
 import com.buddycloud.fragments.adapter.SimilarChannelsAdapter;
+import com.buddycloud.model.SubscribedChannelsModel;
 
 public class GenericChannelActivity extends SherlockFragmentActivity {
 
@@ -43,7 +44,8 @@ public class GenericChannelActivity extends SherlockFragmentActivity {
 		}
 		if (adapterName.equals(FollowersAdapter.ADAPTER_NAME)) {
 			String channelJid = getIntent().getStringExtra(GenericChannelsFragment.CHANNEL);
-			return new FollowersAdapter(channelJid);
+			String role = getIntent().getStringExtra(SubscribedChannelsModel.ROLE);
+			return new FollowersAdapter(channelJid, role);
 		}
 		
 		return null;

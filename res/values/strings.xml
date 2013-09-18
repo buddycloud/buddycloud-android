@@ -5,7 +5,7 @@
     <string name="yes">Yes</string>
     <string name="yes_and_remember">Yes (Remember this choice)</string>
     <string name="no">No</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     
     <string name="menu_search">Search</string>
     <string name="menu_create_channel">Create channel</string>
@@ -20,6 +20,11 @@
     <string name="menu_channel_followers">Followers</string>
     <string name="menu_channel_banned">Banned</string>
     <string name="menu_similar_channels">Similar channels</string>
+    
+    <string name="menu_role_moderator">Change to moderator</string>
+    <string name="menu_role_member">Change to follower (can't post)</string>
+    <string name="menu_role_publisher">Change to follower+post</string>
+    <string name="menu_role_outcast">Ban</string>
     
     <string name="apiAddressTxtHint">https://api.buddycloud.org</string>
 	
