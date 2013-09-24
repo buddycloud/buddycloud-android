@@ -179,8 +179,8 @@ public class ChannelDetailActivity extends SherlockActivity {
 		
 		metadata.put("title", getEditText(R.id.titleTxt));
 		metadata.put("description", getEditText(R.id.descriptionTxt));
-		metadata.put("accessModel", getSpinnerText(R.id.accessModelTxt));
-		metadata.put("defaultAffiliation", getSpinnerText(R.id.defaultAffiliationTxt));
+		metadata.put("access_model", getSpinnerText(R.id.accessModelTxt));
+		metadata.put("default_affiliation", getSpinnerText(R.id.defaultAffiliationTxt));
 		
 		return new JSONObject(metadata);
 	}
