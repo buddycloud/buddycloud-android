@@ -41,7 +41,7 @@ public class ChannelDetailActivity extends SherlockActivity {
 	
 	private final static List<String> ACCESS_MODELS = Arrays.asList(new String[] {
 			SubscribedChannelsModel.ACCESS_MODEL_OPEN,
-			SubscribedChannelsModel.ACCESS_MODEL_WHITELIST});
+			SubscribedChannelsModel.ACCESS_MODEL_AUTHORIZE});
 	
 	protected void onActivityResult(int requestCode, int resultCode,
 			Intent imageReturnedIntent) {

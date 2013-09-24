@@ -28,7 +28,7 @@ public class SubscribedChannelsModel extends AbstractModel<JSONObject, JSONObjec
 	
 	public static final String ACCESS_MODEL = "com.buddycloud.ACCESS_MODEL";
 	public static final String ACCESS_MODEL_OPEN = "open";
-	public static final String ACCESS_MODEL_WHITELIST = "whitelist";
+	public static final String ACCESS_MODEL_AUTHORIZE = "authorize";
 	
 	public static final String POST_NODE_SUFIX = "/posts";
 	
