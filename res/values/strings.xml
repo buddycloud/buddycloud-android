@@ -22,7 +22,7 @@
     <string name="menu_similar_channels">Similar channels</string>
     
     <string name="menu_role_moderator">Change to moderator</string>
-    <string name="menu_role_member">Change to follower (can't post)</string>
+    <string name="menu_role_member">Change to follower (can\'t post)</string>
     <string name="menu_role_publisher">Change to follower+post</string>
     <string name="menu_role_outcast">Ban</string>
     
