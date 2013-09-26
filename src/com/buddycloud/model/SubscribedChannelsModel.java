@@ -8,7 +8,6 @@ import org.apache.http.entity.StringEntity;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.model.dao.SubscribedChannelsDAO;
@@ -24,7 +23,10 @@ public class SubscribedChannelsModel extends AbstractModel<JSONObject, JSONObjec
 	public static final String ROLE_OUTCAST = "outcast";
 	public static final String ROLE_MODERATOR = "moderator";
 	public static final String ROLE_OWNER = "owner";
-	public static final String ROLE_NONE = "none";
+	
+	public static final String SUBSCRIPTION_SUBSCRIBED = "subscribed";
+	public static final String SUBSCRIPTION_PENDING = "pending";
+	public static final String SUBSCRIPTION_NONE = "none";
 	
 	public static final String ACCESS_MODEL = "com.buddycloud.ACCESS_MODEL";
 	public static final String ACCESS_MODEL_OPEN = "open";
@@ -32,7 +34,6 @@ public class SubscribedChannelsModel extends AbstractModel<JSONObject, JSONObjec
 	
 	public static final String POST_NODE_SUFIX = "/posts";
 	
-	private static final String TAG = SubscribedChannelsModel.class.getName();
 	private static final String ENDPOINT = "/subscribed"; 
 	
 	private SubscribedChannelsModel() {}
@@ -62,7 +63,6 @@ public class SubscribedChannelsModel extends AbstractModel<JSONObject, JSONObjec
 		}
 		
 		try {
-			Log.d(TAG, object.toString());
 			StringEntity requestEntity = new StringEntity(object.toString(), "UTF-8");
 			requestEntity.setContentType("application/json");
 			BuddycloudHTTPHelper.post(url(context), true, false, requestEntity, context, new ModelCallback<JSONObject>() {
@@ -156,8 +156,13 @@ public class SubscribedChannelsModel extends AbstractModel<JSONObject, JSONObjec
 	}
 	
 	public static boolean isFollowing(String role) {
-		return role != null && !role.equals(ROLE_NONE) 
-				&& !role.equals(ROLE_OUTCAST);
+		if (role == null) {
+			return false;
+		}
+		return role.equals(ROLE_OWNER)
+				|| role.equals(ROLE_MODERATOR)
+				|| role.equals(ROLE_PUBLISHER)
+				|| role.equals(ROLE_MEMBER);
 	}
 	
 	public static boolean canMakeModerator(String role) {

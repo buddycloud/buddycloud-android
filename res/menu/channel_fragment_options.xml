@@ -14,4 +14,9 @@
     <item android:id="@+id/menu_similar_channels"
         android:title="@string/menu_similar_channels"
         android:showAsAction="never" />
+    
+    <item android:id="@+id/menu_pending_subscriptions"
+        android:title="@string/menu_pending_subscriptions"
+        android:showAsAction="never" />
+    
 </menu>

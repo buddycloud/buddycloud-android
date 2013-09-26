@@ -171,4 +171,12 @@
 	<string name="gcm_single_notification_title">Post from %1$s</string>
 	<string name="gcm_multi_notification_title">%1$s new posts</string>
 	<string name="gcm_multi_notification_content">From %1$s and %2$s</string>
+	
+	<string name="menu_pending_subscriptions">Pending subscriptions</string>
+	<string name="menu_pending_subscription_deny">Deny</string>
+	<string name="menu_pending_subscription_approve">Approve</string>
+	<string name="message_pending_subsriptions_load_failed">Could not fetch pending subscriptions</string>
+	<string name="message_subscription_change_success">Subscriptions were successfully changed</string>
+	<string name="message_subscription_change_failed">Couldn\'t change subscriptions</string>
+	
 </resources>

@@ -33,6 +33,7 @@ import com.buddycloud.card.Card;
 import com.buddycloud.card.CardListAdapter;
 import com.buddycloud.card.PostCard;
 import com.buddycloud.fragments.adapter.FollowersAdapter;
+import com.buddycloud.fragments.adapter.PendingSubscriptionsAdapter;
 import com.buddycloud.fragments.adapter.SimilarChannelsAdapter;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
@@ -299,6 +300,10 @@ public class ChannelStreamFragment extends ContentFragment {
 		} else {
 			followItem.setTitle(R.string.menu_follow);
 		}
+		
+		MenuItem pendingSubscriptionsItem = menu.findItem(R.id.menu_pending_subscriptions);
+		boolean canApprove = SubscribedChannelsModel.canChangeAffiliation(getRole());
+		pendingSubscriptionsItem.setVisible(canApprove);
 	}
 
 	private String getRole() {
@@ -324,6 +329,9 @@ public class ChannelStreamFragment extends ContentFragment {
 		case R.id.menu_channel_details:
 			showDetails();
 			return true;
+		case R.id.menu_pending_subscriptions:
+			showPendingSubscriptions();
+			return true;
 		default:
 			return false;
 		}
@@ -341,7 +349,7 @@ public class ChannelStreamFragment extends ContentFragment {
 		final boolean isFollowing = SubscribedChannelsModel.isFollowing(getRole());
 		
 		Map<String, String> subscription = new HashMap<String, String>();
-		String newRole = isFollowing ? SubscribedChannelsModel.ROLE_NONE : SubscribedChannelsModel.ROLE_PUBLISHER;
+		String newRole = isFollowing ? SubscribedChannelsModel.SUBSCRIPTION_NONE : SubscribedChannelsModel.ROLE_PUBLISHER;
 		final String channelJid = getChannelJid();
 		subscription.put(channelJid + SubscribedChannelsModel.POST_NODE_SUFIX, newRole);
 		
@@ -366,6 +374,10 @@ public class ChannelStreamFragment extends ContentFragment {
 
 	private void showFollowers() {
 		showGenericChannelActivity(FollowersAdapter.ADAPTER_NAME);
+	}
+	
+	private void showPendingSubscriptions() {
+		showGenericChannelActivity(PendingSubscriptionsAdapter.ADAPTER_NAME);
 	}
 	
 	private void showSimilarChannels() {
