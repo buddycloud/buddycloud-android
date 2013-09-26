@@ -1,10 +1,13 @@
 package com.buddycloud.http;
 
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnKeyListener;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.view.KeyEvent;
 
 import com.buddycloud.R;
 import com.buddycloud.model.ModelCallback;
@@ -44,7 +47,7 @@ public class SSLUtils {
 			final ModelCallback<Void> callback) {
 		String sslErrorTitle = context.getString(R.string.ssl_error_title);
 		String sslErrorMessage = context.getString(R.string.ssl_error_message, apiAddress);
-		new AlertDialog.Builder(context)
+		Builder dialogBuilder = new AlertDialog.Builder(context)
 				.setIcon(android.R.drawable.ic_dialog_alert)
 				.setTitle(sslErrorTitle)
 				.setMessage(sslErrorMessage)
@@ -74,8 +77,19 @@ public class SSLUtils {
 									int which) {
 								callback.error(null);
 							}
-						})
-				.show();
-    }
+						});
+		AlertDialog dialog = dialogBuilder.create();
+		dialog.setOnKeyListener(new OnKeyListener() {
+			@Override
+			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+				if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    callback.error(null);
+                    dialog.dismiss();
+                }
+                return true;
+			}
+		});
+		dialog.show();
+	}
 	
 }
