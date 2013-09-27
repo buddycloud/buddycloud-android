@@ -33,7 +33,9 @@ public class GCMIntentService extends GCMBaseIntentService {
 		
 		GCMEvent event = GCMEvent.valueOf(message.getStringExtra("event"));
 		GCMNotificationListener notificationListener = createNotificationListener(event);
-		notificationListener.onMessage(event, arg0, message);
+		if (notificationListener != null) {
+			notificationListener.onMessage(event, arg0, message);
+		}
 	}
 
 	private GCMNotificationListener createNotificationListener(GCMEvent event) {
