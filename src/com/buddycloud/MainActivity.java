@@ -22,9 +22,10 @@ import com.buddycloud.fragments.SearchChannelsFragment;
 import com.buddycloud.fragments.SubscribedChannelsFragment;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.NotificationSettingsModel;
+import com.buddycloud.notifications.GCMEvent;
+import com.buddycloud.notifications.GCMUtils;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.Backstack;
-import com.buddycloud.utils.GCMUtils;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.OnClosedListener;
 import com.slidingmenu.lib.SlidingMenu.OnOpenedListener;
@@ -198,12 +199,24 @@ public class MainActivity extends SlidingFragmentActivity {
 		} else {
 			showChannelFragment(channelJid);
 		}
-		boolean isNotification = getIntent().getBooleanExtra(
-				GCMIntentService.GCM_NOTIFICATION, false);
-		if (isNotification) {
-			GCMUtils.clearGCMAuthors(this);
+		String event = getIntent().getStringExtra(GCMIntentService.GCM_NOTIFICATION_EVENT);
+		if (event != null) {
+			GCMEvent gcmEvent = GCMEvent.valueOf(event);
+			process(gcmEvent);
 		}
 		super.onAttachedToWindow();
+	}
+	
+	private void process(GCMEvent event) {
+		switch (event) {
+		case POST_AFTER_MY_POST:
+		case POST_ON_SUBSCRIBED_CHANNEL:
+		case POST_ON_MY_CHANNEL:
+		case MENTION:
+			GCMUtils.clearGCMAuthors(this);
+		default:
+			break;
+		}
 	}
 	
 	private void registerInGCM() {

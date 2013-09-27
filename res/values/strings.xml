@@ -172,6 +172,13 @@
 	<string name="gcm_multi_notification_title">%1$s new posts</string>
 	<string name="gcm_multi_notification_content">From %1$s and %2$s</string>
 	
+	<string name="gcm_follow_request_notification_title">Follow request</string>
+	<string name="gcm_follow_request_notification_content">%1$s wants to follow %2$s</string>
+	
+	<string name="gcm_follow_request_approved_notification_title">Follow request approved</string>
+	<string name="gcm_follow_request_approved_notification_content">Your request to follow %1$s was approved</string>
+	
+	
 	<string name="menu_pending_subscriptions">Pending subscriptions</string>
 	<string name="menu_pending_subscription_deny">Deny</string>
 	<string name="menu_pending_subscription_approve">Approve</string>

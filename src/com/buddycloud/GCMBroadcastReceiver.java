@@ -1,6 +1,6 @@
 package com.buddycloud;
 
-import com.buddycloud.utils.GCMUtils;
+import com.buddycloud.notifications.GCMUtils;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
