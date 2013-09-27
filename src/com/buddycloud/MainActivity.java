@@ -37,7 +37,6 @@ public class MainActivity extends SlidingFragmentActivity {
 	private static final boolean DEVELOPER_MODE = false;
 	private ContentPageAdapter pageAdapter;
 	private String myJid;
-	private SubscribedChannelsFragment subscribedChannelsFrag;
 	private Backstack backStack;
 
 	@Override
@@ -119,7 +118,7 @@ public class MainActivity extends SlidingFragmentActivity {
 	
 	private ContentFragment getCurrentFragment() {
 		if (getSlidingMenu().isMenuShowing()) {
-			return subscribedChannelsFrag;
+			return pageAdapter.getLeftFragment();
 		} 
 		return pageAdapter.getCurrentFragment();
 	}
@@ -292,7 +291,6 @@ public class MainActivity extends SlidingFragmentActivity {
 		SubscribedChannelsFragment subscribedFrag = new SubscribedChannelsFragment();
 		t.replace(R.id.menu_frame, subscribedFrag);
 		t.commitAllowingStateLoss();
-		this.subscribedChannelsFrag = subscribedFrag;
 	}
 
 	@Override
