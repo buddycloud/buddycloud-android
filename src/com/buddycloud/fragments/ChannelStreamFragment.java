@@ -236,7 +236,7 @@ public class ChannelStreamFragment extends ContentFragment {
 			@Override
 			public void error(Throwable throwable) {
 				Toast.makeText(getActivity().getApplicationContext(), 
-						throwable.getMessage(), Toast.LENGTH_LONG).show();
+						getString(R.string.message_post_creation_failed), Toast.LENGTH_LONG).show();
 				hideProgress(view);
 			}
 		}), getChannelJid());

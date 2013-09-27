@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
@@ -14,6 +15,7 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -24,8 +26,11 @@ import com.buddycloud.model.MediaModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
 import com.buddycloud.preferences.Preferences;
+import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.FileUtils;
 import com.buddycloud.utils.ImageHelper;
+import com.buddycloud.utils.MeasuredMediaView;
+import com.buddycloud.utils.MeasuredMediaView.MeasureListener;
 
 public class ShareActivity extends Activity {
 
@@ -34,46 +39,109 @@ public class ShareActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_share);
 		
-		Intent intent = getIntent();
+		final Intent intent = getIntent();
 		if (!intent.getAction().equals(Intent.ACTION_SEND)) {
 			return;
 		}
 
 		String myJid = Preferences.getPreference(getApplicationContext(), Preferences.MY_CHANNEL_JID);
 		EditText targetChannelView = (EditText) findViewById(R.id.channelText);
-		targetChannelView.setText(myJid);
+		
+		String avatarURL = AvatarUtils.avatarURL(this, myJid);
+		ImageView avatarView = (ImageView) findViewById(R.id.bcProfilePic);
+		ImageHelper.picasso(this).load(avatarURL)
+				.placeholder(R.drawable.personal_50px)
+				.error(R.drawable.personal_50px)
+				.transform(ImageHelper.createRoundTransformation(this, 16, false, -1))
+				.into(avatarView);
 		
 		targetChannelView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				Intent searchActivityIntent = new Intent();
-				searchActivityIntent.setClass(ShareActivity.this, SearchActivity.class);
-				startActivityForResult(searchActivityIntent, SearchActivity.REQUEST_CODE);
+//				Intent searchActivityIntent = new Intent();
+//				searchActivityIntent.setClass(ShareActivity.this, SearchActivity.class);
+//				startActivityForResult(searchActivityIntent, SearchActivity.REQUEST_CODE);
 			}
 		});
 		
-		final Uri uri = (Uri) intent.getExtras().get(Intent.EXTRA_STREAM);
-
-		String mediaType = getContentResolver().getType(uri);
-		ImageView imageView = (ImageView) findViewById(R.id.shareImagePreview);
+		targetChannelView.setOnFocusChangeListener(new OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View arg0, boolean arg1) {
+				if (arg1) {
+					Intent searchActivityIntent = new Intent();
+					searchActivityIntent.setClass(ShareActivity.this, SearchActivity.class);
+					startActivityForResult(searchActivityIntent, SearchActivity.REQUEST_CODE);
+				}
+			}
+		});
+		
+		final String mediaType = intent.getType();
+		
 		if (mediaType.contains("image/")) {
-			ImageHelper.picasso(this).load(uri.toString())
-			        .resize(512, 512)
-					.into(imageView);
+			layoutShareImage();
 		} else if (mediaType.contains("video/")) {
-			Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(
-					FileUtils.getRealPathFromURI(this, uri),
-			        MediaStore.Images.Thumbnails.MINI_KIND);
-			imageView.setImageBitmap(thumbnail);
+			layoutShareVideo();
+		} else if (mediaType.contains("text/")) {
+			layoutShareText();
 		}
 		
 		RelativeLayout shareMediaBtn = (RelativeLayout) findViewById(R.id.shareMediaBtn);
 		shareMediaBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				shareMedia(uri);
+				
+				if (mediaType.contains("image/") || 
+						mediaType.contains("video/")) {
+					shareMedia();
+				} else if (mediaType.contains("text/")) {
+					shareText();
+				}
 			}
 		});
+	}
+
+	protected void layoutShareText() {
+		findViewById(R.id.shareImagePreview).setVisibility(View.GONE);
+		findViewById(R.id.captionTextAlt).setVisibility(View.GONE);
+		
+		EditText caption = (EditText) findViewById(R.id.captionText);
+		String sharedText = getIntent().getStringExtra(Intent.EXTRA_TEXT);
+		caption.setText(sharedText);
+		
+		findViewById(R.id.captionText).requestFocus();
+	}
+
+	protected void layoutShareVideo() {
+		findViewById(R.id.captionText).setVisibility(View.GONE);
+		
+		Uri uri = (Uri) getIntent().getExtras().get(Intent.EXTRA_STREAM);
+		Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(
+				FileUtils.getRealPathFromURI(this, uri),
+		        MediaStore.Images.Thumbnails.MINI_KIND);
+		ImageView imageView = (ImageView) findViewById(R.id.shareImagePreview);
+		imageView.setImageBitmap(thumbnail);
+	}
+
+	protected void layoutShareImage() {
+		
+		findViewById(R.id.captionText).setVisibility(View.GONE);
+		
+		final MeasuredMediaView imageView = (MeasuredMediaView) findViewById(R.id.shareImagePreview);
+		final Uri uri = (Uri) getIntent().getExtras().get(Intent.EXTRA_STREAM);
+		
+		imageView.setMeasureListener(new MeasureListener() {
+			@Override
+			public void measure(int widthMeasureSpec, int heightMeasureSpec) {
+				Context context = getApplicationContext();
+				ImageHelper.picasso(context)
+						.load(uri)
+						.transform(ImageHelper.createRoundTransformation(
+								context, 8, true,widthMeasureSpec))
+						.into(imageView);
+			}
+		});
+		findViewById(R.id.captionTextAlt).requestFocus();
+		imageView.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -87,10 +155,16 @@ public class ShareActivity extends Activity {
 		}
 	}
 	
-	protected void shareMedia(Uri uri) {
+	protected void shareText() {
+		showProgress();
+		postToBuddycloud();
+	}
+	
+	protected void shareMedia() {
 		
-		findViewById(R.id.shareMediaBtn).setVisibility(View.GONE);
-		findViewById(R.id.uploadProgress).setVisibility(View.VISIBLE);
+		Uri uri = (Uri) getIntent().getExtras().get(Intent.EXTRA_STREAM);
+		
+		showProgress();
 		
 		Toast.makeText(getApplicationContext(),
 				getString(R.string.message_media_uploading), 
@@ -99,24 +173,56 @@ public class ShareActivity extends Activity {
 		MediaModel.getInstance().save(getApplicationContext(), null, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
+				Toast.makeText(getApplicationContext(),
+						getString(R.string.message_media_uploaded),
+						Toast.LENGTH_SHORT).show();
 				postToBuddycloud(response.optString("entityId"), 
 						response.optString("id"));
 			}
 			
 			@Override
 			public void error(Throwable throwable) {
-				
+				Toast.makeText(getApplicationContext(),
+						getString(R.string.message_media_upload_failed),
+						Toast.LENGTH_LONG).show();
+				hideProgress();
 			}
 		}, uri.toString(), targetChannelView.getText().toString());
 	}
 
+	protected void showProgress() {
+		findViewById(R.id.shareMediaBtn).setVisibility(View.GONE);
+		findViewById(R.id.uploadProgress).setVisibility(View.VISIBLE);
+	}
+
+	protected void hideProgress() {
+		findViewById(R.id.shareMediaBtn).setVisibility(View.VISIBLE);
+		findViewById(R.id.uploadProgress).setVisibility(View.GONE);
+	}
+	
+	protected void postToBuddycloud() {
+		postToBuddycloud(null, null);
+	}
+	
 	protected void postToBuddycloud(String picChannel, String picId) {
 		EditText targetChannelView = (EditText) findViewById(R.id.channelText);
-		PostsModel.getInstance().save(this, createPost(picChannel, picId), new ModelCallback<JSONObject>() {
+		
+		JSONObject post = null;
+		try {
+			post = createPost(picChannel, picId);
+		} catch (JSONException e) {
+			Toast.makeText(getApplicationContext(),
+					getString(R.string.message_post_creation_failed), 
+					Toast.LENGTH_LONG).show();
+			hideProgress();
+			return;
+		}
+		
+		PostsModel.getInstance().save(this, post, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
 				Toast.makeText(getApplicationContext(),
-						getString(R.string.message_media_uploaded),
+						getString(R.string.message_post_created),
 						Toast.LENGTH_LONG).show();
 				finish();
 			}
@@ -124,18 +230,20 @@ public class ShareActivity extends Activity {
 			@Override
 			public void error(Throwable throwable) {
 				Toast.makeText(getApplicationContext(),
-						getString(R.string.message_media_upload_failed), 
+						getString(R.string.message_post_creation_failed), 
 						Toast.LENGTH_LONG).show();
-				finish();
+				hideProgress();
 			}
 		}, targetChannelView.getText().toString());
 		
 	}
 
-	private JSONObject createPost(String picChannel, String picId) {
-		EditText caption = (EditText) findViewById(R.id.captionText);
+	private JSONObject createPost(String picChannel, String picId) throws JSONException {
+		
 		JSONObject post = new JSONObject();
-		try {
+		
+		if (picId != null && picChannel != null) {
+			EditText caption = (EditText) findViewById(R.id.captionTextAlt);
 			post.putOpt("content", caption.getText().toString());
 			JSONArray mediaArray = new JSONArray();
 			JSONObject mediaObject = new JSONObject();
@@ -143,8 +251,9 @@ public class ShareActivity extends Activity {
 			mediaObject.putOpt("channel", picChannel);
 			mediaArray.put(mediaObject);
 			post.putOpt("media", mediaArray);
-		} catch (JSONException e) {
-			e.printStackTrace();
+		} else {
+			EditText caption = (EditText) findViewById(R.id.captionText);
+			post.putOpt("content", caption.getText().toString());
 		}
 		return post;
 	}

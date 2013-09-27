@@ -1,78 +1,116 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#555555" >
+    android:background="#eeeeee" >
 
-    <ImageView
-        android:id="@+id/shareImagePreview"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_alignParentLeft="true"
-        android:layout_margin="8dp"
-        android:adjustViewBounds="true"
-        android:background="@drawable/share_preview_border"
-        android:scaleType="centerCrop" />
-
-    <EditText
-        android:id="@+id/channelText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/shareImagePreview"
-        android:layout_alignRight="@+id/captionText"
-        android:layout_below="@+id/shareImagePreview"
-        android:ems="10"
-        android:hint="@string/share_channel_hint"
-        android:inputType="textEmailAddress"
-        android:textColor="#FFFFFF" />
-
-    <EditText
-        android:id="@+id/captionText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/shareImagePreview"
-        android:layout_marginRight="8dp"
-        android:layout_toRightOf="@+id/shareImagePreview"
-        android:ems="10"
-        android:hint="@string/share_caption_hint"
-        android:inputType="textMultiLine"
-        android:maxLines="5"
-        android:textColor="#FFFFFF" />
-
-    <ProgressBar
-        android:id="@+id/uploadProgress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/channelText"
-        android:layout_alignLeft="@+id/channelText"
-        android:layout_alignRight="@+id/channelText"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp"
-        android:visibility="gone" />
-    
     <RelativeLayout
-        android:id="@+id/shareMediaBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/channelText"
-        android:layout_alignRight="@+id/channelText"
-        android:layout_below="@+id/channelText"
-        android:background="@color/bc_green"
-        android:layout_marginTop="8dp"
-        android:padding="@dimen/login_button_padding" >
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/bc_shadow"
+        android:paddingBottom="12dp" >
 
-        <com.buddycloud.utils.TypefacedTextView
+        <RelativeLayout
+            android:id="@+id/topicWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        
+        <com.buddycloud.utils.MeasuredMediaView
             xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
-            android:id="@+id/textView1"
+            android:id="@+id/shareImagePreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:adjustViewBounds="true"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/bcProfilePic"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/personal_50px" />
+
+        <EditText
+            android:id="@+id/captionText"
+            android:hint="@string/share_caption_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="@string/share_button"
-            android:textColor="#555555"
-            android:textSize="20sp"
-            buddycloud:typeface="Roboto-Bold.ttf" />
-    </RelativeLayout>
+            android:layout_alignTop="@+id/bcProfilePic"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_toRightOf="@+id/bcProfilePic"
+            android:textColor="#424242"
+            android:textSize="16sp" />
 
+        <EditText
+            android:id="@+id/captionTextAlt"
+            android:hint="@string/share_caption_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/shareImagePreview"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:textColor="#424242"
+            android:textSize="16sp" />
+        
+        </RelativeLayout>
+        
+        <EditText
+            android:id="@+id/channelText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/topicWrapper"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:hint="@string/share_channel_hint"
+            android:inputType="textEmailAddress" 
+            android:textColor="#424242"
+            android:textSize="16sp"/>
+        
+        <ProgressBar
+            android:id="@+id/uploadProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/channelText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/shareMediaBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/channelText"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:background="@color/bc_green"
+            android:padding="@dimen/login_button_padding" >
+
+            <com.buddycloud.utils.TypefacedTextView
+                xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/share_button"
+                android:textColor="#555555"
+                android:textSize="20sp"
+                buddycloud:typeface="Roboto-Condensed.ttf" />
+        </RelativeLayout>
+        
 </RelativeLayout>
+</ScrollView>

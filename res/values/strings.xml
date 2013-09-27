@@ -33,6 +33,7 @@
 	<string name="action_follow_failed">Couldn\'t change your role in %1$s</string>
 	
 	<string name="message_post_created">Post created</string>
+	<string name="message_post_creation_failed">Post creation failed</string>
 	<string name="message_reply_created">Reply created</string>
 	<string name="title_confirm_delete">Confirm deletion</string>
 	<string name="message_confirm_delete">Are you sure you want to delete this post?</string>
@@ -111,9 +112,9 @@
 	
 	<string name="search_hint">Search</string>
 	
-	<string name="share_activity_title">buddycloud</string>
-	<string name="share_channel_hint">channel</string>
-	<string name="share_caption_hint">caption</string>
+	<string name="share_activity_title">Post preview</string>
+	<string name="share_channel_hint">Pick channel to share with</string>
+	<string name="share_caption_hint">Type caption</string>
 	<string name="share_button">Share</string>
 	
 	<string name="channel_list_personal_hint">PERSONAL</string>
