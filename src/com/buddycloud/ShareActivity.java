@@ -55,15 +55,6 @@ public class ShareActivity extends Activity {
 				.transform(ImageHelper.createRoundTransformation(this, 16, false, -1))
 				.into(avatarView);
 		
-		targetChannelView.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-//				Intent searchActivityIntent = new Intent();
-//				searchActivityIntent.setClass(ShareActivity.this, SearchActivity.class);
-//				startActivityForResult(searchActivityIntent, SearchActivity.REQUEST_CODE);
-			}
-		});
-		
 		targetChannelView.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View arg0, boolean arg1) {
@@ -120,10 +111,12 @@ public class ShareActivity extends Activity {
 		        MediaStore.Images.Thumbnails.MINI_KIND);
 		ImageView imageView = (ImageView) findViewById(R.id.shareImagePreview);
 		imageView.setImageBitmap(thumbnail);
+		
+		findViewById(R.id.captionTextAlt).requestFocus();
+		imageView.setVisibility(View.VISIBLE);
 	}
 
 	protected void layoutShareImage() {
-		
 		findViewById(R.id.captionText).setVisibility(View.GONE);
 		
 		final MeasuredMediaView imageView = (MeasuredMediaView) findViewById(R.id.shareImagePreview);
@@ -168,7 +161,7 @@ public class ShareActivity extends Activity {
 		
 		Toast.makeText(getApplicationContext(),
 				getString(R.string.message_media_uploading), 
-				Toast.LENGTH_LONG).show();
+				Toast.LENGTH_SHORT).show();
 		EditText targetChannelView = (EditText) findViewById(R.id.channelText);
 		MediaModel.getInstance().save(getApplicationContext(), null, new ModelCallback<JSONObject>() {
 			@Override
