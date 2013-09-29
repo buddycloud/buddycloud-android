@@ -106,12 +106,19 @@ public class ShareActivity extends Activity {
 		findViewById(R.id.captionText).setVisibility(View.GONE);
 		
 		Uri uri = (Uri) getIntent().getExtras().get(Intent.EXTRA_STREAM);
-		Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(
+		final Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(
 				FileUtils.getRealPathFromURI(this, uri),
 		        MediaStore.Images.Thumbnails.MINI_KIND);
-		ImageView imageView = (ImageView) findViewById(R.id.shareImagePreview);
+		final MeasuredMediaView imageView = (MeasuredMediaView) findViewById(R.id.shareImagePreview);
 		imageView.setImageBitmap(thumbnail);
 		
+		imageView.setMeasureListener(new MeasureListener() {
+			@Override
+			public void measure(int widthMeasureSpec, int heightMeasureSpec) {
+				imageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(
+						thumbnail, 8, true, widthMeasureSpec));
+			}
+		});
 		findViewById(R.id.captionTextAlt).requestFocus();
 		imageView.setVisibility(View.VISIBLE);
 	}

@@ -216,7 +216,7 @@ public class PostCard extends AbstractCard {
 	private void drawMediaLayout(final JSONArray mediaArray, final Context context,
 			final TextView contentTextView, final TextView contentTextViewAlt,
 			final MeasuredMediaView mediaView) {
-		
+		contentTextView.setText(TextUtils.anchor(getMediaURL(mediaArray, context)));
 		mediaView.setMeasureListener(new MeasureListener() {
 			@Override
 			public void measure(int widthMeasureSpec, int heightMeasureSpec) {
