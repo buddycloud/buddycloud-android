@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.KeyEvent;
 
@@ -35,28 +33,28 @@ public class MainActivity extends SlidingFragmentActivity {
 
 	private static final String TAG = MainActivity.class.getName();
 	private static final boolean DEVELOPER_MODE = false;
-	private ContentPageAdapter pageAdapter;
 	private String myJid;
 	private Backstack backStack;
+	
+	private ChannelStreamFragment channelStreamFrag;
+	private SubscribedChannelsFragment subscribedFrag;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		strict();
 		super.onCreate(savedInstanceState);
-
 		setSlidingActionBarEnabled(false);
+		
 		setBehindContentView(R.layout.menu_frame);
+		setContentView(R.layout.content_frame);
 		
-		ViewPager viewPager = new ViewPager(this);
-		this.pageAdapter = new ContentPageAdapter(getSupportFragmentManager(), viewPager);
-		viewPager.setId("VP".hashCode());
-		viewPager.setAdapter(pageAdapter);
-
-		viewPager.setOnPageChangeListener(createPageChangeListener());
-
 		this.backStack = new Backstack(this);
-		setContentView(viewPager);
 		
+		if (savedInstanceState != null) {
+			channelStreamFrag = (ChannelStreamFragment) getSupportFragmentManager().getFragment(
+					savedInstanceState, "mContent");
+		}
+        
 		if (shouldLogin()) {
 			Intent loginActivity = new Intent();
 			loginActivity.setClass(getApplicationContext(), LoginActivity.class);
@@ -68,6 +66,12 @@ public class MainActivity extends SlidingFragmentActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
+	 @Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		getSupportFragmentManager().putFragment(outState, "mContent", channelStreamFrag);
+	}
+	
 	@SuppressLint("NewApi")
 	private void strict() {
 		if (DEVELOPER_MODE) {
@@ -107,45 +111,24 @@ public class MainActivity extends SlidingFragmentActivity {
 		//TODO Animation between fragments
 		if (getSlidingMenu().isMenuShowing()) {
 			finish();
-		} else if (pageAdapter.getCurrentFragmentIndex() == 0) {
+		} else {
 			if (!backStack.pop()) {
 				getSlidingMenu().showMenu();
 			}
-		} else {
-			pageAdapter.setCurrentFragment(pageAdapter.getCurrentFragmentIndex() - 1);
 		}
 	}
 	
 	private ContentFragment getCurrentFragment() {
 		if (getSlidingMenu().isMenuShowing()) {
-			return pageAdapter.getLeftFragment();
+			return subscribedFrag;
 		} 
-		return pageAdapter.getCurrentFragment();
+		return channelStreamFrag;
 	}
 	
-	private OnPageChangeListener createPageChangeListener() {
-		return new OnPageChangeListener() {
-			@Override
-			public void onPageScrollStateChanged(int arg0) { }
-
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) { }
-
-			@Override
-			public void onPageSelected(int position) {
-				fragmentChanged();
-				switch (position) {
-				case 0:
-					getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-					break;
-				default:
-					getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-					break;
-				}
-			}
-		};
+	public ChannelStreamFragment getChannelStreamFrag() {
+		return channelStreamFrag;
 	}
-
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == LoginActivity.REQUEST_CODE) {
@@ -183,7 +166,7 @@ public class MainActivity extends SlidingFragmentActivity {
 	}
 
 	private void startActivity() {
-		myJid = (String) Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
+		this.myJid = (String) Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
 		registerInGCM();
 		addMenuFragment();
 		customizeMenu();
@@ -198,6 +181,7 @@ public class MainActivity extends SlidingFragmentActivity {
 		} else {
 			showChannelFragment(channelJid);
 		}
+		
 		String event = getIntent().getStringExtra(GCMIntentService.GCM_NOTIFICATION_EVENT);
 		if (event != null) {
 			GCMEvent gcmEvent = GCMEvent.valueOf(event);
@@ -232,12 +216,15 @@ public class MainActivity extends SlidingFragmentActivity {
 
 	public ChannelStreamFragment showChannelFragment(String channelJid) {
 		
-		ChannelStreamFragment channelFrag = new ChannelStreamFragment();
+		this.channelStreamFrag = new ChannelStreamFragment();
 		Bundle args = new Bundle();
 		args.putString(GenericChannelsFragment.CHANNEL, channelJid);
-		channelFrag.setArguments(args);
+		channelStreamFrag.setArguments(args);
 		
-		pageAdapter.setLeftFragment(channelFrag);
+		getSupportFragmentManager()
+        	.beginTransaction()
+        	.replace(R.id.content_frame, channelStreamFrag)
+        	.commit();
 		
 		if (getSlidingMenu().isMenuShowing()) {
 			getSlidingMenu().showContent();
@@ -245,7 +232,7 @@ public class MainActivity extends SlidingFragmentActivity {
 			fragmentChanged();
 		}
 		
-		return channelFrag;
+		return channelStreamFrag;
 	}
 	
 	public PostDetailsFragment showPostDetailFragment(final String channelJid,
@@ -255,8 +242,6 @@ public class MainActivity extends SlidingFragmentActivity {
 		args.putString(PostDetailsFragment.POST_ID, postId);
 		args.putString(GenericChannelsFragment.CHANNEL, channelJid);
 		postDetailsFrag.setArguments(args);
-		pageAdapter.setRightFragment(postDetailsFrag);
-		getSlidingMenu().showContent();
 		return postDetailsFrag;
 	}
 
@@ -282,13 +267,9 @@ public class MainActivity extends SlidingFragmentActivity {
 		});
 	}
 
-	public ContentPageAdapter getPageAdapter() {
-		return pageAdapter;
-	}
-
 	private void addMenuFragment() {
+		this.subscribedFrag = new SubscribedChannelsFragment();
 		FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
-		SubscribedChannelsFragment subscribedFrag = new SubscribedChannelsFragment();
 		t.replace(R.id.menu_frame, subscribedFrag);
 		t.commitAllowingStateLoss();
 	}
