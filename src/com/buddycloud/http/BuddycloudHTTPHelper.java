@@ -1,6 +1,8 @@
 package com.buddycloud.http;
 
 import java.security.KeyStore;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import javax.net.ssl.HostnameVerifier;
 
@@ -40,6 +42,7 @@ import com.buddycloud.preferences.Preferences;
 
 public class BuddycloudHTTPHelper {
 	
+	private static final Executor EXECUTOR = Executors.newFixedThreadPool(10);
 	private static final String TAG = "BuddycloudHTTPHelper";
 	private static HttpClient client = null;
 	
@@ -100,7 +103,7 @@ public class BuddycloudHTTPHelper {
 					}
 				};
 		task.returnCodeOnly = true;
-		task.execute();
+		task.executeOnExecutor(EXECUTOR);
 	}
 	
 	public static void checkSSL(String url, Context parent, ModelCallback<Integer> callback) {
@@ -113,7 +116,7 @@ public class BuddycloudHTTPHelper {
 				};
 		task.client = createSecureHttpClient();
 		task.returnCodeOnly = true;
-		task.execute();
+		task.executeOnExecutor(EXECUTOR);
 	}
 	
 	private static void reqObject(String method, String url, boolean auth, boolean acceptsJSON, 
@@ -126,7 +129,7 @@ public class BuddycloudHTTPHelper {
 				}
 				return new JSONObject(responseStr);
 			}
-		}.execute();
+		}.executeOnExecutor(EXECUTOR);
 	}	
 
 	private static void reqArray(String method, String url, boolean auth, boolean acceptsJSON, 
@@ -136,7 +139,7 @@ public class BuddycloudHTTPHelper {
 			protected JSONArray toJSON(String responseStr) throws JSONException {
 				return new JSONArray(responseStr);
 			}
-		}.execute();
+		}.executeOnExecutor(EXECUTOR);
 	}
 	
 	protected static void addAcceptJSONHeader(HttpRequestBase method) {
@@ -266,7 +269,7 @@ public class BuddycloudHTTPHelper {
 					// Make sure entity is consumed (released) so connection can be re-used
 					// this avoids the SingleClientConnManager warning about invalid status connection not released
 					response.getEntity().consumeContent();
-					throw new Exception(response.getStatusLine().toString());
+					return new Exception(response.getStatusLine().toString());
 				}
 				
 				if (returnCodeOnly) {
