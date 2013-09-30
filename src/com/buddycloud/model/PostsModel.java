@@ -1,6 +1,8 @@
 package com.buddycloud.model;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
+import java.util.UUID;
 
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
@@ -13,6 +15,7 @@ import android.util.Log;
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.model.dao.PostsDAO;
 import com.buddycloud.preferences.Preferences;
+import com.buddycloud.utils.TimeUtils;
 
 public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 
@@ -222,8 +225,8 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 	}
 
 	@Override
-	public void save(Context context, JSONObject object,
-			ModelCallback<JSONObject> callback, String... p) {
+	public void save(final Context context, JSONObject object,
+			final ModelCallback<JSONObject> callback, String... p) {
 		if (p == null || p.length < 1) {
 			return;
 		}
@@ -232,8 +235,37 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 			Log.d(TAG, object.toString());
 			StringEntity requestEntity = new StringEntity(object.toString(), "UTF-8");
 			requestEntity.setContentType("application/json");
-			BuddycloudHTTPHelper.post(postsUrl(context, p[0]), true, false, requestEntity, context, callback);
+			
+			String author = (String) Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
+			final String channelJid = p[0];
+			
+			final String tempItemId = UUID.randomUUID().toString();
+			JSONObject tempObject = new JSONObject(object, new String[]{"content"});
+			tempObject.put("id", tempItemId);
+			tempObject.put("updated", TimeUtils.formatISO(new Date()));
+			tempObject.put("author", author);
+			tempObject.put("channel", channelJid);
+
+			PostsDAO.getInstance(context).insert(channelJid, tempObject);
+			
+			BuddycloudHTTPHelper.post(postsUrl(context, channelJid), true, false, requestEntity, context, 
+					new ModelCallback<JSONObject>() {
+				
+				@Override
+				public void success(JSONObject response) {
+					PostsDAO.getInstance(context).delete(channelJid, tempItemId);
+					callback.success(response);
+				}
+				
+				@Override
+				public void error(Throwable throwable) {
+					callback.error(throwable);
+				}
+			});
+			
 		} catch (UnsupportedEncodingException e) {
+			callback.error(e);
+		} catch (JSONException e) {
 			callback.error(e);
 		}
 	}

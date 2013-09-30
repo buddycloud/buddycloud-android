@@ -23,5 +23,11 @@
   <color name="bc_orange">#f29e37</color>
   <color name="bc_dark_grey">#c2c2c2</color>
   <color name="bc_light_grey">#e2e2e2</color>
+  
+  <color name="bc_text_dark_grey">#424242</color>
+  <color name="bc_text_light_grey">#d2d2d2</color>
+  <color name="bc_text_bold_grey">#929292</color>
+  
+  <color name="white">#FFFFFF</color>
   <color name="transparent">#00000000</color>
 </resources>

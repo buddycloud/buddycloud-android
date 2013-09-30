@@ -7,10 +7,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.text.Editable;
+import android.text.Html;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
@@ -148,14 +151,26 @@ public class PostCard extends AbstractCard {
 		RelativeLayout topicWrapper = holder.getView(R.id.topicWrapper);
 		topicWrapper.forceLayout();
 		
-		try {
-			long publishedTime = TimeUtils.fromISOToDate(published).getTime();
-			TextView publishedView = holder.getView(R.id.bcPostDate);
-			publishedView.setText(
-					DateUtils.getRelativeTimeSpanString(publishedTime, 
-							new Date().getTime(), DateUtils.MINUTE_IN_MILLIS));
-		} catch (ParseException e) {
-			e.printStackTrace();
+		View postWrapper = holder.getView(R.id.postWrapper);
+		TextView publishedView = holder.getView(R.id.bcPostDate);
+		boolean pending = published.length() == 0;
+		if (!pending) {
+			try {
+				long publishedTime = TimeUtils.fromISOToDate(published).getTime();
+				publishedView.setText(
+						DateUtils.getRelativeTimeSpanString(publishedTime, 
+								new Date().getTime(), DateUtils.MINUTE_IN_MILLIS));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			publishedView.setTextColor(context.getResources().getColor(
+					R.color.bc_text_light_grey));
+			setBackgroundEnabled(context, postWrapper);
+		} else {
+			publishedView.setTextColor(context.getResources().getColor(
+					R.color.bc_text_bold_grey));
+			publishedView.setText(Html.fromHtml("&#x231A;"));
+			setBackgroundDisabled(context, postWrapper);
 		}
 		
 		View contextArrowDown = holder.getView(R.id.bcArrowDown);
@@ -173,7 +188,7 @@ public class PostCard extends AbstractCard {
 		
 		// Create reply section
 		View replyFrame = holder.getView(R.id.replyFrameView);
-		if (!SubscribedChannelsModel.canPost(role)) {
+		if (!SubscribedChannelsModel.canPost(role) || pending) {
 			replyFrame.setVisibility(View.GONE);
 		} else {
 			replyFrame.setVisibility(View.VISIBLE);
@@ -204,6 +219,31 @@ public class PostCard extends AbstractCard {
 		return convertView;
 	}
 
+	private void setBackgroundDisabled(Context context, View view) {
+		setBackground(context, view, R.drawable.bc_shadow_dis);
+	}
+	
+	private void setBackgroundEnabled(Context context, View view) {
+		setBackground(context, view, R.drawable.bc_shadow);
+	}
+	
+	@SuppressWarnings("deprecation")
+	@SuppressLint("NewApi")
+	private void setBackground(Context context, View view, int resId) {
+		int pLeft = view.getPaddingLeft();
+		int pTop = view.getPaddingTop();
+		int pRight = view.getPaddingRight();
+		int pBottom = view.getPaddingBottom();
+		int sdk = android.os.Build.VERSION.SDK_INT;
+		Drawable drawable = context.getResources().getDrawable(resId);
+		if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+			view.setBackgroundDrawable(drawable);
+		} else {
+		    view.setBackground(drawable);
+		}
+		view.setPadding(pLeft, pTop, pRight, pBottom);
+	}
+	
 	private void drawNoMediaLayout(TextView contentTextView,
 			TextView contentTextViewAlt, final MeasuredMediaView mediaView) {
 		mediaView.setVisibility(View.GONE);
@@ -404,7 +444,7 @@ public class PostCard extends AbstractCard {
 				R.id.replyListView, R.id.replyAuthorView,
 				R.id.replyContentTxt, R.id.replyBtn, 
 				R.id.topicWrapper, R.id.replyFrameView, 
-				R.id.bcArrowDown);
+				R.id.bcArrowDown, R.id.postWrapper);
 	}
 
 	@Override
