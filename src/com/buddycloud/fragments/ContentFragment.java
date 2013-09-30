@@ -29,7 +29,7 @@ public abstract class ContentFragment extends SherlockFragment {
 		
 		@Override
 		public void success(T response) {
-			if (isDetached()) {
+			if (isDetached() || getActivity() == null) {
 				return;
 			}
 			innerCallback.success(response);
