@@ -51,6 +51,17 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 				adapter.sort(getActivity());
 				adapter.notifyDataSetChanged();
 			}
+
+			@Override
+			public void itemRemoved(String itemId, String parentId) {
+				
+			}
+
+			@Override
+			public void pendingItemAdded(JSONObject pendingItem) {
+				// TODO Auto-generated method stub
+				
+			}
 		};
 		SyncModel.getInstance().setListener(notifyChangeListener);
 		ChannelMetadataModel.getInstance().setListener(notifyChangeListener);
@@ -171,6 +182,17 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 	@Override
 	public void dataChanged() {
 		adapter.reload(getActivity());
+	}
+
+	@Override
+	public void itemRemoved(String itemId, String parentId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void pendingItemAdded(JSONObject pendingItem) {
+		// TODO Auto-generated method stub
 	}
 
 }

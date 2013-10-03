@@ -69,7 +69,9 @@ public class MainActivity extends SlidingFragmentActivity {
 	 @Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		getSupportFragmentManager().putFragment(outState, "mContent", channelStreamFrag);
+		if (channelStreamFrag != null) {
+			getSupportFragmentManager().putFragment(outState, "mContent", channelStreamFrag);
+		}
 	}
 	
 	@SuppressLint("NewApi")
@@ -224,7 +226,7 @@ public class MainActivity extends SlidingFragmentActivity {
 		getSupportFragmentManager()
         	.beginTransaction()
         	.replace(R.id.content_frame, channelStreamFrag)
-        	.commit();
+        	.commitAllowingStateLoss();
 		
 		if (getSlidingMenu().isMenuShowing()) {
 			getSlidingMenu().showContent();

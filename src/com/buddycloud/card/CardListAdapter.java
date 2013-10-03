@@ -56,6 +56,10 @@ public class CardListAdapter extends BaseAdapter {
 		}
 		card.setParentAdapter(this);
 	}
+	
+	public Card getCard(String itemId) {
+		return cardsRef.get(itemId);
+	}
 
 	public void sort() {
 		Collections.sort(cards);

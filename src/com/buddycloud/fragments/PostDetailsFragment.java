@@ -169,7 +169,7 @@ public class PostDetailsFragment extends ContentFragment {
 	
 	private CommentCard toCard(JSONObject comment) {
 		CommentCard commentCard = new CommentCard(null, comment, 
-				(MainActivity) getActivity(), commentAdapter, null);
+				(MainActivity) getActivity(), null);
 		return commentCard;
 	}
 

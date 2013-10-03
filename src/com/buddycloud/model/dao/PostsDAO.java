@@ -136,7 +136,8 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 	}
 	
 	public JSONObject getLatest(String channel) {
-		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
+		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\" " +
+				"AND " + PostsTableHelper.COLUMN_PUBLISHED + " <> ''";
 		String orderBy = "datetime(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
 		return DAOHelper.queryUniqueOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
 				null, null, null, orderBy, String.valueOf(1), 

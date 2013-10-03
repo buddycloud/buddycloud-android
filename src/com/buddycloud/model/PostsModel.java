@@ -97,7 +97,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		return postStream;
 	}
 	
-	private boolean isComment(JSONObject item) {
+	public static boolean isComment(JSONObject item) {
 		return item.has("replyTo");
 	}
 	
@@ -240,13 +240,14 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 			final String channelJid = p[0];
 			
 			final String tempItemId = UUID.randomUUID().toString();
-			JSONObject tempObject = new JSONObject(object, new String[]{"content"});
+			final JSONObject tempObject = new JSONObject(object, new String[]{"content", "replyTo"});
 			tempObject.put("id", tempItemId);
 			tempObject.put("updated", TimeUtils.formatISO(new Date()));
 			tempObject.put("author", author);
 			tempObject.put("channel", channelJid);
 
 			PostsDAO.getInstance(context).insert(channelJid, tempObject);
+			notifyAdded(tempObject);
 			
 			BuddycloudHTTPHelper.post(postsUrl(context, channelJid), true, false, requestEntity, context, 
 					new ModelCallback<JSONObject>() {
@@ -254,6 +255,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 				@Override
 				public void success(JSONObject response) {
 					PostsDAO.getInstance(context).delete(channelJid, tempItemId);
+					notifyDeleted(tempItemId, tempObject.optString("replyTo", null));
 					callback.success(response);
 				}
 				
@@ -299,16 +301,33 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		fetchPosts(context, channelJid, callback, null);
 	}
 
+	public static boolean isPending(JSONObject post) {
+		String published = post.optString("published", null);
+		return published == null || published.length() == 0;
+	}
+	
 	@Override
 	public void delete(final Context context, final ModelCallback<Void> callback, String... p) {
 		final String channelJid = p[0];
 		final String itemId = p[1];
+		
+		final JSONObject oldPost = PostsDAO.getInstance(context).get(channelJid, itemId);
+		if (oldPost != null && isPending(oldPost)) {
+			PostsDAO.getInstance(context).delete(channelJid, itemId);
+			notifyDeleted(itemId, oldPost.optString("replyTo", null));
+			callback.success(null);
+			return;
+		}
+		
 		String url = postUrl(context, channelJid, itemId);
 		BuddycloudHTTPHelper.delete(url, true, false, context, 
 				new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
-				PostsDAO.getInstance(context).delete(channelJid, itemId);
+				if (oldPost != null) {
+					PostsDAO.getInstance(context).delete(channelJid, itemId);
+					notifyDeleted(itemId, oldPost.optString("replyTo", null));
+				}
 				callback.success(null);
 			}
 			

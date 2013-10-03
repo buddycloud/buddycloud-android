@@ -60,13 +60,10 @@ public class PostCard extends AbstractCard {
 	private Spanned anchoredContent;
 	private MainActivity activity;
 	private String role;
-	private CardListAdapter cardAdapter;
 
-	public PostCard(String channelJid, JSONObject post, MainActivity activity, 
-			CardListAdapter cardAdapter, String role) {
+	public PostCard(String channelJid, JSONObject post, MainActivity activity, String role) {
 		this.channelJid = channelJid;
 		this.activity = activity;
-		this.cardAdapter = cardAdapter;
 		this.role = role;
 		setPost(post);
 	}
@@ -84,7 +81,7 @@ public class PostCard extends AbstractCard {
 	private void fillReplyAdapter(Context context) {
 		repliesAdapter.clear();
 		JSONArray comments = post.optJSONArray("replies");
-		for (int i = 0; i < comments.length(); i++) {
+		for (int i = 0; comments != null && i < comments.length(); i++) {
 			JSONObject comment = comments.optJSONObject(i);
 			repliesAdapter.addCard(toReplyCard(comment, context));
 		}
@@ -153,7 +150,7 @@ public class PostCard extends AbstractCard {
 		
 		View postWrapper = holder.getView(R.id.postWrapper);
 		TextView publishedView = holder.getView(R.id.bcPostDate);
-		boolean pending = published.length() == 0;
+		boolean pending = PostsModel.isPending(post);
 		if (!pending) {
 			try {
 				long publishedTime = TimeUtils.fromISOToDate(published).getTime();
@@ -178,7 +175,7 @@ public class PostCard extends AbstractCard {
 			@Override
 			public void onClick(View v) {
 				PostContextUtils.showPostContextActions(context, channelJid, 
-						postId, cardAdapter, role);
+						postId, role);
 			}
 		});
 		
@@ -242,6 +239,10 @@ public class PostCard extends AbstractCard {
 		    view.setBackground(drawable);
 		}
 		view.setPadding(pLeft, pTop, pRight, pBottom);
+	}
+	
+	public CardListAdapter getRepliesAdapter() {
+		return repliesAdapter;
 	}
 	
 	private void drawNoMediaLayout(TextView contentTextView,
@@ -432,7 +433,7 @@ public class PostCard extends AbstractCard {
 	
 	private CommentCard toReplyCard(JSONObject comment, Context context) {
 		CommentCard commentCard = new CommentCard(channelJid, comment, 
-				activity, repliesAdapter, role);
+				activity, role);
 		return commentCard;
 	}
 	
@@ -456,5 +457,10 @@ public class PostCard extends AbstractCard {
 		} catch (ParseException e) {
 			return 0;
 		}
+	}
+
+	public void addPendingCard(JSONObject pendingItem) {
+		repliesAdapter.addCard(toReplyCard(pendingItem, activity));
+		repliesAdapter.sort();
 	}
 }

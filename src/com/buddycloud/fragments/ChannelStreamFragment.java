@@ -36,6 +36,7 @@ import com.buddycloud.fragments.adapter.FollowersAdapter;
 import com.buddycloud.fragments.adapter.PendingSubscriptionsAdapter;
 import com.buddycloud.fragments.adapter.SimilarChannelsAdapter;
 import com.buddycloud.model.ModelCallback;
+import com.buddycloud.model.ModelListener;
 import com.buddycloud.model.PostsModel;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.preferences.Preferences;
@@ -44,7 +45,7 @@ import com.buddycloud.utils.ImageHelper;
 import com.buddycloud.utils.InputUtils;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
-public class ChannelStreamFragment extends ContentFragment {
+public class ChannelStreamFragment extends ContentFragment implements ModelListener {
 
 	private CardListAdapter cardAdapter;
 	private EndlessScrollListener scrollListener;
@@ -55,6 +56,8 @@ public class ChannelStreamFragment extends ContentFragment {
 		final View view = inflater.inflate(R.layout.fragment_channel_stream, container, false);
 		
 		showProgress(view);
+		
+		PostsModel.getInstance().setListener(this);
 		
 		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
@@ -111,19 +114,30 @@ public class ChannelStreamFragment extends ContentFragment {
 	}
 
 	protected void fillMore() {
-		
 		scrollListener.setLoading(true);
 		String lastUpdated = null;
 		String lastId = null;
 		
-		if (cardAdapter.getCount() > 0) {
-			Card lastCard = (Card) cardAdapter.getItem(cardAdapter.getCount() - 1);
-			lastUpdated = lastCard.getPost().optString("updated");
-			lastId = lastCard.getPost().optString("id");
+		JSONObject lastPost = getLastPost();
+		if (lastPost != null) {
+			lastUpdated = lastPost.optString("updated");
+			lastId = lastPost.optString("id");
 		}
 		
 		fillAdapter(getActivity(), lastUpdated, 
 				fillAdapterCallback(lastUpdated, lastId));
+	}
+	
+	private JSONObject getLastPost() {
+		JSONObject post = null;
+		for (int i = cardAdapter.getCount() - 1; i >= 0; i--) {
+			Card lastCard = (Card) cardAdapter.getItem(i);
+			if (!PostsModel.isPending(lastCard.getPost())) {
+				post = lastCard.getPost();
+				break;
+			}
+		}
+		return post;
 	}
 
 	private ModelCallback<Boolean> fillAdapterCallback(final String lastUpdated,
@@ -185,7 +199,7 @@ public class ChannelStreamFragment extends ContentFragment {
 			
 			@Override
 			protected void onPostExecute(JSONArray allPosts) {
-				if (isDetached()) {
+				if (!isAttachedToActivity()) {
 					return;
 				}
 				for (int i = 0; i < allPosts.length(); i++) {
@@ -203,8 +217,7 @@ public class ChannelStreamFragment extends ContentFragment {
 	}
 	
 	private PostCard toCard(JSONObject post, final String channelJid) {
-		return new PostCard(channelJid, post, (MainActivity) getActivity(), 
-				cardAdapter, getRole());
+		return new PostCard(channelJid, post, (MainActivity) getActivity(), getRole());
 	}
 	
 	private void createPost(final View view) {
@@ -288,7 +301,7 @@ public class ChannelStreamFragment extends ContentFragment {
 
 	@Override
 	public void createOptions(Menu menu) {
-		if (isDetached()) {
+		if (!isAttachedToActivity()) {
 			return;
 		}
 		getSherlockActivity().getSupportMenuInflater().inflate(
@@ -401,5 +414,48 @@ public class ChannelStreamFragment extends ContentFragment {
 		intent.putExtra(SubscribedChannelsModel.ROLE, getRole());
 		getActivity().startActivityForResult(
 				intent, GenericChannelActivity.REQUEST_CODE);
+	}
+
+	@Override
+	public void dataChanged() {
+		cardAdapter.notifyDataSetChanged();
+	}
+
+	@Override
+	public void itemRemoved(String itemId, String parentId) {
+		CardListAdapter adapter = getAdapter(itemId, parentId);
+		if (adapter != null) {
+			adapter.remove(itemId);
+			adapter.notifyDataSetChanged();
+		}
+	}
+	
+	private CardListAdapter getAdapter(String itemId, String parentId) {
+		Card card = cardAdapter.getCard(itemId);
+		if (card != null) {
+			return cardAdapter;
+		} else if (parentId != null) {
+			PostCard parentCard = (PostCard) cardAdapter.getCard(parentId);
+			if (parentCard == null) {
+				return null;
+			}
+			return parentCard.getRepliesAdapter();
+		}
+		return null;
+	}
+
+	@Override
+	public void pendingItemAdded(JSONObject pendingItem) {
+		String replyTo = pendingItem.optString("replyTo", null);
+		if (replyTo == null) {
+			PostCard card = toCard(pendingItem, getChannelJid());
+			cardAdapter.addCard(card);
+			cardAdapter.sort();
+		} else {
+			PostCard parentCard = (PostCard) cardAdapter.getCard(replyTo);
+			if (parentCard != null) {
+				parentCard.addPendingCard(pendingItem);
+			}
+		}
 	}
 }

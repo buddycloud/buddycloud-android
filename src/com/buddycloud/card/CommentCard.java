@@ -5,6 +5,8 @@ import java.util.Date;
 
 import org.json.JSONObject;
 
+import android.content.Context;
+import android.text.Html;
 import android.text.Spanned;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 
 import com.buddycloud.MainActivity;
 import com.buddycloud.R;
+import com.buddycloud.model.PostsModel;
 import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
 import com.buddycloud.utils.TextUtils;
@@ -29,14 +32,11 @@ public class CommentCard extends AbstractCard {
 	private JSONObject comment;
 	private String channelJid;
 	private String role;
-	private CardListAdapter cardAdapter;
 	
-	public CommentCard(String channelJid, JSONObject comment, MainActivity activity, 
-			CardListAdapter cardAdapter, String role) {
+	public CommentCard(String channelJid, JSONObject comment, MainActivity activity, String role) {
 		this.channelJid = channelJid;
 		this.comment = comment;
 		this.activity = activity;
-		this.cardAdapter = cardAdapter;
 		this.role = role;
 		this.anchoredContent = TextUtils.anchor(comment.optString("content"));
 	}
@@ -86,14 +86,30 @@ public class CommentCard extends AbstractCard {
 		contentView.setMovementMethod(LinkMovementMethod.getInstance());
 		contentView.setText(anchoredContent);
 		
-		try {
-			long publishedTime = TimeUtils.fromISOToDate(published).getTime();
-			TextView publishedView = holder.getView(R.id.bcPostDate);
-			publishedView.setText(
-					DateUtils.getRelativeTimeSpanString(publishedTime, 
-							new Date().getTime(), DateUtils.MINUTE_IN_MILLIS));
-		} catch (ParseException e) {
-			e.printStackTrace();
+		View postWrapper = holder.getView(R.id.postWrapper);
+		Context context = contentView.getContext();
+		
+		boolean pending = PostsModel.isPending(comment);
+		TextView publishedView = holder.getView(R.id.bcPostDate);
+		if (!pending) {
+			try {
+				long publishedTime = TimeUtils.fromISOToDate(published).getTime();
+				publishedView.setText(
+						DateUtils.getRelativeTimeSpanString(publishedTime, 
+								new Date().getTime(), DateUtils.MINUTE_IN_MILLIS));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			publishedView.setTextColor(context.getResources().getColor(
+					R.color.bc_text_light_grey));
+			postWrapper.setBackgroundColor(context.getResources().getColor(
+					R.color.transparent));
+		} else {
+			postWrapper.setBackgroundColor(context.getResources().getColor(
+					R.color.bc_pending_grey));
+			publishedView.setTextColor(context.getResources().getColor(
+					R.color.bc_text_dark_grey));
+			publishedView.setText(Html.fromHtml("&#x231A;"));
 		}
 		
 		View contextArrowDown = holder.getView(R.id.bcArrowDown);
@@ -101,7 +117,7 @@ public class CommentCard extends AbstractCard {
 			@Override
 			public void onClick(View v) {
 				PostContextUtils.showPostContextActions(viewGroup.getContext(), 
-						channelJid, replyId, cardAdapter, role);
+						channelJid, replyId, role);
 			}
 		});
 		
@@ -111,7 +127,7 @@ public class CommentCard extends AbstractCard {
 	private static CardViewHolder fillHolder(View view) {
 		return CardViewHolder.create(view, R.id.bcProfilePic, 
 				R.id.bcPostContent, R.id.bcPostDate, 
-				R.id.bcArrowDown);
+				R.id.bcArrowDown, R.id.postWrapper);
 	}
 
 	@Override

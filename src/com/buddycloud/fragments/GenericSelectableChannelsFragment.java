@@ -35,7 +35,7 @@ public class GenericSelectableChannelsFragment extends SherlockFragment {
 		return view;
 	}
 	
-	private void selectChannel(String channelJid) {
+	public void selectChannel(String channelJid) {
 		finishActivity(channelJid);
 	}
 

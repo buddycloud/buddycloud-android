@@ -20,7 +20,7 @@ public class PostContextUtils {
 	private static final String CONTEXT_SHARE = "Share";
 	
 	public static void showPostContextActions(final Context context, final String channelJid, 
-			final String postId, final CardListAdapter cardAdapter, String role) {
+			final String postId, String role) {
 		
 		final List<String> contextItems = new ArrayList<String>();
 		if (SubscribedChannelsModel.canDelete(role)) {
@@ -34,8 +34,7 @@ public class PostContextUtils {
 				new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int item) {
 		        if (contextItems.get(item).equals(CONTEXT_DELETE)) {
-		        	confirmDelete(context, channelJid, postId, cardAdapter);
-		        }
+		        	confirmDelete(context, channelJid, postId);		        }
 		    }
 		});
 		AlertDialog alert = builder.create();
@@ -43,7 +42,7 @@ public class PostContextUtils {
 	}
 	
 	private static void confirmDelete(final Context context, final String channelJid, 
-			final String postId, final CardListAdapter cardAdapter) {
+			final String postId) {
 		new AlertDialog.Builder(context)
 				.setIcon(android.R.drawable.ic_dialog_alert)
 				.setTitle(context.getString(R.string.title_confirm_delete))
@@ -53,17 +52,15 @@ public class PostContextUtils {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								delete(context, channelJid, postId, cardAdapter);
+								delete(context, channelJid, postId);
 							}
 						}).setNegativeButton(R.string.no, null).show();
 	}
 	
-	private static void delete(final Context context, String channelJid, 
-			final String postId, final CardListAdapter cardAdapter) {
+	private static void delete(final Context context, String channelJid, final String postId) {
 		PostsModel.getInstance().delete(context, new ModelCallback<Void>() {
 			@Override
 			public void success(Void response) {
-				cardAdapter.remove(postId);
 				Toast.makeText(context, context.getString(R.string.message_post_deleted),
 						Toast.LENGTH_LONG).show();
 			}

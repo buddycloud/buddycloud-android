@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 
@@ -107,6 +108,13 @@ public abstract class SelectableChannelAdapter extends GenericChannelAdapter {
 	            }
 	            childView.setSelected(mustSelect);
 	            return true;
+			}
+		});
+		childView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				JSONObject channelItem = getChild(groupPosition, childPosition);
+				fragment.selectChannel(channelItem.optString("jid"));
 			}
 		});
 		
