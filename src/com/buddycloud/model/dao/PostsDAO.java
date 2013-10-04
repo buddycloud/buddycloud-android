@@ -144,6 +144,12 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 				cursorParser());
 	}
 	
+	public Map<String, JSONArray> getPending() {
+		String filter = PostsTableHelper.COLUMN_PUBLISHED + " = ''";
+		return DAOHelper.queryCollectionMapOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
+				null, null, null, null, null, cursorParser(), PostsTableHelper.COLUMN_CHANNEL);
+	}
+	
 	public JSONArray get(String channel, int limit) {
 		return get(channel, null, limit);
 	}
@@ -185,4 +191,5 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 	public Map<String, JSONArray> getAll() {
 		return null;
 	}
+
 }

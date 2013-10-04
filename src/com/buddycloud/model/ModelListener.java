@@ -6,8 +6,8 @@ public interface ModelListener {
 
 	void dataChanged();
 	
-	void itemRemoved(String itemId, String parentId);
+	void itemRemoved(String channelJid, String itemId, String parentId);
 
-	void pendingItemAdded(JSONObject pendingItem);
+	void pendingItemAdded(String channelJid, JSONObject pendingItem);
 	
 }

@@ -172,6 +172,12 @@ public class MainActivity extends SlidingFragmentActivity {
 		registerInGCM();
 		addMenuFragment();
 		customizeMenu();
+		startPendingPostsService();
+	}
+
+	protected void startPendingPostsService() {
+		Intent i = new Intent(this, PendingPostsService.class);
+		this.startService(i);
 	}
 
 	@Override

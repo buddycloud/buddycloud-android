@@ -418,11 +418,18 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 
 	@Override
 	public void dataChanged() {
-		cardAdapter.notifyDataSetChanged();
+		if (!isAttachedToActivity()) {
+			return;
+		}
+		showProgress(getView());
+		fillRemotely(null, null);
 	}
 
 	@Override
-	public void itemRemoved(String itemId, String parentId) {
+	public void itemRemoved(String channelJid, String itemId, String parentId) {
+		if (!channelJid.equals(getChannelJid()) || !isAttachedToActivity()) {
+			return;
+		}
 		CardListAdapter adapter = getAdapter(itemId, parentId);
 		if (adapter != null) {
 			adapter.remove(itemId);
@@ -445,7 +452,10 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 	}
 
 	@Override
-	public void pendingItemAdded(JSONObject pendingItem) {
+	public void pendingItemAdded(String channelJid, JSONObject pendingItem) {
+		if (!channelJid.equals(getChannelJid()) || !isAttachedToActivity()) {
+			return;
+		}
 		String replyTo = pendingItem.optString("replyTo", null);
 		if (replyTo == null) {
 			PostCard card = toCard(pendingItem, getChannelJid());

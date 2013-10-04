@@ -375,6 +375,7 @@ public class PostCard extends AbstractCard {
 			@Override
 			public void error(Throwable throwable) {
 				Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_LONG).show();
+				hideProgress(convertView);
 			}
 		}, channelJid);
 	}

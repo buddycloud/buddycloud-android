@@ -108,7 +108,7 @@ public class CommentCard extends AbstractCard {
 			postWrapper.setBackgroundColor(context.getResources().getColor(
 					R.color.bc_pending_grey));
 			publishedView.setTextColor(context.getResources().getColor(
-					R.color.bc_text_dark_grey));
+					R.color.bc_text_bold_grey));
 			publishedView.setText(Html.fromHtml("&#x231A;"));
 		}
 		

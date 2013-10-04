@@ -234,7 +234,6 @@ public class BuddycloudHTTPHelper {
 		@Override
 		protected Object doInBackground(Void... params) {
 			try {
-				Thread.sleep(10000);
 				long t = System.currentTimeMillis();
 				HttpRequestBase method = null;
 				if (methodType.equals("get")) {

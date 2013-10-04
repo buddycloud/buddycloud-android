@@ -120,6 +120,7 @@
         </receiver>
 		
         <service android:name=".GCMIntentService" />
+        <service android:name=".PendingPostsService"/>
         
     </application>
 

@@ -18,15 +18,15 @@ public abstract class AbstractModel<RefreshType, SaveType, Params> implements Mo
 		}
 	}
 	
-	protected void notifyDeleted(String itemId, String parentId) {
+	protected void notifyDeleted(String channelJid, String itemId, String parentId) {
 		if (listener != null) {
-			listener.itemRemoved(itemId, parentId);
+			listener.itemRemoved(channelJid, itemId, parentId);
 		}
 	}
 	
-	protected void notifyAdded(JSONObject pendingItem) {
+	protected void notifyAdded(String channelJid, JSONObject pendingItem) {
 		if (listener != null) {
-			listener.pendingItemAdded(pendingItem);
+			listener.pendingItemAdded(channelJid, pendingItem);
 		}
 	}
 }

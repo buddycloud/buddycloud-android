@@ -103,6 +103,29 @@ public class DAOHelper {
 		return map;
 	}
 	
+	static Map<String, JSONArray> queryCollectionMapOnSameThread(final SQLiteDatabase db, final boolean distinct, final String table, 
+			final String[] columns, final String selection, final String[] selectionArgs, 
+			final String groupBy, final String having, final String orderBy, final String limit, 
+			final DAOCursorParser cursorParser, final String keyColumn) {
+		
+		JSONArray response = queryOnSameThread(db, distinct, table, columns, selection,
+				selectionArgs, groupBy, having, orderBy, limit, cursorParser);
+		
+		Map<String, JSONArray> map = new HashMap<String, JSONArray>();
+		for (int i = 0; i < response.length(); i++) {
+			JSONObject json = response.optJSONObject(i);
+			String key = json.optString(keyColumn);
+			JSONArray jsonArray = map.get(key);
+			if (jsonArray == null) {
+				jsonArray = new JSONArray();
+				map.put(key, jsonArray);
+			}
+			jsonArray.put(json);
+		}
+		
+		return map;
+	}
+	
 	static JSONArray queryOnSameThread(final SQLiteDatabase db,
 			final boolean distinct, final String table, final String[] columns,
 			final String selection, final String[] selectionArgs,

@@ -53,12 +53,12 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 			}
 
 			@Override
-			public void itemRemoved(String itemId, String parentId) {
+			public void itemRemoved(String channelJid, String itemId, String parentId) {
 				
 			}
 
 			@Override
-			public void pendingItemAdded(JSONObject pendingItem) {
+			public void pendingItemAdded(String channelJid, JSONObject pendingItem) {
 				// TODO Auto-generated method stub
 				
 			}
@@ -185,13 +185,13 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 	}
 
 	@Override
-	public void itemRemoved(String itemId, String parentId) {
+	public void itemRemoved(String channelJid, String itemId, String parentId) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void pendingItemAdded(JSONObject pendingItem) {
+	public void pendingItemAdded(String channelJid, JSONObject pendingItem) {
 		// TODO Auto-generated method stub
 	}
 

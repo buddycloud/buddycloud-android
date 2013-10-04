@@ -2,6 +2,8 @@ package com.buddycloud.model;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.apache.http.entity.StringEntity;
@@ -10,8 +12,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
+import com.buddycloud.PendingPostsService;
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.model.dao.PostsDAO;
 import com.buddycloud.preferences.Preferences;
@@ -224,6 +228,44 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		return apiAddress + "/" + channel + POSTS_ENDPOINT + "/" + postId + "/replyto";
 	}
 
+	public void savePendingPosts(final Context context, PendingPostsService service) {
+		Map<String, JSONArray> pending = PostsDAO.getInstance(context).getPending();
+		for (Entry<String, JSONArray> postsPerChannel : pending.entrySet()) {
+			String channelJid = postsPerChannel.getKey();
+			JSONArray posts = postsPerChannel.getValue();
+			for (int i = 0; i < posts.length(); i++) {
+				JSONObject post = posts.optJSONObject(i);
+				savePendingPost(context, channelJid, post, service);
+			}
+		}
+	}
+
+	private void savePendingPost(final Context context, final String channelJid,
+			final JSONObject post, final PendingPostsService service) {
+		try {
+			JSONObject tempPost = new JSONObject(post, new String[] {"content", "replyTo", "media" });
+			StringEntity requestEntity = new StringEntity(tempPost.toString(), "UTF-8");
+			requestEntity.setContentType("application/json");
+
+			BuddycloudHTTPHelper.post(postsUrl(context, channelJid), true, false, requestEntity, context,
+				new ModelCallback<JSONObject>() {
+					@Override
+					public void success(JSONObject response) {
+						String postId = post.optString("id");
+						PostsDAO.getInstance(context).delete(channelJid, postId);
+						notifyDeleted(channelJid, postId, post.optString("replyTo", null));
+						notifyChanged();
+						if (PostsDAO.getInstance(context).getPending().isEmpty()) {
+							service.stop();
+						}
+					}
+
+					@Override
+					public void error(Throwable throwable) {}
+				});
+		} catch (Exception e) {}
+	}
+	
 	@Override
 	public void save(final Context context, JSONObject object,
 			final ModelCallback<JSONObject> callback, String... p) {
@@ -240,14 +282,14 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 			final String channelJid = p[0];
 			
 			final String tempItemId = UUID.randomUUID().toString();
-			final JSONObject tempObject = new JSONObject(object, new String[]{"content", "replyTo"});
+			final JSONObject tempObject = new JSONObject(object, new String[]{"content", "replyTo", "media"});
 			tempObject.put("id", tempItemId);
 			tempObject.put("updated", TimeUtils.formatISO(new Date()));
 			tempObject.put("author", author);
 			tempObject.put("channel", channelJid);
 
 			PostsDAO.getInstance(context).insert(channelJid, tempObject);
-			notifyAdded(tempObject);
+			notifyAdded(channelJid, tempObject);
 			
 			BuddycloudHTTPHelper.post(postsUrl(context, channelJid), true, false, requestEntity, context, 
 					new ModelCallback<JSONObject>() {
@@ -255,12 +297,15 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 				@Override
 				public void success(JSONObject response) {
 					PostsDAO.getInstance(context).delete(channelJid, tempItemId);
-					notifyDeleted(tempItemId, tempObject.optString("replyTo", null));
+					notifyDeleted(channelJid, tempItemId, 
+							tempObject.optString("replyTo", null));
 					callback.success(response);
 				}
 				
 				@Override
 				public void error(Throwable throwable) {
+					Intent i = new Intent(context, PendingPostsService.class);
+					context.startService(i);
 					callback.error(throwable);
 				}
 			});
@@ -314,7 +359,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		final JSONObject oldPost = PostsDAO.getInstance(context).get(channelJid, itemId);
 		if (oldPost != null && isPending(oldPost)) {
 			PostsDAO.getInstance(context).delete(channelJid, itemId);
-			notifyDeleted(itemId, oldPost.optString("replyTo", null));
+			notifyDeleted(channelJid, itemId, oldPost.optString("replyTo", null));
 			callback.success(null);
 			return;
 		}
@@ -326,7 +371,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 			public void success(JSONObject response) {
 				if (oldPost != null) {
 					PostsDAO.getInstance(context).delete(channelJid, itemId);
-					notifyDeleted(itemId, oldPost.optString("replyTo", null));
+					notifyDeleted(channelJid, itemId, oldPost.optString("replyTo", null));
 				}
 				callback.success(null);
 			}
