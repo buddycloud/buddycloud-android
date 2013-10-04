@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
+
 import android.net.Uri;
 
 import com.squareup.picasso.OkHttpDownloader;
@@ -17,6 +20,12 @@ public class PicassoDownloader extends OkHttpDownloader {
 
 	public PicassoDownloader(File arg0, long arg1, boolean skipCache) {
 		super(arg0, arg1);
+		getClient().setHostnameVerifier(new HostnameVerifier() {
+			@Override
+			public boolean verify(String hostname, SSLSession session) {
+				return true;
+			}
+		});
 		this.skipCache = skipCache;
 	}
 

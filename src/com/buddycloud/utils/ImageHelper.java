@@ -21,6 +21,7 @@ public class ImageHelper {
 	private static final String TAG = ImageHelper.class.getName();
 	private static final String PICASSO_CACHE = "picasso";
 	private static final Long PICASSO_CACHE_SIZE = 20L * 1024L * 1024L; // 20MB
+	
 	private static Picasso PICASSO = null;
 	
 	public static Picasso picasso(Context context) {
@@ -28,6 +29,10 @@ public class ImageHelper {
 			PICASSO = createPicasso(context, false);
 		}
 		return PICASSO;
+	}
+	
+	public static void reset() {
+		PICASSO = null;
 	}
 
 	private static Picasso createPicasso(Context context, boolean skipCache) {
@@ -99,5 +104,5 @@ public class ImageHelper {
 
         return output;
     }
-	
+
 }

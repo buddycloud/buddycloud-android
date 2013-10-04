@@ -24,6 +24,7 @@ import com.buddycloud.notifications.GCMEvent;
 import com.buddycloud.notifications.GCMUtils;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.Backstack;
+import com.buddycloud.utils.ImageHelper;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.OnClosedListener;
 import com.slidingmenu.lib.SlidingMenu.OnOpenedListener;
@@ -54,6 +55,8 @@ public class MainActivity extends SlidingFragmentActivity {
 			channelStreamFrag = (ChannelStreamFragment) getSupportFragmentManager().getFragment(
 					savedInstanceState, "mContent");
 		}
+		
+		ImageHelper.reset();
         
 		if (shouldLogin()) {
 			Intent loginActivity = new Intent();
