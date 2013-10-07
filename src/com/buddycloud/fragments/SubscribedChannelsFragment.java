@@ -186,8 +186,7 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 
 	@Override
 	public void itemRemoved(String channelJid, String itemId, String parentId) {
-		// TODO Auto-generated method stub
-		
+	
 	}
 
 	@Override

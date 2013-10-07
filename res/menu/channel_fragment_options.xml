@@ -19,4 +19,8 @@
         android:title="@string/menu_pending_subscriptions"
         android:showAsAction="never" />
     
+    <item android:id="@+id/menu_delete_channel"
+        android:title="@string/menu_delete_channel"
+        android:showAsAction="never" />
+    
 </menu>

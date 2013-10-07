@@ -30,7 +30,7 @@ public class TopicChannelModel extends AbstractModel<JSONObject, Void, String> {
 
 
 	@Override
-	public void save(Context context, Void object,
+	public void save(final Context context, Void object,
 			final ModelCallback<Void> callback, String... p) {
 		if (p == null || p.length < 1) {
 			return;
@@ -39,8 +39,7 @@ public class TopicChannelModel extends AbstractModel<JSONObject, Void, String> {
 		BuddycloudHTTPHelper.post(url(context, p[0]), true, false, null, context, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
-				notifyChanged();
-				callback.success(null);
+				SubscribedChannelsModel.getInstance().fill(context, callback);
 			}
 			
 			@Override
@@ -63,8 +62,21 @@ public class TopicChannelModel extends AbstractModel<JSONObject, Void, String> {
 	}
 
 	@Override
-	public void delete(Context context, ModelCallback<Void> callback, String... p) {
-		// TODO Auto-generated method stub
-		
+	public void delete(final Context context, final ModelCallback<Void> callback, final String... p) {
+		if (p == null || p.length < 1) {
+			return;
+		}
+		BuddycloudHTTPHelper.delete(url(context, p[0]), true, false, context, 
+				new ModelCallback<JSONObject>() {
+			@Override
+			public void success(JSONObject response) {
+				SubscribedChannelsModel.getInstance().fill(context, callback);
+			}
+			
+			@Override
+			public void error(Throwable throwable) {
+				callback.error(throwable);
+			}
+		});
 	}
 }

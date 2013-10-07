@@ -20,6 +20,7 @@
     <string name="menu_channel_followers">Followers</string>
     <string name="menu_channel_banned">Banned</string>
     <string name="menu_similar_channels">Similar channels</string>
+    <string name="menu_delete_channel">Delete channel</string>
     
     <string name="menu_role_moderator">Change to moderator</string>
     <string name="menu_role_member">Change to follower (can\'t post)</string>
@@ -186,4 +187,8 @@
 	<string name="message_subscription_change_success">Subscriptions were successfully changed</string>
 	<string name="message_subscription_change_failed">Couldn\'t change subscriptions</string>
 	
+	<string name="title_confirm_delete_channel">Delete channel</string>
+	<string name="message_confirm_delete_channel">Do you really want to delete this channel?</string>
+	<string name="message_channel_deleted">Channel was successfully deleted</string>
+	<string name="message_channel_deletion_failed">Could not delete channel</string>
 </resources>

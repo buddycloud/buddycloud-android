@@ -23,7 +23,7 @@ public class PostContextUtils {
 			final String postId, String role) {
 		
 		final List<String> contextItems = new ArrayList<String>();
-		if (SubscribedChannelsModel.canDelete(role)) {
+		if (SubscribedChannelsModel.canDeletePost(role)) {
 			contextItems.add(CONTEXT_DELETE);
 		}
 		contextItems.add(CONTEXT_SHARE);

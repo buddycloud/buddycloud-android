@@ -8,7 +8,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,10 +37,12 @@ import com.buddycloud.card.PostCard;
 import com.buddycloud.fragments.adapter.FollowersAdapter;
 import com.buddycloud.fragments.adapter.PendingSubscriptionsAdapter;
 import com.buddycloud.fragments.adapter.SimilarChannelsAdapter;
+import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.ModelListener;
 import com.buddycloud.model.PostsModel;
 import com.buddycloud.model.SubscribedChannelsModel;
+import com.buddycloud.model.TopicChannelModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
@@ -105,9 +109,21 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 			cardAdapter.notifyDataSetChanged();
 		}
 		
+		fillMetadata();
 		fillMore();
 	}
 	
+	private void fillMetadata() {
+		ChannelMetadataModel.getInstance().fill(getActivity(), new ModelCallback<Void>() {
+			@Override
+			public void success(Void response) {
+				getSherlockActivity().supportInvalidateOptionsMenu();
+			}
+			@Override
+			public void error(Throwable throwable) {}
+		}, getChannelJid());
+	}
+
 	public void scrollUp() {
 		ListView postsStream = (ListView) getView().findViewById(R.id.postsStream);
 		postsStream.smoothScrollToPosition(0);
@@ -317,6 +333,13 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 		MenuItem pendingSubscriptionsItem = menu.findItem(R.id.menu_pending_subscriptions);
 		boolean canApprove = SubscribedChannelsModel.canChangeAffiliation(getRole());
 		pendingSubscriptionsItem.setVisible(canApprove);
+		
+		MenuItem deleteChannelItem = menu.findItem(R.id.menu_delete_channel);
+		JSONObject metadata = ChannelMetadataModel.getInstance().getFromCache(getActivity(), getChannelJid());
+		
+		boolean isPersonal = metadata == null || metadata.optString("channelType").equals("personal");
+		boolean canDelete = SubscribedChannelsModel.canDeleteChannel(getRole());
+		deleteChannelItem.setVisible(canDelete && !isPersonal);
 	}
 
 	private String getRole() {
@@ -345,9 +368,51 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 		case R.id.menu_pending_subscriptions:
 			showPendingSubscriptions();
 			return true;
+		case R.id.menu_delete_channel:
+			confirmDeleteChannel();
+			return true;
 		default:
 			return false;
 		}
+	}
+
+	private void confirmDeleteChannel() {
+		Context context = getActivity();
+		new AlertDialog.Builder(context)
+			.setIcon(android.R.drawable.ic_dialog_alert)
+			.setTitle(context.getString(R.string.title_confirm_delete_channel))
+			.setMessage(context.getString(R.string.message_confirm_delete_channel))
+			.setPositiveButton(R.string.yes,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog,
+								int which) {
+							deleteChannel();
+						}
+					}).setNegativeButton(R.string.no, null).show();	
+	}
+	
+	private void deleteChannel() {
+		TopicChannelModel.getInstance().delete(getActivity(), new ModelCallback<Void>() {
+			@Override
+			public void success(Void response) {
+				Toast.makeText(getActivity(),  
+						getString(R.string.message_channel_deleted), 
+						Toast.LENGTH_LONG).show();
+				MainActivity mainActivity = (MainActivity) getSherlockActivity();
+				String myJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
+				mainActivity.showChannelFragment(myJid);
+				mainActivity.showMenu();
+			}
+
+			@Override
+			public void error(Throwable throwable) {
+				Toast.makeText(getActivity(),  
+						getString(R.string.message_channel_deletion_failed), 
+						Toast.LENGTH_LONG).show();
+
+			}
+		}, getChannelJid());
 	}
 
 	private void showDetails() {

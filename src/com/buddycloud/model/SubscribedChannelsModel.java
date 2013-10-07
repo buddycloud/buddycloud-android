@@ -147,12 +147,19 @@ public class SubscribedChannelsModel extends AbstractModel<JSONObject, JSONObjec
 				|| role.equals(ROLE_PUBLISHER);
 	}
 
-	public static boolean canDelete(String role) {
+	public static boolean canDeletePost(String role) {
 		if (role == null) {
 			return false;
 		}
 		return role.equals(ROLE_OWNER)
 				|| role.equals(ROLE_MODERATOR);
+	}
+	
+	public static boolean canDeleteChannel(String role) {
+		if (role == null) {
+			return false;
+		}
+		return role.equals(ROLE_OWNER);
 	}
 	
 	public static boolean isFollowing(String role) {

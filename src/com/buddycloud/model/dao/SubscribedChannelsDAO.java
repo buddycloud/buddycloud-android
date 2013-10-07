@@ -46,9 +46,6 @@ public class SubscribedChannelsDAO implements DAO<JSONObject, JSONObject> {
 		return values;
 	}
 	
-	public void delete(String key) {
-	}
-	
 	public boolean insert(String key, JSONObject json) {
 		ContentValues values = buildValues(json);
 		if (values != null) {
