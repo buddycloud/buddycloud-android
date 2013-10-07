@@ -97,6 +97,19 @@
                 buddycloud:typeface="Roboto-Light.ttf" />
 
         </RelativeLayout>
+        
+        <com.buddycloud.utils.TypefacedTextView
+                xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+                android:id="@+id/forgotPasswordText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:text="@string/caption_forgot_password"
+                android:autoLink="all"
+                android:textSize="16sp"
+                buddycloud:typeface="Roboto-Light.ttf" />
+        
     </LinearLayout>
 	</RelativeLayout>
 </RelativeLayout>

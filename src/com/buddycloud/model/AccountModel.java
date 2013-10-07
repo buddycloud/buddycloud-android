@@ -1,16 +1,21 @@
 package com.buddycloud.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.http.entity.StringEntity;
 import org.json.JSONObject;
 
-import com.buddycloud.http.BuddycloudHTTPHelper;
-
 import android.content.Context;
+
+import com.buddycloud.http.BuddycloudHTTPHelper;
+import com.buddycloud.utils.DNSUtils;
 
 public class AccountModel extends AbstractModel<Void, JSONObject, String> {
 
 	private static AccountModel instance;
 	private static final String ENDPOINT = "/account"; 
+	private static final String PW_RESET_ENDPOINT = "/pw/reset"; 
 	
 	private AccountModel() {}
 	
@@ -28,6 +33,9 @@ public class AccountModel extends AbstractModel<Void, JSONObject, String> {
 		return apiAddress + ENDPOINT;
 	}
 
+	private static String pwResetUrl(String apiAddress) {
+		return apiAddress + ENDPOINT + PW_RESET_ENDPOINT;
+	}
 
 	@Override
 	public void save(Context context, JSONObject object,
@@ -61,5 +69,33 @@ public class AccountModel extends AbstractModel<Void, JSONObject, String> {
 	public void delete(Context context, ModelCallback<Void> callback, String... p) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void resetPassword(final Context context, final String userJid, 
+			final ModelCallback<JSONObject> callback) {
+		String[] userJidSplitted = userJid.split("@");
+		String domain = userJidSplitted[1];
+		DNSUtils.resolveAPISRV(new ModelCallback<String>() {
+			@Override
+			public void success(String apiAddress) {
+				Map<String, String> passwordObj = new HashMap<String, String>();
+				passwordObj.put("username", userJid);
+				StringEntity requestEntity = null;
+				try {
+					requestEntity = new StringEntity(new JSONObject(passwordObj).toString(), "UTF-8");
+					requestEntity.setContentType("application/json");
+				} catch (Exception e) {
+					callback.error(e);
+					return;
+				}
+				BuddycloudHTTPHelper.post(pwResetUrl(apiAddress), false, false, 
+						requestEntity, context, callback);
+			}
+
+			@Override
+			public void error(Throwable throwable) {
+				callback.error(throwable);
+			}
+		}, domain);
 	}
 }

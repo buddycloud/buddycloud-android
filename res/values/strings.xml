@@ -6,6 +6,7 @@
     <string name="yes_and_remember">Yes (Remember this choice)</string>
     <string name="no">No</string>
     <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
     
     <string name="menu_search">Search</string>
     <string name="menu_create_channel">Create channel</string>
@@ -191,4 +192,12 @@
 	<string name="message_confirm_delete_channel">Do you really want to delete this channel?</string>
 	<string name="message_channel_deleted">Channel was successfully deleted</string>
 	<string name="message_channel_deletion_failed">Could not delete channel</string>
+	
+	<string name="caption_forgot_password">forgot password</string>
+	<string name="title_reset_password">Reset password</string>
+	<string name="message_reset_password">Type your username. You will receive an email with a new random password.</string>
+	<string name="message_password_successfully_reset">Password successfully reset</string>
+	<string name="message_password_reset_failed">Could not reset password</string>
+	
+	
 </resources>

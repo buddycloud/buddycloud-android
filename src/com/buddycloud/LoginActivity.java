@@ -1,16 +1,23 @@
 package com.buddycloud;
 
+import org.json.JSONObject;
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.buddycloud.http.SSLUtils;
+import com.buddycloud.model.AccountModel;
 import com.buddycloud.model.LoginModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.preferences.Preferences;
@@ -110,9 +117,57 @@ public class LoginActivity extends Activity {
 				startActivityForResult(intent, CreateAccountActivity.REQUEST_CODE);
 			}
 		});
+        
+        TextView forgotPasswordTxt = (TextView) findViewById(R.id.forgotPasswordText);
+        forgotPasswordTxt.setMovementMethod(LinkMovementMethod.getInstance());
+        forgotPasswordTxt.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				resetPassword();
+			}
+		});
     }
 
-    private void showLoginError(int stringId) {
+    protected void resetPassword() {
+    	AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle(getString(R.string.title_reset_password));
+		alert.setMessage(getString(R.string.message_reset_password));
+		final EditText input = new EditText(this);
+		alert.setView(input);
+
+		alert.setPositiveButton(getString(R.string.ok), 
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				String userJid = input.getText().toString();
+				AccountModel.getInstance().resetPassword(getApplicationContext(), 
+						userJid, new ModelCallback<JSONObject>() {
+							@Override
+							public void success(JSONObject response) {
+								Toast.makeText(getApplicationContext(), 
+										getString(R.string.message_password_successfully_reset), 
+										Toast.LENGTH_LONG).show();
+							}
+
+							@Override
+							public void error(Throwable throwable) {
+								Toast.makeText(getApplicationContext(), 
+										getString(R.string.message_password_reset_failed), 
+										Toast.LENGTH_LONG).show();
+							}
+				});
+			}
+		});
+
+		alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+			}
+		});
+
+		alert.show();
+    }
+
+	private void showLoginError(int stringId) {
     	Toast.makeText(getApplicationContext(), getString(stringId), 
     			Toast.LENGTH_LONG).show();
     	clearAPIAddress();

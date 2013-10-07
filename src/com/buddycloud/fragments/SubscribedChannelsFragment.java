@@ -163,7 +163,7 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 			}
 		});
 
-		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 			}
 		});
