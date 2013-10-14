@@ -204,4 +204,6 @@
 	<string name="message_delete_account_success">Account successfully deleted</string>
 	<string name="message_delete_account_failed">Couldn\'t delete account</string>
 	
+	<string name="message_send_bug_report">Send bug report</string>
+	
 </resources>
