@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.content.Context;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
+import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.DNSUtils;
 
 public class AccountModel extends AbstractModel<Void, JSONObject, String> {
@@ -66,9 +67,19 @@ public class AccountModel extends AbstractModel<Void, JSONObject, String> {
 	}
 
 	@Override
-	public void delete(Context context, ModelCallback<Void> callback, String... p) {
-		// TODO Auto-generated method stub
-		
+	public void delete(Context context, final ModelCallback<Void> callback, String... p) {
+		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
+		BuddycloudHTTPHelper.delete(url(apiAddress), true, false, context, new ModelCallback<JSONObject>() {
+			@Override
+			public void success(JSONObject response) {
+				callback.success(null);
+			}
+			
+			@Override
+			public void error(Throwable throwable) {
+				callback.error(throwable);
+			}
+		});
 	}
 
 	public void resetPassword(final Context context, final String userJid, 

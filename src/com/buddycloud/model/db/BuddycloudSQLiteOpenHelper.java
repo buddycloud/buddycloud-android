@@ -46,4 +46,12 @@ public class BuddycloudSQLiteOpenHelper extends SQLiteOpenHelper {
 		onCreate(db);
 	}
 
+	public void purgeDatabase() {
+		SQLiteDatabase db = getWritableDatabase();
+		db.execSQL(PostsTableHelper.PURGE_TABLE);
+		db.execSQL(UnreadCountersTableHelper.PURGE_TABLE);
+		db.execSQL(SubscribedChannelsTableHelper.PURGE_TABLE);
+		db.execSQL(ChannelMetadataTableHelper.PURGE_TABLE);
+	}
+
 }

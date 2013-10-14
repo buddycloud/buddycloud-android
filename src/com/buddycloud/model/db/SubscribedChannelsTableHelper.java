@@ -21,4 +21,6 @@ public class SubscribedChannelsTableHelper {
 	public static final String CREATE_USER_INDEX = "CREATE INDEX "
 			+ COLUMN_USER_IDX + " ON " + TABLE_NAME + "("
 			+ COLUMN_USER + ");";
+	
+	public static final String PURGE_TABLE = "DELETE FROM " + TABLE_NAME;
 }

@@ -7,7 +7,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
@@ -36,6 +38,12 @@ public class SettingsActivity extends SherlockPreferenceActivity {
 						Toast.LENGTH_SHORT).show();
 			}
 		});
+	}
+	
+	@Override
+	public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
+			Preference preference) {
+		return SettingsFragment.onPreferenceClick(this, preference);
 	}
 
 	@SuppressWarnings("deprecation")

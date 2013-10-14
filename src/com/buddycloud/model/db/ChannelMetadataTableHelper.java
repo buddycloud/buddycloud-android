@@ -25,4 +25,6 @@ public class ChannelMetadataTableHelper {
 			+ COLUMN_DEFAULT_AFFILIATION + " TEXT NOT NULL,"
 			+ COLUMN_CREATION_DATE + " TEXT NOT NULL);";
 	
+	public static final String PURGE_TABLE = "DELETE FROM " + TABLE_NAME;
+	
 }

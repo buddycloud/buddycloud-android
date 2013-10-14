@@ -199,5 +199,9 @@
 	<string name="message_password_successfully_reset">Password successfully reset</string>
 	<string name="message_password_reset_failed">Could not reset password</string>
 	
+	<string name="title_confirm_delete_account">Delete account</string>
+	<string name="message_confirm_delete_account">Are you sure you want to delete your account? If so, all your personal channels, subscriptions and posts will be deleted.</string>
+	<string name="message_delete_account_success">Account successfully deleted</string>
+	<string name="message_delete_account_failed">Couldn\'t delete account</string>
 	
 </resources>

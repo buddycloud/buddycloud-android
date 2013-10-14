@@ -42,7 +42,7 @@ import com.buddycloud.preferences.Preferences;
 
 public class BuddycloudHTTPHelper {
 	
-	private static final Executor EXECUTOR = Executors.newFixedThreadPool(10);
+	private static final Executor EXECUTOR = Executors.newFixedThreadPool(20);
 	private static final String TAG = "BuddycloudHTTPHelper";
 	private static HttpClient client = null;
 	
