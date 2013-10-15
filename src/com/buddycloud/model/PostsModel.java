@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Semaphore;
 import java.util.UUID;
 
 import org.apache.http.entity.StringEntity;
@@ -229,19 +230,27 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 	}
 
 	public void savePendingPosts(final Context context, PendingPostsService service) {
+		Semaphore semaphore = new Semaphore(0);
+		int permits = 0;
+		
 		Map<String, JSONArray> pending = PostsDAO.getInstance(context).getPending();
 		for (Entry<String, JSONArray> postsPerChannel : pending.entrySet()) {
 			String channelJid = postsPerChannel.getKey();
 			JSONArray posts = postsPerChannel.getValue();
 			for (int i = 0; i < posts.length(); i++) {
 				JSONObject post = posts.optJSONObject(i);
-				savePendingPost(context, channelJid, post, service);
+				permits++;
+				savePendingPost(context, channelJid, post, service, semaphore);
 			}
 		}
+		
+		try {
+			semaphore.acquire(permits);
+		} catch (InterruptedException e) {}
 	}
 
 	private void savePendingPost(final Context context, final String channelJid,
-			final JSONObject post, final PendingPostsService service) {
+			final JSONObject post, final PendingPostsService service, final Semaphore semaphore) {
 		try {
 			JSONObject tempPost = new JSONObject(post, new String[] {"content", "replyTo", "media" });
 			StringEntity requestEntity = new StringEntity(tempPost.toString(), "UTF-8");
@@ -258,12 +267,17 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 						if (PostsDAO.getInstance(context).getPending().isEmpty()) {
 							service.stop();
 						}
+						semaphore.release();
 					}
 
 					@Override
-					public void error(Throwable throwable) {}
+					public void error(Throwable throwable) {
+						semaphore.release();
+					}
 				});
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			semaphore.release();
+		}
 	}
 	
 	@Override
