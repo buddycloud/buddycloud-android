@@ -169,6 +169,9 @@
 	
 	<string name="pref_danger_zone_category_title">Danger zone</string>
 	
+	<string name="pref_account_category_title">Account</string>
+	<string name="pref_change_password_title">Change password</string>
+	
 	<string name="pref_delete_account_title">Delete buddycloud account</string>
 	
 	<string name="gcm_single_notification_title">Post from %1$s</string>
@@ -206,4 +209,11 @@
 	
 	<string name="message_send_bug_report">Send bug report</string>
 	
+	<string name="change_password_button">Change password</string>
+	<string name="change_current_password">current password</string>
+	<string name="change_new_password">new password</string>
+	<string name="change_repeat_new_password">repeat new password</string>
+	<string name="message_change_password_success">Password successfully changed</string>
+	<string name="message_change_password_failed">Couldn\'t change password</string>
+
 </resources>

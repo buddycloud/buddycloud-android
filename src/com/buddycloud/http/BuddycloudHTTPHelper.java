@@ -1,6 +1,8 @@
 package com.buddycloud.http;
 
 import java.security.KeyStore;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -88,6 +90,11 @@ public class BuddycloudHTTPHelper {
 		reqObject("post", url, auth, acceptsJSON, entity, parent, callback);
 	}
 	
+	public static void post(String url, Map<String, String> headers, HttpEntity entity, Context parent, 
+			final ModelCallback<JSONObject> callback) {
+		reqObject("post", url, headers, entity, parent, callback);
+	}
+	
 	public static void delete(String url, boolean auth, boolean acceptsJSON, Context parent, 
 			final ModelCallback<JSONObject> callback) {
 		reqObject("delete", url, auth, acceptsJSON, null, parent, callback);
@@ -130,8 +137,24 @@ public class BuddycloudHTTPHelper {
 				return new JSONObject(responseStr);
 			}
 		}.executeOnExecutor(EXECUTOR);
-	}	
+	}
 
+	private static void reqObject(String method, String url, Map<String, String> headers, 
+			HttpEntity entity, Context parent, ModelCallback<JSONObject> callback) {
+		RequestAsyncTask<JSONObject> task = new RequestAsyncTask<JSONObject>(method, url, entity, 
+				false, false, parent, callback) {
+			@Override
+			protected JSONObject toJSON(String responseStr) throws JSONException {
+				if (responseStr == null || responseStr.length() == 0 || responseStr.equals("OK")) {
+					return new JSONObject();
+				}
+				return new JSONObject(responseStr);
+			}
+		};
+		task.headers = headers;
+		task.executeOnExecutor(EXECUTOR);
+	}
+	
 	private static void reqArray(String method, String url, boolean auth, boolean acceptsJSON, 
 			HttpEntity entity, Context parent, ModelCallback<JSONArray> callback) {
 		new RequestAsyncTask<JSONArray>(method, url, entity, auth, acceptsJSON, parent, callback) {
@@ -152,6 +175,13 @@ public class BuddycloudHTTPHelper {
         String auth = loginPref.split("@")[0] + ":" + passPref;
 		String authToken = Base64.encodeToString(auth.getBytes(), Base64.NO_WRAP);
 		method.setHeader("Authorization", "Basic " + authToken);
+	}
+	
+	public static String getAuthHeader(Context parent, String password) {
+		String loginPref = Preferences.getPreference(parent, Preferences.MY_CHANNEL_JID);
+        String auth = loginPref.split("@")[0] + ":" + password;
+		String authToken = Base64.encodeToString(auth.getBytes(), Base64.NO_WRAP);
+		return "Basic " + authToken;
 	}
 	
 	protected static void addUserAgentHeader(HttpRequestBase method, Context parent) {
@@ -217,6 +247,7 @@ public class BuddycloudHTTPHelper {
 		private ModelCallback<T> callback;
 		private boolean returnCodeOnly;
 		private HttpClient client;
+		private Map<String, String> headers;
 		
 		public RequestAsyncTask(String methodType, String url, HttpEntity entity,
 				boolean auth, boolean acceptsJSON, Context parent,
@@ -259,6 +290,12 @@ public class BuddycloudHTTPHelper {
 				}
 				
 				addUserAgentHeader(method, parent);
+				
+				if (headers != null) {
+					for (Entry<String, String> header : headers.entrySet()) {
+						method.setHeader(header.getKey(), header.getValue());
+					}
+				}
 				
 				HttpResponse response = client.execute(method);
 				Log.d(TAG, "HTTP: {M: " + methodType + ", U: " + url + ", T: " + (System.currentTimeMillis() - t) + "}");

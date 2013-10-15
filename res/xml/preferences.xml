@@ -53,6 +53,15 @@
             android:title="@string/pref_enable_sound_title"
             android:defaultValue="true"/>
     </PreferenceCategory>
+
+    <PreferenceCategory 
+        android:title="@string/pref_account_category_title"
+        android:key="pref_key_account">
+        <Preference
+            android:key="pref_key_change_password"
+            android:title="@string/pref_change_password_title"/>
+    </PreferenceCategory>
+    
     
     <PreferenceCategory 
         android:title="@string/pref_about_category_title"

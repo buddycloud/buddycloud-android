@@ -16,7 +16,8 @@ public class AccountModel extends AbstractModel<Void, JSONObject, String> {
 
 	private static AccountModel instance;
 	private static final String ENDPOINT = "/account"; 
-	private static final String PW_RESET_ENDPOINT = "/pw/reset"; 
+	private static final String PW_RESET_ENDPOINT = "/pw/reset";
+	private static final String PW_CHANGE_ENDPOINT = "/pw/change"; 
 	
 	private AccountModel() {}
 	
@@ -38,6 +39,11 @@ public class AccountModel extends AbstractModel<Void, JSONObject, String> {
 		return apiAddress + ENDPOINT + PW_RESET_ENDPOINT;
 	}
 
+	private static String pwChangeUrl(Context context) {
+		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
+		return apiAddress + ENDPOINT + PW_CHANGE_ENDPOINT;
+	}
+	
 	@Override
 	public void save(Context context, JSONObject object,
 			ModelCallback<JSONObject> callback, String... p) {
@@ -108,5 +114,36 @@ public class AccountModel extends AbstractModel<Void, JSONObject, String> {
 				callback.error(throwable);
 			}
 		}, domain);
+	}
+
+	public void changePassword(Context context, String currentPassword,
+			String newPassword, final ModelCallback<Void> callback) {
+		String authHeader = BuddycloudHTTPHelper.getAuthHeader(context, currentPassword);
+		Map<String, String> headers = new HashMap<String, String>();
+		headers.put("Authorization", authHeader);
+		
+		Map<String, String> passwordObj = new HashMap<String, String>();
+		passwordObj.put("username", Preferences.getPreference(context, Preferences.MY_CHANNEL_JID));
+		passwordObj.put("password", newPassword);
+		StringEntity requestEntity = null;
+		try {
+			requestEntity = new StringEntity(new JSONObject(passwordObj).toString(), "UTF-8");
+			requestEntity.setContentType("application/json");
+		} catch (Exception e) {
+			callback.error(e);
+			return;
+		}
+		
+		BuddycloudHTTPHelper.post(pwChangeUrl(context), headers, requestEntity, context, 
+				new ModelCallback<JSONObject>() {
+			@Override
+			public void success(JSONObject response) {
+				callback.success(null);
+			}
+			@Override
+			public void error(Throwable throwable) {
+				callback.error(throwable);
+			}
+		});
 	}
 }

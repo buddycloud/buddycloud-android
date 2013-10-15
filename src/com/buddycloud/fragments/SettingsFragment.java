@@ -12,6 +12,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.widget.Toast;
 
+import com.buddycloud.ChangePasswordActivity;
 import com.buddycloud.R;
 import com.buddycloud.model.AccountModel;
 import com.buddycloud.model.ModelCallback;
@@ -49,7 +50,17 @@ public class SettingsFragment extends PreferenceFragment {
 			sendBugReport(context);
 			return true;
 		}
+		if (preference.getKey().equals("pref_key_change_password")) {
+			changePassword(context);
+			return true;
+		}
 		return false;
+	}
+
+	private static void changePassword(Context context) {
+		Intent changePasswordIntent = new Intent();
+		changePasswordIntent.setClass(context, ChangePasswordActivity.class);
+		context.startActivity(changePasswordIntent);
 	}
 
 	protected static void sendBugReport(final Context context) {
