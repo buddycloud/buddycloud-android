@@ -12,6 +12,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.widget.Toast;
 
+import com.buddycloud.AboutBuddycloudActivity;
 import com.buddycloud.ChangePasswordActivity;
 import com.buddycloud.R;
 import com.buddycloud.model.AccountModel;
@@ -54,7 +55,17 @@ public class SettingsFragment extends PreferenceFragment {
 			changePassword(context);
 			return true;
 		}
+		if (preference.getKey().equals("pref_key_about_bc")) {
+			openAbout(context);
+			return true;
+		}
 		return false;
+	}
+
+	private static void openAbout(Context context) {
+		Intent aboutBCIntent = new Intent();
+		aboutBCIntent.setClass(context, AboutBuddycloudActivity.class);
+		context.startActivity(aboutBCIntent);
 	}
 
 	private static void changePassword(Context context) {

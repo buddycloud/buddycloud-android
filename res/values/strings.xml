@@ -216,4 +216,9 @@
 	<string name="message_change_password_success">Password successfully changed</string>
 	<string name="message_change_password_failed">Couldn\'t change password</string>
 
+	<string name="about_buddycloud_protocol_title">The buddycloud protocol</string>
+	<string name="about_buddycloud_protocol_content">buddycloud is a new way to build communication tools. The buddycloud protocol enables communication, file sharing and chat, using open standards and is secure.</string>
+    <string name="about_buddycloud_contributors_title">Contributors</string>
+    <string name="about_buddycloud_version_title">Version</string>
+    
 </resources>
