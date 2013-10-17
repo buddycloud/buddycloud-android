@@ -14,13 +14,16 @@ import com.buddycloud.fragments.SearchChannelsFragment;
 public class SearchActivity extends SherlockFragmentActivity {
 
 	public static final int REQUEST_CODE = 102;
+	private static final long SEARCH_DELAY = 2000;
+	
+	private boolean searchScheduled = false;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         
-        TextView searchView = (TextView)findViewById(R.id.searchTxt);
+        final TextView searchView = (TextView)findViewById(R.id.searchTxt);
         String q = getIntent().getStringExtra(SearchChannelsFragment.FILTER);
         searchView.setText(q);
         
@@ -43,10 +46,19 @@ public class SearchActivity extends SherlockFragmentActivity {
 			}
 
 			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+			public void onTextChanged(final CharSequence arg0, int arg1, int arg2,
 					int arg3) {
-				String q = arg0.toString();
-				searchChannelsFragment.filter(SearchActivity.this, q);
+				if (!searchScheduled) {
+					searchScheduled = true;
+					searchView.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							searchChannelsFragment.filter(
+									SearchActivity.this, arg0.toString());
+							searchScheduled = false;
+						}
+					}, SEARCH_DELAY);
+				}
 			}
 		});
 		
