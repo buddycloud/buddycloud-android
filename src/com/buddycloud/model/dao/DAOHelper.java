@@ -148,6 +148,23 @@ public class DAOHelper {
 		return responseArray;
 	}
 	
+	static JSONArray rawQueryOnSameThread(SQLiteDatabase db, DAOCursorParser cursorParser, 
+			String rawSQL, String[] args) {
+		Cursor cursor = db.rawQuery(rawSQL, args);
+		cursor.moveToFirst();
+		JSONArray responseArray = new JSONArray();
+		while (!cursor.isAfterLast()) {
+			JSONObject json = cursorParser.parse(cursor);
+			if (json != null) {
+				responseArray.put(json);
+			}
+			cursor.moveToNext();
+		}
+		cursor.close();
+		
+		return responseArray;
+	}
+	
 	static void queryUnique(final SQLiteDatabase db, final boolean distinct, final String table, 
 			final String[] columns, final String selection, final String[] selectionArgs, 
 			final String groupBy, final String having, final String orderBy, final String limit, 

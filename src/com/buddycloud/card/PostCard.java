@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.buddycloud.FullScreenImageActivity;
 import com.buddycloud.MainActivity;
 import com.buddycloud.R;
+import com.buddycloud.fragments.ChannelStreamFragment;
 import com.buddycloud.model.MediaModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
@@ -60,10 +61,13 @@ public class PostCard extends AbstractCard {
 	private Spanned anchoredContent;
 	private MainActivity activity;
 	private String role;
+	private ChannelStreamFragment fragment;
 
-	public PostCard(String channelJid, JSONObject post, MainActivity activity, String role) {
+	public PostCard(String channelJid, JSONObject post, 
+			ChannelStreamFragment fragment, String role) {
 		this.channelJid = channelJid;
-		this.activity = activity;
+		this.fragment = fragment;
+		this.activity = (MainActivity) fragment.getActivity();
 		this.role = role;
 		setPost(post);
 	}
@@ -355,21 +359,24 @@ public class PostCard extends AbstractCard {
 			public void success(JSONObject response) {
 				Toast.makeText(context, context.getString(R.string.message_post_created), 
 						Toast.LENGTH_LONG).show();
-				loadReplies(post, channelJid, context, new ModelCallback<Void>() {
-					@Override
-					public void success(Void response) {
-						getParentAdapter().sort();
-						hideProgress(convertView);
-					}
-
-					@Override
-					public void error(Throwable throwable) {
-						Toast.makeText(context,
-								context.getString(R.string.message_reply_created), 
-								Toast.LENGTH_LONG).show();
-						hideProgress(convertView);
-					}
-				});
+				hideProgress(convertView);
+				fragment.fillRemotely(null, null);
+//				loadReplies(post, channelJid, context, new ModelCallback<Void>() {
+//					@Override
+//					public void success(Void response) {
+//						getParentAdapter().sort();
+//						hideProgress(convertView);
+//					}
+//
+//					@Override
+//					public void error(Throwable throwable) {
+//						Toast.makeText(context,
+//								context.getString(R.string.message_reply_created), 
+//								Toast.LENGTH_LONG).show();
+//						hideProgress(convertView);
+//					}
+//				});
+				
 			}
 			
 			@Override
@@ -415,23 +422,6 @@ public class PostCard extends AbstractCard {
 		return reply;
 	}
 	
-	private void loadReplies(JSONObject post, String channelJid, 
-			final Context context, final ModelCallback<Void> callback) {
-		PostsModel.getInstance().fetchSinglePost(context, new ModelCallback<JSONObject>() {
-			@Override
-			public void success(JSONObject response) {
-				setPost(response);
-				callback.success(null);
-			}
-			
-			@Override
-			public void error(Throwable throwable) {
-				Toast.makeText(context, context.getString(R.string.message_post_details_load_failed), 
-						Toast.LENGTH_LONG).show();
-			}
-		}, channelJid, post.optString("id"));
-	}
-	
 	private CommentCard toReplyCard(JSONObject comment, Context context) {
 		CommentCard commentCard = new CommentCard(channelJid, comment, 
 				activity, role);
@@ -452,8 +442,8 @@ public class PostCard extends AbstractCard {
 	@Override
 	public int compareTo(Card anotherCard) {
 		try {
-			Date otherUpdated = TimeUtils.updated(anotherCard.getPost());
-			Date thisUpdated = TimeUtils.updated(this.getPost());
+			Date otherUpdated = TimeUtils.threadUpdated(anotherCard.getPost());
+			Date thisUpdated = TimeUtils.threadUpdated(this.getPost());
 			return otherUpdated.compareTo(thisUpdated);
 		} catch (ParseException e) {
 			return 0;

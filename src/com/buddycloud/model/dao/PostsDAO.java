@@ -1,5 +1,7 @@
 package com.buddycloud.model.dao;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -40,7 +42,8 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 
 	
 	private ContentValues buildValues(String id, String author, String published, String updated, 
-			String content, String channel, String replyTo, String media) {
+			String content, String channel, String replyTo, String media, String threadId, 
+			String threadUpdated) {
 		
 		ContentValues values = new ContentValues();
 		values.put(PostsTableHelper.COLUMN_ID, id);
@@ -49,6 +52,8 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 		values.put(PostsTableHelper.COLUMN_UPDATED, updated);
 		values.put(PostsTableHelper.COLUMN_CONTENT, content);
 		values.put(PostsTableHelper.COLUMN_CHANNEL, channel);
+		values.put(PostsTableHelper.COLUMN_THREAD_ID, threadId);
+		values.put(PostsTableHelper.COLUMN_THREAD_UPDATED, threadUpdated);
 		
 		if (replyTo != null && !replyTo.equals("")) {
 			values.put(PostsTableHelper.COLUMN_REPLY_TO, replyTo);
@@ -69,8 +74,11 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 		String content = json.isNull("content") ? null : json.optString("content");
 		String replyTo = json.isNull("replyTo") ? null : json.optString("replyTo");
 		String mediaId = json.isNull("media") ? null : json.optJSONArray("media").toString();
+		String threadId = json.optString("threadId");
+		String threadUpdated = json.optString("threadUpdated");
 		
-		return buildValues(id, author, published, updated, content, channel, replyTo, mediaId);
+		return buildValues(id, author, published, updated, content, channel, replyTo, 
+				mediaId, threadId, threadUpdated);
 	}
 	
 	public boolean insert(String channel, JSONObject json) {
@@ -98,7 +106,11 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 	}
 	
 	public JSONArray get(String channel) {
-		return get(channel, DEF_LIMIT);
+		try {
+			return get(channel, DEF_LIMIT);
+		} catch (JSONException e) {
+			return null;
+		}
 	}
 
 	public JSONObject get(String channel, String itemId) {
@@ -114,25 +126,51 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 		return DAOHelper.deleteOnSameThread(db, PostsTableHelper.TABLE_NAME, filter, null);
 	}
 	
-	public JSONArray getReplies(String channel, String itemId) {
+	public JSONArray getThread(String channel, String threadId) {
 		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\" AND " 
-						+ PostsTableHelper.COLUMN_REPLY_TO + "=\"" + itemId + "\"";
-		String orderBy = "datetime(" + PostsTableHelper.COLUMN_UPDATED + ") ASC";
+						+ PostsTableHelper.COLUMN_THREAD_ID + "=\"" + threadId + "\"";
 		return DAOHelper.queryOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
-				null, null, null, orderBy, null, cursorParser());
+				null, null, null, null, null, cursorParser());
 	}
 
-	public JSONArray get(String channel, String after, int limit) {
-		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
-		filter += " AND " + PostsTableHelper.COLUMN_REPLY_TO + " IS NULL";
+	public JSONArray get(String channel, String after, Integer limit) throws JSONException {
+		String rawSQL = "SELECT * FROM " + PostsTableHelper.TABLE_NAME + ", " +
+				 "(SELECT DISTINCT " + PostsTableHelper.COLUMN_THREAD_ID + " AS thr " +
+				   "FROM " + PostsTableHelper.TABLE_NAME + " " +
+				   "WHERE " + PostsTableHelper.COLUMN_CHANNEL + " = ? " + 
+				   (after == null ? "" : "AND " + PostsTableHelper.COLUMN_THREAD_UPDATED + " < ? ") +
+				   "ORDER BY datetime(" + PostsTableHelper.COLUMN_THREAD_UPDATED + ") DESC LIMIT ?) " +
+				 "WHERE thr = " + PostsTableHelper.COLUMN_THREAD_ID + " " +
+				 "ORDER BY datetime(" + PostsTableHelper.COLUMN_THREAD_UPDATED + ") DESC, " +
+				 		"datetime(" + PostsTableHelper.COLUMN_UPDATED + ") ASC";
+		
+		List<String> args = new LinkedList<String>();
+		args.add(channel);
 		if (after != null) {
-			filter += " AND " + PostsTableHelper.COLUMN_UPDATED + "<\"" + after + "\"";
+			args.add(after);
 		}
-		String orderBy = "datetime(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
-
-		return DAOHelper.queryOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
-				null, null, null, orderBy, String.valueOf(limit), 
-				cursorParser());
+		args.add(limit.toString());
+		
+		JSONArray plainResults = DAOHelper.rawQueryOnSameThread(db, cursorParser(), 
+				rawSQL, args.toArray(new String[]{}));
+		JSONArray threadedResults = new JSONArray();
+		JSONObject currentThread = null;
+		for (int i = 0; i < plainResults.length(); i++) {
+			JSONObject currentItem = plainResults.optJSONObject(i);
+			if (currentThread == null || !currentThread.optString("threadId").equals(
+					currentItem.optString("threadId"))) {
+				threadedResults.put(currentItem);
+				currentThread = currentItem;
+			} else {
+				JSONArray replies = currentThread.optJSONArray("replies");
+				if (replies == null) {
+					replies = new JSONArray();
+					currentThread.put("replies", replies);
+				}
+				replies.put(currentItem);
+			}
+		}
+		return threadedResults;
 	}
 	
 	public JSONObject getLatest(String channel) {
@@ -150,7 +188,7 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 				null, null, null, null, null, cursorParser(), PostsTableHelper.COLUMN_CHANNEL);
 	}
 	
-	public JSONArray get(String channel, int limit) {
+	public JSONArray get(String channel, int limit) throws JSONException {
 		return get(channel, null, limit);
 	}
 
@@ -175,6 +213,8 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 			json.put(PostsTableHelper.COLUMN_CONTENT, getString(cursor, PostsTableHelper.COLUMN_CONTENT));
 			json.put(PostsTableHelper.COLUMN_REPLY_TO, getString(cursor, PostsTableHelper.COLUMN_REPLY_TO));
 			json.put(PostsTableHelper.COLUMN_MEDIA, getString(cursor, PostsTableHelper.COLUMN_MEDIA));
+			json.put(PostsTableHelper.COLUMN_THREAD_ID, getString(cursor, PostsTableHelper.COLUMN_THREAD_ID));
+			json.put(PostsTableHelper.COLUMN_THREAD_UPDATED, getString(cursor, PostsTableHelper.COLUMN_THREAD_UPDATED));
 		} catch (JSONException e) {
 			return null;
 		}

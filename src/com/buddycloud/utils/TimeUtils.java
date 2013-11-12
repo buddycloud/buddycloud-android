@@ -25,4 +25,8 @@ public class TimeUtils {
 	public static Date updated(JSONObject post) throws ParseException {
 		return fromISOToDate(post.optString("updated"));
 	}
+	
+	public static Date threadUpdated(JSONObject post) throws ParseException {
+		return fromISOToDate(post.optString("threadUpdated"));
+	}
 }

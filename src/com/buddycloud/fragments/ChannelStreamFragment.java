@@ -12,7 +12,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -110,7 +109,7 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 		}
 		
 		fillMetadata();
-		fillMore();
+//		fillMore();
 	}
 	
 	private void fillMetadata() {
@@ -169,7 +168,7 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 		});
 	}
 
-	private void fillRemotely(final String lastId, final String lastUpdated) {
+	public void fillRemotely(final String lastId, final String lastUpdated) {
 		PostsModel.getInstance().fillMore(getActivity(), smartify(new ModelCallback<Void>() {
 			@Override
 			public void success(Void response) {
@@ -206,34 +205,49 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 	
 	private void fillAdapter(final Context context, final String lastUpdated, 
 			final ModelCallback<Boolean> callback) {
-		new AsyncTask<Void, Void, JSONArray>() {
-
-			@Override
-			protected JSONArray doInBackground(Void... params) {
-				return PostsModel.getInstance().getFromCache(context, getChannelJid(), lastUpdated);
-			}
-			
-			@Override
-			protected void onPostExecute(JSONArray allPosts) {
-				if (!isAttachedToActivity()) {
-					return;
-				}
-				for (int i = 0; i < allPosts.length(); i++) {
-					JSONObject post = allPosts.optJSONObject(i);
-					PostCard card = toCard(post, getChannelJid());
-					cardAdapter.addCard(card);
-				}
-				cardAdapter.sort();
-				if (callback != null) {
-					callback.success(allPosts.length() > 0);
-				}
-			}
-			
-		}.execute();
+//		new AsyncTask<Void, Void, JSONArray>() {
+//
+//			@Override
+//			protected JSONArray doInBackground(Void... params) {
+//				return PostsModel.getInstance().getFromCache(context, getChannelJid(), lastUpdated);
+//			}
+//			
+//			@Override
+//			protected void onPostExecute(JSONArray allPosts) {
+//				if (!isAttachedToActivity()) {
+//					return;
+//				}
+//				for (int i = 0; i < allPosts.length(); i++) {
+//					JSONObject post = allPosts.optJSONObject(i);
+//					PostCard card = toCard(post, getChannelJid());
+//					cardAdapter.addCard(card);
+//				}
+//				cardAdapter.sort();
+//				if (callback != null) {
+//					callback.success(allPosts.length() > 0);
+//				}
+//			}
+//			
+//		}.execute();
+		
+		if (!isAttachedToActivity()) {
+			return;
+		}
+		JSONArray cachedPosts = PostsModel.getInstance().getFromCache(context, 
+				getChannelJid(), lastUpdated);
+		for (int i = 0; i < cachedPosts.length(); i++) {
+			JSONObject post = cachedPosts.optJSONObject(i);
+			PostCard card = toCard(post, getChannelJid());
+			cardAdapter.addCard(card);
+		}
+		cardAdapter.sort();
+		if (callback != null) {
+			callback.success(cachedPosts.length() > 0);
+		}
 	}
 	
 	private PostCard toCard(JSONObject post, final String channelJid) {
-		return new PostCard(channelJid, post, (MainActivity) getActivity(), getRole());
+		return new PostCard(channelJid, post, this, getRole());
 	}
 	
 	private void createPost(final View view) {

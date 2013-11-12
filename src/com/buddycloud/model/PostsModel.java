@@ -4,8 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.Semaphore;
 import java.util.UUID;
+import java.util.concurrent.Semaphore;
 
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
@@ -28,7 +28,9 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 	private static PostsModel instance;
 	private static final int REMOTE_PAGE_SIZE = 30;
 	private static final int LOCAL_PAGE_SIZE = 10;
+	
 	private static final String POSTS_ENDPOINT = "/content/posts";
+	private static final String THREADS_ENDPOINT = "/content/posts/threads";
 	
 	private PostsModel() {}
 
@@ -39,42 +41,23 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		return instance;
 	}
 	
-	private boolean persist(PostsDAO postsDAO, String channel, JSONArray jsonPosts) throws JSONException {
-		boolean containsTopic = false;
-		for (int i = 0; i < jsonPosts.length(); i++) {
-			JSONObject item = jsonPosts.optJSONObject(i);
-			normalize(item);
-			if (postsDAO.get(channel, item.optString("id")) == null) {
-				updateTopicTimestamp(postsDAO, channel, item);
-				postsDAO.insert(channel, item);
-			} else {
-//				postsDAO.update(channel, item);
-			}
-			if (!isComment(item)) {
-				containsTopic = true;
+	private boolean persist(PostsDAO postsDAO, String channel, JSONArray postsPerThreads) throws JSONException {
+		for (int i = 0; i < postsPerThreads.length(); i++) {
+			JSONObject thread = postsPerThreads.optJSONObject(i);
+			JSONArray items = thread.optJSONArray("items");
+			for (int j = 0; j < items.length(); j++) {
+				JSONObject item = items.optJSONObject(j);
+				normalize(item);
+				item.put("threadId", thread.optString("id"));
+				item.put("threadUpdated", thread.optString("updated"));
+				if (postsDAO.get(channel, item.optString("id")) == null) {
+					postsDAO.insert(channel, item);
+				}
 			}
 		}
-		return containsTopic;
+		return postsPerThreads.length() > 0;
 	}
 
-	private void updateTopicTimestamp(PostsDAO postsDAO, String channel,
-			JSONObject item) throws JSONException {
-		String itemId = item.optString("id");
-		if (isComment(item)) {
-			JSONObject parent = postsDAO.get(channel, item.optString("replyTo"));
-			if (parent != null) {
-				parent.putOpt("updated", item.optString("updated"));
-				postsDAO.update(channel, parent);
-			}
-		} else {
-			JSONArray replies = postsDAO.getReplies(channel, itemId);
-			if (replies != null && replies.length() > 0) {
-				JSONObject lastReply = replies.optJSONObject(replies.length() - 1);
-				item.putOpt("updated", lastReply.optString("updated"));
-			}
-		}
-	}
-	
 	private void normalize(JSONObject item) {
 		String author = item.optString("author");
 		if (author.contains("acct:")) {
@@ -86,26 +69,6 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		}
 	}
 	
-	private JSONArray lookupPostsFromDatabase(final Context context, final String channelJid, String after) {
-		final PostsDAO postsDAO = PostsDAO.getInstance(context);
-		JSONArray postStream = postsDAO.get(channelJid, after, LOCAL_PAGE_SIZE);
-		for (int i = 0; i < postStream.length(); i++) {
-			JSONObject eachPost = postStream.optJSONObject(i);
-			JSONArray replies = postsDAO.getReplies(channelJid,
-					eachPost.optString("id"));
-			try {
-				eachPost.putOpt("replies", replies);
-			} catch (JSONException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		return postStream;
-	}
-	
-	public static boolean isComment(JSONObject item) {
-		return item.has("replyTo");
-	}
-	
 	@Override
 	public JSONArray getFromCache(Context context, String... p) {
 		String channelJid = p[0];
@@ -113,69 +76,12 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		if (p.length > 1) {
 			after = p[1];
 		}
-		return lookupPostsFromDatabase(context, channelJid, after);
-	}
-
-	public void fetchSinglePost(Context context, final ModelCallback<JSONObject> callback, String... p) {
-		String channelJid = p[0];
-		String itemId = p[1];
-		fetchPost(context, channelJid, itemId, callback);
-	}
-	
-	private void fetchPost(final Context context, final String channelJid, 
-			final String itemId, final ModelCallback<JSONObject> callback) {
-		BuddycloudHTTPHelper.getObject(postUrl(context, channelJid, itemId), context,
-				new ModelCallback<JSONObject>() {
-			@Override
-			public void success(JSONObject response) {
-				normalize(response);
-				fetchReplies(context, channelJid, response, callback);
-			}
-
-			@Override
-			public void error(Throwable throwable) {
-				if (callback != null) {
-					callback.error(throwable);
-				}
-			}
-		});
-	}
-	
-	private void fetchReplies(final Context context, final String channelJid, 
-			final JSONObject item, final ModelCallback<JSONObject> callback) {
-		final String itemId = item.optString("id");
-		BuddycloudHTTPHelper.getArray(repliesUrl(context, channelJid, itemId), context,
-				new ModelCallback<JSONArray>() {
-			@Override
-			public void success(JSONArray response) {
-				for (int i = 0; i < response.length(); i++) {
-					JSONObject reply = response.optJSONObject(i);
-					normalize(reply);
-				}
-				PostsDAO dao = PostsDAO.getInstance(context);
-				
-				JSONObject updatedItem = new JSONObject();
-				
-				try {
-					persist(dao, channelJid, response);
-					updatedItem = dao.get(channelJid, itemId);
-					updatedItem.putOpt("replies", dao.getReplies(channelJid, itemId));
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				
-				if (callback != null) {
-					callback.success(updatedItem);
-				}
-			}
-
-			@Override
-			public void error(Throwable throwable) {
-				if (callback != null) {
-					callback.error(throwable);
-				}
-			}
-		});
+		final PostsDAO postsDAO = PostsDAO.getInstance(context);
+		try {
+			return postsDAO.get(channelJid, after, LOCAL_PAGE_SIZE);
+		} catch (JSONException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private void fetchPosts(final Context context, final String channelJid, 
@@ -186,13 +92,8 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 			@Override
 			public void success(JSONArray response) {
 				try {
-					final PostsDAO postsDAO = PostsDAO.getInstance(context);
-					if (!persist(postsDAO, channelJid, response) && response.length() > 0) {
-						JSONObject lastReply = response.optJSONObject(response.length() - 1);
-						fetchPosts(context, channelJid, callback, lastReply.optString("id"));
-					} else {
-						callback.success(null);
-					}
+					persist(PostsDAO.getInstance(context), channelJid, response);
+					callback.success(null);
 				} catch (Exception e) {
 					error(e);
 				}
@@ -207,7 +108,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 	
 	private String postsUrl(Context context, String channel, String after) {
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
-		String postsURL = apiAddress + "/" + channel + POSTS_ENDPOINT + "?max=" + REMOTE_PAGE_SIZE;
+		String postsURL = apiAddress + "/" + channel + THREADS_ENDPOINT + "?max=" + REMOTE_PAGE_SIZE;
 		if (after != null) {
 			postsURL += "&after=" + after;
 		}
@@ -216,7 +117,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 	
 	private String postsUrl(Context context, String channel) {
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
-		return apiAddress + "/" + channel + POSTS_ENDPOINT + "?max=" + REMOTE_PAGE_SIZE;
+		return apiAddress + "/" + channel + POSTS_ENDPOINT;
 	}
 	
 	private String postUrl(Context context, String channel, String postId) {
@@ -224,11 +125,6 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		return apiAddress + "/" + channel + POSTS_ENDPOINT + "/" + postId;
 	}
 	
-	private String repliesUrl(Context context, String channel, String postId) {
-		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
-		return apiAddress + "/" + channel + POSTS_ENDPOINT + "/" + postId + "/replyto";
-	}
-
 	public void savePendingPosts(final Context context, PendingPostsService service) {
 		Semaphore semaphore = new Semaphore(0);
 		int permits = 0;
@@ -299,10 +195,23 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 			final JSONObject tempObject = new JSONObject(object, new String[]{"content", "replyTo", "media"});
 			tempObject.put("id", tempItemId);
 			tempObject.put("updated", TimeUtils.formatISO(new Date()));
+			tempObject.put("threadUpdated", TimeUtils.formatISO(new Date()));
+			tempObject.put("threadId", tempObject.has("replyTo") ? 
+					tempObject.optString("replyTo") : tempItemId);
 			tempObject.put("author", author);
 			tempObject.put("channel", channelJid);
 
-			PostsDAO.getInstance(context).insert(channelJid, tempObject);
+			final PostsDAO postsDAO = PostsDAO.getInstance(context);
+			postsDAO.insert(channelJid, tempObject);
+			if (tempObject.has("replyTo")) {
+				String threadId = tempObject.optString("threadId");
+				JSONArray thread = postsDAO.getThread(channelJid, threadId);
+				for (int i = 0; i < thread.length(); i++) {
+					JSONObject threadItem = thread.optJSONObject(i);
+					threadItem.put("threadUpdated", tempObject.optString("threadUpdated"));
+					postsDAO.update(channelJid, threadItem);
+				}
+			}
 			notifyAdded(channelJid, tempObject);
 			
 			BuddycloudHTTPHelper.post(postsUrl(context, channelJid), true, false, requestEntity, context, 
@@ -310,7 +219,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 				
 				@Override
 				public void success(JSONObject response) {
-					PostsDAO.getInstance(context).delete(channelJid, tempItemId);
+					postsDAO.delete(channelJid, tempItemId);
 					notifyDeleted(channelJid, tempItemId, 
 							tempObject.optString("replyTo", null));
 					callback.success(response);

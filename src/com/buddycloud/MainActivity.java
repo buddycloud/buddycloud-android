@@ -15,7 +15,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.fragments.ChannelStreamFragment;
 import com.buddycloud.fragments.ContentFragment;
 import com.buddycloud.fragments.GenericChannelsFragment;
-import com.buddycloud.fragments.PostDetailsFragment;
 import com.buddycloud.fragments.SearchChannelsFragment;
 import com.buddycloud.fragments.SubscribedChannelsFragment;
 import com.buddycloud.model.ModelCallback;
@@ -141,16 +140,9 @@ public class MainActivity extends SlidingFragmentActivity {
 		} else if (requestCode == SearchActivity.REQUEST_CODE) {
 			if (data != null) {
 				String channelJid = data.getStringExtra(GenericChannelsFragment.CHANNEL);
-				String postId = data.getStringExtra(GenericChannelsFragment.POST_ID);
 				String filter = data.getStringExtra(SearchChannelsFragment.FILTER);
-				
 				backStack.pushSearch(filter);
-				
-				if (postId != null) {
-					showPostDetailFragment(channelJid, postId);
-				} else {
-					showChannelFragment(channelJid);
-				}
+				showChannelFragment(channelJid);
 			}
 		} else if (requestCode == GenericChannelActivity.REQUEST_CODE) {
 			if (data != null) {
@@ -246,16 +238,6 @@ public class MainActivity extends SlidingFragmentActivity {
 		return channelStreamFrag;
 	}
 	
-	public PostDetailsFragment showPostDetailFragment(final String channelJid,
-			final String postId) {
-		PostDetailsFragment postDetailsFrag = new PostDetailsFragment();
-		Bundle args = new Bundle();
-		args.putString(PostDetailsFragment.POST_ID, postId);
-		args.putString(GenericChannelsFragment.CHANNEL, channelJid);
-		postDetailsFrag.setArguments(args);
-		return postDetailsFrag;
-	}
-
 	private void customizeMenu() {
 		SlidingMenu sm = getSlidingMenu();
 		sm.setShadowWidthRes(R.dimen.shadow_width);
