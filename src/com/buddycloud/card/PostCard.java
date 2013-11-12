@@ -361,22 +361,6 @@ public class PostCard extends AbstractCard {
 						Toast.LENGTH_LONG).show();
 				hideProgress(convertView);
 				fragment.fillRemotely(null, null);
-//				loadReplies(post, channelJid, context, new ModelCallback<Void>() {
-//					@Override
-//					public void success(Void response) {
-//						getParentAdapter().sort();
-//						hideProgress(convertView);
-//					}
-//
-//					@Override
-//					public void error(Throwable throwable) {
-//						Toast.makeText(context,
-//								context.getString(R.string.message_reply_created), 
-//								Toast.LENGTH_LONG).show();
-//						hideProgress(convertView);
-//					}
-//				});
-				
 			}
 			
 			@Override
