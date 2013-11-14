@@ -91,7 +91,7 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 
 	private void fetchMetadata(JSONObject channelItem, Context context) {
 		String channelJid = channelItem.optString("jid");
-		ChannelMetadataModel.getInstance().fill(context,
+		ChannelMetadataModel.getInstance().fillInLoPriority(context,
 				new ModelCallback<Void>() {
 					@Override
 					public void success(Void response) {

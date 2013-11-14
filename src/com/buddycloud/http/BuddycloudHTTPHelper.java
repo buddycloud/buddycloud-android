@@ -18,6 +18,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -27,6 +29,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,15 +48,24 @@ import com.buddycloud.preferences.Preferences;
 
 public class BuddycloudHTTPHelper {
 	
-	private static final Executor EXECUTOR = Executors.newFixedThreadPool(20);
+	private static final Executor HIGH_PRIORITY_EXECUTOR = Executors.newFixedThreadPool(20);
+	private static final Executor LO_PRIORITY_EXECUTOR = Executors.newFixedThreadPool(40);
 	private static final String TAG = "BuddycloudHTTPHelper";
-	private static HttpClient client = null;
+	private static HttpClient hiPriorityClient = null;
+	private static HttpClient loPriorityClient = null;
 	
-	private static HttpClient getClient(Context context) {
-		if (client == null) {
-			client = createHttpClient(context);
+	private static HttpClient getHiPriorityClient(Context context) {
+		if (hiPriorityClient == null) {
+			hiPriorityClient = createHttpClient(context);
 		}
-		return client;
+		return hiPriorityClient;
+	}
+	
+	private static HttpClient getLoPriorityClient(Context context) {
+		if (loPriorityClient == null) {
+			loPriorityClient = createHttpClient(context);
+		}
+		return loPriorityClient;
 	}
 	
 	public static void getObject(String url, Context parent, 
@@ -60,6 +73,11 @@ public class BuddycloudHTTPHelper {
 		getObject(url, true, true, parent, callback);
 	}
 
+	public static void getObjectInLoPriority(String url, Context parent, 
+			final ModelCallback<JSONObject> callback) {
+		getObjectInLoPriority(url, true, true, parent, callback);
+	}
+	
 	public static void getArray(String url, Context parent, 
 			final ModelCallback<JSONArray> callback) {
 		getArray(url, true, true, parent, callback);
@@ -80,6 +98,11 @@ public class BuddycloudHTTPHelper {
 		reqObject("get", url, auth, acceptsJSON, null, parent, callback);
 	}
 
+	public static void getObjectInLoPriority(String url, boolean auth, boolean acceptsJSON, Context parent, 
+			final ModelCallback<JSONObject> callback) {
+		reqObjectInLoPriority("get", url, auth, acceptsJSON, null, parent, callback);
+	}
+	
 	public static void getArray(String url, boolean auth, boolean acceptsJSON, Context parent, 
 			final ModelCallback<JSONArray> callback) {
 		reqArray("get", url, auth, acceptsJSON, null, parent, callback);
@@ -110,7 +133,7 @@ public class BuddycloudHTTPHelper {
 					}
 				};
 		task.returnCodeOnly = true;
-		task.executeOnExecutor(EXECUTOR);
+		task.executeOnExecutor(HIGH_PRIORITY_EXECUTOR);
 	}
 	
 	public static void checkSSL(String url, Context parent, ModelCallback<Integer> callback) {
@@ -123,7 +146,7 @@ public class BuddycloudHTTPHelper {
 				};
 		task.client = createSecureHttpClient();
 		task.returnCodeOnly = true;
-		task.executeOnExecutor(EXECUTOR);
+		task.executeOnExecutor(HIGH_PRIORITY_EXECUTOR);
 	}
 	
 	private static void reqObject(String method, String url, boolean auth, boolean acceptsJSON, 
@@ -136,7 +159,22 @@ public class BuddycloudHTTPHelper {
 				}
 				return new JSONObject(responseStr);
 			}
-		}.executeOnExecutor(EXECUTOR);
+		}.executeOnExecutor(HIGH_PRIORITY_EXECUTOR);
+	}
+	
+	private static void reqObjectInLoPriority(String method, String url, boolean auth, boolean acceptsJSON, 
+			HttpEntity entity, Context parent, ModelCallback<JSONObject> callback) {
+		RequestAsyncTask<JSONObject> task = new RequestAsyncTask<JSONObject>(method, url, entity, auth, acceptsJSON, parent, callback) {
+					@Override
+					protected JSONObject toJSON(String responseStr) throws JSONException {
+						if (responseStr == null || responseStr.length() == 0 || responseStr.equals("OK")) {
+							return new JSONObject();
+						}
+						return new JSONObject(responseStr);
+					}
+				};
+		task.lo = true;
+		task.executeOnExecutor(LO_PRIORITY_EXECUTOR);
 	}
 
 	private static void reqObject(String method, String url, Map<String, String> headers, 
@@ -152,7 +190,7 @@ public class BuddycloudHTTPHelper {
 			}
 		};
 		task.headers = headers;
-		task.executeOnExecutor(EXECUTOR);
+		task.executeOnExecutor(HIGH_PRIORITY_EXECUTOR);
 	}
 	
 	private static void reqArray(String method, String url, boolean auth, boolean acceptsJSON, 
@@ -162,7 +200,7 @@ public class BuddycloudHTTPHelper {
 			protected JSONArray toJSON(String responseStr) throws JSONException {
 				return new JSONArray(responseStr);
 			}
-		}.executeOnExecutor(EXECUTOR);
+		}.executeOnExecutor(HIGH_PRIORITY_EXECUTOR);
 	}
 	
 	protected static void addAcceptJSONHeader(HttpRequestBase method) {
@@ -220,8 +258,11 @@ public class BuddycloudHTTPHelper {
 			registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
 			registry.register(new Scheme("https", socketFactory, 443));
 			
-			ClientConnectionManager ccm = new ThreadSafeClientConnManager(
-					new DefaultHttpClient().getParams(), registry);
+			HttpParams connManagerParams = new BasicHttpParams();
+			ConnManagerParams.setMaxTotalConnections(connManagerParams, 20);
+			ConnManagerParams.setMaxConnectionsPerRoute(connManagerParams, new ConnPerRouteBean(20));
+			
+			ClientConnectionManager ccm = new ThreadSafeClientConnManager(connManagerParams, registry);
 			
 			DefaultHttpClient client = new DefaultHttpClient(ccm, null);
 			client.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(2, true));
@@ -238,6 +279,7 @@ public class BuddycloudHTTPHelper {
 	
 	private static abstract class RequestAsyncTask<T extends Object> extends AsyncTask<Void, Void, Object> {
 
+		private boolean lo = false;
 		private String methodType;
 		private String url;
 		private HttpEntity entity;
@@ -259,12 +301,15 @@ public class BuddycloudHTTPHelper {
 			this.acceptsJSON = acceptsJSON;
 			this.parent = parent;
 			this.callback = callback;
-			this.client = getClient(parent);
+			this.client = lo ? getLoPriorityClient(parent) : getHiPriorityClient(parent);
 		}
 
 		@Override
 		protected Object doInBackground(Void... params) {
 			try {
+				
+				Log.d(TAG, "HTTP S: {M: " + methodType + ", U: " + url + ", Lo: " + lo + "}");
+				
 				long t = System.currentTimeMillis();
 				HttpRequestBase method = null;
 				if (methodType.equals("get")) {

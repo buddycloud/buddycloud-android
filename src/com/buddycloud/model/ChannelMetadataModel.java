@@ -70,9 +70,14 @@ public class ChannelMetadataModel extends AbstractModel<JSONObject, JSONObject, 
 
 	private void fetchFromServer(Context context,
 			final ModelCallback<Void> callback, final String channel) {
+		fetchFromServer(context, callback, channel, false);
+	}
+	
+	private void fetchFromServer(Context context,
+			final ModelCallback<Void> callback, final String channel, 
+			final boolean loPriority) {
 		final ChannelMetadataDAO dao = ChannelMetadataDAO.getInstance(context);
-		BuddycloudHTTPHelper.getObject(url(context, channel), 
-				context, new ModelCallback<JSONObject>() {
+		ModelCallback<JSONObject> httpCallback = new ModelCallback<JSONObject>() {
 			@Override
 			public void success(final JSONObject metadata) {
 				JSONObject oldMetadata = dao.get(channel);
@@ -90,7 +95,13 @@ public class ChannelMetadataModel extends AbstractModel<JSONObject, JSONObject, 
 					callback.error(throwable);
 				}
 			}
-		});
+		};
+		
+		if (loPriority) {
+			BuddycloudHTTPHelper.getObjectInLoPriority(url(context, channel), context, httpCallback);
+		} else {
+			BuddycloudHTTPHelper.getObject(url(context, channel), context, httpCallback);
+		}
 	}
 	
 	private static String url(Context context, String channel) {
@@ -141,6 +152,10 @@ public class ChannelMetadataModel extends AbstractModel<JSONObject, JSONObject, 
 		fetchFromServer(context, callback, p[0]);
 	}
 
+	public void fillInLoPriority(Context context, ModelCallback<Void> callback, String... p) {
+		fetchFromServer(context, callback, p[0], true);
+	}
+	
 	@Override
 	public void delete(Context context, ModelCallback<Void> callback, String... p) {
 		// TODO Auto-generated method stub
