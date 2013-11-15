@@ -73,9 +73,18 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 		String updated = json.optString("updated");
 		String content = json.isNull("content") ? null : json.optString("content");
 		String replyTo = json.isNull("replyTo") ? null : json.optString("replyTo");
-		String mediaId = json.isNull("media") ? null : json.optJSONArray("media").toString();
 		String threadId = json.optString("threadId");
 		String threadUpdated = json.optString("threadUpdated");
+		
+		String mediaId = null;
+		if (!json.isNull("media")) {
+			JSONArray mediaArray = json.optJSONArray("media");
+			if (mediaArray != null) {
+				mediaId = mediaArray.toString();
+			} else {
+				mediaId = json.optString("media");
+			}
+		}
 		
 		return buildValues(id, author, published, updated, content, channel, replyTo, 
 				mediaId, threadId, threadUpdated);

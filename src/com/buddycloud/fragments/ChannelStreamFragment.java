@@ -205,31 +205,6 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 	
 	private void fillAdapter(final Context context, final String lastUpdated, 
 			final ModelCallback<Boolean> callback) {
-//		new AsyncTask<Void, Void, JSONArray>() {
-//
-//			@Override
-//			protected JSONArray doInBackground(Void... params) {
-//				return PostsModel.getInstance().getFromCache(context, getChannelJid(), lastUpdated);
-//			}
-//			
-//			@Override
-//			protected void onPostExecute(JSONArray allPosts) {
-//				if (!isAttachedToActivity()) {
-//					return;
-//				}
-//				for (int i = 0; i < allPosts.length(); i++) {
-//					JSONObject post = allPosts.optJSONObject(i);
-//					PostCard card = toCard(post, getChannelJid());
-//					cardAdapter.addCard(card);
-//				}
-//				cardAdapter.sort();
-//				if (callback != null) {
-//					callback.success(allPosts.length() > 0);
-//				}
-//			}
-//			
-//		}.execute();
-		
 		if (!isAttachedToActivity()) {
 			return;
 		}

@@ -89,6 +89,7 @@ public class PostCard extends AbstractCard {
 			JSONObject comment = comments.optJSONObject(i);
 			repliesAdapter.addCard(toReplyCard(comment, context));
 		}
+		repliesAdapter.sort();
 		repliesAdapter.notifyDataSetChanged();
 	}
 

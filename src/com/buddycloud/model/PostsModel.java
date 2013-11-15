@@ -41,21 +41,33 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		return instance;
 	}
 	
-	private boolean persist(PostsDAO postsDAO, String channel, JSONArray postsPerThreads) throws JSONException {
+	private void persist(PostsDAO postsDAO, String channel, JSONArray postsPerThreads) throws JSONException {
 		for (int i = 0; i < postsPerThreads.length(); i++) {
 			JSONObject thread = postsPerThreads.optJSONObject(i);
+			String threadId = thread.optString("id");
+			String threadUpdated = thread.optString("updated");
+			updateThreadTimestamp(postsDAO, channel, threadId, threadUpdated);
 			JSONArray items = thread.optJSONArray("items");
 			for (int j = 0; j < items.length(); j++) {
 				JSONObject item = items.optJSONObject(j);
 				normalize(item);
-				item.put("threadId", thread.optString("id"));
-				item.put("threadUpdated", thread.optString("updated"));
+				item.put("threadId", threadId);
+				item.put("threadUpdated", threadUpdated);
 				if (postsDAO.get(channel, item.optString("id")) == null) {
 					postsDAO.insert(channel, item);
 				}
 			}
 		}
-		return postsPerThreads.length() > 0;
+	}
+
+	private void updateThreadTimestamp(PostsDAO postsDAO, String channel, 
+			String threadId, String threadUpdated) throws JSONException {
+		JSONArray thread = postsDAO.getThread(channel, threadId);
+		for (int i = 0; i < thread.length(); i++) {
+			JSONObject item = thread.optJSONObject(i);
+			item.put("threadUpdated", threadUpdated);
+			postsDAO.update(channel, item);
+		}
 	}
 
 	private void normalize(JSONObject item) {
