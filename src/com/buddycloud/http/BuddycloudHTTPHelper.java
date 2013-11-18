@@ -23,6 +23,7 @@ import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.scheme.SocketFactory;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -40,6 +41,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
 
@@ -235,13 +237,20 @@ public class BuddycloudHTTPHelper {
 	public static HttpClient createSecureHttpClient() {
 		try {
 			SchemeRegistry registry = new SchemeRegistry();
-			registry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+			registry.register(new Scheme("https", createSecureSocketFactory(), 443));
 			ClientConnectionManager ccm = new SingleClientConnManager(
 					new DefaultHttpClient().getParams(), registry);
 			return new DefaultHttpClient(ccm, null);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	protected static SocketFactory createSecureSocketFactory() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+			return new TLSSNISocketFactory();
+		}
+		return SSLSocketFactory.getSocketFactory();
 	}
 	
 	public static HttpClient createHttpClient(Context context) {
