@@ -33,23 +33,25 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 	}
 	
 	private void parseChannelCounters(UnreadCountersDAO unreadCountersDAO, String channel, 
-			JSONObject oldCounter, int newPostsCount) {
+			JSONObject oldSummary, JSONObject newSummary) {
 		
 		int oldTotalCount = 0;
 		int oldMentionsCount = 0;
+		int oldRepliesCount = 0;
 		
-		boolean hasOldCounter = oldCounter != null;
+		boolean hasOldCounter = oldSummary != null;
 		if (hasOldCounter) {
-			oldTotalCount = oldCounter.optInt("totalCount");
-			oldMentionsCount = oldCounter.optInt("mentionsCount");
+			oldTotalCount = oldSummary.optInt("totalCount");
+			oldMentionsCount = oldSummary.optInt("mentionsCount");
+			oldRepliesCount = oldSummary.optInt("replyCount");
 		}
 
 		JSONObject unreadCounters = new JSONObject();
-		
 		try {
-			unreadCounters.put("totalCount", newPostsCount + oldTotalCount);
-			// FIXME: needs to verify if there are mentions
-			unreadCounters.put("mentionsCount", oldMentionsCount);
+			unreadCounters.put("totalCount", newSummary.optInt("totalCount") + oldTotalCount);
+			unreadCounters.put("mentionsCount", newSummary.optInt("mentionsCount") + oldMentionsCount);
+			unreadCounters.put("replyCount", newSummary.optInt("repliesCount") + oldRepliesCount);
+			unreadCounters.put("lastWeekActivity", newSummary.optJSONArray("postsThisWeek").length());
 		} catch (JSONException e) {/*Do nothing*/}
 		
 		if (hasOldCounter) {
@@ -60,36 +62,30 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void parse(Context context, JSONObject newCounters, Map<String, JSONObject> oldCounters) {
+	private void parse(Context context, JSONObject summary, Map<String, JSONObject> oldCounters) {
 		
 		final UnreadCountersDAO unreadCountersDAO = UnreadCountersDAO.getInstance(context);
 		String lastUpdate = Preferences.getPreference(context, Preferences.LAST_UPDATE, TimeUtils.OLDEST_DATE);
 		String syncTimestamp = lastUpdate;
 		
-		Iterator<String> keys = newCounters.keys();
+		Iterator<String> keys = summary.keys();
 		while (keys.hasNext()) {
 			String node = keys.next();
 			String channel = node.split("/")[2];
-			JSONArray newPosts = newCounters.optJSONArray(node);
-			if (newPosts.length() == 0) {
-				continue;
+			JSONObject channelSummary = summary.optJSONObject(node);
+			
+			JSONArray postsThisWeek = channelSummary.optJSONArray("postsThisWeek");
+			String channelUpdated = TimeUtils.OLDEST_DATE;
+			if (postsThisWeek.length() > 0) {
+				channelUpdated = postsThisWeek.optString(0);
 			}
 			
-			String newPostUpdate = newPosts.optJSONObject(0).optString("updated");
-			
-			if (after(newPostUpdate, syncTimestamp)) {
-				syncTimestamp = newPostUpdate;
+			if (after(channelUpdated, syncTimestamp)) {
+				syncTimestamp = channelUpdated;
 			}
 			
-			int newPostsCount = 0;
-			for (int i = 0; i < newPosts.length(); i++) {
-				String update = newPosts.optJSONObject(i).optString("updated");
-				if (after(update, lastUpdate)) {
-					newPostsCount++;
-				}
-			}
-			
-			parseChannelCounters(unreadCountersDAO, channel, oldCounters.get(channel), newPostsCount);
+			parseChannelCounters(unreadCountersDAO, channel, 
+					oldCounters.get(channel), channelSummary);
 		}
 		
 		Preferences.setPreference(context, Preferences.LAST_UPDATE, syncTimestamp);
@@ -117,7 +113,7 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 	
 	}
 
-	public void resetCounter(Context context, String channelJid) {
+	public void visitChannel(Context context, String channelJid) {
 		UnreadCountersDAO.getInstance(context).delete(channelJid);
 		notifyChanged();
 	}
@@ -157,7 +153,7 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 	}
 
 	private String syncUrl(Context context) {
-		String params = "?max=" + PAGE_SIZE + "&since=" + since(context);
+		String params = "?max=" + PAGE_SIZE + "&since=" + since(context) + "&summary=true";
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
 		return apiAddress + SYNC_ENDPOINT + params;
 	}

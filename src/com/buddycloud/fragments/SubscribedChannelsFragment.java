@@ -76,7 +76,7 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 
 	private void selectChannel(String channelJid) {
 		showChannelFragment(channelJid);
-		SyncModel.getInstance().resetCounter(getActivity(), channelJid);
+		SyncModel.getInstance().visitChannel(getActivity(), channelJid);
 		hideMenu();
 	}
 

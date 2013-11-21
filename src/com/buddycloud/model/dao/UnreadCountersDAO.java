@@ -41,12 +41,16 @@ public class UnreadCountersDAO implements DAO<JSONObject, JSONObject> {
 		return instance;
 	}
 
-	private ContentValues buildValues(String channel, int mentionsCount, int totalCount) {
+	private ContentValues buildValues(String channel, int mentionsCount, int totalCount, 
+			int replyCount, int visitCount, int lastWeekActivity) {
 		ContentValues values = new ContentValues();
 		values.put(UnreadCountersTableHelper.COLUMN_USER, myJid);
 		values.put(UnreadCountersTableHelper.COLUMN_CHANNEL, channel);
 		values.put(UnreadCountersTableHelper.COLUMN_MENTIONS_COUNT, mentionsCount);
 		values.put(UnreadCountersTableHelper.COLUMN_TOTAL_COUNT, totalCount);
+		values.put(UnreadCountersTableHelper.COLUMN_REPLY_COUNT, replyCount);
+		values.put(UnreadCountersTableHelper.COLUMN_VISIT_COUNT, visitCount);
+		values.put(UnreadCountersTableHelper.COLUMN_LAST_WEEK_ACTIVITY, lastWeekActivity);
 		
 		return values;
 	}
@@ -54,7 +58,11 @@ public class UnreadCountersDAO implements DAO<JSONObject, JSONObject> {
 	private ContentValues buildValues(String channel, JSONObject counter) {
 		int mentionsCount = counter.optInt("mentionsCount");
 		int totalCount = counter.optInt("totalCount");
-		return buildValues(channel, mentionsCount, totalCount);
+		int replyCount = counter.optInt("replyCount");
+		int visitCount = counter.optInt("visitCount");
+		int lastWeekActivity = counter.optInt("lastWeekActivity");
+		return buildValues(channel, mentionsCount, totalCount, replyCount, 
+				visitCount, lastWeekActivity);
 	}
 	
 	public void delete(String channelJid) {
