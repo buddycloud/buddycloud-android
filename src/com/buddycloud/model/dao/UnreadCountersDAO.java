@@ -22,10 +22,13 @@ public class UnreadCountersDAO implements DAO<JSONObject, JSONObject> {
 	private BuddycloudSQLiteOpenHelper helper;
 	private String myJid;
 	
-	private final String[] COLUMNS = new String[]{
+	private final String[] COLUMNS = new String[] {
 			UnreadCountersTableHelper.COLUMN_CHANNEL, 
 			UnreadCountersTableHelper.COLUMN_MENTIONS_COUNT, 
-			UnreadCountersTableHelper.COLUMN_TOTAL_COUNT};
+			UnreadCountersTableHelper.COLUMN_TOTAL_COUNT,
+			UnreadCountersTableHelper.COLUMN_REPLY_COUNT,
+			UnreadCountersTableHelper.COLUMN_VISIT_COUNT,
+			UnreadCountersTableHelper.COLUMN_LAST_WEEK_ACTIVITY};
 	
 	private UnreadCountersDAO(Context context) {
 		this.helper = new BuddycloudSQLiteOpenHelper(context);

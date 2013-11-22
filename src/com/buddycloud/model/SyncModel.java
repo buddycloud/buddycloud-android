@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -74,13 +73,8 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 			String channel = node.split("/")[2];
 			JSONObject channelSummary = summary.optJSONObject(node);
 			
-			JSONArray postsThisWeek = channelSummary.optJSONArray("postsThisWeek");
-			String channelUpdated = TimeUtils.OLDEST_DATE;
-			if (postsThisWeek.length() > 0) {
-				channelUpdated = postsThisWeek.optString(0);
-			}
-			
-			if (after(channelUpdated, syncTimestamp)) {
+			String channelUpdated = channelSummary.optString("lastUpdated", null);
+			if (channelUpdated != null && after(channelUpdated, syncTimestamp)) {
 				syncTimestamp = channelUpdated;
 			}
 			
@@ -114,7 +108,17 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 	}
 
 	public void visitChannel(Context context, String channelJid) {
-		UnreadCountersDAO.getInstance(context).delete(channelJid);
+		UnreadCountersDAO dao = UnreadCountersDAO.getInstance(context);
+		JSONObject summary = dao.get(channelJid);
+		try {
+			summary.put("mentionsCount", 0);
+			summary.put("totalCount", 0);
+			summary.put("replyCount", 0);
+			summary.put("visitCount", summary.optInt("visitCount") + 1);
+		} catch (JSONException e) {
+			Log.e(TAG, e.getMessage(), e);
+		}
+		dao.update(channelJid, summary);
 		notifyChanged();
 	}
 	
