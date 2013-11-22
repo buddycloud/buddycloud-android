@@ -111,14 +111,20 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 		UnreadCountersDAO dao = UnreadCountersDAO.getInstance(context);
 		JSONObject summary = dao.get(channelJid);
 		try {
-			summary.put("mentionsCount", 0);
-			summary.put("totalCount", 0);
-			summary.put("replyCount", 0);
-			summary.put("visitCount", summary.optInt("visitCount") + 1);
+			if (summary != null) {
+				summary.put("mentionsCount", 0);
+				summary.put("totalCount", 0);
+				summary.put("replyCount", 0);
+				summary.put("visitCount", summary.optInt("visitCount") + 1);
+				dao.update(channelJid, summary);
+			} else {
+				summary = new JSONObject();
+				summary.put("visitCount", 1);
+				dao.insert(channelJid, summary);
+			}
 		} catch (JSONException e) {
 			Log.e(TAG, e.getMessage(), e);
 		}
-		dao.update(channelJid, summary);
 		notifyChanged();
 	}
 	

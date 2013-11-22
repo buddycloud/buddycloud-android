@@ -19,6 +19,7 @@ import android.util.Log;
 import com.buddycloud.PendingPostsService;
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.model.dao.PostsDAO;
+import com.buddycloud.model.dao.ThreadsDAO;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.TimeUtils;
 
@@ -41,18 +42,18 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		return instance;
 	}
 	
-	private void persist(PostsDAO postsDAO, String channel, JSONArray postsPerThreads) throws JSONException {
+	private void persist(Context context, String channel, JSONArray postsPerThreads) throws JSONException {
+		PostsDAO postsDAO = PostsDAO.getInstance(context);
 		for (int i = 0; i < postsPerThreads.length(); i++) {
 			JSONObject thread = postsPerThreads.optJSONObject(i);
 			String threadId = thread.optString("id");
 			String threadUpdated = thread.optString("updated");
-			updateThreadTimestamp(postsDAO, channel, threadId, threadUpdated);
+			updateThreadTimestamp(context, channel, threadId, threadUpdated);
 			JSONArray items = thread.optJSONArray("items");
 			for (int j = 0; j < items.length(); j++) {
 				JSONObject item = items.optJSONObject(j);
 				normalize(item);
 				item.put("threadId", threadId);
-				item.put("threadUpdated", threadUpdated);
 				if (postsDAO.get(channel, item.optString("id")) == null) {
 					postsDAO.insert(channel, item);
 				}
@@ -60,13 +61,19 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		}
 	}
 
-	private void updateThreadTimestamp(PostsDAO postsDAO, String channel, 
+	private void updateThreadTimestamp(Context context, String channel, 
 			String threadId, String threadUpdated) throws JSONException {
-		JSONArray thread = postsDAO.getThread(channel, threadId);
-		for (int i = 0; i < thread.length(); i++) {
-			JSONObject item = thread.optJSONObject(i);
-			item.put("threadUpdated", threadUpdated);
-			postsDAO.update(channel, item);
+		JSONObject thread = new JSONObject();
+		thread.put("id", threadId);
+		thread.put("channel", channel);
+		thread.put("updated", threadUpdated);
+		
+		ThreadsDAO dao = ThreadsDAO.getInstance(context);
+		JSONObject existingThread = dao.get(threadId, channel);
+		if (existingThread == null) {
+			dao.insert(threadId, thread);
+		} else {
+			dao.update(threadId, thread);
 		}
 	}
 
@@ -104,7 +111,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 			@Override
 			public void success(JSONArray response) {
 				try {
-					persist(PostsDAO.getInstance(context), channelJid, response);
+					persist(context, channelJid, response);
 					callback.success(null);
 				} catch (Exception e) {
 					error(e);
@@ -215,15 +222,6 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 
 			final PostsDAO postsDAO = PostsDAO.getInstance(context);
 			postsDAO.insert(channelJid, tempObject);
-			if (tempObject.has("replyTo")) {
-				String threadId = tempObject.optString("threadId");
-				JSONArray thread = postsDAO.getThread(channelJid, threadId);
-				for (int i = 0; i < thread.length(); i++) {
-					JSONObject threadItem = thread.optJSONObject(i);
-					threadItem.put("threadUpdated", tempObject.optString("threadUpdated"));
-					postsDAO.update(channelJid, threadItem);
-				}
-			}
 			notifyAdded(channelJid, tempObject);
 			
 			BuddycloudHTTPHelper.post(postsUrl(context, channelJid), true, false, requestEntity, context, 

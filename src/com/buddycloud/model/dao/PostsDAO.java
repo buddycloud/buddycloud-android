@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.buddycloud.model.db.BuddycloudSQLiteOpenHelper;
 import com.buddycloud.model.db.PostsTableHelper;
+import com.buddycloud.model.db.ThreadsTableHelper;
 
 public class PostsDAO implements DAO<JSONObject, JSONArray> {
 	
@@ -42,8 +43,7 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 
 	
 	private ContentValues buildValues(String id, String author, String published, String updated, 
-			String content, String channel, String replyTo, String media, String threadId, 
-			String threadUpdated) {
+			String content, String channel, String replyTo, String media, String threadId) {
 		
 		ContentValues values = new ContentValues();
 		values.put(PostsTableHelper.COLUMN_ID, id);
@@ -53,7 +53,6 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 		values.put(PostsTableHelper.COLUMN_CONTENT, content);
 		values.put(PostsTableHelper.COLUMN_CHANNEL, channel);
 		values.put(PostsTableHelper.COLUMN_THREAD_ID, threadId);
-		values.put(PostsTableHelper.COLUMN_THREAD_UPDATED, threadUpdated);
 		
 		if (replyTo != null && !replyTo.equals("")) {
 			values.put(PostsTableHelper.COLUMN_REPLY_TO, replyTo);
@@ -74,7 +73,6 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 		String content = json.isNull("content") ? null : json.optString("content");
 		String replyTo = json.isNull("replyTo") ? null : json.optString("replyTo");
 		String threadId = json.optString("threadId");
-		String threadUpdated = json.optString("threadUpdated");
 		
 		String mediaId = null;
 		if (!json.isNull("media")) {
@@ -87,7 +85,7 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 		}
 		
 		return buildValues(id, author, published, updated, content, channel, replyTo, 
-				mediaId, threadId, threadUpdated);
+				mediaId, threadId);
 	}
 	
 	public boolean insert(String channel, JSONObject json) {
@@ -144,14 +142,14 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 
 	public JSONArray get(String channel, String after, Integer limit) throws JSONException {
 		String rawSQL = "SELECT * FROM " + PostsTableHelper.TABLE_NAME + ", " +
-				 "(SELECT DISTINCT " + PostsTableHelper.COLUMN_THREAD_ID + " AS thr " +
-				   "FROM " + PostsTableHelper.TABLE_NAME + " " +
-				   "WHERE " + PostsTableHelper.COLUMN_CHANNEL + " = ? " + 
-				   (after == null ? "" : "AND " + PostsTableHelper.COLUMN_THREAD_UPDATED + " < ? ") +
-				   "ORDER BY datetime(" + PostsTableHelper.COLUMN_THREAD_UPDATED + ") DESC LIMIT ?) " +
-				 "WHERE thr = " + PostsTableHelper.COLUMN_THREAD_ID + " " +
-				 "ORDER BY datetime(" + PostsTableHelper.COLUMN_THREAD_UPDATED + ") DESC, " +
-				 		"datetime(" + PostsTableHelper.COLUMN_UPDATED + ") ASC";
+				 "(SELECT " + ThreadsTableHelper.COLUMN_ID + " AS thrId,  " + 
+				      ThreadsTableHelper.COLUMN_UPDATED + " AS thrUpdated " +
+				   "FROM " + ThreadsTableHelper.TABLE_NAME + " " +
+				   "WHERE " + ThreadsTableHelper.COLUMN_CHANNEL + " = ? " + 
+				   (after == null ? "" : "AND " + ThreadsTableHelper.COLUMN_UPDATED + " < ? ") +
+				   "ORDER BY datetime(" + PostsTableHelper.COLUMN_UPDATED + ") DESC LIMIT ?) " +
+				 "WHERE thrId = " + PostsTableHelper.COLUMN_THREAD_ID + " " +
+				 "ORDER BY datetime(thrUpdated) DESC, datetime(" + PostsTableHelper.COLUMN_UPDATED + ") ASC";
 		
 		List<String> args = new LinkedList<String>();
 		args.add(channel);
@@ -223,7 +221,9 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 			json.put(PostsTableHelper.COLUMN_REPLY_TO, getString(cursor, PostsTableHelper.COLUMN_REPLY_TO));
 			json.put(PostsTableHelper.COLUMN_MEDIA, getString(cursor, PostsTableHelper.COLUMN_MEDIA));
 			json.put(PostsTableHelper.COLUMN_THREAD_ID, getString(cursor, PostsTableHelper.COLUMN_THREAD_ID));
-			json.put(PostsTableHelper.COLUMN_THREAD_UPDATED, getString(cursor, PostsTableHelper.COLUMN_THREAD_UPDATED));
+			if (cursor.getColumnIndex("thrUpdated") >= 0) {
+				json.put("threadUpdated", getString(cursor, "thrUpdated"));
+			}
 		} catch (JSONException e) {
 			return null;
 		}

@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class BuddycloudSQLiteOpenHelper extends SQLiteOpenHelper {
 	
-	public static final int DATABASE_VERSION = 13;
+	public static final int DATABASE_VERSION = 15;
 	public static final String DATABASE_NAME = "buddycloud.db";
 	
 	public BuddycloudSQLiteOpenHelper(Context context) {
@@ -30,6 +30,9 @@ public class BuddycloudSQLiteOpenHelper extends SQLiteOpenHelper {
 		// Posts table
 		db.execSQL(PostsTableHelper.CREATE_TABLE);
 		db.execSQL(PostsTableHelper.CREATE_CHANNEL_INDEX);
+		
+		// Threads table
+		db.execSQL(ThreadsTableHelper.CREATE_TABLE);
 	}
 
 	@Override
@@ -43,6 +46,7 @@ public class BuddycloudSQLiteOpenHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + SubscribedChannelsTableHelper.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + UnreadCountersTableHelper.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + PostsTableHelper.TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + ThreadsTableHelper.TABLE_NAME);
 		onCreate(db);
 	}
 
@@ -52,6 +56,7 @@ public class BuddycloudSQLiteOpenHelper extends SQLiteOpenHelper {
 		db.execSQL(UnreadCountersTableHelper.PURGE_TABLE);
 		db.execSQL(SubscribedChannelsTableHelper.PURGE_TABLE);
 		db.execSQL(ChannelMetadataTableHelper.PURGE_TABLE);
+		db.execSQL(ThreadsTableHelper.PURGE_TABLE);
 	}
 
 }
