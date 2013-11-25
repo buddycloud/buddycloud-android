@@ -311,8 +311,15 @@ public class PostCard extends AbstractCard {
 				}
 				
 				@Override
-				public void onBitmapFailed() {
+				public void onBitmapFailed(Drawable arg0) {
 					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void onPrepareLoad(Drawable arg0) {
+					// TODO Auto-generated method stub
+					
 				}
 		});
 	}
