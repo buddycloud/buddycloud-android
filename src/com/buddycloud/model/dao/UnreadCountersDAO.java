@@ -131,6 +131,12 @@ public class UnreadCountersDAO implements DAO<JSONObject, JSONObject> {
 					getInt(cursor, UnreadCountersTableHelper.COLUMN_MENTIONS_COUNT));
 			json.put(UnreadCountersTableHelper.COLUMN_TOTAL_COUNT, 
 					getInt(cursor, UnreadCountersTableHelper.COLUMN_TOTAL_COUNT));
+			json.put(UnreadCountersTableHelper.COLUMN_REPLY_COUNT, 
+					getInt(cursor, UnreadCountersTableHelper.COLUMN_REPLY_COUNT));
+			json.put(UnreadCountersTableHelper.COLUMN_VISIT_COUNT, 
+					getInt(cursor, UnreadCountersTableHelper.COLUMN_VISIT_COUNT));
+			json.put(UnreadCountersTableHelper.COLUMN_LAST_WEEK_ACTIVITY, 
+					getInt(cursor, UnreadCountersTableHelper.COLUMN_LAST_WEEK_ACTIVITY));
 		} catch (JSONException e) {
 			return null;
 		}
