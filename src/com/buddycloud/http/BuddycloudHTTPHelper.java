@@ -50,8 +50,8 @@ import com.buddycloud.preferences.Preferences;
 
 public class BuddycloudHTTPHelper {
 	
-	private static final Executor HIGH_PRIORITY_EXECUTOR = Executors.newFixedThreadPool(20);
-	private static final Executor LO_PRIORITY_EXECUTOR = Executors.newFixedThreadPool(40);
+	private static final Executor HIGH_PRIORITY_EXECUTOR = Executors.newFixedThreadPool(5);
+	private static final Executor LO_PRIORITY_EXECUTOR = Executors.newFixedThreadPool(5);
 	private static final String TAG = "BuddycloudHTTPHelper";
 	private static HttpClient hiPriorityClient = null;
 	private static HttpClient loPriorityClient = null;
