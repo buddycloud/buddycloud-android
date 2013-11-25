@@ -89,7 +89,7 @@ public class GCMPostNotificationListener implements GCMNotificationListener {
 				(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		mNotificationManager.notify(NOTIFICATION_ID, notification);
 		
-		PostsModel.getInstance().fillMoreAfterLatest(context, new ModelCallback<Void>() {
+		PostsModel.getInstance().fill(context, new ModelCallback<Void>() {
 			@Override
 			public void success(Void response) {
 				// Pretty much best effort here

@@ -180,15 +180,6 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 		return threadedResults;
 	}
 	
-	public JSONObject getLatest(String channel) {
-		String filter = PostsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\" " +
-				"AND " + PostsTableHelper.COLUMN_PUBLISHED + " <> ''";
-		String orderBy = "datetime(" + PostsTableHelper.COLUMN_UPDATED + ") DESC";
-		return DAOHelper.queryUniqueOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,
-				null, null, null, orderBy, String.valueOf(1), 
-				cursorParser());
-	}
-	
 	public Map<String, JSONArray> getPending() {
 		String filter = PostsTableHelper.COLUMN_PUBLISHED + " = ''";
 		return DAOHelper.queryCollectionMapOnSameThread(db, false, PostsTableHelper.TABLE_NAME, null, filter,

@@ -26,6 +26,10 @@ public class TimeUtils {
 		return fromISOToDate(post.optString("updated"));
 	}
 	
+	public static boolean after(String isoDateA, String isoDateB) throws ParseException {
+		return fromISOToDate(isoDateA).before(fromISOToDate(isoDateA));
+	}
+	
 	public static Date threadUpdated(JSONObject post) throws ParseException {
 		return fromISOToDate(post.optString("threadUpdated"));
 	}

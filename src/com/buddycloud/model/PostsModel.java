@@ -1,6 +1,7 @@
 package com.buddycloud.model;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,12 +43,23 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		return instance;
 	}
 	
-	private void persist(Context context, String channel, JSONArray postsPerThreads) throws JSONException {
+	private void persist(Context context, String channel, JSONArray postsPerThreads) throws JSONException, ParseException {
 		PostsDAO postsDAO = PostsDAO.getInstance(context);
+		
+		String newestThreadUpdated = null;
+		JSONObject newestThread = ThreadsDAO.getInstance(context).getNewest(channel);
+		if (newestThread != null) {
+			newestThreadUpdated = newestThread.optString("updated");
+		}
+		
 		for (int i = 0; i < postsPerThreads.length(); i++) {
 			JSONObject thread = postsPerThreads.optJSONObject(i);
-			String threadId = thread.optString("id");
 			String threadUpdated = thread.optString("updated");
+			if (newestThreadUpdated != null && 
+					!TimeUtils.after(threadUpdated, newestThreadUpdated)) {
+				continue;
+			}
+			String threadId = thread.optString("id");
 			updateThreadTimestamp(context, channel, threadId, threadUpdated);
 			JSONArray items = thread.optJSONArray("items");
 			for (int j = 0; j < items.length(); j++) {
@@ -104,7 +116,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 	}
 
 	private void fetchPosts(final Context context, final String channelJid, 
-			final ModelCallback<Void> callback, String after) {
+			final ModelCallback<Void> callback, String after, String before) {
 		BuddycloudHTTPHelper.getArray(postsUrl(context, channelJid, after), context,
 				new ModelCallback<JSONArray>() {
 
@@ -260,23 +272,13 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 	public void fillMore(Context context, ModelCallback<Void> callback, String... p) {
 		String channelJid = p[0];
 		String oldestPostId = p[1];
-		fetchPosts(context, channelJid, callback, oldestPostId);
-	}
-	
-	public void fillMoreAfterLatest(Context context, ModelCallback<Void> callback, String... p) {
-		String channelJid = p[0];
-		String oldestPostId = null;
-		JSONObject latest = PostsDAO.getInstance(context).getLatest(channelJid);
-		if (latest != null) {
-			oldestPostId = latest.optString("id");
-		}
-		fetchPosts(context, channelJid, callback, oldestPostId);
+		fetchPosts(context, channelJid, callback, oldestPostId, null);
 	}
 	
 	@Override
 	public void fill(Context context, ModelCallback<Void> callback, String... p) {
 		String channelJid = p[0];
-		fetchPosts(context, channelJid, callback, null);
+		fetchPosts(context, channelJid, callback, null, null);
 	}
 
 	public static boolean isPending(JSONObject post) {

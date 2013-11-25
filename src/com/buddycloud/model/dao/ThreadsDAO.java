@@ -56,6 +56,14 @@ public class ThreadsDAO implements DAO<JSONObject, JSONObject> {
 		long rowId = db.insert(ThreadsTableHelper.TABLE_NAME, null, values);
 		return rowId != -1;
 	}
+	
+	public JSONObject getNewest(String channel) {
+		String filter = ThreadsTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
+		String orderBy = "datetime(" + ThreadsTableHelper.COLUMN_UPDATED + ") DESC";
+		return DAOHelper.queryUniqueOnSameThread(db, false, ThreadsTableHelper.TABLE_NAME, null, filter,
+				null, null, null, orderBy, String.valueOf(1), 
+				cursorParser());
+	}
 
 	@Override
 	public boolean update(String threadId, JSONObject json) {
