@@ -102,11 +102,11 @@
 	<string name="create_account_password">password</string>
 	<string name="create_account_repeat_password">repeat password</string>
 	
-	<string name="login_hint">personal channel</string>
+	<string name="login_hint">user@example.com</string>
 	<string name="login_password">password</string>
     <string name="login_button">Login</string>
     <string name="login_create_account_button">Create new account</string>
-    <string name="login_error_wrong_credentials">Wrong credentials</string>
+    <string name="login_error_wrong_credentials">Wrong password</string>
 	<string name="login_error_bad_channel_format">Bad channel format. Expected format is user@domain.</string>
 	
 	<string name="ssl_error_title">SSL error</string>
