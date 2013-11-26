@@ -55,7 +55,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		for (int i = 0; i < postsPerThreads.length(); i++) {
 			JSONObject thread = postsPerThreads.optJSONObject(i);
 			String threadUpdated = thread.optString("updated");
-			if (newestThreadUpdated == null || 
+			if (newestThreadUpdated != null && 
 					TimeUtils.after(threadUpdated, newestThreadUpdated)) {
 				continue;
 			}
