@@ -8,12 +8,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.buddycloud.http.SSLUtils;
@@ -47,65 +50,20 @@ public class LoginActivity extends Activity {
         	passwordTxt.setText(passPref);
         }
         
+		passwordTxt.setOnEditorActionListener(new OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_DONE) {
+					login(loginBtn, myChannelTxt, passwordTxt, progressBar);
+				}
+				return false;
+			}
+		});
+        
         loginBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
-				loginBtn.setVisibility(View.GONE);
-				progressBar.setVisibility(View.VISIBLE);
-				
-				String myChannelJid = myChannelTxt.getText().toString();
-				String password = passwordTxt.getText().toString();
-				
-				Preferences.setPreference(LoginActivity.this, Preferences.MY_CHANNEL_JID, myChannelJid);
-				Preferences.setPreference(LoginActivity.this, Preferences.PASSWORD, password);
-				
-				String[] myChannelJidSplit = myChannelJid.split("@");
-				
-				if (myChannelJidSplit.length < 2) {
-					showLoginError(R.string.login_error_bad_channel_format);
-					return;
-				}
-				
-				DNSUtils.resolveAPISRV(new ModelCallback<String>() {
-					
-					@Override
-					public void success(String apiAddress) {
-						Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, apiAddress);
-						SSLUtils.checkSSL(LoginActivity.this, apiAddress, new ModelCallback<Void>() {
-							@Override
-							public void success(Void response) {
-								checkCredentials();
-							}
-							@Override
-							public void error(Throwable throwable) {
-								// Do nothing, SSL error not tolerable
-								clearAPIAddress();
-								hideProgress();
-							}
-						});
-					}
-
-					@Override
-					public void error(Throwable throwable) {
-						showLoginError(R.string.login_error_wrong_credentials);
-					}
-					
-					private void checkCredentials() {
-						LoginModel.getInstance().getFromServer(LoginActivity.this, new ModelCallback<Void>() {
-							@Override
-							public void success(Void response) {
-								LoginActivity.this.finish();
-							}
-							
-							@Override
-							public void error(Throwable throwable) {
-								showLoginError(R.string.login_error_wrong_credentials);
-							}
-						});
-					}
-					
-				}, myChannelJidSplit[1]);
+				login(loginBtn, myChannelTxt, passwordTxt, progressBar);
 			}
 		});
         
@@ -198,4 +156,64 @@ public class LoginActivity extends Activity {
 //        getMenuInflater().inflate(R.menu.activity_share, menu);
         return true;
     }
+
+	protected void login(final RelativeLayout loginBtn,
+			final EditText myChannelTxt, final EditText passwordTxt,
+			final View progressBar) {
+		loginBtn.setVisibility(View.GONE);
+		progressBar.setVisibility(View.VISIBLE);
+		
+		String myChannelJid = myChannelTxt.getText().toString();
+		String password = passwordTxt.getText().toString();
+		
+		Preferences.setPreference(LoginActivity.this, Preferences.MY_CHANNEL_JID, myChannelJid);
+		Preferences.setPreference(LoginActivity.this, Preferences.PASSWORD, password);
+		
+		String[] myChannelJidSplit = myChannelJid.split("@");
+		
+		if (myChannelJidSplit.length < 2) {
+			showLoginError(R.string.login_error_bad_channel_format);
+			return;
+		}
+		
+		DNSUtils.resolveAPISRV(new ModelCallback<String>() {
+			
+			@Override
+			public void success(String apiAddress) {
+				Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, apiAddress);
+				SSLUtils.checkSSL(LoginActivity.this, apiAddress, new ModelCallback<Void>() {
+					@Override
+					public void success(Void response) {
+						checkCredentials();
+					}
+					@Override
+					public void error(Throwable throwable) {
+						// Do nothing, SSL error not tolerable
+						clearAPIAddress();
+						hideProgress();
+					}
+				});
+			}
+
+			@Override
+			public void error(Throwable throwable) {
+				showLoginError(R.string.login_error_wrong_credentials);
+			}
+			
+			private void checkCredentials() {
+				LoginModel.getInstance().getFromServer(LoginActivity.this, new ModelCallback<Void>() {
+					@Override
+					public void success(Void response) {
+						LoginActivity.this.finish();
+					}
+					
+					@Override
+					public void error(Throwable throwable) {
+						showLoginError(R.string.login_error_wrong_credentials);
+					}
+				});
+			}
+			
+		}, myChannelJidSplit[1]);
+	}
 }
