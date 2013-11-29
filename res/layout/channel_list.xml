@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:visibility="gone" />
-        
+            
             <ExpandableListView
                 android:id="@+id/channelListView"
                 android:layout_width="match_parent"
@@ -29,6 +29,7 @@
                 android:divider="@null"
 				android:dividerHeight="0dp" >
             </ExpandableListView>
+        	
 
     </LinearLayout>
 

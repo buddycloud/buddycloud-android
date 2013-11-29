@@ -6,15 +6,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.view.View;
 import android.widget.Toast;
 
 import com.buddycloud.R;
+import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SearchChannelsModel;
@@ -33,6 +36,7 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 	private final List<String> allSubscribedChannels = new ArrayList<String>();
 	private final Map<String, String> plainMetadata = new HashMap<String, String>();
 	private String myChannel;
+	private View view;
 	
 	public SearchChannelsAdapter() {
 		setCategoryOrder(PERSONAL, SUBSCRIBED, METADATA_SEARCH, CONTENT_SEARCH);
@@ -76,8 +80,10 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 			matchedChannels++;
 		}
 		if (matchedChannels <= SEARCH_THRESHOLD && q.length() > 0) {
-			search(context, q, SearchChannelsModel.METADATA_TYPE, METADATA_SEARCH);
-			search(context, q, SearchChannelsModel.POST_TYPE, CONTENT_SEARCH);
+			setLoading();
+			Semaphore s = new Semaphore(1);
+			search(context, q, SearchChannelsModel.METADATA_TYPE, METADATA_SEARCH, s);
+			search(context, q, SearchChannelsModel.POST_TYPE, CONTENT_SEARCH, s);
 		}
 	}
 
@@ -99,7 +105,7 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 		return allValues.toString();
 	}
 
-	private void search(final Context context, String q, String type, final String category) {
+	private void search(final Context context, String q, String type, final String category, final Semaphore s) {
 		SearchChannelsModel.getInstance().getFromServer(context, new ModelCallback<JSONArray>() {
 			@Override
 			public void success(JSONArray response) {
@@ -110,6 +116,9 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 						addChannel(category, channelItem, context);
 					}
 				}
+				if (!s.tryAcquire()) {
+					setLoaded();
+				}
 			}
 
 			@Override
@@ -117,7 +126,22 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 				Toast.makeText(context, context.getString(
 						R.string.message_search_failed), 
 						Toast.LENGTH_LONG).show();
+				if (!s.tryAcquire()) {
+					setLoaded();
+				}
 			}
 		}, type, q);
+	}
+
+	private void setLoading() {
+		view.findViewById(R.id.channelListProgress).setVisibility(View.VISIBLE);
+	}
+	
+	private void setLoaded() {
+		view.findViewById(R.id.channelListProgress).setVisibility(View.GONE);
+	}
+
+	public void configure(GenericChannelsFragment genericChannelFrag, View view) {
+		this.view = view;
 	}
 }

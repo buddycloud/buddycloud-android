@@ -40,7 +40,7 @@ public abstract class GenericChannelsFragment extends SherlockFragment {
 		};
 		
 		final ExpandableListView channelsView = (ExpandableListView) view.findViewById(R.id.channelListView);
-		channelsView.setEmptyView(view.findViewById(R.id.subscribedProgress));
+		channelsView.setEmptyView(view.findViewById(R.id.channelListProgress));
 		channelsView.setAdapter(adapter);
 		channelsView.setOnChildClickListener(channelItemListener);
 		

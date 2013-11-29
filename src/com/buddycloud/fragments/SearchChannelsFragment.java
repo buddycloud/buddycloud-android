@@ -10,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ExpandableListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.buddycloud.R;
 import com.buddycloud.fragments.adapter.SearchChannelsAdapter;
 
 public class SearchChannelsFragment extends SherlockFragment {
@@ -24,6 +26,16 @@ public class SearchChannelsFragment extends SherlockFragment {
 	private SearchChannelsAdapter adapter = new SearchChannelsAdapter();
 	
 	private GenericChannelsFragment genericChannelFrag = new GenericChannelsFragment(adapter) {
+		
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			View view = super.onCreateView(inflater, container, savedInstanceState);
+			final ExpandableListView channelsView = (ExpandableListView) view.findViewById(R.id.channelListView);
+			channelsView.setEmptyView(null);
+			view.findViewById(R.id.channelListProgress).setVisibility(View.GONE);
+			adapter.configure(genericChannelFrag, view);
+			return view;
+		};
+		
 		@Override
 		public void channelSelected(JSONObject channelItem) {
 			if (channelItem.has("post_id")) {
