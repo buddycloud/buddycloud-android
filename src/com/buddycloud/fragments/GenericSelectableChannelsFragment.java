@@ -42,6 +42,8 @@ public class GenericSelectableChannelsFragment extends SherlockFragment {
 	private void finishActivity(String channelJid) {
 		Intent returnIntent = new Intent();
 		returnIntent.putExtra(GenericChannelsFragment.CHANNEL, channelJid);
+		returnIntent.putExtra(GenericChannelsFragment.INPUT_ARGS, 
+				getActivity().getIntent().getExtras());
 		getActivity().setResult(0, returnIntent);
 		getActivity().finish();
 	}

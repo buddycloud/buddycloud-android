@@ -17,6 +17,7 @@ public abstract class GenericChannelsFragment extends SherlockFragment {
 
 	public final static String CHANNEL = "com.buddycloud.CHANNEL";
 	public static final String POST_ID = "com.buddycloud.ITEM";
+	public final static String INPUT_ARGS = "com.buddycloud.INPUT_ARGS";
 	
 	private final GenericChannelAdapter adapter;
 	

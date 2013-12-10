@@ -6,6 +6,7 @@ import java.util.Stack;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.buddycloud.GenericChannelActivity;
 import com.buddycloud.MainActivity;
 import com.buddycloud.SearchActivity;
 import com.buddycloud.fragments.GenericChannelsFragment;
@@ -18,6 +19,7 @@ public class Backstack {
 	
 	private static final String TYPE_CHANNEL_STREAM = "CHANNEL_STREAM";
 	private static final String TYPE_SEARCH = "SEARCH";
+	private static final String TYPE_GENERIC = "GENERIC";
 	
 	private Stack<Bundle> backStack = new Stack<Bundle>();
 	private MainActivity activity;
@@ -46,6 +48,8 @@ public class Backstack {
 			popChannel(args);
 		} else if (stackBundle.getString(TYPE).equals(TYPE_SEARCH)) {
 			popSearch(args);
+		} else if (stackBundle.getString(TYPE).equals(TYPE_GENERIC)) {
+			popGenericStream(args);
 		}
 	}
 
@@ -60,7 +64,17 @@ public class Backstack {
 
 	private void popChannel(Bundle args) {
 		activity.showChannelFragment(
-				args.getString(GenericChannelsFragment.CHANNEL));
+				args.getString(GenericChannelsFragment.CHANNEL), true);
+	}
+	
+	private void popGenericStream(Bundle args) {
+		Intent intent = new Intent();
+		intent.setClass(activity, GenericChannelActivity.class);
+		for (String key : args.keySet()) {
+			intent.putExtra(key, args.getString(key));
+		}
+		activity.startActivityForResult(
+				intent, GenericChannelActivity.REQUEST_CODE);
 	}
 
 	public void pushChannel(String channelJid) {
@@ -73,6 +87,10 @@ public class Backstack {
 		Bundle args = new Bundle();
 		args.putString(SearchChannelsFragment.FILTER, filter);
 		push(TYPE_SEARCH, args);
+	}
+	
+	public void pushGeneric(Bundle args) {
+		push(TYPE_GENERIC, args);
 	}
 
 	private void push(String type, Bundle args) {

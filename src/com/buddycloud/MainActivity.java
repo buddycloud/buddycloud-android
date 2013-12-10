@@ -145,13 +145,18 @@ public class MainActivity extends SlidingFragmentActivity {
 			if (data != null) {
 				String channelJid = data.getStringExtra(GenericChannelsFragment.CHANNEL);
 				String filter = data.getStringExtra(SearchChannelsFragment.FILTER);
-				backStack.pushSearch(filter);
 				showChannelFragment(channelJid);
+				backStack.pushSearch(filter);
+			} else {
+				backStack.pop();
 			}
 		} else if (requestCode == GenericChannelActivity.REQUEST_CODE) {
 			if (data != null) {
 				final String channelJid = data.getStringExtra(GenericChannelsFragment.CHANNEL);
 				showChannelFragment(channelJid);
+				backStack.pushGeneric(data.getBundleExtra(GenericChannelsFragment.INPUT_ARGS));
+			} else {
+				backStack.pop();
 			}
 		}  else if (requestCode == SettingsActivity.REQUEST_CODE) {
 			NotificationSettingsModel.getInstance().saveFromPreferences(this, new ModelCallback<JSONObject>() {
@@ -222,6 +227,18 @@ public class MainActivity extends SlidingFragmentActivity {
 	}
 
 	public ChannelStreamFragment showChannelFragment(String channelJid) {
+		return showChannelFragment(channelJid, false);
+	}
+	
+	public ChannelStreamFragment showChannelFragment(String channelJid, boolean fromBackstack) {
+		
+		if (!fromBackstack && channelStreamFrag != null) {
+			String previousChannel = channelStreamFrag.getArguments().getString(
+					GenericChannelsFragment.CHANNEL);
+			if (previousChannel != null) {
+				getBackStack().pushChannel(previousChannel);
+			}
+		}
 		
 		this.channelStreamFrag = new ChannelStreamFragment();
 		Bundle args = new Bundle();
