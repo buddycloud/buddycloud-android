@@ -40,6 +40,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Base64;
@@ -288,6 +289,8 @@ public class BuddycloudHTTPHelper {
 	
 	private static abstract class RequestAsyncTask<T extends Object> extends AsyncTask<Void, Void, Object> {
 
+		private static final String ALLOWED = "/:@?=&";
+		
 		private boolean lo = false;
 		private String methodType;
 		private String url;
@@ -304,7 +307,7 @@ public class BuddycloudHTTPHelper {
 				boolean auth, boolean acceptsJSON, Context parent,
 				ModelCallback<T> callback) {
 			this.methodType = methodType;
-			this.url = url;
+			this.url = Uri.encode(url, ALLOWED);
 			this.entity = entity;
 			this.auth = auth;
 			this.acceptsJSON = acceptsJSON;
@@ -352,9 +355,10 @@ public class BuddycloudHTTPHelper {
 				}
 				
 				HttpResponse response = client.execute(method);
-				Log.d(TAG, "HTTP: {M: " + methodType + ", U: " + url + ", T: " + (System.currentTimeMillis() - t) + "}");
-				
 				int statusCode = response.getStatusLine().getStatusCode();
+				
+				Log.d(TAG, "HTTP R: {M: " + methodType + ", U: " + url + ", T: " + (
+						System.currentTimeMillis() - t) + ", S: " + statusCode + "}");
 				
 				if (isError(statusCode)) {
 					// Make sure entity is consumed (released) so connection can be re-used
