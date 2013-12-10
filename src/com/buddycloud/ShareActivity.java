@@ -22,9 +22,11 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.buddycloud.fragments.GenericChannelsFragment;
+import com.buddycloud.fragments.SearchChannelsFragment;
 import com.buddycloud.model.MediaModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
+import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.FileUtils;
@@ -61,6 +63,10 @@ public class ShareActivity extends Activity {
 				if (arg1) {
 					Intent searchActivityIntent = new Intent();
 					searchActivityIntent.setClass(ShareActivity.this, SearchActivity.class);
+					searchActivityIntent.putExtra(SearchChannelsFragment.AFFILIATIONS, new String[] {
+							SubscribedChannelsModel.ROLE_OWNER, 
+							SubscribedChannelsModel.ROLE_MODERATOR, 
+							SubscribedChannelsModel.ROLE_PUBLISHER});
 					startActivityForResult(searchActivityIntent, SearchActivity.REQUEST_CODE);
 				}
 			}

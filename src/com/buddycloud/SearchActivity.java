@@ -27,8 +27,15 @@ public class SearchActivity extends SherlockFragmentActivity {
         String q = getIntent().getStringExtra(SearchChannelsFragment.FILTER);
         searchView.setText(q);
         
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		final SearchChannelsFragment searchChannelsFragment = new SearchChannelsFragment();
+		
+		String[] affiliationsToDisplay = getIntent().getStringArrayExtra(
+				SearchChannelsFragment.AFFILIATIONS);
+		if (affiliationsToDisplay != null) {
+			searchChannelsFragment.setAffiliationsToDisplay(affiliationsToDisplay);
+		}
+		
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		searchChannelsFragment.setInitialFilter(q);
 		searchChannelsFragment.setWindowToken(searchView.getWindowToken());
 		transaction.replace(R.id.contentFrame, searchChannelsFragment);

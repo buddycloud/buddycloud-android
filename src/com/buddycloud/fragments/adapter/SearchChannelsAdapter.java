@@ -3,6 +3,7 @@ package com.buddycloud.fragments.adapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -38,8 +39,20 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 	private String myChannel;
 	private View view;
 	
+	private boolean remoteSearch = true;
+	private List<String> affiliationsToDisplay = new LinkedList<String>();
+	private JSONObject allAffiliations;
+	
 	public SearchChannelsAdapter() {
 		setCategoryOrder(PERSONAL, SUBSCRIBED, METADATA_SEARCH, CONTENT_SEARCH);
+	}
+	
+	public void addAffiliationToDisplay(String affiliation) {
+		this.affiliationsToDisplay.add(affiliation);
+	}
+	
+	public void enableRemoteSearch(boolean enabled) {
+		this.remoteSearch = enabled;
 	}
 	
 	public void load(final Context context) {
@@ -55,6 +68,10 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 			allSubscribedChannels.add(channel);
 			JSONObject metadata = ChannelMetadataModel.getInstance().getFromCache(context, channel);
 			plainMetadata.put(channel, getPlainMetadata(metadata));
+		}
+		
+		if (!affiliationsToDisplay.isEmpty()) {
+			this.allAffiliations = SubscribedChannelsModel.getInstance().getFromCache(context);
 		}
 		
 		filter(context, "");
@@ -73,18 +90,25 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 				continue;
 			}
 			if (!channel.equals(myChannel)) {
-				addChannel(SUBSCRIBED, createChannelItem(channel), context);
+				if (affiliationsToDisplay.isEmpty() || 
+						affiliationsToDisplay.contains(getRole(context, channel))) {
+					addChannel(SUBSCRIBED, createChannelItem(channel), context);
+				}
 			} else {
 				addChannel(PERSONAL, createChannelItem(channel), context);
 			}
 			matchedChannels++;
 		}
-		if (matchedChannels <= SEARCH_THRESHOLD && q.length() > 0) {
+		if (matchedChannels <= SEARCH_THRESHOLD && q.length() > 0 && remoteSearch) {
 			setLoading();
 			Semaphore s = new Semaphore(1);
 			search(context, q, SearchChannelsModel.METADATA_TYPE, METADATA_SEARCH, s);
 			search(context, q, SearchChannelsModel.POST_TYPE, CONTENT_SEARCH, s);
 		}
+	}
+	
+	private String getRole(Context context, String channelJid) {
+		return allAffiliations.optString(channelJid, "");
 	}
 
 	private static String low(String q) {

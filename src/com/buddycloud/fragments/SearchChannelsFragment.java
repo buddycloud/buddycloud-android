@@ -19,6 +19,7 @@ import com.buddycloud.fragments.adapter.SearchChannelsAdapter;
 public class SearchChannelsFragment extends SherlockFragment {
 
 	public static final String FILTER = "com.buddycloud.FILTER";
+	public static final String AFFILIATIONS = "com.buddycloud.AFFILIATIONS";
 	
 	private IBinder windowToken;
 	private String lastFilter;
@@ -94,5 +95,12 @@ public class SearchChannelsFragment extends SherlockFragment {
 
 	public void setInitialFilter(String q) {
 		initialFilter = q;
+	}
+
+	public void setAffiliationsToDisplay(String[] affiliationsToDisplay) {
+		adapter.enableRemoteSearch(false);
+		for (String affiliation : affiliationsToDisplay) {
+			adapter.addAffiliationToDisplay(affiliation);
+		}
 	}
 }
