@@ -10,6 +10,8 @@ import com.buddycloud.model.PostsModel;
 
 public class PendingPostsService extends IntentService {
 
+	private static final int REPEAT_INTERVAL = 15000;
+
 	public PendingPostsService() {
 		super("PendingPostsService");
 	}
@@ -32,7 +34,7 @@ public class PendingPostsService extends IntentService {
 					PostsModel.getInstance().savePendingPosts(
 							getApplicationContext(), PendingPostsService.this);
 					try {
-						Thread.sleep(30000);
+						Thread.sleep(REPEAT_INTERVAL);
 					} catch (InterruptedException e) {}
 				}
 			}

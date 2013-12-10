@@ -275,7 +275,7 @@ public class BuddycloudHTTPHelper {
 			ClientConnectionManager ccm = new ThreadSafeClientConnManager(connManagerParams, registry);
 			
 			DefaultHttpClient client = new DefaultHttpClient(ccm, null);
-			client.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(2, true));
+			client.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(0, true));
 			
 			return client;
 		} catch (Exception e) {
