@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.buddycloud.PendingPostsService;
@@ -121,13 +122,29 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 				new ModelCallback<JSONArray>() {
 
 			@Override
-			public void success(JSONArray response) {
-				try {
-					persist(context, channelJid, response);
-					callback.success(null);
-				} catch (Exception e) {
-					error(e);
-				}
+			public void success(final JSONArray response) {
+				new AsyncTask<Void, Void, Exception>() {
+
+					@Override
+					protected Exception doInBackground(Void... params) {
+						try {
+							persist(context, channelJid, response);
+							return null;
+						} catch (Exception e) {
+							return e;
+						}
+					}
+					
+					@Override
+					protected void onPostExecute(Exception e) {
+						if (e != null) {
+							error(e);
+						} else {
+							callback.success(null);
+						}
+					}
+					
+				}.execute();
 			}
 
 			@Override

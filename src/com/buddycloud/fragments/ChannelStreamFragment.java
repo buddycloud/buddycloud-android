@@ -1,6 +1,8 @@
 package com.buddycloud.fragments;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -12,6 +14,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.ChannelDetailActivity;
@@ -208,17 +212,32 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 		if (!isAttachedToActivity()) {
 			return;
 		}
-		JSONArray cachedPosts = PostsModel.getInstance().getFromCache(context, 
-				getChannelJid(), lastUpdated);
-		for (int i = 0; i < cachedPosts.length(); i++) {
-			JSONObject post = cachedPosts.optJSONObject(i);
-			PostCard card = toCard(post, getChannelJid());
-			cardAdapter.addCard(card);
-		}
-		cardAdapter.sort();
-		if (callback != null) {
-			callback.success(cachedPosts.length() > 0);
-		}
+		new AsyncTask<Void, Void, List<PostCard>>() {
+
+			@Override
+			protected List<PostCard> doInBackground(Void... params) {
+				JSONArray cachedPosts = PostsModel.getInstance().getFromCache(context, 
+						getChannelJid(), lastUpdated);
+				List<PostCard> posts = new LinkedList<PostCard>();
+				for (int i = 0; i < cachedPosts.length(); i++) {
+					JSONObject post = cachedPosts.optJSONObject(i);
+					PostCard card = toCard(post, getChannelJid());
+					posts.add(card);
+				}
+				return posts;
+			}
+			
+			protected void onPostExecute(List<PostCard> cachedPosts) {
+				for (PostCard card : cachedPosts) {
+					cardAdapter.addCard(card);
+				}
+				cardAdapter.sort();
+				if (callback != null) {
+					callback.success(cachedPosts.size() > 0);
+				}
+			};
+			
+		}.execute();
 	}
 	
 	private PostCard toCard(JSONObject post, final String channelJid) {
@@ -452,11 +471,13 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 	}
 	
 	private void showProgress(View container) {
-		container.findViewById(R.id.channelStreamProgress).setVisibility(View.VISIBLE);
+		SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+	    activity.setProgressBarIndeterminateVisibility(true);
 	}
 	
 	private void hideProgress(View container) {
-		container.findViewById(R.id.channelStreamProgress).setVisibility(View.GONE);
+		SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
+	    activity.setProgressBarIndeterminateVisibility(false);
 	}
 	
 	private void showGenericChannelActivity(String adapterName) {

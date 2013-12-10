@@ -5,7 +5,7 @@ import android.widget.AbsListView.OnScrollListener;
 
 public class EndlessScrollListener implements OnScrollListener {
 
-	private static final int VISIBLE_THRESHOLD = 5;
+	private static final int VISIBLE_THRESHOLD = 10;
 	private boolean loading;
 	private ChannelStreamFragment fragment;
 
