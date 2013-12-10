@@ -13,9 +13,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
+import android.view.View.OnTouchListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -57,10 +58,11 @@ public class ShareActivity extends Activity {
 				.transform(ImageHelper.createRoundTransformation(this, 16, false, -1))
 				.into(avatarView);
 		
-		targetChannelView.setOnFocusChangeListener(new OnFocusChangeListener() {
+		targetChannelView.setOnTouchListener(new OnTouchListener() {
+
 			@Override
-			public void onFocusChange(View arg0, boolean arg1) {
-				if (arg1) {
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_UP) {
 					Intent searchActivityIntent = new Intent();
 					searchActivityIntent.setClass(ShareActivity.this, SearchActivity.class);
 					searchActivityIntent.putExtra(SearchChannelsFragment.AFFILIATIONS, new String[] {
@@ -69,6 +71,7 @@ public class ShareActivity extends Activity {
 							SubscribedChannelsModel.ROLE_PUBLISHER});
 					startActivityForResult(searchActivityIntent, SearchActivity.REQUEST_CODE);
 				}
+				return true;
 			}
 		});
 		
