@@ -2,10 +2,13 @@ package com.buddycloud.model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
@@ -82,8 +85,8 @@ public class MediaModel extends AbstractModel<JSONObject, JSONObject, String> {
 	}
 
 	private void postMediaGeneral(Context context,
-			ModelCallback<JSONObject> callback, String imageUri, String url, boolean post)
-			throws UnsupportedEncodingException {
+			final ModelCallback<JSONObject> callback, String imageUri, 
+			String url, boolean post) throws IOException {
 		
 		MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 		ContentResolver cr = context.getContentResolver();
@@ -91,21 +94,51 @@ public class MediaModel extends AbstractModel<JSONObject, JSONObject, String> {
 		final Uri streamUri = Uri.parse(imageUri);
 		String streamType = cr.getType(streamUri);
 		
-		File mediaFile = new File(FileUtils.getRealPathFromURI(context, streamUri));
+		String fileName = streamUri.getLastPathSegment();
 		if (streamType == null) {
 			streamType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
-					FilenameUtils.getExtension(mediaFile.getName()));
+					FilenameUtils.getExtension(fileName));
+		}
+		InputStream is = context.getContentResolver().openInputStream(streamUri);
+		
+		String realPath = FileUtils.getRealPathFromURI(context, streamUri);
+		ModelCallback<JSONObject> tempCallback = null;
+		
+		File mediaFile = null;
+		if (realPath == null) {
+			File tempDir = context.getCacheDir();
+			final File tempFile = File.createTempFile("buddycloud-tmp-", 
+					MimeTypeMap.getSingleton().getExtensionFromMimeType(streamType), 
+					tempDir);
+			IOUtils.copy(is, new FileOutputStream(tempFile));
+			tempCallback = new ModelCallback<JSONObject>() {
+				@Override
+				public void success(JSONObject response) {
+					tempFile.delete();
+					callback.success(response);
+				}
+				
+				@Override
+				public void error(Throwable throwable) {
+					tempFile.delete();
+					callback.error(throwable);
+				}
+			};
+			mediaFile = tempFile;
+		} else {
+			mediaFile = new File(realPath);
+			tempCallback = callback;
 		}
 		
 		reqEntity.addPart("data", new FileBody(mediaFile));
-		reqEntity.addPart("filename", new StringBody(mediaFile.getName()));
+		reqEntity.addPart("filename", new StringBody(fileName));
 		reqEntity.addPart("content-type", new StringBody(streamType));
 		reqEntity.addPart("title", new StringBody("Android upload"));
 		
 		if (post) {
-			BuddycloudHTTPHelper.post(url, reqEntity, context, callback);
+			BuddycloudHTTPHelper.post(url, reqEntity, context, tempCallback);
 		} else {
-			BuddycloudHTTPHelper.put(url, reqEntity, context, callback);
+			BuddycloudHTTPHelper.put(url, reqEntity, context, tempCallback);
 		}
 	}
 
