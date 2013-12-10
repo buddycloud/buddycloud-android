@@ -114,7 +114,6 @@
 	
 	<string name="search_hint">Search</string>
 	
-	<string name="share_activity_title">Post preview</string>
 	<string name="share_channel_hint">Pick channel to share with</string>
 	<string name="share_caption_hint">Type caption</string>
 	<string name="share_button">Share</string>
