@@ -18,6 +18,8 @@ Besides the Android SDK and the support library, we use [ActionBarSherlock](http
 Security model
 ----------
 
+As we use HTTPS as default, we expect API server certificates to be valid so that we can start talking to them. If the API certificate is not valid, we prompt the user for confirmation, so that he becomes aware of unsafe connections. If the user agrees to do so (and ask the app to remember this decision), we store it as a preference, and we skip SSL for this server.
+
 Architecture
 ----------
 
