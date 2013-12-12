@@ -132,7 +132,9 @@ public class PostCard extends AbstractCard {
 		avatarView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				activity.showChannelFragment(postAuthor);
+				if (!channelJid.equals(postAuthor)) {
+					activity.showChannelFragment(postAuthor);
+				}
 			}
 		});
 		

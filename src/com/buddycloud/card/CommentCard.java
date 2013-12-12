@@ -77,8 +77,9 @@ public class CommentCard extends AbstractCard {
 		avatarView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				activity.getBackStack().pushChannel(channelJid);
-				activity.showChannelFragment(replyAuthor);
+				if (!channelJid.equals(replyAuthor)) {
+					activity.showChannelFragment(replyAuthor);
+				}
 			}
 		});
 		
