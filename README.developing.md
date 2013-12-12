@@ -13,10 +13,17 @@ The Android client implements most of the features provided by the [buddycloud A
 Technologies
 ----------
 
-Besides the Android SDK and the support library, we use [ActionBarSherlock](https://github.com/JakeWharton/ActionBarSherlock) to implement the action bar design pattern; [SligingMenu](https://github.com/jfeinstein10/SlidingMenu) to implement the side menu; [picasso](https://github.com/square/picasso) for displaying and transforming images; and [dnsjava](http://www.xbill.org/dnsjava/) for DNS queries.
+Besides the Android SDK and the support library, we use:
+
+* [ActionBarSherlock](https://github.com/JakeWharton/ActionBarSherlock) to implement the action bar design pattern; 
+* [SligingMenu](https://github.com/jfeinstein10/SlidingMenu) to implement the side menu;
+* [picasso](https://github.com/square/picasso) for displaying and transforming images; and
+* [dnsjava](http://www.xbill.org/dnsjava/) for DNS queries.
 
 Security model
 ----------
+
+As we use HTTPS as default, we expect API server certificates to be valid so that we can start talking to them. If the API certificate is not valid, we prompt the user for confirmation, so that he becomes aware of unsafe connections. If the user agrees to do so (and ask the app to remember this decision), we store it as a preference, and we skip SSL for this server.
 
 Architecture
 ----------
