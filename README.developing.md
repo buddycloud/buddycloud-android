@@ -28,6 +28,27 @@ As we use HTTPS as default, we expect API server certificates to be valid so tha
 Architecture
 ----------
 
+### Activity flow
+
+```
+MainActivity --if not logged------> LoginActivity
+             ---------------------> GenericChannelActity --pick a channel--> MainActivity
+             ---------------------> SettingsActivity     --save settings---> MainActivity
+             ---------------------> SearchActivity       --pick a channel--> MainActivity
+             ---------------------> ChannelDetailsActivity  --save or back-> MainActivity
+MainActivity --back-menu-visible--> exit
+
+LoginActivity --login-------------> MainActivity
+              --not registered----> CreateAccountActivity ------> MainActivity
+              --back--------------> exit
+
+SettingsActivity -----------------> ChangePasswordActivity  --save or back-> SettingsActivity
+                 -----------------> AboutBuddycloudActivity --save or back-> SettingsActivity
+             
+ShareActivity --post created------> exit
+```
+
+
 How to get started
 ----------
 
