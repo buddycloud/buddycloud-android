@@ -108,7 +108,7 @@ Buddycloud android clients talks to the Buddycloud HTTP API. In that sense, the 
       |                   |                    |
       |   visitChannel    |                    |
       +------------------>|+--+  clear         |
-      |                   |   | countersN      |
+      |                   |   | counters       |
       |                   |<--+                |
       |                   |                    |
       v                   v                    v
