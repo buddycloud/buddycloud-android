@@ -64,9 +64,32 @@ ShareActivity --post created------> exit
 └-----------┴-------------------┘
 ```
 
+Caching
+GCM
+Sync
+Adapter architecture
+GenericChannelActivity
+Backstack
+PendingPosts
+
 
 How to get started
 ----------
+
+### Building
+
+After checking out the code, you need to download both [ActionBarSherlock](https://github.com/JakeWharton/ActionBarSherlock) and [SligingMenu](https://github.com/jfeinstein10/SlidingMenu) and reference them as libraries in your project. Notice that 
+SlidingMenu needs a small [hack]{https://github.com/jfeinstein10/SlidingMenu/blob/master/README.md#setup-with-actionbarsherlock} to work together with ActionBarSherlock.
+
+Then, build: http://developer.android.com/tools/building/index.html. Life is easier if you are using Eclipse.
+
+### Entry points
+
+The main entry points of the app are the MainActivity and the ShareActivity. If the user is not logged yet, the MainActivity will start the LoginActivity, and handle its result.
+
+### Code conventions
+
+Code conventions improve the readability of the software, allowing engineers to understand new code more quickly and thoroughly. Thus, we are using Oracle's [code conventions for Java]{http://www.oracle.com/technetwork/java/codeconv-138413.html} so that our code look beautiful.
 
 Roadmap
 ----------
