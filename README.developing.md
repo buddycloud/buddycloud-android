@@ -13,7 +13,12 @@ The Android client implements most of the features provided by the [buddycloud A
 Technologies
 ----------
 
-Besides the Android SDK and the support library, we use [ActionBarSherlock](https://github.com/JakeWharton/ActionBarSherlock) to implement the action bar design pattern; [SligingMenu](https://github.com/jfeinstein10/SlidingMenu) to implement the side menu; [picasso](https://github.com/square/picasso) for displaying and transforming images; and [dnsjava](http://www.xbill.org/dnsjava/) for DNS queries.
+Besides the Android SDK and the support library, we use:
+
+* [ActionBarSherlock](https://github.com/JakeWharton/ActionBarSherlock) to implement the action bar design pattern; 
+* [SligingMenu](https://github.com/jfeinstein10/SlidingMenu) to implement the side menu;
+* [picasso](https://github.com/square/picasso) for displaying and transforming images; and
+* [dnsjava](http://www.xbill.org/dnsjava/) for DNS queries.
 
 Security model
 ----------
