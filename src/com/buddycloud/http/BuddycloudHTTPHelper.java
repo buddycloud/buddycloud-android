@@ -1,12 +1,9 @@
 package com.buddycloud.http;
 
-import java.security.KeyStore;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-
-import javax.net.ssl.HostnameVerifier;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -25,7 +22,6 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.scheme.SocketFactory;
 import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.conn.SingleClientConnManager;
@@ -256,14 +252,9 @@ public class BuddycloudHTTPHelper {
 	
 	public static HttpClient createHttpClient(Context context) {
 		try {
-			KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-			trustStore.load(null, null);
 			
-			HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
 			SchemeRegistry registry = new SchemeRegistry();
-			
-			SSLSocketFactory socketFactory = new AndroidInsecureSSLSocketFactory(trustStore, context);
-			socketFactory.setHostnameVerifier((X509HostnameVerifier) hostnameVerifier);
+			SocketFactory socketFactory = createSecureSocketFactory();
 			
 			registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
 			registry.register(new Scheme("https", socketFactory, 443));

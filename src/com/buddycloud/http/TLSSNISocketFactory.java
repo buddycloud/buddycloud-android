@@ -21,7 +21,7 @@ import android.util.Log;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class TLSSNISocketFactory implements LayeredSocketFactory {
-    private static final String TAG = "yourApp.SNISocketFactory";
+    private static final String TAG = "buddycloud.SNISocketFactory";
 
     // "insecure" means that it doesn't verify the host name
     // we will do this ourselves so we can set up SNI before
@@ -61,8 +61,9 @@ public class TLSSNISocketFactory implements LayeredSocketFactory {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             Log.i(TAG, "Setting SNI hostname");
             sslSocketFactory.setHostname(ssl, host);
-        } else
-            Log.w(TAG, "No SNI support below Android 4.2!");
+        } else {
+        	Log.w(TAG, "No SNI support below Android 4.2!");
+        }
 
         // now do the TLS handshake
         ssl.startHandshake();

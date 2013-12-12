@@ -9,6 +9,7 @@ import javax.net.ssl.SSLSession;
 
 import android.net.Uri;
 
+import com.buddycloud.http.TLSSNISocketFactoryWrapper;
 import com.squareup.picasso.OkHttpDownloader;
 
 public class PicassoDownloader extends OkHttpDownloader {
@@ -20,6 +21,7 @@ public class PicassoDownloader extends OkHttpDownloader {
 
 	public PicassoDownloader(File arg0, long arg1, boolean skipCache) {
 		super(arg0, arg1);
+		getClient().setSslSocketFactory(new TLSSNISocketFactoryWrapper());
 		getClient().setHostnameVerifier(new HostnameVerifier() {
 			@Override
 			public boolean verify(String hostname, SSLSession session) {
