@@ -76,6 +76,7 @@ We use GitHub issues to track our progress, so check our [milestones](https://gi
 Testing
 ----------
 
+We are using JUnit and [instrumentation](http://developer.android.com/tools/testing/testing_android.html#Instrumentation) to assemble our tests. Source code can be found at https://github.com/buddycloud/buddycloud-android-testing and PRs are welcome :)
 
 Debug help
 ----------
