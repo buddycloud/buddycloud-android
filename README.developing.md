@@ -48,6 +48,22 @@ SettingsActivity -----------------> ChangePasswordActivity  --save or back-> Set
 ShareActivity --post created------> exit
 ```
 
+### Fragments inside MainActivity
+
+```
+┌-----------┬-------------------┐
+│           │                   │
+│           │                   │
+│           │                   │
+│Subscribed │     Channel       │
+│ Channels  │     Stream        │
+│ Fragment  │     Fragment      │
+│           │                   │
+│           │                   │
+│           │                   │
+└-----------┴-------------------┘
+```
+
 
 How to get started
 ----------
