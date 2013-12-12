@@ -68,24 +68,52 @@ ShareActivity --post created------> exit
 
 #### Adapters 
 
-An Adapter object acts as a bridge between a View and the underlying data for that view. Adapters provide access to  data items and are also responsible for making a View for each item in the data set. In our app, adapters also work as memory caches, since they fetch and store data items from the SQLite DB. In most of the cases, adapters are also responsible for the sorting of data items. Adapter classes can be found in the package [com.buddycloud.fragments.adapter]{https://github.com/buddycloud/buddycloud-android/tree/master/src/com/buddycloud/fragments/adapter}.
+An Adapter object acts as a bridge between a View and the underlying data for that view. Adapters provide access to  data items and are also responsible for making a View for each item in the data set. In our app, adapters also work as memory caches, since they fetch and store data items from the SQLite DB. In most of the cases, adapters are also responsible for the sorting of data items. Adapter classes can be found in the package [com.buddycloud.fragments.adapter](https://github.com/buddycloud/buddycloud-android/tree/master/src/com/buddycloud/fragments/adapter).
 
 #### Models
 
-Models are the glue between adapters and the SQLite+HTTP layer. Models decide when to use the SQLite cache or when to hit the API. They are aware of the API endpoints and the DB helpers. Model classes can be found in the package [com.buddycloud.model]{https://github.com/buddycloud/buddycloud-android/tree/master/src/com/buddycloud/model}.
+Models are the glue between adapters and the SQLite+HTTP layer. Models decide when to use the SQLite cache or when to hit the API. They are aware of the API endpoints and the DB helpers. Model classes can be found in the package [com.buddycloud.model](https://github.com/buddycloud/buddycloud-android/tree/master/src/com/buddycloud/model).
 
 #### SQLite database + DAO
 
-The SQLite cache makes the app feels faster, since we almost always have something to show before hitting the API. We have tables for channel metadata, posts, subscribed channels, threads' ids and unread counters. DB helper classes can be found in the package [com.buddycloud.model.db]{https://github.com/buddycloud/buddycloud-android/tree/master/src/com/buddycloud/model/db}.
-In order to access data stored in the SQLite cache, we use DAO classes. Those classes assemble SQL queries to read and update the database, thus, there is a corresponding DAO for each SQLite table. DAO classes can be found in the package [com.buddycloud.model.dao]{https://github.com/buddycloud/buddycloud-android/tree/master/src/com/buddycloud/model/dao}.
+The SQLite cache makes the app feels faster, since we almost always have something to show before hitting the API. We have tables for channel metadata, posts, subscribed channels, threads' ids and unread counters. DB helper classes can be found in the package [com.buddycloud.model.db](https://github.com/buddycloud/buddycloud-android/tree/master/src/com/buddycloud/model/db).
+In order to access data stored in the SQLite cache, we use DAO classes. Those classes assemble SQL queries to read and update the database, thus, there is a corresponding DAO for each SQLite table. DAO classes can be found in the package [com.buddycloud.model.dao](https://github.com/buddycloud/buddycloud-android/tree/master/src/com/buddycloud/model/dao).
 
 #### HTTP helpers
 
-Buddycloud android clients talks to the Buddycloud HTTP API. In that sense, the lower level of this app lives in the [BuddycloudHTTPHelper]{https://github.com/buddycloud/buddycloud-android/blob/master/src/com/buddycloud/http/BuddycloudHTTPHelper.java}. We use two Executors for HTTP requests, one for low priority requests and another for high ones. The low priority pool is expected to exhaust sooner, since it runs longer requests, while the high priority one is meant for quick requests updating the UI.
-
+Buddycloud android clients talks to the Buddycloud HTTP API. In that sense, the lower level of this app lives in the [BuddycloudHTTPHelper](https://github.com/buddycloud/buddycloud-android/blob/master/src/com/buddycloud/http/BuddycloudHTTPHelper.java). We use two Executors for HTTP requests, one for low priority requests and another for high ones. The low priority pool is expected to exhaust sooner, since it runs longer requests, while the high priority one is meant for quick requests updating the UI.
 
 ### Pusher + GCM
 ### Sync
+
+```
++-----------+       +-----------+        +-----------+
+| Fragments |       | SyncModel |        |    API    |
++-----+-----+       +-----+-----+        +-----+-----+
+      |                   |                    |
+      |                   | sync(since=forever)|
+      |                   |------------------->|
+      |                   |                  +-|
+      |                   |      summary     + |
+      |                   |<-----------------+ |
+      |       update  +--+|                    |
+      |      counters |   |sync(since=lastsync)|
+      |               +-->|------------------->|
+      |                   |                  +-|
+      |                   |      summary     + |
+      |                   |<-----------------+ |
+      |       update  +--+|                    |
+      |      counters |   |                    |
+      |               +-->|                    |
+      |                   |                    |
+      |   visitChannel    |                    |
+      +------------------>|+--+  clear         |
+      |                   |   | countersN      |
+      |                   |<--+                |
+      |                   |                    |
+      v                   v                    v
+```
+
 ### GenericChannelActivity
 ### Backstack
 ### PendingPosts
@@ -96,7 +124,7 @@ How to get started
 ### Building
 
 After checking out the code, you need to download both [ActionBarSherlock](https://github.com/JakeWharton/ActionBarSherlock) and [SligingMenu](https://github.com/jfeinstein10/SlidingMenu) and reference them as libraries in your project. Notice that 
-SlidingMenu needs a small [hack]{https://github.com/jfeinstein10/SlidingMenu/blob/master/README.md#setup-with-actionbarsherlock} to work together with ActionBarSherlock.
+SlidingMenu needs a small [hack](https://github.com/jfeinstein10/SlidingMenu/blob/master/README.md#setup-with-actionbarsherlock) to work together with ActionBarSherlock.
 
 Then, build: http://developer.android.com/tools/building/index.html. Life is easier if you are using Eclipse.
 
@@ -106,7 +134,7 @@ The main entry points of the app are the MainActivity and the ShareActivity. If 
 
 ### Code conventions
 
-Code conventions improve the readability of the software, allowing engineers to understand new code more quickly and thoroughly. Thus, we are using Oracle's [code conventions for Java]{http://www.oracle.com/technetwork/java/codeconv-138413.html} so that our code look beautiful.
+Code conventions improve the readability of the software, allowing engineers to understand new code more quickly and thoroughly. Thus, we are using Oracle's [code conventions for Java](http://www.oracle.com/technetwork/java/codeconv-138413.html) so that our code look beautiful.
 
 Roadmap
 ----------
