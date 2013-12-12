@@ -71,8 +71,11 @@ How to get started
 Roadmap
 ----------
 
+We use GitHub issues to track our progress, so check our [milestones](https://github.com/buddycloud/buddycloud-android/issues/milestones) page for release planning. 
+
 Testing
 ----------
+
 
 Debug help
 ----------
