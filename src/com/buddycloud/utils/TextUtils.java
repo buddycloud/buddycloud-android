@@ -24,8 +24,17 @@ public class TextUtils {
 			return null;
 		}
 		Matcher matcher = LINKS_PATTERN.matcher(text);
-		text = matcher.replaceAll("<a href=\"$0\">$0</a>");
-		text = text.replaceAll("\\n", "<br>");
+		
+		StringBuffer textBuffer = new StringBuffer();
+		while (matcher.find()) {
+			if (matcher.group(1) != null) {
+				matcher.appendReplacement(textBuffer, "<a href=\"$1\">$1</a>");
+			} else if (matcher.group(2) != null) {
+				matcher.appendReplacement(textBuffer, "<a href=\"buddycloud:$2\">$2</a>");
+			}
+		}
+		matcher.appendTail(textBuffer);
+		text = textBuffer.toString().replaceAll("\\n", "<br>");
 		return Html.fromHtml(text);
 	}
 }

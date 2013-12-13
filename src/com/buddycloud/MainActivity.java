@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentTransaction;
@@ -186,7 +187,15 @@ public class MainActivity extends SlidingFragmentActivity {
 
 	@Override
 	public void onAttachedToWindow() {
-		String channelJid = getIntent().getStringExtra(GenericChannelsFragment.CHANNEL);
+		Uri data = getIntent().getData();
+		String channelJid = null;
+		if (data != null) {
+			channelJid = data.getSchemeSpecificPart();
+		}
+		if (channelJid == null) {
+			channelJid = getIntent().getStringExtra(GenericChannelsFragment.CHANNEL);
+		}
+		
 		if (channelJid == null) {
 			showChannelFragment(myJid);
 			showMenu();
