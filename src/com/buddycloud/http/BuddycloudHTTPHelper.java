@@ -1,5 +1,6 @@
 package com.buddycloud.http;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Executor;
@@ -14,6 +15,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.params.ClientPNames;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRouteBean;
@@ -46,6 +48,10 @@ import com.buddycloud.model.ModelCallback;
 import com.buddycloud.preferences.Preferences;
 
 public class BuddycloudHTTPHelper {
+	
+	private static final String BROWSER_LIKE_USER_AGENT = 
+			"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) " +
+			"Chrome/31.0.1650.63 Safari/537.36";
 	
 	private static final Executor HIGH_PRIORITY_EXECUTOR = Executors.newFixedThreadPool(5);
 	private static final Executor LO_PRIORITY_EXECUTOR = Executors.newFixedThreadPool(5);
@@ -201,6 +207,21 @@ public class BuddycloudHTTPHelper {
 			}
 		}.executeOnExecutor(HIGH_PRIORITY_EXECUTOR);
 	}
+	
+	public static void reqArrayNoSSL(String url, Context parent, ModelCallback<JSONArray> callback) {
+		RequestAsyncTask<JSONArray> task = new RequestAsyncTask<JSONArray>("get", url, null, false, false, parent, callback) {
+			@Override
+			protected JSONArray toJSON(String responseStr) throws JSONException {
+				return new JSONArray(responseStr);
+			}
+		};
+		task.client = new DefaultHttpClient();
+		task.client.getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true); 
+		task.headers = new HashMap<String, String>();
+		task.headers.put("User-Agent", BROWSER_LIKE_USER_AGENT);
+		task.executeOnExecutor(HIGH_PRIORITY_EXECUTOR);
+	}
+	
 	
 	protected static void addAcceptJSONHeader(HttpRequestBase method) {
 		method.setHeader("Accept", "application/json");

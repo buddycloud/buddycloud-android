@@ -2,14 +2,12 @@ package com.buddycloud;
 
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -19,6 +17,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.buddycloud.http.SSLUtils;
 import com.buddycloud.model.AccountModel;
 import com.buddycloud.model.LoginModel;
@@ -26,7 +25,7 @@ import com.buddycloud.model.ModelCallback;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.DNSUtils;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends SherlockActivity {
 
 	public static final int REQUEST_CODE = 101;
 	
@@ -34,6 +33,8 @@ public class LoginActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        getSupportActionBar().hide();
+        
         final RelativeLayout loginBtn = (RelativeLayout) findViewById(R.id.loginBtn);
         final RelativeLayout createAccountBtn = (RelativeLayout) findViewById(R.id.createAccountBtn);
         final EditText myChannelTxt = (EditText) findViewById(R.id.loginTxt);
@@ -151,12 +152,6 @@ public class LoginActivity extends Activity {
     	super.onActivityResult(requestCode, resultCode, data);
     }
     
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.activity_share, menu);
-        return true;
-    }
-
 	protected void login(final RelativeLayout loginBtn,
 			final EditText myChannelTxt, final EditText passwordTxt,
 			final View progressBar) {

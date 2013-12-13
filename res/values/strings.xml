@@ -96,11 +96,12 @@
 	<string name="channel_details_default_affiliation_hint">default affiliation</string>
 	<string name="channel_details_save">Save settings</string>
 	
-	<string name="create_account_channel_name">channel name</string>
-	<string name="create_account_domain_name">domain</string>
+	<string name="create_account_channel_name">username</string>
+	<string name="create_account_domain_name">buddycloud-enabled site</string>
 	<string name="create_account_email_address">email address</string>
 	<string name="create_account_password">password</string>
 	<string name="create_account_repeat_password">repeat password</string>
+	<string name="create_account_domain_hint">The following buddycloud-enabled sites are available for new sign-ups</string>
 	
 	<string name="login_hint">user@example.com</string>
 	<string name="login_password">password</string>

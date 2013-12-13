@@ -8,23 +8,22 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.http.SSLUtils;
 import com.buddycloud.model.AccountModel;
@@ -32,7 +31,7 @@ import com.buddycloud.model.ModelCallback;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.DNSUtils;
 
-public class CreateAccountActivity extends Activity {
+public class CreateAccountActivity extends SherlockActivity {
 
 	private static final String DOMAIN_SUGGESTION_URL = "http://buddycloud.com/registration-helper/sign-up-domains.json";
 	public static final int REQUEST_CODE = 105;
@@ -42,21 +41,7 @@ public class CreateAccountActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
-        
-        final AutoCompleteTextView actv = (AutoCompleteTextView) findViewById(R.id.domainTxt);
-        
-        actv.setOnFocusChangeListener(new OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (hasFocus) {
-					actv.showDropDown();
-				} else {
-					actv.dismissDropDown();
-				}
-			}
-		});
-        
-        fillSuggestions(actv);
+        getSupportActionBar().hide();
         
         final View progressBar = findViewById(R.id.progressBar);
         final RelativeLayout createAccountBtn = (RelativeLayout) findViewById(R.id.createAccountBtn);
@@ -132,6 +117,11 @@ public class CreateAccountActivity extends Activity {
         
     }
 
+    @Override
+    public void onAttachedToWindow() {
+    	fillSuggestions();
+    }
+    
     private void hideProgress() {
     	View progressBar = findViewById(R.id.progressBar);
         RelativeLayout createAccountBtn = (RelativeLayout) findViewById(R.id.createAccountBtn);
@@ -139,11 +129,9 @@ public class CreateAccountActivity extends Activity {
 		progressBar.setVisibility(View.GONE);
 	}
     
-	private void fillSuggestions(final AutoCompleteTextView actv) {
-		BuddycloudHTTPHelper.getArray(
-        		DOMAIN_SUGGESTION_URL, false, true, this, 
-        		new ModelCallback<JSONArray>() {
-
+	private void fillSuggestions() {
+		BuddycloudHTTPHelper.reqArrayNoSSL(
+        		DOMAIN_SUGGESTION_URL, this, new ModelCallback<JSONArray>() {
 					@Override
 					public void success(JSONArray response) {
 						List<Domain> domains = new ArrayList<Domain>();
@@ -152,14 +140,24 @@ public class CreateAccountActivity extends Activity {
 							domains.add(new Domain(domainJson));
 						}
 						
-						DomainAdapter adapter = new DomainAdapter(
+						final DomainAdapter adapter = new DomainAdapter(
 								getApplicationContext(), 
 								R.layout.domain_spinner_item, 
 								domains);
 						
-						actv.setAdapter(adapter);
-						actv.setThreshold(256);
-						actv.showDropDown();
+						AlertDialog.Builder builder = new AlertDialog.Builder(CreateAccountActivity.this);
+						DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								Domain domain = adapter.getItem(which);
+								TextView domainTextView = (TextView) findViewById(R.id.domainTxt);
+								domainTextView.setText(domain.toString());
+								dialog.dismiss();
+							}
+						};
+								
+						builder.setTitle(getString(R.string.create_account_domain_hint));
+						builder.setAdapter(adapter, dialogListener);
+						builder.create().show();
 					}
 
 					@Override
@@ -179,11 +177,6 @@ public class CreateAccountActivity extends Activity {
     
     private String getValue(int resId) {
     	return ((EditText) findViewById(resId)).getText().toString();
-    }
-    
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
     }
     
     private void createAccount(final String emailAddressTxt,
