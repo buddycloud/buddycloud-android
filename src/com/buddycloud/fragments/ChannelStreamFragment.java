@@ -272,8 +272,7 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 			
 			@Override
 			public void error(Throwable throwable) {
-				Toast.makeText(getActivity().getApplicationContext(), 
-						getString(R.string.message_post_creation_failed), Toast.LENGTH_LONG).show();
+				// Best effort. We now have offline messages.
 				hideProgress(view);
 			}
 		}), getChannelJid());

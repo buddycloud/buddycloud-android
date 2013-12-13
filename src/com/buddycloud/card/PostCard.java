@@ -374,7 +374,7 @@ public class PostCard extends AbstractCard {
 			
 			@Override
 			public void error(Throwable throwable) {
-				Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_LONG).show();
+				// Best effort. We now have offline messages.
 				hideProgress(convertView);
 			}
 		}, channelJid);
