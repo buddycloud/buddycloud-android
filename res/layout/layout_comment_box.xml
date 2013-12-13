@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
 	        	android:layout_gravity="bottom"
-                android:inputType="textMultiLine"
+                android:inputType="textMultiLine|textCapSentences"
     			android:imeOptions="actionNone" />
 
             <ImageView

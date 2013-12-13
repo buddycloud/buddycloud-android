@@ -152,7 +152,7 @@
                 android:layout_weight="1"
                 android:hint="@string/post_comment_hint"
                 android:imeOptions="actionNone"
-                android:inputType="textMultiLine"
+                android:inputType="textMultiLine|textCapSentences"
                 android:textSize="16sp" >
             </EditText>
 
