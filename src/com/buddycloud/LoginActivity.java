@@ -28,6 +28,7 @@ import com.buddycloud.utils.DNSUtils;
 public class LoginActivity extends SherlockActivity {
 
 	public static final int REQUEST_CODE = 101;
+	public static final int RESULT_CODE_OK = 1010;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -146,7 +147,9 @@ public class LoginActivity extends SherlockActivity {
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	if (requestCode == CreateAccountActivity.REQUEST_CODE && resultCode == CreateAccountActivity.ACCOUNT_CREATED_RESULT) {
+    	if (requestCode == CreateAccountActivity.REQUEST_CODE && 
+    			resultCode == CreateAccountActivity.ACCOUNT_CREATED_RESULT) {
+    		setResult(RESULT_CODE_OK);
     		finish();
     	}
     	super.onActivityResult(requestCode, resultCode, data);
@@ -199,6 +202,7 @@ public class LoginActivity extends SherlockActivity {
 				LoginModel.getInstance().getFromServer(LoginActivity.this, new ModelCallback<Void>() {
 					@Override
 					public void success(Void response) {
+						setResult(RESULT_CODE_OK);
 						LoginActivity.this.finish();
 					}
 					

@@ -141,7 +141,11 @@ public class MainActivity extends SlidingFragmentActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == LoginActivity.REQUEST_CODE) {
-			startActivity();
+			if (resultCode == LoginActivity.RESULT_CODE_OK) {
+				startActivity();
+			} else {
+				finish();
+			}
 		} else if (requestCode == SearchActivity.REQUEST_CODE) {
 			if (data != null) {
 				String channelJid = data.getStringExtra(GenericChannelsFragment.CHANNEL);
