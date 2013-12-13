@@ -299,6 +299,10 @@ public class MainActivity extends SlidingFragmentActivity {
 	
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		if (item.getItemId() == android.R.id.home) {
+	        showMenu();
+	        return true;
+	    }
 		return getCurrentFragment().menuItemSelected(featureId, item);
 	}
 
