@@ -16,6 +16,12 @@ import com.buddycloud.preferences.Preferences;
 
 public class NotificationSettingsModel extends AbstractModel<JSONObject, JSONObject, String> {
 
+	public static final String PREF_ANYCHANNEL_NOTIFICATION = "pref_key_enable_post_anychannel_notification";
+	public static final String PREF_COMMENTS_NOTIFICATION = "pref_key_enable_comments_notification";
+	public static final String PREF_FOLLOWER_NOTIFICATION = "pref_key_enable_new_follower_notification";
+	public static final String PREF_MYCHANNEL_NOTIFICATION = "pref_key_enable_post_mychannel_notification";
+	public static final String PREF_MENTION_NOTIFICATION = "pref_key_enable_mention_notification";
+	
 	private static final String ENDPOINT = "/notification_settings";
 	private static NotificationSettingsModel instance;
 	
@@ -80,16 +86,11 @@ public class NotificationSettingsModel extends AbstractModel<JSONObject, JSONObj
 	private JSONObject toJSON(SharedPreferences sharedPrefs) throws JSONException {
 		JSONObject settings = new JSONObject();
 		settings.put("type", "gcm");
-		settings.put("postMentionedMe", getPref(sharedPrefs, 
-				"pref_key_enable_mention_notification"));
-		settings.put("postOnMyChannel", getPref(sharedPrefs, 
-				"pref_key_enable_post_mychannel_notification"));
-		settings.put("followMyChannel", getPref(sharedPrefs, 
-				"pref_key_enable_new_follower_notification"));
-		settings.put("postAfterMe", getPref(sharedPrefs, 
-				"pref_key_enable_comments_notification"));
-		settings.put("postOnSubscribedChannel", getPref(sharedPrefs, 
-				"pref_key_enable_post_anychannel_notification"));
+		settings.put("postMentionedMe", getPref(sharedPrefs, PREF_MENTION_NOTIFICATION));
+		settings.put("postOnMyChannel", getPref(sharedPrefs, PREF_MYCHANNEL_NOTIFICATION));
+		settings.put("followMyChannel", getPref(sharedPrefs, PREF_FOLLOWER_NOTIFICATION));
+		settings.put("postAfterMe", getPref(sharedPrefs, PREF_COMMENTS_NOTIFICATION));
+		settings.put("postOnSubscribedChannel", getPref(sharedPrefs, PREF_ANYCHANNEL_NOTIFICATION));
 		return settings;
 	}
 
@@ -98,15 +99,15 @@ public class NotificationSettingsModel extends AbstractModel<JSONObject, JSONObj
 	}
 	
 	public void fillEditor(Editor editor, JSONObject object) {
-		editor.putBoolean("pref_key_enable_mention_notification", 
+		editor.putBoolean(PREF_MENTION_NOTIFICATION, 
 				object.optBoolean("postMentionedMe"));
-		editor.putBoolean("pref_key_enable_post_mychannel_notification", 
+		editor.putBoolean(PREF_MYCHANNEL_NOTIFICATION, 
 				object.optBoolean("postOnMyChannel"));
-		editor.putBoolean("pref_key_enable_new_follower_notification", 
+		editor.putBoolean(PREF_FOLLOWER_NOTIFICATION, 
 				object.optBoolean("followMyChannel"));
-		editor.putBoolean("pref_key_enable_comments_notification", 
+		editor.putBoolean(PREF_COMMENTS_NOTIFICATION, 
 				object.optBoolean("postAfterMe"));
-		editor.putBoolean("pref_key_enable_post_anychannel_notification", 
+		editor.putBoolean(PREF_ANYCHANNEL_NOTIFICATION, 
 				object.optBoolean("postOnSubscribedChannel"));
 	}
 

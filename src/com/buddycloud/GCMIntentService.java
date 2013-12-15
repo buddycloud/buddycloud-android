@@ -5,6 +5,8 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.buddycloud.model.ModelCallback;
@@ -28,31 +30,55 @@ public class GCMIntentService extends GCMBaseIntentService {
 	}
 
 	@Override
-	protected void onMessage(Context arg0, Intent message) {
+	protected void onMessage(Context context, Intent message) {
 		Log.d(TAG, "GCM reveived " + message);
-		
+		// TODO sync
 		GCMEvent event = GCMEvent.valueOf(message.getStringExtra("event"));
-		GCMNotificationListener notificationListener = createNotificationListener(event);
+		GCMNotificationListener notificationListener = createNotificationListener(context, event);
 		if (notificationListener != null) {
-			notificationListener.onMessage(event, arg0, message);
+			notificationListener.onMessage(event, context, message);
 		}
 	}
 
-	private GCMNotificationListener createNotificationListener(GCMEvent event) {
+	private GCMNotificationListener createNotificationListener(
+			Context context, GCMEvent event) {
+		
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 		switch (event) {
 		case POST_AFTER_MY_POST:
+			if (!getPref(sharedPrefs, NotificationSettingsModel.PREF_COMMENTS_NOTIFICATION)) {
+				return null;
+			}
 		case POST_ON_SUBSCRIBED_CHANNEL:
+			if (!getPref(sharedPrefs, NotificationSettingsModel.PREF_ANYCHANNEL_NOTIFICATION)) {
+				return null;
+			}
 		case POST_ON_MY_CHANNEL:
+			if (!getPref(sharedPrefs, NotificationSettingsModel.PREF_MYCHANNEL_NOTIFICATION)) {
+				return null;
+			}
 		case MENTION:
+			if (!getPref(sharedPrefs, NotificationSettingsModel.PREF_MENTION_NOTIFICATION)) {
+				return null;
+			}
 			return new GCMPostNotificationListener();
 		case FOLLOW_REQUEST:
+			if (!getPref(sharedPrefs, NotificationSettingsModel.PREF_FOLLOWER_NOTIFICATION)) {
+				return null;
+			}
 			return new GCMFollowRequestNotificationListener();
 		case FOLLOW_REQUEST_APPROVED:
+			if (!getPref(sharedPrefs, NotificationSettingsModel.PREF_FOLLOWER_NOTIFICATION)) {
+				return null;
+			}
 			return new GCMFollowRequestApprovedNotificationListener();
-		
 		default:
 			return null;
 		}
+	}
+
+	protected boolean getPref(SharedPreferences sharedPrefs, String key) {
+		return Boolean.valueOf(sharedPrefs.getBoolean(key, true));
 	}
 
 	@Override
@@ -65,6 +91,11 @@ public class GCMIntentService extends GCMBaseIntentService {
 		try {
 			settings.put("type", "gcm");
 			settings.put("target", regId);
+			settings.put("postMentionedMe", Boolean.TRUE.toString());
+			settings.put("postOnMyChannel", Boolean.TRUE.toString());
+			settings.put("followMyChannel", Boolean.TRUE.toString());
+			settings.put("postAfterMe", Boolean.TRUE.toString());
+			settings.put("postOnSubscribedChannel", Boolean.TRUE.toString());
 		} catch (JSONException e) {
 			Log.e(TAG, "Failure to register GCM settings.", e);
 			return;
@@ -89,5 +120,4 @@ public class GCMIntentService extends GCMBaseIntentService {
 	protected void onUnregistered(Context arg0, String regId) {
 		Log.w(TAG, "Unregistered from GCM " + regId);
 	}
-
 }
