@@ -39,7 +39,7 @@ public class ThreadsDAO implements DAO<JSONObject, JSONObject> {
 	}
 	
 	private ThreadsDAO(Context context) {
-		this.helper = new BuddycloudSQLiteOpenHelper(context);
+		this.helper = BuddycloudSQLiteOpenHelper.getInstance(context);
 		this.db = helper.getWritableDatabase();
 	}
 	

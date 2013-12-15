@@ -9,11 +9,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.model.dao.UnreadCountersDAO;
 import com.buddycloud.preferences.Preferences;
+import com.buddycloud.utils.JIDUtils;
 import com.buddycloud.utils.TimeUtils;
 
 public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
@@ -72,7 +74,7 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 		Iterator<String> keys = summary.keys();
 		while (keys.hasNext()) {
 			String node = keys.next();
-			String channel = node.split("/")[2];
+			String channel = JIDUtils.nodeToChannel(node);
 			JSONObject channelSummary = summary.optJSONObject(node);
 			
 			String channelUpdated = channelSummary.optString("lastUpdated", null);
@@ -165,24 +167,34 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public void success(JSONObject newPosts) {
-				PostsModel postsModel = PostsModel.getInstance();
-				Iterator<String> keys = newPosts.keys();
-				while (keys.hasNext()) {
-					String channelJid = keys.next();
-					JSONArray channelPosts = newPosts.optJSONArray(channelJid);
-					for (int i = 0; i < channelPosts.length(); i++) {
-						try {
-							JSONObject post = channelPosts.getJSONObject(i);
-							postsModel.persistSinglePost(context, channelJid, post);
-						} catch (Exception e) {
-							// Best effort
+			public void success(final JSONObject newPosts) {
+				new AsyncTask<Void, Void, Void>() {
+					@Override
+					protected Void doInBackground(Void... params) {
+						PostsModel postsModel = PostsModel.getInstance();
+						Iterator<String> keys = newPosts.keys();
+						while (keys.hasNext()) {
+							String key = keys.next();
+							String channelJid = JIDUtils.nodeToChannel(key);
+							JSONArray channelPosts = newPosts.optJSONArray(key);
+							for (int i = 0; i < channelPosts.length(); i++) {
+								try {
+									JSONObject post = channelPosts.getJSONObject(i);
+									postsModel.persistSinglePost(context, channelJid, post);
+								} catch (Exception e) {
+									// Best effort
+								}
+							}
 						}
+						return null;
 					}
-				}
-				if (callback != null) {
-					callback.success(null);
-				}
+					
+					protected void onPostExecute(Void result) {
+						if (callback != null) {
+							callback.success(null);
+						}
+					};
+				}.execute();
 			}
 
 			@Override

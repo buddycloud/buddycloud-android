@@ -81,8 +81,12 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		String threadId = post.has("replyTo") ? post.optString("replyTo")
 				: post.optString("id");
 		JSONObject thread = ThreadsDAO.getInstance(context).get(threadId);
-		String threadUpdated = thread.optString("updated");
-		if (TimeUtils.after(threadUpdated, updated)) {
+		if (thread != null) {
+			String threadUpdated = thread.optString("updated");
+			if (TimeUtils.after(threadUpdated, updated)) {
+				updateThreadTimestamp(context, channel, threadId, updated);
+			}
+		} else {
 			updateThreadTimestamp(context, channel, threadId, updated);
 		}
 

@@ -26,7 +26,7 @@ public class SubscribedChannelsDAO implements DAO<JSONObject, JSONObject> {
 			SubscribedChannelsTableHelper.COLUMN_SUBSCRIBED};
 	
 	private SubscribedChannelsDAO(Context context) {
-		this.helper = new BuddycloudSQLiteOpenHelper(context);
+		this.helper = BuddycloudSQLiteOpenHelper.getInstance(context);
 		this.db = helper.getWritableDatabase();
 		this.myJid = Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
 	}

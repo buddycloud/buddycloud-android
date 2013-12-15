@@ -134,7 +134,7 @@ public class SettingsFragment extends PreferenceFragment {
 	}
 
 	private static void deleteDatabase(final Context context) {
-		new BuddycloudSQLiteOpenHelper(context).purgeDatabase();
+		BuddycloudSQLiteOpenHelper.getInstance(context).purgeDatabase();
 	}
 	
 	private static void restart(final Context context) {

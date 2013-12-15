@@ -28,10 +28,9 @@ public class PostsDAO implements DAO<JSONObject, JSONArray> {
 	
 	
 	private PostsDAO(Context context) {
-		this.helper = new BuddycloudSQLiteOpenHelper(context);
+		this.helper = BuddycloudSQLiteOpenHelper.getInstance(context);
 		this.db = helper.getWritableDatabase();
 	}
-	
 	
 	public static PostsDAO getInstance(Context context) {
 		if (instance == null) {

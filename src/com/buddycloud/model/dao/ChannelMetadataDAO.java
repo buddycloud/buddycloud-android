@@ -31,7 +31,7 @@ public class ChannelMetadataDAO implements DAO<JSONObject, JSONObject> {
 	
 	
 	private ChannelMetadataDAO(Context context) {
-		this.helper = new BuddycloudSQLiteOpenHelper(context);
+		this.helper = BuddycloudSQLiteOpenHelper.getInstance(context);
 		this.db = helper.getWritableDatabase();
 	}
 	
