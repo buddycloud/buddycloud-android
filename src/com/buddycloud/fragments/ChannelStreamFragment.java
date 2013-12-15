@@ -445,7 +445,7 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 						Toast.makeText(getActivity(),  
 								getString(isFollowing ? R.string.action_unfollowed : R.string.action_followed, channelJid), 
 								Toast.LENGTH_LONG).show();
-						getSherlockActivity().supportInvalidateOptionsMenu();
+						((MainActivity) getActivity()).showChannelFragment(channelJid, true);
 					}
 
 					@Override
