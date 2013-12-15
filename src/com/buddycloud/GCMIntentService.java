@@ -10,7 +10,9 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.buddycloud.model.ModelCallback;
+import com.buddycloud.model.ModelCallbackImpl;
 import com.buddycloud.model.NotificationSettingsModel;
+import com.buddycloud.model.SyncModel;
 import com.buddycloud.notifications.GCMEvent;
 import com.buddycloud.notifications.GCMFollowRequestApprovedNotificationListener;
 import com.buddycloud.notifications.GCMFollowRequestNotificationListener;
@@ -30,9 +32,22 @@ public class GCMIntentService extends GCMBaseIntentService {
 	}
 
 	@Override
-	protected void onMessage(Context context, Intent message) {
+	protected void onMessage(final Context context, Intent message) {
 		Log.d(TAG, "GCM reveived " + message);
-		// TODO sync
+		
+		final SyncModel syncModel = SyncModel.getInstance();
+		SyncModel.getInstance().syncNoSummary(context, new ModelCallbackImpl<Void>(){
+			@Override
+			public void success(Void response) {
+				syncModel.fill(context, new ModelCallbackImpl<Void>());
+			}
+			
+			@Override
+			public void error(Throwable throwable) {
+				success(null);
+			}
+		});
+		
 		GCMEvent event = GCMEvent.valueOf(message.getStringExtra("event"));
 		GCMNotificationListener notificationListener = createNotificationListener(context, event);
 		if (notificationListener != null) {

@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,6 +21,7 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 	private static SyncModel instance;
 	private static String TAG = SyncModel.class.toString();
 	private static final int PAGE_SIZE = 31;
+	private static final int PAGE_SIZE_NO_SUMMARY = 10;
 	private static final String SYNC_ENDPOINT = "/sync";
 	
 	private SyncModel() {}
@@ -136,7 +138,7 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 	private void sync(final Map<String, JSONObject> oldCounters, final Context context, 
 			final ModelCallback<Void> callback) {
 		
-		BuddycloudHTTPHelper.getObject(syncUrl(context), context,
+		BuddycloudHTTPHelper.getObject(syncUrlWithSummary(context), context,
 				new ModelCallback<JSONObject>() {
 
 			@Override
@@ -157,13 +159,54 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 		});
 	}
 	
+	public void syncNoSummary(final Context context, final ModelCallback<Void> callback) {
+		BuddycloudHTTPHelper.getObject(syncUrl(context), context,
+				new ModelCallback<JSONObject>() {
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public void success(JSONObject newPosts) {
+				PostsModel postsModel = PostsModel.getInstance();
+				Iterator<String> keys = newPosts.keys();
+				while (keys.hasNext()) {
+					String channelJid = keys.next();
+					JSONArray channelPosts = newPosts.optJSONArray(channelJid);
+					for (int i = 0; i < channelPosts.length(); i++) {
+						try {
+							JSONObject post = channelPosts.getJSONObject(i);
+							postsModel.persistSinglePost(context, channelJid, post);
+						} catch (Exception e) {
+							// Best effort
+						}
+					}
+				}
+				if (callback != null) {
+					callback.success(null);
+				}
+			}
+
+			@Override
+			public void error(Throwable throwable) {
+				if (callback != null) {
+					callback.error(throwable);
+				}
+			}
+		});
+	}
+	
 	private String since(Context context) {
 		String lastUpdate = Preferences.getPreference(context, Preferences.LAST_UPDATE);
 		return lastUpdate == null ? TimeUtils.OLDEST_DATE : lastUpdate;
 	}
 
-	private String syncUrl(Context context) {
+	private String syncUrlWithSummary(Context context) {
 		String params = "?max=" + PAGE_SIZE + "&since=" + since(context) + "&summary=true";
+		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
+		return apiAddress + SYNC_ENDPOINT + params;
+	}
+	
+	private String syncUrl(Context context) {
+		String params = "?max=" + PAGE_SIZE_NO_SUMMARY + "&since=" + since(context);
 		String apiAddress = Preferences.getPreference(context, Preferences.API_ADDRESS);
 		return apiAddress + SYNC_ENDPOINT + params;
 	}

@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.buddycloud.R;
 import com.buddycloud.model.ModelCallback;
+import com.buddycloud.model.ModelCallbackImpl;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.model.SyncModel;
 import com.buddycloud.preferences.Preferences;
@@ -53,20 +54,19 @@ public class SubscribedChannelsAdapter extends GenericChannelAdapter {
 		SubscribedChannelsModel.getInstance().fill(context, new ModelCallback<Void>() {
 			@Override
 			public void success(Void response) {
-				SyncModel.getInstance().fill(context, new ModelCallback<Void>() {
-					@Override
-					public void success(Void response) {
-					}
-
-					@Override
-					public void error(Throwable throwable) {
-						Log.w(SubscribedChannelsAdapter.class.toString(), 
-								throwable.getLocalizedMessage(), throwable);
-						Toast.makeText(context, context.getString(
-								R.string.message_sync_failed), 
-								Toast.LENGTH_LONG).show();
-					}
-				});
+				SyncModel.getInstance().syncNoSummary(
+						context, new ModelCallbackImpl<Void>(){
+							@Override
+							public void success(Void response) {
+								SyncModel.getInstance().fill(
+										context, new ModelCallbackImpl<Void>());
+							}
+							
+							@Override
+							public void error(Throwable throwable) {
+								success(null);
+							}
+						});
 			}
 			
 			@Override

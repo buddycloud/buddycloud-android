@@ -44,7 +44,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		return instance;
 	}
 	
-	private void persist(Context context, String channel, JSONArray postsPerThreads) throws JSONException, ParseException {
+	private void persistThreads(Context context, String channel, JSONArray postsPerThreads) throws JSONException, ParseException {
 		PostsDAO postsDAO = PostsDAO.getInstance(context);
 		
 		String newestThreadUpdated = null;
@@ -71,6 +71,25 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 					postsDAO.insert(channel, item);
 				}
 			}
+		}
+	}
+	
+	public void persistSinglePost(Context context, String channel,
+			JSONObject post) throws JSONException, ParseException {
+		PostsDAO postsDAO = PostsDAO.getInstance(context);
+		String updated = post.optString("updated");
+		String threadId = post.has("replyTo") ? post.optString("replyTo")
+				: post.optString("id");
+		JSONObject thread = ThreadsDAO.getInstance(context).get(threadId);
+		String threadUpdated = thread.optString("updated");
+		if (TimeUtils.after(threadUpdated, updated)) {
+			updateThreadTimestamp(context, channel, threadId, updated);
+		}
+
+		normalize(post);
+		post.put("threadId", threadId);
+		if (postsDAO.get(channel, post.optString("id")) == null) {
+			postsDAO.insert(channel, post);
 		}
 	}
 
@@ -128,7 +147,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 					@Override
 					protected Exception doInBackground(Void... params) {
 						try {
-							persist(context, channelJid, response);
+							persistThreads(context, channelJid, response);
 							return null;
 						} catch (Exception e) {
 							return e;
@@ -262,8 +281,9 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 					notifyDeleted(channelJid, tempItemId, 
 							tempObject.optString("replyTo", null));
 					callback.success(response);
+					sync(context);
 				}
-				
+
 				@Override
 				public void error(Throwable throwable) {
 					Intent i = new Intent(context, PendingPostsService.class);
@@ -279,6 +299,21 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		}
 	}
 
+	protected void sync(final Context context) {
+		final SyncModel syncModel = SyncModel.getInstance();
+		SyncModel.getInstance().syncNoSummary(context, new ModelCallbackImpl<Void>(){
+			@Override
+			public void success(Void response) {
+				syncModel.fill(context, new ModelCallbackImpl<Void>());
+			}
+			
+			@Override
+			public void error(Throwable throwable) {
+				success(null);
+			}
+		});
+	}
+	
 	@Override
 	public void getFromServer(Context context, ModelCallback<JSONArray> callback,
 			String... p) {
