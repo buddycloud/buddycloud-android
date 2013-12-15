@@ -86,6 +86,21 @@ Buddycloud android clients talks to the Buddycloud HTTP API. In that sense, the 
 ### Pusher + GCM
 ### Sync
 
+#### Parameters
+
+* since - Posts newer than this time
+* max - Max posts count per channel (if a single channel is super active, we'd be overloading this endpoint or the client itself)
+
+#### When to sync?
+
+* First app launch (since=forever, max=5 (so that we fill the screen))
+* Application launch (since=newest post in cache)
+* Any push notification
+** When notification are disabled in the preferences activity, the GCM should be still triggering sync.
+* When we post (since=newest post in cache)
+
+#### Sync Activity diagram
+
 ```
 +-----------+       +-----------+        +-----------+
 | Fragments |       | SyncModel |        |    API    |
@@ -94,17 +109,17 @@ Buddycloud android clients talks to the Buddycloud HTTP API. In that sense, the 
       |                   | sync(since=forever)|
       |                   |------------------->|
       |                   |                  +-|
-      |                   |      summary     + |
+      |                   |      posts       + |
       |                   |<-----------------+ |
       |       update  +--+|                    |
-      |      counters |   |sync(since=lastsync)|
-      |               +-->|------------------->|
+      |    posts and  |   |sync(since=lastsync)|
+      |     counters  +-->|------------------->|
       |                   |                  +-|
-      |                   |      summary     + |
+      |                   |      posts       + |
       |                   |<-----------------+ |
       |       update  +--+|                    |
-      |      counters |   |                    |
-      |               +-->|                    |
+      |    posts and  |   |                    |
+      |     counters  +-->|                    |
       |                   |                    |
       |   visitChannel    |                    |
       +------------------>|+--+  clear         |
