@@ -168,6 +168,9 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void success(final JSONObject newPosts) {
+				if (callback != null) {
+					callback.success(null);
+				}
 				new AsyncTask<Void, Void, Void>() {
 					@Override
 					protected Void doInBackground(Void... params) {
@@ -188,12 +191,6 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 						}
 						return null;
 					}
-					
-					protected void onPostExecute(Void result) {
-						if (callback != null) {
-							callback.success(null);
-						}
-					};
 				}.execute();
 			}
 
