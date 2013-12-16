@@ -7,9 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.preferences.Preferences;
@@ -37,7 +35,6 @@ public class NotificationSettingsModel extends AbstractModel<JSONObject, JSONObj
 	@Override
 	public void getFromServer(final Context context, final ModelCallback<JSONObject> callback,
 			String... p) {
-		BuddycloudHTTPHelper.getObject(url(context) + "?type=gcm", true, true, context, callback);
 	}
 
 	@Override
@@ -71,33 +68,6 @@ public class NotificationSettingsModel extends AbstractModel<JSONObject, JSONObj
 		
 	}
 
-	public void saveFromPreferences(Context context, ModelCallback<JSONObject> modelCallback) {
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-		JSONObject settings = null;
-		try {
-			settings = toJSON(sharedPrefs);
-		} catch (JSONException e) {
-			modelCallback.error(e);
-			return;
-		}
-		save(context, settings, modelCallback);
-	}
-
-	private JSONObject toJSON(SharedPreferences sharedPrefs) throws JSONException {
-		JSONObject settings = new JSONObject();
-		settings.put("type", "gcm");
-		settings.put("postMentionedMe", getPref(sharedPrefs, PREF_MENTION_NOTIFICATION));
-		settings.put("postOnMyChannel", getPref(sharedPrefs, PREF_MYCHANNEL_NOTIFICATION));
-		settings.put("followMyChannel", getPref(sharedPrefs, PREF_FOLLOWER_NOTIFICATION));
-		settings.put("postAfterMe", getPref(sharedPrefs, PREF_COMMENTS_NOTIFICATION));
-		settings.put("postOnSubscribedChannel", getPref(sharedPrefs, PREF_ANYCHANNEL_NOTIFICATION));
-		return settings;
-	}
-
-	private String getPref(SharedPreferences sharedPrefs, String key) {
-		return Boolean.valueOf(sharedPrefs.getBoolean(key, true)).toString();
-	}
-	
 	public void fillEditor(Editor editor, JSONObject object) {
 		editor.putBoolean(PREF_MENTION_NOTIFICATION, 
 				object.optBoolean("postMentionedMe"));
@@ -112,8 +82,35 @@ public class NotificationSettingsModel extends AbstractModel<JSONObject, JSONObj
 	}
 
 	@Override
-	public void delete(Context context, ModelCallback<Void> callback, String... p) {
-		// TODO Auto-generated method stub
+	public void delete(Context context, final ModelCallback<Void> callback, String... p) {
+		JSONObject settings = new JSONObject();
+		try {
+			settings.put("type", "gcm");
+			settings.put("target", p[0]);
+		} catch (JSONException e) {
+			// Best effort
+			return;
+		}
 		
+		StringEntity requestEntity = null;
+		try {
+			requestEntity = new StringEntity(settings.toString(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			callback.error(e);
+			return;
+		}
+		requestEntity.setContentType("application/json");
+		BuddycloudHTTPHelper.delete(url(context), true, true, requestEntity, 
+				context, new ModelCallback<JSONObject>() {
+			@Override
+			public void success(JSONObject response) {
+				callback.success(null);
+			}
+
+			@Override	
+			public void error(Throwable throwable) {
+				callback.error(throwable);
+			}
+		});
 	}
 }

@@ -128,6 +128,11 @@ public class BuddycloudHTTPHelper {
 		reqObject("delete", url, auth, acceptsJSON, null, parent, callback);
 	}
 	
+	public static void delete(String url, boolean auth, boolean acceptsJSON, HttpEntity entity, 
+			Context parent, final ModelCallback<JSONObject> callback) {
+		reqObject("delete", url, auth, acceptsJSON, entity, parent, callback);
+	}
+	
 	public static void reqStatus(String url, boolean auth, 
 			Context parent, ModelCallback<Integer> callback) {
 		RequestAsyncTask<Integer> task = new RequestAsyncTask<Integer>("get", url, null, auth, 

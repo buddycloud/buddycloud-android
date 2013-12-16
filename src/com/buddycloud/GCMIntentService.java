@@ -18,6 +18,7 @@ import com.buddycloud.notifications.GCMFollowRequestApprovedNotificationListener
 import com.buddycloud.notifications.GCMFollowRequestNotificationListener;
 import com.buddycloud.notifications.GCMNotificationListener;
 import com.buddycloud.notifications.GCMPostNotificationListener;
+import com.buddycloud.preferences.Preferences;
 import com.google.android.gcm.GCMBaseIntentService;
 import com.google.android.gcm.GCMRegistrar;
 
@@ -97,8 +98,13 @@ public class GCMIntentService extends GCMBaseIntentService {
 	}
 
 	@Override
-	protected void onRegistered(Context arg0, String regId) {
+	protected void onRegistered(Context context, String regId) {
 		sendToPusher(getApplicationContext(), regId);
+		String currentRegId = Preferences.getPreference(context, Preferences.CURRENT_GCM_ID);
+		if (currentRegId != null && !regId.equals(currentRegId)) {
+			removeFromPusher(context, currentRegId);
+		}
+		Preferences.setPreference(context, Preferences.CURRENT_GCM_ID, regId);
 	}
 
 	public static void sendToPusher(final Context context, String regId) {
@@ -130,9 +136,26 @@ public class GCMIntentService extends GCMBaseIntentService {
 					}
 				});
 	}
+	
+	
+	public static void removeFromPusher(final Context context, String regId) {
+		NotificationSettingsModel.getInstance().delete(context, 
+				new ModelCallback<Void>() {
+					@Override
+					public void success(Void response) {
+						Log.i(TAG, "Succesfully removed GCM settings.");
+						GCMRegistrar.setRegisteredOnServer(context, false);
+					}
+					@Override
+					public void error(Throwable throwable) {
+						Log.e(TAG, "Failed to remove GCM settings.", throwable);
+					}
+				}, regId);
+	}
 
 	@Override
-	protected void onUnregistered(Context arg0, String regId) {
+	protected void onUnregistered(Context context, String regId) {
 		Log.w(TAG, "Unregistered from GCM " + regId);
+		removeFromPusher(context, regId);
 	}
 }

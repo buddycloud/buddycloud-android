@@ -36,7 +36,7 @@ public class GCMUtils {
 		GCMRegistrar.checkDevice(context);
 		GCMRegistrar.checkManifest(context);
 		final String regId = GCMRegistrar.getRegistrationId(context);
-		if (regId.equals("")) {
+		if (regId == null || regId.equals("")) {
 			NotificationMetadataModel.getInstance().getFromServer(context, new ModelCallback<JSONObject>() {
 				@Override
 				public void success(JSONObject response) {
