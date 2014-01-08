@@ -177,6 +177,7 @@
 	<string name="gcm_single_notification_title">Post from %1$s</string>
 	<string name="gcm_multi_notification_title">%1$s new posts</string>
 	<string name="gcm_multi_notification_content">From %1$s and %2$s</string>
+	<string name="gcm_multi_notification_content_single_author">From %1$s</string>
 	
 	<string name="gcm_follow_request_notification_title">Follow request</string>
 	<string name="gcm_follow_request_notification_content">%1$s wants to follow %2$s</string>

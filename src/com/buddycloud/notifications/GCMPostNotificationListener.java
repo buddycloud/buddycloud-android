@@ -66,11 +66,17 @@ public class GCMPostNotificationListener implements GCMNotificationListener {
 				allAuthorsButLastBuilder.append(gcmAuthor);
 			}
 			
-			String lastAuthor = gcmAuthorsUniqueList.get(
-					gcmAuthorsUniqueList.size() - 1);
-			
-			mBuilder.setContentText(context.getString(R.string.gcm_multi_notification_content, 
-					allAuthorsButLastBuilder.toString(), lastAuthor));
+			if (gcmAuthorsUniqueList.size() > 1) {
+				String lastAuthor = gcmAuthorsUniqueList.get(
+						gcmAuthorsUniqueList.size() - 1);
+				mBuilder.setContentText(context.getString(
+						R.string.gcm_multi_notification_content, 
+						allAuthorsButLastBuilder.toString(), lastAuthor));
+			} else {
+				mBuilder.setContentText(context.getString(
+						R.string.gcm_multi_notification_content_single_author, 
+						allAuthorsButLastBuilder.toString()));
+			}
 		} else {
 			mBuilder.setContentTitle(context.getString(
 					R.string.gcm_single_notification_title, authorJid));
