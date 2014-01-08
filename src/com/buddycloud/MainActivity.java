@@ -17,6 +17,7 @@ import com.buddycloud.fragments.ContentFragment;
 import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.fragments.SearchChannelsFragment;
 import com.buddycloud.fragments.SubscribedChannelsFragment;
+import com.buddycloud.model.SyncModel;
 import com.buddycloud.notifications.GCMEvent;
 import com.buddycloud.notifications.GCMUtils;
 import com.buddycloud.preferences.Preferences;
@@ -243,6 +244,8 @@ public class MainActivity extends SlidingFragmentActivity {
 		Bundle args = new Bundle();
 		args.putString(GenericChannelsFragment.CHANNEL, channelJid);
 		channelStreamFrag.setArguments(args);
+		
+		SyncModel.getInstance().visitChannel(this, channelJid);
 		
 		getSupportFragmentManager()
         	.beginTransaction()
