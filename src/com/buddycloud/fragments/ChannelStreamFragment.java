@@ -258,7 +258,6 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 		
 		JSONObject post = createJSONPost(postContent);
 		postContent.setText("");
-		InputUtils.hideKeyboard(getActivity(), postContent);
 		
 		PostsModel.getInstance().save(getActivity(), post, smartify(
 				new ModelCallback<JSONObject>() {
@@ -267,7 +266,6 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 				Toast.makeText(getActivity().getApplicationContext(), 
 						getString(R.string.message_post_created), Toast.LENGTH_LONG).show();
 				fillRemotely(null, null);
-				scrollUp();
 			}
 			
 			@Override
@@ -541,5 +539,7 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 				parentCard.addPendingCard(pendingItem);
 			}
 		}
+		InputUtils.hideKeyboard(getActivity());
+		scrollUp();
 	}
 }

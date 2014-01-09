@@ -41,7 +41,6 @@ import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
-import com.buddycloud.utils.InputUtils;
 import com.buddycloud.utils.MeasuredMediaView;
 import com.buddycloud.utils.MeasuredMediaView.MeasureListener;
 import com.buddycloud.utils.TextUtils;
@@ -362,7 +361,6 @@ public class PostCard extends AbstractCard {
 		
 		JSONObject replyPost = createReply(replyTxt);
 		replyTxt.setText("");
-		InputUtils.hideKeyboard(context, replyTxt);
 		PostsModel.getInstance().save(context, replyPost, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
