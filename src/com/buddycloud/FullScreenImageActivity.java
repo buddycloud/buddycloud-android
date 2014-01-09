@@ -1,14 +1,10 @@
 package com.buddycloud;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.buddycloud.utils.ImageHelper;
 import com.buddycloud.utils.TouchImageView;
-import com.squareup.picasso.Picasso.LoadedFrom;
-import com.squareup.picasso.Target;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class FullScreenImageActivity extends SherlockFragmentActivity {
 
@@ -34,25 +30,7 @@ public class FullScreenImageActivity extends SherlockFragmentActivity {
 
 	private void loadToTarget(String key) {
 		String imageURL = getIntent().getStringExtra(key);
-		ImageHelper.picasso(getApplicationContext()).load(imageURL).into(new Target() {
-			@Override
-			public void onBitmapLoaded(Bitmap arg0, LoadedFrom arg1) {
-				imageView.setImageBitmap(arg0);
-				imageView.forceLayout();
-			}
-
-			@Override
-			public void onBitmapFailed(Drawable arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void onPrepareLoad(Drawable arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+		ImageLoader.getInstance().displayImage(imageURL, imageView);
 	}
 	
 }

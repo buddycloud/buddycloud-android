@@ -50,6 +50,8 @@ import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
 import com.buddycloud.utils.InputUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class ChannelStreamFragment extends ContentFragment implements ModelListener {
@@ -69,10 +71,13 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
 		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
 		ImageView avatarView = (ImageView) view.findViewById(R.id.bcCommentPic);
-		ImageHelper.picasso(getActivity()).load(avatarURL)
-				.placeholder(R.drawable.personal_50px)
-				.error(R.drawable.personal_50px)
-				.into(avatarView);
+		
+		DisplayImageOptions dio = new DisplayImageOptions.Builder()
+				.cloneFrom(ImageHelper.defaultImageOptions())
+				.showImageOnFail(R.drawable.personal_50px)
+				.showImageOnLoading(R.drawable.personal_50px)
+				.build();
+		ImageLoader.getInstance().displayImage(avatarURL, avatarView, dio);
 		
 		final ImageView postButton = (ImageView) view.findViewById(R.id.postButton);
 		postButton.setEnabled(false);

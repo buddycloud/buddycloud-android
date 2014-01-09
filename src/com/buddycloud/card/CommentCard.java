@@ -24,6 +24,8 @@ import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
 import com.buddycloud.utils.TextUtils;
 import com.buddycloud.utils.TimeUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class CommentCard extends AbstractCard {
 	
@@ -68,12 +70,16 @@ public class CommentCard extends AbstractCard {
 		
 		String avatarURL = AvatarUtils.avatarURL(viewGroup.getContext(), replyAuthor);
 		ImageView avatarView = holder.getView(R.id.bcProfilePic);
-		ImageHelper.picasso(viewGroup.getContext()).load(avatarURL)
-				.placeholder(R.drawable.personal_50px)
-				.error(R.drawable.personal_50px)
-				.transform(ImageHelper.createRoundTransformation(
-						viewGroup.getContext(), 16, false, -1))
-				.into(avatarView);
+		
+		DisplayImageOptions dio = new DisplayImageOptions.Builder()
+				.cloneFrom(ImageHelper.defaultImageOptions())
+				.showImageOnFail(R.drawable.personal_50px)
+				.showImageOnLoading(R.drawable.personal_50px)
+				.preProcessor(ImageHelper.createRoundProcessor(16, false, -1))
+				.build();
+		
+		ImageLoader.getInstance().displayImage(avatarURL, avatarView, dio);
+		
 		avatarView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {

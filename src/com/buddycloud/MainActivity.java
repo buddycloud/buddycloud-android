@@ -41,6 +41,8 @@ public class MainActivity extends SlidingFragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		strict();
+		ImageHelper.configUIL(getApplicationContext());
+		
 		super.onCreate(savedInstanceState);
 		
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -57,8 +59,6 @@ public class MainActivity extends SlidingFragmentActivity {
 					savedInstanceState, "mContent");
 		}
 		
-		ImageHelper.reset();
-        
 		if (shouldLogin()) {
 			Intent loginActivity = new Intent();
 			loginActivity.setClass(getApplicationContext(), LoginActivity.class);

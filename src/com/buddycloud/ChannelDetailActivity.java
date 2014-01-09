@@ -29,6 +29,10 @@ import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.DiscCacheUtil;
+import com.nostra13.universalimageloader.core.assist.MemoryCacheUtil;
 
 public class ChannelDetailActivity extends SherlockActivity {
 
@@ -167,10 +171,21 @@ public class ChannelDetailActivity extends SherlockActivity {
 	private ImageView loadAvatar(final String channelJid, boolean skipCache) {
 		ImageView avatarView = (ImageView) findViewById(R.id.avatarView);
 		String avatarURL = AvatarUtils.avatarURL(this, channelJid);
-		ImageHelper.picassoSkipCache(this).load(avatarURL)
-				.placeholder(R.drawable.personal_50px)
-				.error(R.drawable.personal_50px)
-				.into(avatarView);
+		
+		DisplayImageOptions dio = new DisplayImageOptions.Builder()
+				.cloneFrom(ImageHelper.defaultImageOptions())
+				.showImageOnFail(R.drawable.personal_50px)
+				.showImageOnLoading(R.drawable.personal_50px)
+				.resetViewBeforeLoading(true)
+				.build();
+		
+		if (skipCache) {
+			DiscCacheUtil.removeFromCache(avatarURL, ImageLoader.getInstance().getDiscCache());
+			MemoryCacheUtil.removeFromCache(avatarURL, ImageLoader.getInstance().getMemoryCache());
+		}
+		
+		ImageLoader.getInstance().displayImage(avatarURL, avatarView, dio);
+		
 		return avatarView;
 	}
 

@@ -12,6 +12,8 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.buddycloud.R;
 import com.buddycloud.fragments.adapter.GenericChannelAdapter;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
 
 public abstract class GenericChannelsFragment extends SherlockFragment {
 
@@ -44,6 +46,8 @@ public abstract class GenericChannelsFragment extends SherlockFragment {
 		channelsView.setEmptyView(view.findViewById(R.id.channelListProgress));
 		channelsView.setAdapter(adapter);
 		channelsView.setOnChildClickListener(channelItemListener);
+		PauseOnScrollListener listener = new PauseOnScrollListener(ImageLoader.getInstance(), true, true);
+		channelsView.setOnScrollListener(listener);
 		
 		expandAll(view);
 		

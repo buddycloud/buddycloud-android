@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
@@ -34,6 +33,8 @@ import com.buddycloud.utils.FileUtils;
 import com.buddycloud.utils.ImageHelper;
 import com.buddycloud.utils.MeasuredMediaView;
 import com.buddycloud.utils.MeasuredMediaView.MeasureListener;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ShareActivity extends Activity {
 
@@ -52,11 +53,14 @@ public class ShareActivity extends Activity {
 		
 		String avatarURL = AvatarUtils.avatarURL(this, myJid);
 		ImageView avatarView = (ImageView) findViewById(R.id.bcProfilePic);
-		ImageHelper.picasso(this).load(avatarURL)
-				.placeholder(R.drawable.personal_50px)
-				.error(R.drawable.personal_50px)
-				.transform(ImageHelper.createRoundTransformation(this, 16, false, -1))
-				.into(avatarView);
+		
+		DisplayImageOptions dio = new DisplayImageOptions.Builder()
+				.cloneFrom(ImageHelper.defaultImageOptions())
+				.showImageOnFail(R.drawable.personal_50px)
+				.showImageOnLoading(R.drawable.personal_50px)
+				.preProcessor(ImageHelper.createRoundProcessor(16, false, -1))
+				.build();
+		ImageLoader.getInstance().displayImage(avatarURL, avatarView, dio);
 		
 		targetChannelView.setOnTouchListener(new OnTouchListener() {
 
@@ -141,12 +145,11 @@ public class ShareActivity extends Activity {
 		imageView.setMeasureListener(new MeasureListener() {
 			@Override
 			public void measure(int widthMeasureSpec, int heightMeasureSpec) {
-				Context context = getApplicationContext();
-				ImageHelper.picasso(context)
-						.load(uri)
-						.transform(ImageHelper.createRoundTransformation(
-								context, 8, true,widthMeasureSpec))
-						.into(imageView);
+				DisplayImageOptions dio = new DisplayImageOptions.Builder()
+						.cloneFrom(ImageHelper.defaultImageOptions())
+						.preProcessor(ImageHelper.createRoundProcessor(8, true, widthMeasureSpec))
+						.build();
+				ImageLoader.getInstance().displayImage(uri.toString(), imageView, dio);
 			}
 		});
 		findViewById(R.id.captionTextAlt).requestFocus();

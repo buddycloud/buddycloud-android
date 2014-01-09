@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.buddycloud.R;
 import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.model.SyncModel;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ChannelAdapterHelper {
 
@@ -87,10 +89,13 @@ public class ChannelAdapterHelper {
 
 	private static void loadAvatar(Context parent, ViewHolder holder, String channelJid) {
 		String avatarURL = AvatarUtils.avatarURL(parent, channelJid);
-		ImageHelper.picasso(parent).load(avatarURL)
-				.placeholder(R.drawable.personal_50px)
-				.error(R.drawable.personal_50px)
-				.into(holder.avatar);
+		DisplayImageOptions dio = new DisplayImageOptions.Builder()
+				.cloneFrom(ImageHelper.defaultImageOptions())
+				.showImageOnFail(R.drawable.personal_50px)
+				.showImageOnLoading(R.drawable.personal_50px)
+				.build();
+		
+		ImageLoader.getInstance().displayImage(avatarURL, holder.avatar, dio);
 	}
 	
 	private static void loadCounters(Context context, final ViewHolder holder, final String channelJid) {

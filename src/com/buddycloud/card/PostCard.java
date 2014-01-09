@@ -46,8 +46,10 @@ import com.buddycloud.utils.MeasuredMediaView.MeasureListener;
 import com.buddycloud.utils.TextUtils;
 import com.buddycloud.utils.TimeUtils;
 import com.buddycloud.utils.Typefaces;
-import com.squareup.picasso.Picasso.LoadedFrom;
-import com.squareup.picasso.Target;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 public class PostCard extends AbstractCard {
 	
@@ -123,11 +125,15 @@ public class PostCard extends AbstractCard {
 		String avatarURL = AvatarUtils.avatarURL(viewGroup.getContext(), postAuthor);
 		final Context context = viewGroup.getContext();
 		ImageView avatarView = holder.getView(R.id.bcProfilePic);
-		ImageHelper.picasso(viewGroup.getContext()).load(avatarURL)
-				.placeholder(R.drawable.personal_50px)
-				.error(R.drawable.personal_50px)
-				.transform(ImageHelper.createRoundTransformation(context, 16, false, -1))
-				.into(avatarView);
+		
+		DisplayImageOptions dio = new DisplayImageOptions.Builder()
+				.cloneFrom(ImageHelper.defaultImageOptions())
+				.showImageOnFail(R.drawable.personal_50px)
+				.showImageOnLoading(R.drawable.personal_50px)
+				.preProcessor(ImageHelper.createRoundProcessor(16, false, -1))
+				.build();
+		ImageLoader.getInstance().displayImage(avatarURL, avatarView, dio);
+		
 		avatarView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -197,11 +203,14 @@ public class PostCard extends AbstractCard {
 			ImageView replyAuthorView = holder.getView(R.id.replyAuthorView);
 			String replyAuthorURL = AvatarUtils.avatarURL(viewGroup.getContext(), 
 					Preferences.getPreference(context, Preferences.MY_CHANNEL_JID));
-			ImageHelper.picasso(viewGroup.getContext()).load(replyAuthorURL)
-					.placeholder(R.drawable.personal_50px)
-					.error(R.drawable.personal_50px)
-					.transform(ImageHelper.createRoundTransformation(context, 16, false, -1))
-					.into(replyAuthorView);
+//			ImageHelper.picasso(viewGroup.getContext()).load(replyAuthorURL)
+//					.placeholder(R.drawable.personal_50px)
+//					.error(R.drawable.personal_50px)
+//					.transform(ImageHelper.createRoundTransformation(context, 16, false, -1))
+//					.into(replyAuthorView);
+			
+			ImageLoader.getInstance().displayImage(replyAuthorURL, replyAuthorView, dio);
+			
 			final Button replyBtn = holder.getView(R.id.replyBtn);
 			replyBtn.setTypeface(Typefaces.get(context,  "fonts/Roboto-Light.ttf"));
 			final EditText replyTxt = holder.getView(R.id.replyContentTxt);
@@ -279,48 +288,47 @@ public class PostCard extends AbstractCard {
 			final MeasuredMediaView mediaView, int widthMeasureSpec) {
 		final String imageURLLo = getMediaLoURL(mediaArray, context);
 		
-		ImageHelper.picasso(context)
-			.load(imageURLLo)
-			.transform(ImageHelper.createRoundTransformation(context, 8, 
-					true, widthMeasureSpec))
-			.into(new Target() {
+		DisplayImageOptions dio = new DisplayImageOptions.Builder()
+				.cloneFrom(ImageHelper.defaultImageOptions())
+				.preProcessor(ImageHelper.createRoundProcessor(8, true, widthMeasureSpec))
+				.build();
+		
+		ImageLoader.getInstance().displayImage(imageURLLo, mediaView, dio, new ImageLoadingListener() {
 			
-				@Override
-				public void onBitmapLoaded(Bitmap arg0, LoadedFrom arg1) {
-					contentTextViewAlt.setVisibility(View.VISIBLE);
-					contentTextView.setVisibility(View.INVISIBLE);
-					contentTextViewAlt.setText(anchoredContent);
-					contentTextViewAlt.setMovementMethod(LinkMovementMethod.getInstance());
-					
-					mediaView.setImageBitmap(arg0);
-					mediaView.forceLayout();
-					
-					final String imageURLHi = getMediaHiURL(mediaArray, context);
-					ImageHelper.picasso(context).load(imageURLHi).fetch();
-					
-					mediaView.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							Intent intent = new Intent();
-							intent.setClass(context, FullScreenImageActivity.class);
-							intent.putExtra(FullScreenImageActivity.IMAGE_URL, imageURLLo);
-							intent.putExtra(FullScreenImageActivity.IMAGE_URL_HIGH_RES, imageURLHi);
-							activity.startActivityForResult(intent, FullScreenImageActivity.REQUEST_CODE);
-						}
-					});
-				}
+			@Override
+			public void onLoadingStarted(String arg0, View arg1) {
 				
-				@Override
-				public void onBitmapFailed(Drawable arg0) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void onPrepareLoad(Drawable arg0) {
-					// TODO Auto-generated method stub
-					
-				}
+			}
+			
+			@Override
+			public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
+			}
+			
+			@Override
+			public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
+				contentTextViewAlt.setVisibility(View.VISIBLE);
+				contentTextView.setVisibility(View.INVISIBLE);
+				contentTextViewAlt.setText(anchoredContent);
+				contentTextViewAlt.setMovementMethod(LinkMovementMethod.getInstance());
+				
+				final String imageURLHi = getMediaHiURL(mediaArray, context);
+				
+				mediaView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent();
+						intent.setClass(context, FullScreenImageActivity.class);
+						intent.putExtra(FullScreenImageActivity.IMAGE_URL, imageURLLo);
+						intent.putExtra(FullScreenImageActivity.IMAGE_URL_HIGH_RES, imageURLHi);
+						activity.startActivityForResult(intent, FullScreenImageActivity.REQUEST_CODE);
+					}
+				});
+			}
+			
+			@Override
+			public void onLoadingCancelled(String arg0, View arg1) {
+				// TODO Auto-generated method stub
+			}
 		});
 	}
 	
