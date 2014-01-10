@@ -17,6 +17,7 @@ import com.buddycloud.ChangePasswordActivity;
 import com.buddycloud.R;
 import com.buddycloud.model.AccountModel;
 import com.buddycloud.model.ModelCallback;
+import com.buddycloud.model.SyncModel;
 import com.buddycloud.model.db.BuddycloudSQLiteOpenHelper;
 import com.buddycloud.preferences.Preferences;
 
@@ -55,11 +56,37 @@ public class SettingsFragment extends PreferenceFragment {
 			changePassword(context);
 			return true;
 		}
+		if (preference.getKey().equals("pref_key_mark_all_as_read")) {
+			confirmMarkAllAsRead(context);
+			return true;
+		}
 		if (preference.getKey().equals("pref_key_about_bc")) {
 			openAbout(context);
 			return true;
 		}
 		return false;
+	}
+
+	private static void confirmMarkAllAsRead(final Context context) {
+		new AlertDialog.Builder(context)
+				.setIcon(android.R.drawable.ic_dialog_alert)
+				.setTitle(context.getString(R.string.title_confirm_mark_all_as_read))
+				.setMessage(context.getString(R.string.message_confirm_mark_all_as_read))
+				.setPositiveButton(R.string.yes,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								markAllAsRead(context);
+							}
+						}).setNegativeButton(R.string.no, null).show();
+	}
+
+	private static void markAllAsRead(Context context) {
+		SyncModel.getInstance().resetUnreadCounters(context);
+		Toast.makeText(context, 
+				context.getString(R.string.message_mark_all_as_read_success), 
+				Toast.LENGTH_LONG).show();
 	}
 
 	private static void openAbout(Context context) {

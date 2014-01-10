@@ -60,8 +60,10 @@
         <Preference
             android:key="pref_key_change_password"
             android:title="@string/pref_change_password_title"/>
+        <Preference
+            android:key="pref_key_mark_all_as_read"
+            android:title="@string/pref_mark_all_as_read"/>
     </PreferenceCategory>
-    
     
     <PreferenceCategory 
         android:title="@string/pref_about_category_title"

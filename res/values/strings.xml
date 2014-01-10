@@ -171,6 +171,7 @@
 	
 	<string name="pref_account_category_title">Account</string>
 	<string name="pref_change_password_title">Change password</string>
+	<string name="pref_mark_all_as_read">Mark all channels as read</string>
 	
 	<string name="pref_delete_account_title">Delete buddycloud account</string>
 	
@@ -221,5 +222,9 @@
 	<string name="about_buddycloud_protocol_content">buddycloud is a new way to build communication tools. The buddycloud protocol enables communication, file sharing and chat, using open standards and is secure.</string>
     <string name="about_buddycloud_contributors_title">Contributors</string>
     <string name="about_buddycloud_version_title">Version</string>
+    
+    <string name="title_confirm_mark_all_as_read">Mark as read</string>
+	<string name="message_confirm_mark_all_as_read">This will reset the unread counters for all channels you follow. Are you sure?</string>
+	<string name="message_mark_all_as_read_success">Unread counters reset</string>
     
 </resources>

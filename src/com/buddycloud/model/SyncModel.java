@@ -132,6 +132,11 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 		notifyChanged();
 	}
 	
+	public void resetUnreadCounters(Context context) {
+		UnreadCountersDAO.getInstance(context).resetUnreadCounters();
+		notifyChanged();
+	}
+	
 	public void fill(Context context, final ModelCallback<Void> callback, String... p) {
 		UnreadCountersDAO unreadCountersDAO = UnreadCountersDAO.getInstance(context);
 		sync(unreadCountersDAO.getAll(), context, callback);

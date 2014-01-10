@@ -97,6 +97,19 @@ public class UnreadCountersDAO implements DAO<JSONObject, JSONObject> {
 		return false;
 	}
 	
+	public boolean resetUnreadCounters() {
+		ContentValues values = new ContentValues();
+		values.put(UnreadCountersTableHelper.COLUMN_USER, myJid);
+		values.put(UnreadCountersTableHelper.COLUMN_TOTAL_COUNT, 0);
+		values.put(UnreadCountersTableHelper.COLUMN_REPLY_COUNT, 0);
+		values.put(UnreadCountersTableHelper.COLUMN_MENTIONS_COUNT, 0);
+		
+		String filter = UnreadCountersTableHelper.COLUMN_USER + "=\"" + myJid + "\"";
+		int rowsAffected = db.update(UnreadCountersTableHelper.TABLE_NAME, 
+				values, filter, null);
+		return rowsAffected == 1;
+	}
+	
 	public JSONObject get(String channel) {
 		String filter = UnreadCountersTableHelper.COLUMN_USER + "=\"" + myJid + "\" AND " + 
 				UnreadCountersTableHelper.COLUMN_CHANNEL + "=\"" + channel + "\"";
