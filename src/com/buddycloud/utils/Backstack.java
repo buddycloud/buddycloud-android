@@ -64,7 +64,7 @@ public class Backstack {
 
 	private void popChannel(Bundle args) {
 		activity.showChannelFragment(
-				args.getString(GenericChannelsFragment.CHANNEL), true);
+				args.getString(GenericChannelsFragment.CHANNEL), true, true);
 	}
 	
 	private void popGenericStream(Bundle args) {

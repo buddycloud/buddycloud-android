@@ -188,7 +188,7 @@ public class MainActivity extends SlidingFragmentActivity {
 		}
 		
 		if (channelJid == null) {
-			showChannelFragment(myJid);
+			showChannelFragment(myJid, false, false);
 			showMenu();
 		} else {
 			showChannelFragment(channelJid);
@@ -227,12 +227,13 @@ public class MainActivity extends SlidingFragmentActivity {
 	}
 
 	public ChannelStreamFragment showChannelFragment(String channelJid) {
-		return showChannelFragment(channelJid, false);
+		return showChannelFragment(channelJid, false, true);
 	}
 	
-	public ChannelStreamFragment showChannelFragment(String channelJid, boolean fromBackstack) {
+	public ChannelStreamFragment showChannelFragment(String channelJid, 
+			boolean pushPreviousToBackstack, boolean clearCounters) {
 		
-		if (!fromBackstack && channelStreamFrag != null) {
+		if (!pushPreviousToBackstack && channelStreamFrag != null) {
 			String previousChannel = channelStreamFrag.getArguments().getString(
 					GenericChannelsFragment.CHANNEL);
 			if (previousChannel != null) {
@@ -245,7 +246,9 @@ public class MainActivity extends SlidingFragmentActivity {
 		args.putString(GenericChannelsFragment.CHANNEL, channelJid);
 		channelStreamFrag.setArguments(args);
 		
-		SyncModel.getInstance().visitChannel(this, channelJid);
+		if (clearCounters) {
+			SyncModel.getInstance().visitChannel(this, channelJid);
+		}
 		
 		getSupportFragmentManager()
         	.beginTransaction()
