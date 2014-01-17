@@ -21,7 +21,6 @@ public class FindFriendsAdapter extends GenericChannelAdapter {
 
 	public static final String ADAPTER_NAME = "FIND_FRIENDS";
 	
-	@SuppressLint("DefaultLocale")
 	public void configure(final GenericSelectableChannelsFragment fragment, View view) {
 		
 		final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
@@ -44,6 +43,7 @@ public class FindFriendsAdapter extends GenericChannelAdapter {
 				}
 				final String matcherName = matcher.getName();
 				matcher.match(fragment.getActivity(), new ModelCallback<JSONArray>() {
+					@SuppressLint("DefaultLocale")
 					@Override
 					public void success(JSONArray response) {
 						for (int i = 0; i < response.length(); i++) {

@@ -33,6 +33,10 @@ public class FacebookContactMatcher implements ContactMatcher {
 			@Override
 			public void call(Session session, SessionState state,
 					Exception exception) {
+				if (exception != null) {
+					callback.error(exception);
+					return;
+				}
 				if (session.isOpened()) {
 					getFriends(activity, session, callback);
 				}
@@ -45,6 +49,10 @@ public class FacebookContactMatcher implements ContactMatcher {
 		Request.newMeRequest(session, new GraphUserCallback() {
 			@Override
 			public void onCompleted(final GraphUser user, Response response) {
+				if (response.getError() != null) {
+					callback.error(response.getError().getException());
+					return;
+				}
 				getFriends(context, session, user, callback);
 			}
 		}).executeAsync();
@@ -55,6 +63,10 @@ public class FacebookContactMatcher implements ContactMatcher {
 		Request.newGraphPathRequest(session, "/me/friends", new Callback() {
 			@Override
 			public void onCompleted(Response response) {
+				if (response.getError() != null) {
+					callback.error(response.getError().getException());
+					return;
+				}
 				matchContacts(context, user, response, callback);
 			}
 		}).executeAsync();
