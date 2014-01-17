@@ -21,6 +21,7 @@ import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.SearchActivity;
 import com.buddycloud.SettingsActivity;
+import com.buddycloud.fragments.adapter.FindFriendsAdapter;
 import com.buddycloud.fragments.adapter.MostActiveChannelsAdapter;
 import com.buddycloud.fragments.adapter.RecommendedChannelsAdapter;
 import com.buddycloud.fragments.adapter.SubscribedChannelsAdapter;
@@ -120,6 +121,9 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 			return true;
 		} else if (item.getItemId() == R.id.menu_create_channel) {
 			createNewTopicChannel();
+			return true;
+		} else if (item.getItemId() == R.id.menu_find_friends) {
+			showGenericActivity(FindFriendsAdapter.ADAPTER_NAME);
 			return true;
 		} else if (item.getItemId() == R.id.menu_settings) {
 			Intent settingsActivityIntent = new Intent();

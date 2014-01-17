@@ -1,6 +1,7 @@
 <resources>
 
     <string name="app_name">buddycloud</string>
+	<string name="app_id">246626368832474</string>
     
     <string name="yes">Yes</string>
     <string name="yes_and_remember">Yes (Remember this choice)</string>
@@ -14,6 +15,7 @@
     <string name="menu_find_nearby">Nearby channels</string>
     <string name="menu_find_active">Active channels</string>
     <string name="menu_find_recommended">Recommended channels</string>
+    <string name="menu_find_friends">Find friends</string>
     
     <string name="menu_follow">Follow</string>
     <string name="menu_unfollow">Unfollow</string>

@@ -24,4 +24,8 @@
     <item android:id="@+id/menu_find_recommended"
         android:title="@string/menu_find_recommended"
         android:showAsAction="never" />
+    
+    <item android:id="@+id/menu_find_friends"
+        android:title="@string/menu_find_friends"
+        android:showAsAction="never" />
 </menu>
