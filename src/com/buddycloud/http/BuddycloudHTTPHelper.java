@@ -118,6 +118,11 @@ public class BuddycloudHTTPHelper {
 		reqObject("post", url, auth, acceptsJSON, entity, parent, callback);
 	}
 	
+	public static void postArray(String url, boolean auth, boolean acceptsJSON, HttpEntity entity, Context parent, 
+			final ModelCallback<JSONArray> callback) {
+		reqArray("post", url, auth, acceptsJSON, entity, parent, callback);
+	}
+	
 	public static void post(String url, Map<String, String> headers, HttpEntity entity, Context parent, 
 			final ModelCallback<JSONObject> callback) {
 		reqObject("post", url, headers, entity, parent, callback);

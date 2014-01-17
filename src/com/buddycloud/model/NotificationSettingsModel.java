@@ -3,6 +3,7 @@ package com.buddycloud.model;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.http.entity.StringEntity;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,7 +40,7 @@ public class NotificationSettingsModel extends AbstractModel<JSONObject, JSONObj
 
 	@Override
 	public void save(Context context, JSONObject object,
-			ModelCallback<JSONObject> callback, String... p) {
+			final ModelCallback<JSONObject> callback, String... p) {
 		StringEntity requestEntity = null;
 		try {
 			requestEntity = new StringEntity(object.toString(), "UTF-8");
@@ -48,7 +49,18 @@ public class NotificationSettingsModel extends AbstractModel<JSONObject, JSONObj
 			return;
 		}
 		requestEntity.setContentType("application/json");
-		BuddycloudHTTPHelper.post(url(context), true, false, requestEntity, context, callback);
+		BuddycloudHTTPHelper.postArray(url(context), true, false, requestEntity, context, 
+				new ModelCallback<JSONArray>() {
+			@Override
+			public void success(JSONArray response) {
+				callback.success(null);
+			}
+			
+			@Override
+			public void error(Throwable throwable) {
+				callback.error(throwable);				
+			}
+		});
 	}
 
 	private static String url(Context context) {
