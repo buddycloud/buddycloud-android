@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.buddycloud.fragments.GenericSelectableChannelsFragment;
 import com.buddycloud.fragments.contacts.ContactMatcher;
+import com.buddycloud.fragments.contacts.DeviceContactMatcher;
 import com.buddycloud.fragments.contacts.FacebookContactMatcher;
 import com.buddycloud.model.ModelCallback;
 
@@ -27,9 +28,9 @@ public class FindFriendsAdapter extends GenericChannelAdapter {
                 fragment.getActivity(),
                 android.R.layout.select_dialog_singlechoice);
         arrayAdapter.add("facebook");
+        arrayAdapter.add("contact list");
         arrayAdapter.add("twitter");
         arrayAdapter.add("google");
-        arrayAdapter.add("contact list");
 		
         final AlertDialog.Builder builderSingle = new AlertDialog.Builder(
         		fragment.getActivity());
@@ -37,10 +38,7 @@ public class FindFriendsAdapter extends GenericChannelAdapter {
         builderSingle.setAdapter(arrayAdapter, new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				ContactMatcher matcher = null;
-				if (which == 0) {
-					matcher = new FacebookContactMatcher();
-				}
+				ContactMatcher matcher = createMatcher(which);
 				final String matcherName = matcher.getName();
 				matcher.match(fragment.getActivity(), new ModelCallback<JSONArray>() {
 					@SuppressLint("DefaultLocale")
@@ -63,6 +61,20 @@ public class FindFriendsAdapter extends GenericChannelAdapter {
 		});
         builderSingle.show();
 	}
-	
 
+	protected ContactMatcher createMatcher(int which) {
+		ContactMatcher matcher = null;
+		switch (which) {
+		case 0:
+			matcher = new FacebookContactMatcher();
+			break;
+		case 1:
+			matcher = new DeviceContactMatcher();
+			break;
+		default:
+			break;
+		}
+		return matcher;
+	}
+	
 }

@@ -1,13 +1,10 @@
 package com.buddycloud.fragments.contacts;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
 
-import com.buddycloud.model.ContactMatchingModel;
 import com.buddycloud.model.ModelCallback;
 import com.facebook.Request;
 import com.facebook.Request.Callback;
@@ -83,27 +80,11 @@ public class FacebookContactMatcher implements ContactMatcher {
 			friendsHashes.put(friendHash);
 		}
 		
-		JSONObject contactMatchingReq = new JSONObject();
 		JSONArray myHashes = new JSONArray();
 		myHashes.put(user.getId());
-		try {
-			contactMatchingReq.put("mine", myHashes);
-			contactMatchingReq.put("others", friendsHashes);
-		} catch (JSONException e) {}
 		
-		ContactMatchingModel.getInstance().save(context, contactMatchingReq, 
-				new ModelCallback<JSONObject>() {
-			@Override
-			public void success(JSONObject response) {
-				JSONArray matchedJids = response.optJSONArray("items");
-				callback.success(matchedJids);
-			}
-			
-			@Override
-			public void error(Throwable throwable) {
-				callback.error(throwable);
-			}
-		});
+		ContactMatcherUtils.reportToFriendFinder(context, callback, 
+				friendsHashes, myHashes);
 	}
 
 	@Override
