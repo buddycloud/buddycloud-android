@@ -31,6 +31,10 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 		return channelsPerCategory.get(categories.get(groupPosition)).get(childPosition);
 	}
 	
+	protected Map<String, List<JSONObject>> getChannelsPerCategory() {
+		return channelsPerCategory;
+	}
+	
 	public void setCategoryOrder(String... categoryOrder) {
 		for (int i = 0; i < categoryOrder.length; i++) {
 			this.categoryOrder.put(categoryOrder[i], i);
@@ -171,7 +175,6 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 		
 		ExpandableListView listView = (ExpandableListView) viewGroup;
 	    listView.expandGroup(groupPosition);
-	    
 		return returningView;
 	}
 
@@ -189,5 +192,8 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 	}
 
 	public void configure(GenericSelectableChannelsFragment fragment, View view) {
+	}
+
+	public void onFinish() {
 	}
 }
