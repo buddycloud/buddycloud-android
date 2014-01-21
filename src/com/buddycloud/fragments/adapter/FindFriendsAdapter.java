@@ -6,12 +6,14 @@ import org.json.JSONArray;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.buddycloud.R;
 import com.buddycloud.fragments.GenericSelectableChannelsFragment;
 import com.buddycloud.fragments.contacts.ContactMatcher;
 import com.buddycloud.fragments.contacts.DeviceContactMatcher;
@@ -20,21 +22,25 @@ import com.buddycloud.model.ModelCallback;
 
 public class FindFriendsAdapter extends GenericChannelAdapter {
 
+	private static final int IN_DEVICE = 1;
+	private static final int FACEBOOK = 0;
+	
 	public static final String ADAPTER_NAME = "FIND_FRIENDS";
 	
 	public void configure(final GenericSelectableChannelsFragment fragment, View view) {
 		
 		final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 fragment.getActivity(),
-                android.R.layout.select_dialog_singlechoice);
-        arrayAdapter.add("facebook");
-        arrayAdapter.add("contact list");
-        arrayAdapter.add("twitter");
-        arrayAdapter.add("google");
+                android.R.layout.select_dialog_item);
+		
+		Context context = fragment.getActivity();
+		
+        arrayAdapter.add(context.getString(R.string.contact_matching_facebook));
+        arrayAdapter.add(context.getString(R.string.contact_matching_contact_list));
 		
         final AlertDialog.Builder builderSingle = new AlertDialog.Builder(
         		fragment.getActivity());
-        builderSingle.setTitle("Find friends");
+        builderSingle.setTitle(context.getString(R.string.contact_matching_title));
         builderSingle.setAdapter(arrayAdapter, new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -65,10 +71,10 @@ public class FindFriendsAdapter extends GenericChannelAdapter {
 	protected ContactMatcher createMatcher(int which) {
 		ContactMatcher matcher = null;
 		switch (which) {
-		case 0:
+		case FACEBOOK:
 			matcher = new FacebookContactMatcher();
 			break;
-		case 1:
+		case IN_DEVICE:
 			matcher = new DeviceContactMatcher();
 			break;
 		default:

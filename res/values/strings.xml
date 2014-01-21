@@ -229,4 +229,7 @@
 	<string name="message_confirm_mark_all_as_read">This will reset the unread counters for all channels you follow. Are you sure?</string>
 	<string name="message_mark_all_as_read_success">Unread counters reset</string>
     
+	<string name="contact_matching_title">Find friends</string>
+	<string name="contact_matching_facebook">facebook</string>
+	<string name="contact_matching_contact_list">contact list</string>
 </resources>
