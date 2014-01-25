@@ -85,7 +85,15 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 	
 	protected void addChannel(String category, JSONObject channelItem, Context context) {
 		addCategory(category);
-		channelsPerCategory.get(category).add(channelItem);
+		List<JSONObject> categoryChannels = channelsPerCategory.get(category);
+		for (JSONObject existentChannel : categoryChannels) {
+			if (existentChannel.optString("jid").equals(
+					channelItem.optString("jid"))) {
+				return;
+			}
+		}
+		
+		categoryChannels.add(channelItem);
 		if (ChannelMetadataModel.getInstance().getFromCache(
 				context, channelItem.optString("jid")) == null) {
 			fetchMetadata(channelItem, context);
