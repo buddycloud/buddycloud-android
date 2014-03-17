@@ -1,5 +1,6 @@
 package com.buddycloud.utils;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,34 +36,37 @@ public class DNSUtils {
 
 		Map<String, String> stringMap = null;
 		for (Record rec : recs) {
-			TXTRecord record = (TXTRecord) rec;
+			String rData = rec.rdataToString().replaceAll("\"", "");
+			List<String> rDataTokens = Arrays.asList(rData.split("\\s+"));
+			TXTRecord record = new TXTRecord(rec.getName(), rec.getDClass(), 
+					rec.getTTL(), rDataTokens);
 			List<String> strings = record.getStrings();
 			if (strings != null && strings.size() > 0) {
 				stringMap = parseStrings(strings);
 				break;
 			}
 		}
-		
+
 		if (stringMap == null) {
 			throw new RuntimeException("Domain has no TXT records for buddycloud.");
 		}
-		
+
 		String host = stringMap.get("host");
 		String protocol = stringMap.get("protocol");
 		String path = stringMap.get("path");
 		String port = stringMap.get("port");
-		
+
 		path = path == null || path.equals("/") ? "" : path;
 		port = port == null ? "" : port;
-		
+
 		return protocol + "://" + host + ":" + port + path;
 	}
 	
-	private static Map<String, String> parseStrings(List<String> strings) {
+	private static Map<String, String> parseStrings(List<String> rDataTokens) {
 		Map<String, String> stringsMap = new HashMap<String, String>();
-		for (String string : strings) {
-			String[] splitString = string.trim().split("=");
-			stringsMap.put(splitString[0], splitString[1]);
+		for (String rToken : rDataTokens) {
+			String[] splitToken = rToken.trim().split("=");
+			stringsMap.put(splitToken[0], splitToken[1]);
 		}
 		return stringsMap;
 	}
