@@ -14,11 +14,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.buddycloud.PendingPostsService;
 import com.buddycloud.http.BuddycloudHTTPHelper;
 import com.buddycloud.model.dao.PostsDAO;
 import com.buddycloud.model.dao.ThreadsDAO;
@@ -196,7 +194,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		return apiAddress + "/" + channel + POSTS_ENDPOINT + "/" + postId;
 	}
 	
-	public void savePendingPosts(final Context context, PendingPostsService service) {
+	public synchronized void savePendingPosts(final Context context) {
 		Semaphore semaphore = new Semaphore(0);
 		int permits = 0;
 		
@@ -207,7 +205,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 			for (int i = 0; i < posts.length(); i++) {
 				JSONObject post = posts.optJSONObject(i);
 				permits++;
-				savePendingPost(context, channelJid, post, service, semaphore);
+				savePendingPost(context, channelJid, post, semaphore);
 			}
 		}
 		
@@ -217,7 +215,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 	}
 
 	private void savePendingPost(final Context context, final String channelJid,
-			final JSONObject post, final PendingPostsService service, final Semaphore semaphore) {
+			final JSONObject post, final Semaphore semaphore) {
 		try {
 			JSONObject tempPost = new JSONObject(post, new String[] {"content", "replyTo", "media" });
 			StringEntity requestEntity = new StringEntity(tempPost.toString(), "UTF-8");
@@ -231,9 +229,6 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 						PostsDAO.getInstance(context).delete(channelJid, postId);
 						notifyDeleted(channelJid, postId, post.optString("replyTo", null));
 						notifyChanged();
-						if (PostsDAO.getInstance(context).getPending().isEmpty()) {
-							service.stop();
-						}
 						semaphore.release();
 					}
 
@@ -290,8 +285,6 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 
 				@Override
 				public void error(Throwable throwable) {
-					Intent i = new Intent(context, PendingPostsService.class);
-					context.startService(i);
 					callback.error(throwable);
 				}
 			});
