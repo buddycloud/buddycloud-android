@@ -1,116 +1,134 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFFFFF" >
+    android:layout_height="fill_parent"
+    android:background="#FFFFFF"
+    android:fillViewport="true"
+    android:isScrollContainer="true" >
 
-    <RelativeLayout 
-    	android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true">
-    
-    <ImageView
-        android:id="@+id/logoSquare"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:adjustViewBounds="true"
-        android:maxHeight="250dp"
-        android:maxWidth="250dp"
-        android:src="@drawable/square_logo_500" />
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" >
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/logoSquare"
-        android:layout_alignRight="@+id/logoSquare"
-        android:layout_below="@+id/logoSquare"
-        android:layout_marginTop="5dp"
-        android:orientation="vertical" >
-
-        <EditText
-            android:id="@+id/loginTxt"
-            android:layout_width="match_parent"
+        <TableLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:ems="10"
-            android:hint="@string/login_hint"
-            android:inputType="textEmailAddress" />
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:stretchColumns="1,2" >
 
-        <EditText
-            android:id="@+id/passwordTxt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:ems="10"
-            android:hint="@string/login_password"
-            android:inputType="textPassword"
-            android:imeOptions="actionDone" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" >
 
-        <ProgressBar
-                android:id="@+id/progressBar"
+                <ImageView
+                    android:id="@+id/logoSquare"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@color/bc_green_blue"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/square_logo_white" />
+            </TableRow>
+
+            <TableRow
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:visibility="gone" />
-        
-        <RelativeLayout
-            android:id="@+id/loginBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/bc_green"
-            android:padding="@dimen/login_button_padding" >
+                android:layout_marginTop="10dp" >
 
-            <com.buddycloud.utils.TypefacedTextView
-                xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="@string/login_button"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                buddycloud:typeface="Roboto-Light.ttf" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
 
-        </RelativeLayout>
-        
-        <RelativeLayout
-            android:id="@+id/createAccountBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/bc_orange"
-            android:layout_marginTop="5dp"
-            android:padding="@dimen/login_button_padding" >
+                    <EditText
+                        android:id="@+id/loginTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:ems="15"
+                        android:hint="@string/login_hint"
+                        android:inputType="textEmailAddress" />
 
-            <com.buddycloud.utils.TypefacedTextView
-                xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="@string/login_create_account_button"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                buddycloud:typeface="Roboto-Light.ttf" />
+                    <EditText
+                        android:id="@+id/passwordTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:ems="15"
+                        android:hint="@string/login_password"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPassword" />
 
-        </RelativeLayout>
-        
-        <com.buddycloud.utils.TypefacedTextView
-                xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
-                android:id="@+id/forgotPasswordText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="8dp"
-                android:text="@string/caption_forgot_password"
-                android:autoLink="all"
-                android:textSize="16sp"
-                buddycloud:typeface="Roboto-Light.ttf" />
-        
-    </LinearLayout>
-	</RelativeLayout>
-</RelativeLayout>
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:visibility="gone" />
+
+                    <RelativeLayout
+                        android:id="@+id/loginBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:background="@color/bc_green"
+                        android:padding="@dimen/login_button_padding" >
+
+                        <com.buddycloud.utils.TypefacedTextView
+                            xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+                            android:id="@+id/textView1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/login_button"
+                            android:textColor="#FFFFFF"
+                            android:textSize="20sp"
+                            buddycloud:typeface="Roboto-Light.ttf" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/createAccountBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/bc_orange"
+                        android:padding="@dimen/login_button_padding" >
+
+                        <com.buddycloud.utils.TypefacedTextView
+                            xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+                            android:id="@+id/textView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/login_create_account_button"
+                            android:textColor="#FFFFFF"
+                            android:textSize="20sp"
+                            buddycloud:typeface="Roboto-Light.ttf" />
+                    </RelativeLayout>
+
+                    <com.buddycloud.utils.TypefacedTextView
+                        xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+                        android:id="@+id/forgotPasswordText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:autoLink="all"
+                        android:text="@string/caption_forgot_password"
+                        android:textSize="16sp"
+                        buddycloud:typeface="Roboto-Light.ttf" />
+                </LinearLayout>
+            </TableRow>
+        </TableLayout>
+    </RelativeLayout>
+
+
+</ScrollView>

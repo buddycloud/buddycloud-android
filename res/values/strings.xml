@@ -98,15 +98,15 @@
 	<string name="channel_details_default_affiliation_hint">default affiliation</string>
 	<string name="channel_details_save">Save settings</string>
 	
-	<string name="create_account_channel_name">username</string>
-	<string name="create_account_domain_name">buddycloud-enabled site</string>
-	<string name="create_account_email_address">email address</string>
-	<string name="create_account_password">password</string>
-	<string name="create_account_repeat_password">repeat password</string>
+	<string name="create_account_channel_name">Username</string>
+	<string name="create_account_domain_name">Buddycloud-enabled site</string>
+	<string name="create_account_email_address">Email</string>
+	<string name="create_account_password">Password</string>
+	<string name="create_account_repeat_password">Repeat password</string>
 	<string name="create_account_domain_hint">The following buddycloud-enabled sites are available for new sign-ups</string>
 	
-	<string name="login_hint">user@example.com</string>
-	<string name="login_password">password</string>
+	<string name="login_hint">User@example.com</string>
+	<string name="login_password">Password</string>
     <string name="login_button">Login</string>
     <string name="login_create_account_button">Create new account</string>
     <string name="login_error_wrong_credentials">Wrong password</string>
@@ -200,7 +200,7 @@
 	<string name="message_channel_deleted">Channel was successfully deleted</string>
 	<string name="message_channel_deletion_failed">Could not delete channel</string>
 	
-	<string name="caption_forgot_password">forgot password</string>
+	<string name="caption_forgot_password">Forgot your password?</string>
 	<string name="title_reset_password">Reset password</string>
 	<string name="message_reset_password">Type your username. You will receive an email with a new random password.</string>
 	<string name="message_password_successfully_reset">Password successfully reset</string>

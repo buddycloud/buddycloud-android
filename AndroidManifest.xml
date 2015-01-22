@@ -77,10 +77,12 @@
         <activity
             android:name=".CreateAccountActivity"
             android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".LoginActivity"
+            android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait">
         </activity>
