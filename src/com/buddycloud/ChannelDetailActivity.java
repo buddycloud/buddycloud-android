@@ -167,7 +167,19 @@ public class ChannelDetailActivity extends SherlockActivity {
 
 		});
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		ImageLoader.getInstance().resume();	
+	}
 
+	@Override
+	protected void onStop() {
+		super.onStop();
+		ImageLoader.getInstance().stop();
+	}
+	
 	private ImageView loadAvatar(final String channelJid, boolean skipCache) {
 		ImageView avatarView = (ImageView) findViewById(R.id.avatarView);
 		String avatarURL = AvatarUtils.avatarURL(this, channelJid);

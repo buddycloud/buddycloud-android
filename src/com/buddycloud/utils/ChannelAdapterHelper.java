@@ -83,8 +83,6 @@ public class ChannelAdapterHelper {
 		
 		holder.title.setText(channelTitle);
 		holder.description.setText(channelDescription);
-		
-		
 	}
 
 	private static void loadAvatar(Context parent, ViewHolder holder, String channelJid) {

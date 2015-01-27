@@ -174,6 +174,7 @@ public class LoginActivity extends SherlockActivity {
 			return;
 		}
 		
+		// Resolve the API server through DNS lookup
 		DNSUtils.resolveAPISRV(new ModelCallback<String>() {
 			
 			@Override
@@ -186,6 +187,7 @@ public class LoginActivity extends SherlockActivity {
 					}
 					@Override
 					public void error(Throwable throwable) {
+						
 						// Do nothing, SSL error not tolerable
 						clearAPIAddress();
 						hideProgress();

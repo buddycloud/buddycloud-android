@@ -3,8 +3,8 @@ package com.buddycloud.card;
 import org.json.JSONObject;
 
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 
 public interface Card extends Comparable<Card> {
 

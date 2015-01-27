@@ -1,10 +1,10 @@
 package com.buddycloud;
 
-import com.buddycloud.notifications.GCMUtils;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import com.buddycloud.notifications.GCMUtils;
 
 public class GCMBroadcastReceiver extends BroadcastReceiver {
 

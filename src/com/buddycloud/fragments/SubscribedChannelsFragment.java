@@ -31,7 +31,7 @@ import com.buddycloud.model.ModelListener;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.model.SyncModel;
 import com.buddycloud.model.TopicChannelModel;
-import com.slidingmenu.lib.app.SlidingFragmentActivity;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class SubscribedChannelsFragment extends ContentFragment implements ModelListener {
 

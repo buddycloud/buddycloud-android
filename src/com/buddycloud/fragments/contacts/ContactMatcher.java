@@ -2,9 +2,9 @@ package com.buddycloud.fragments.contacts;
 
 import org.json.JSONArray;
 
-import com.buddycloud.model.ModelCallback;
-
 import android.app.Activity;
+
+import com.buddycloud.model.ModelCallback;
 
 public interface ContactMatcher {
 

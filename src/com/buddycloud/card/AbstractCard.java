@@ -1,8 +1,8 @@
 package com.buddycloud.card;
 
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 
 public abstract class AbstractCard implements Card {
 

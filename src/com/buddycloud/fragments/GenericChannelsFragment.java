@@ -53,6 +53,18 @@ public abstract class GenericChannelsFragment extends SherlockFragment {
 		
 		return view;
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		ImageLoader.getInstance().resume();
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		ImageLoader.getInstance().stop();
+	}
 
 	private void expandAll(View view) {
 		ExpandableListView listView = (ExpandableListView) view.findViewById(

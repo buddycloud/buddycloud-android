@@ -15,5 +15,4 @@ public interface Model<RefreshType, SaveType, Params> {
 	void delete(Context context, ModelCallback<Void> callback, Params... p);
 	
 	void setListener(ModelListener listener);
-	
 }

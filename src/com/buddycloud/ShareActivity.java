@@ -103,6 +103,18 @@ public class ShareActivity extends Activity {
 			}
 		});
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		ImageLoader.getInstance().resume();	
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		ImageLoader.getInstance().stop();
+	}
 
 	protected void layoutShareText() {
 		findViewById(R.id.shareImagePreview).setVisibility(View.GONE);

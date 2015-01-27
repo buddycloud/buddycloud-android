@@ -50,9 +50,9 @@ import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
 import com.buddycloud.utils.InputUtils;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class ChannelStreamFragment extends ContentFragment implements ModelListener {
 
@@ -99,6 +99,18 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 		return view;
 	}
 	
+	@Override
+	public void onResume() {
+		super.onResume();
+		ImageLoader.getInstance().resume();
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		ImageLoader.getInstance().stop();
+	}
+
 	private String getChannelJid() {
 		return getArguments().getString(GenericChannelsFragment.CHANNEL);
 	}

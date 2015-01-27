@@ -25,12 +25,18 @@ public class FullScreenImageActivity extends SherlockFragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		ImageLoader.getInstance().resume();
 		loadToTarget(IMAGE_URL_HIGH_RES);
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		ImageLoader.getInstance().stop();
 	}
 
 	private void loadToTarget(String key) {
 		String imageURL = getIntent().getStringExtra(key);
 		ImageLoader.getInstance().displayImage(imageURL, imageView);
 	}
-	
 }

@@ -132,7 +132,8 @@ public class CreateAccountActivity extends SherlockActivity {
 	private void fillSuggestions() {
 		BuddycloudHTTPHelper.reqArrayNoSSL(
         		DOMAIN_SUGGESTION_URL, this, new ModelCallback<JSONArray>() {
-					@Override
+					
+        			@Override
 					public void success(JSONArray response) {
 						List<Domain> domains = new ArrayList<Domain>();
 						for (int i = 0; i < response.length(); i++) {
