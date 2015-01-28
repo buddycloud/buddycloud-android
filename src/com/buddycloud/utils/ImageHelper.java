@@ -11,9 +11,9 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
+import com.buddycloud.log.Logger;
 import com.nostra13.universalimageloader.cache.disc.impl.TotalSizeLimitedDiscCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -38,6 +38,7 @@ public class ImageHelper {
 				.discCache(new TotalSizeLimitedDiscCache(cacheDir, 50 * 1024 * 1024))
 				.imageDownloader(downloader)
 				.defaultDisplayImageOptions(defaultOptions)
+				.writeDebugLogs()
 				.build();
 		
 		ImageLoader.getInstance().init(config);
@@ -74,7 +75,7 @@ public class ImageHelper {
 			h = (int) (targetW * ratio);
 		}
 		
-		Log.d(TAG, "Scale w: " + w + ", h: " + h);
+		Logger.debug(TAG, "Scale w: " + w + ", h: " + h);
 		
 		bitmap = Bitmap.createScaledBitmap(bitmap, w, h, false);
 		

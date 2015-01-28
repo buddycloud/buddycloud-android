@@ -42,8 +42,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Base64;
-import android.util.Log;
 
+import com.buddycloud.log.Logger;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.preferences.Preferences;
 
@@ -342,7 +342,7 @@ public class BuddycloudHTTPHelper {
 		protected Object doInBackground(Void... params) {
 			try {
 				
-				Log.d(TAG, "HTTP S: {M: " + methodType + ", U: " + url + ", Lo: " + lo + "}");
+				Logger.debug(TAG, "HTTP S: {M: " + methodType + ", U: " + url + ", Lo: " + lo + "}");
 				
 				long t = System.currentTimeMillis();
 				HttpRequestBase method = null;
@@ -379,7 +379,7 @@ public class BuddycloudHTTPHelper {
 				HttpResponse response = client.execute(method);
 				int statusCode = response.getStatusLine().getStatusCode();
 				
-				Log.d(TAG, "HTTP R: {M: " + methodType + ", U: " + url + ", T: " + (
+				Logger.debug(TAG, "HTTP R: {M: " + methodType + ", U: " + url + ", T: " + (
 						System.currentTimeMillis() - t) + ", S: " + statusCode + "}");
 				
 				if (isError(statusCode)) {
@@ -401,7 +401,7 @@ public class BuddycloudHTTPHelper {
 				String responseStr = EntityUtils.toString(resEntityGet, "utf-8");
 				return responseStr;
 			} catch (Throwable e) {
-				Log.e(TAG, e.getLocalizedMessage(), e);
+				Logger.error(TAG, e.getLocalizedMessage(), e);
 				return e;
 			}
 		}

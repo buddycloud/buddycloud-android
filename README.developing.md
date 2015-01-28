@@ -19,6 +19,7 @@ Besides the Android SDK and the support library, we use:
 * [SligingMenu](https://github.com/jfeinstein10/SlidingMenu) to implement the side menu;
 * [picasso](https://github.com/square/picasso) for displaying and transforming images; and
 * [dnsjava](http://www.xbill.org/dnsjava/) for DNS queries.
+* [GooglePlayServices](https://developer.android.com/google/play-services/setup.html) setup google play services SDK for GCM.
 
 Security model
 ----------

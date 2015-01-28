@@ -4,7 +4,8 @@ import java.util.Hashtable;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.util.Log;
+
+import com.buddycloud.log.Logger;
 
 /**
  * Typefaces cache, this allows us to get custom typefaces
@@ -27,7 +28,7 @@ public class Typefaces {
 							assetPath);
 					cache.put(assetPath, t);
 				} catch (Exception e) {
-					Log.e(TAG, "Could not get typeface '" + assetPath
+					Logger.error(TAG, "Could not get typeface '" + assetPath
 							+ "' because " + e.getMessage());
 					return null;
 				}

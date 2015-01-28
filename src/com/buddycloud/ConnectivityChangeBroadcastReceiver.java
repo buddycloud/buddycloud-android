@@ -11,5 +11,4 @@ public class ConnectivityChangeBroadcastReceiver extends BroadcastReceiver {
 		Intent newIntent = new Intent(context, ConnectivityChangeIntentService.class);
 		context.startService(newIntent);
 	}
-	
 }

@@ -3,7 +3,8 @@ package com.buddycloud.model.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+
+import com.buddycloud.log.Logger;
 
 public class BuddycloudSQLiteOpenHelper extends SQLiteOpenHelper {
 	
@@ -46,7 +47,7 @@ public class BuddycloudSQLiteOpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.w(BuddycloudSQLiteOpenHelper.class.getName(),
+		Logger.warn(BuddycloudSQLiteOpenHelper.class.getName(),
 			  "Upgrading " + DATABASE_NAME + " from version " + oldVersion + " to "
 			  + newVersion + ", which will destroy all old data");
 

@@ -10,9 +10,9 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
+import com.buddycloud.log.Logger;
 import com.buddycloud.model.dao.UnreadCountersDAO;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.JIDUtils;
@@ -51,10 +51,12 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 
 		JSONObject unreadCounters = new JSONObject();
 		try {
+			
+			int lastWeekActivity =  newSummary.has("postsThisWeek") ? newSummary.optJSONArray("postsThisWeek").length() : 0;
 			unreadCounters.put("totalCount", newSummary.optInt("totalCount") + oldTotalCount);
 			unreadCounters.put("mentionsCount", newSummary.optInt("mentionsCount") + oldMentionsCount);
 			unreadCounters.put("replyCount", newSummary.optInt("repliesCount") + oldRepliesCount);
-			unreadCounters.put("lastWeekActivity", newSummary.optJSONArray("postsThisWeek").length());
+			unreadCounters.put("lastWeekActivity", lastWeekActivity);
 		} catch (JSONException e) {/*Do nothing*/}
 		
 		if (hasOldCounter) {
@@ -94,7 +96,7 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 			return TimeUtils.fromISOToDate(dateA).after(
 					TimeUtils.fromISOToDate(dateB));
 		} catch (ParseException e) {
-			Log.e(TAG, "Could not parse dates.", e);
+			Logger.error(TAG, "Could not parse dates.", e);
 			return false;
 		}
 	}
@@ -127,7 +129,7 @@ public class SyncModel extends AbstractModel<JSONObject, JSONObject, String> {
 				dao.insert(channelJid, summary);
 			}
 		} catch (JSONException e) {
-			Log.e(TAG, e.getMessage(), e);
+			Logger.error(TAG, e.getMessage(), e);
 		}
 		notifyChanged();
 	}

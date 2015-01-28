@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
+import com.buddycloud.log.Logger;
 import com.buddycloud.model.PostsModel;
 
 public class ConnectivityChangeIntentService extends IntentService {
@@ -27,7 +27,7 @@ public class ConnectivityChangeIntentService extends IntentService {
 		boolean isConnected = activeNetwork != null &&
 		                      activeNetwork.isConnectedOrConnecting();
 		
-		Log.d(TAG, "Connected: " + isConnected + "; Intent: " + intent);
+		Logger.debug(TAG, "Connected: " + isConnected + "; Intent: " + intent);
 		
 		if (isConnected) {
 			PostsModel.getInstance().savePendingPosts(context);

@@ -15,9 +15,9 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
+import com.buddycloud.log.Logger;
 import com.buddycloud.model.dao.PostsDAO;
 import com.buddycloud.model.dao.ThreadsDAO;
 import com.buddycloud.preferences.Preferences;
@@ -250,7 +250,7 @@ public class PostsModel extends AbstractModel<JSONArray, JSONObject, String> {
 		}
 		
 		try {
-			Log.d(TAG, object.toString());
+			Logger.debug(TAG, object.toString());
 			StringEntity requestEntity = new StringEntity(object.toString(), "UTF-8");
 			requestEntity.setContentType("application/json");
 			

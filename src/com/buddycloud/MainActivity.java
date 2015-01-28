@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
 
@@ -17,6 +16,7 @@ import com.buddycloud.fragments.ContentFragment;
 import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.fragments.SearchChannelsFragment;
 import com.buddycloud.fragments.SubscribedChannelsFragment;
+import com.buddycloud.log.Logger;
 import com.buddycloud.model.SyncModel;
 import com.buddycloud.notifications.GCMEvent;
 import com.buddycloud.notifications.GCMUtils;
@@ -69,6 +69,15 @@ public class MainActivity extends SlidingFragmentActivity {
 		}
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+	
+	// You need to do the Play Services APK check here too.
+	@Override
+	protected void onResume() {
+	    super.onResume();
+	    
+	    // Check for the Google Play Services for GCM.
+	    GCMUtils.checkPlayServices(this);
 	}
 
 	 @Override
@@ -166,6 +175,7 @@ public class MainActivity extends SlidingFragmentActivity {
 
 	private void startActivity() {
 		this.myJid = (String) Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
+		
 		registerInGCM();
 		addMenuFragment();
 		customizeMenu();
@@ -213,7 +223,7 @@ public class MainActivity extends SlidingFragmentActivity {
 		try {
 			GCMUtils.issueGCMRegistration(this);
 		} catch (Exception e) {
-			Log.e(TAG, "Failed to register in GCM.", e);
+			Logger.error(TAG, "Failed to register in GCM.", e);
 		}
 	}
 	

@@ -6,10 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.buddycloud.R;
+import com.buddycloud.log.Logger;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.ModelCallbackImpl;
 import com.buddycloud.model.SubscribedChannelsModel;
@@ -71,7 +71,7 @@ public class SubscribedChannelsAdapter extends GenericChannelAdapter {
 			
 			@Override
 			public void error(Throwable throwable) {
-				Log.w(SubscribedChannelsAdapter.class.toString(), 
+				Logger.warn(SubscribedChannelsAdapter.class.toString(), 
 						throwable.getLocalizedMessage(), throwable);
 				Toast.makeText(context, context.getString(
 						R.string.message_fetch_subscribed_failed), 
@@ -83,6 +83,7 @@ public class SubscribedChannelsAdapter extends GenericChannelAdapter {
 	public void sort(final Context context) {
 		final JSONObject allCounters = SyncModel.getInstance().getFromCache(context);
 		sort(new Comparator<JSONObject>() {
+			
 			@Override
 			public int compare(JSONObject lhs, JSONObject rhs) {
 				

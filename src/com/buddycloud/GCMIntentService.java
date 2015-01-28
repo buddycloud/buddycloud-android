@@ -3,12 +3,14 @@ package com.buddycloud;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
+import com.buddycloud.log.Logger;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.ModelCallbackImpl;
 import com.buddycloud.model.NotificationSettingsModel;
@@ -19,23 +21,23 @@ import com.buddycloud.notifications.GCMFollowRequestNotificationListener;
 import com.buddycloud.notifications.GCMNotificationListener;
 import com.buddycloud.notifications.GCMPostNotificationListener;
 import com.buddycloud.preferences.Preferences;
-import com.google.android.gcm.GCMBaseIntentService;
-import com.google.android.gcm.GCMRegistrar;
+import com.buddycloud.utils.VersionUtils;
 
-public class GCMIntentService extends GCMBaseIntentService {
+public class GCMIntentService extends IntentService {
 
 	public static final String GCM_NOTIFICATION_EVENT = "com.buddycloud.GCM_NOTIFICATION_EVENT";
 	private static final String TAG = GCMIntentService.class.getName();
 	
-	@Override
-	protected void onError(Context arg0, String arg1) {
-		Log.e(TAG, "GCM error " + arg1);
+	public GCMIntentService() {
+		super("GCMIntentService");
 	}
-
+	
 	@Override
-	protected void onMessage(final Context context, Intent message) {
-		Log.d(TAG, "GCM reveived " + message);
+	protected void onHandleIntent(Intent remoteMessage) {
 		
+		Logger.info(TAG, "GCM reveived " + remoteMessage.getStringExtra("message"));
+
+		final Context context = ApplicationManager.getAppContext();
 		final SyncModel syncModel = SyncModel.getInstance();
 		SyncModel.getInstance().syncNoSummary(context, new ModelCallbackImpl<Void>(){
 			@Override
@@ -49,10 +51,10 @@ public class GCMIntentService extends GCMBaseIntentService {
 			}
 		});
 		
-		GCMEvent event = GCMEvent.valueOf(message.getStringExtra("event"));
+		GCMEvent event = GCMEvent.valueOf(remoteMessage.getStringExtra("event"));
 		GCMNotificationListener notificationListener = createNotificationListener(context, event);
 		if (notificationListener != null) {
-			notificationListener.onMessage(event, context, message);
+			notificationListener.onMessage(event, context, remoteMessage);
 		}
 	}
 
@@ -97,14 +99,23 @@ public class GCMIntentService extends GCMBaseIntentService {
 		return Boolean.valueOf(sharedPrefs.getBoolean(key, true));
 	}
 
-	@Override
-	protected void onRegistered(Context context, String regId) {
-		sendToPusher(getApplicationContext(), regId);
-		String currentRegId = Preferences.getPreference(context, Preferences.CURRENT_GCM_ID);
-		if (currentRegId != null && !regId.equals(currentRegId)) {
-			removeFromPusher(context, currentRegId);
+	public static void registerOnPusher(String regId) {
+		
+		final Context context = ApplicationManager.getAppContext();
+		try {
+			sendToPusher(context, regId);
+			
+			String currentRegId = Preferences.getPreference(context, Preferences.CURRENT_GCM_ID);
+			if (currentRegId != null && !regId.equals(currentRegId)) {
+				removeFromPusher(context, currentRegId);
+			}
+			
+			int appVersion = VersionUtils.getVersionCode(context);
+			Preferences.setPreference(context, Preferences.CURRENT_GCM_ID, regId);
+			Preferences.setPreference(context, Preferences.APP_VERSION, String.valueOf(appVersion));
+		} catch (NameNotFoundException e) {
+			Logger.error(TAG, "App Version code not found.", e);
 		}
-		Preferences.setPreference(context, Preferences.CURRENT_GCM_ID, regId);
 	}
 
 	public static void sendToPusher(final Context context, String regId) {
@@ -118,7 +129,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 			settings.put("postAfterMe", Boolean.TRUE.toString());
 			settings.put("postOnSubscribedChannel", Boolean.TRUE.toString());
 		} catch (JSONException e) {
-			Log.e(TAG, "Failure to register GCM settings.", e);
+			Logger.error(TAG, "Failure to register GCM settings.", e);
 			return;
 		}
 		
@@ -127,35 +138,26 @@ public class GCMIntentService extends GCMBaseIntentService {
 				new ModelCallback<JSONObject>() {
 					@Override
 					public void success(JSONObject response) {
-						Log.i(TAG, "Succesfully registered GCM settings.");
-						GCMRegistrar.setRegisteredOnServer(context, true);
+						Logger.info(TAG, "Succesfully registered GCM settings.");
 					}
 					@Override
 					public void error(Throwable throwable) {
-						Log.e(TAG, "Failure to register GCM settings.", throwable);
+						Logger.error(TAG, "Failure to register GCM settings.", throwable);
 					}
 				});
 	}
-	
-	
+
 	public static void removeFromPusher(final Context context, String regId) {
 		NotificationSettingsModel.getInstance().delete(context, 
 				new ModelCallback<Void>() {
 					@Override
 					public void success(Void response) {
-						Log.i(TAG, "Succesfully removed GCM settings.");
-						GCMRegistrar.setRegisteredOnServer(context, false);
+						Logger.info(TAG, "Succesfully removed GCM settings.");
 					}
-					@Override
+					@Override	
 					public void error(Throwable throwable) {
-						Log.e(TAG, "Failed to remove GCM settings.", throwable);
+						Logger.error(TAG, "Failed to remove GCM settings.", throwable);
 					}
 				}, regId);
-	}
-
-	@Override
-	protected void onUnregistered(Context context, String regId) {
-		Log.w(TAG, "Unregistered from GCM " + regId);
-		removeFromPusher(context, regId);
 	}
 }

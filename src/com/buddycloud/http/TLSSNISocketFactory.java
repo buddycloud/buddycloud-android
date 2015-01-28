@@ -17,7 +17,8 @@ import org.apache.http.params.HttpParams;
 import android.annotation.TargetApi;
 import android.net.SSLCertificateSocketFactory;
 import android.os.Build;
-import android.util.Log;
+
+import com.buddycloud.log.Logger;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class TLSSNISocketFactory implements LayeredSocketFactory {
@@ -59,10 +60,10 @@ public class TLSSNISocketFactory implements LayeredSocketFactory {
 
         // set SNI before the handshake
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            Log.i(TAG, "Setting SNI hostname");
+            Logger.info(TAG, "Setting SNI hostname");
             sslSocketFactory.setHostname(ssl, host);
         } else {
-        	Log.w(TAG, "No SNI support below Android 4.2!");
+        	Logger.warn(TAG, "No SNI support below Android 4.2!");
         }
 
         // now do the TLS handshake
