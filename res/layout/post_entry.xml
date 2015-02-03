@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <com.buddycloud.utils.MeasuredMediaView
+            <com.buddycloud.customviews.MeasuredMediaView
                 xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
                 android:id="@+id/bcImageContent"
                 android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                 android:layout_marginTop="8dp"
                 android:src="@drawable/personal_50px" />
 
-            <com.buddycloud.utils.TypefacedTextView
+            <com.buddycloud.customviews.TypefacedTextView
                 xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
                 android:id="@+id/bcPostContent"
                 android:layout_width="wrap_content"
@@ -53,7 +53,7 @@
                 android:textSize="16sp"
                 buddycloud:typeface="Roboto-Condensed.ttf" />
 
-            <com.buddycloud.utils.TypefacedTextView
+            <com.buddycloud.customviews.TypefacedTextView
                 xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
                 android:id="@+id/bcPostContentAlt"
                 android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
                 android:textSize="16sp"
                 buddycloud:typeface="Roboto-Condensed.ttf" />
 
-            <com.buddycloud.utils.TypefacedTextView
+            <com.buddycloud.customviews.TypefacedTextView
                 xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
                 android:id="@+id/bcPostDate"
                 android:layout_width="wrap_content"

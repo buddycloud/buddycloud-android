@@ -22,7 +22,7 @@
         android:layout_toRightOf="@+id/bcProfilePic"
         android:orientation="vertical">
 
-        <com.buddycloud.utils.TypefacedTextView
+        <com.buddycloud.customviews.TypefacedTextView
             xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
             android:id="@+id/bcUserId"
             android:layout_width="match_parent"
@@ -31,7 +31,7 @@
             android:textSize="17sp"
             buddycloud:typeface="Roboto-Light.ttf" />
 
-        <com.buddycloud.utils.TypefacedTextView
+        <com.buddycloud.customviews.TypefacedTextView
             xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
             android:id="@+id/bcMessage"
             android:layout_width="match_parent"
@@ -48,7 +48,7 @@
         android:layout_alignParentRight="true"
         android:background="@color/bc_green" >
 
-        <com.buddycloud.utils.TypefacedTextView
+        <com.buddycloud.customviews.TypefacedTextView
             xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
             android:id="@+id/unreadCounter"
             android:layout_width="wrap_content"

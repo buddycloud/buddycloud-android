@@ -33,6 +33,8 @@ import android.widget.Toast;
 import com.buddycloud.FullScreenImageActivity;
 import com.buddycloud.MainActivity;
 import com.buddycloud.R;
+import com.buddycloud.customviews.MeasuredMediaView;
+import com.buddycloud.customviews.MeasuredMediaView.MeasureListener;
 import com.buddycloud.fragments.ChannelStreamFragment;
 import com.buddycloud.model.MediaModel;
 import com.buddycloud.model.ModelCallback;
@@ -41,11 +43,9 @@ import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
-import com.buddycloud.utils.MeasuredMediaView;
-import com.buddycloud.utils.MeasuredMediaView.MeasureListener;
 import com.buddycloud.utils.TextUtils;
 import com.buddycloud.utils.TimeUtils;
-import com.buddycloud.utils.Typefaces;
+import com.buddycloud.utils.TypefacesUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -212,7 +212,7 @@ public class PostCard extends AbstractCard {
 			ImageLoader.getInstance().displayImage(replyAuthorURL, replyAuthorView, dio);
 			
 			final Button replyBtn = holder.getView(R.id.replyBtn);
-			replyBtn.setTypeface(Typefaces.get(context,  "fonts/Roboto-Light.ttf"));
+			replyBtn.setTypeface(TypefacesUtil.get(context,  "fonts/Roboto-Light.ttf"));
 			final EditText replyTxt = holder.getView(R.id.replyContentTxt);
 			replyBtn.setEnabled(false);
 			

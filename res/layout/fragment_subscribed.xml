@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
             
-            <com.buddycloud.utils.TypefacedTextView
+            <com.buddycloud.customviews.TypefacedTextView
 	            xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
 	            android:id="@+id/personalTitle"
 	            android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
 
             </ListView>
 
-            <com.buddycloud.utils.TypefacedTextView
+            <com.buddycloud.customviews.TypefacedTextView
 	            xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
 	            android:id="@+id/subscribedTitle"
 	            android:layout_width="wrap_content"

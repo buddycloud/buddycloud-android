@@ -1,5 +1,27 @@
 <resources>
-    <declare-styleable name="TypefacedTextView">
+
+    <declare-styleable name="Typefaced">
         <attr name="typeface" format="string" />
     </declare-styleable>
+    <declare-styleable name="TooltipErrorView">
+
+        <!-- Tooltip background color -->
+        <attr name="bgColor" format="color" />
+
+        <!-- Tooltip border color -->
+        <attr name="borderColor" format="color" />
+
+        <!-- Tooltip text -->
+        <attr name="text" format="string" />
+
+        <!-- Tooltip text color -->
+        <attr name="textColor" format="color" />
+
+        <!-- Tooltip text typeface -->
+        <attr name="fontTypeface" format="string" />
+
+        <!-- Tooltip text font size -->
+        <attr name="textSize" format="integer" />
+    </declare-styleable>
+
 </resources>

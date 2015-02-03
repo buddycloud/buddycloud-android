@@ -2,12 +2,15 @@
 
     <string name="app_name">buddycloud</string>
 	<string name="app_id">246626368832474</string>
+	<string name="buddycloud_website">http://buddycloud.com/</string>
     
     <string name="yes">Yes</string>
     <string name="yes_and_remember">Yes (Remember this choice)</string>
     <string name="no">No</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    
+    <string name="welcome_message">A demo app built on the Buddycloud messaging stack.</string>
     
     <string name="menu_search">Search</string>
     <string name="menu_create_channel">Create channel</string>
@@ -58,10 +61,16 @@
 	<string name="message_metadata_update_failed">Could not update channel metadata</string>
 
 	<string name="message_account_fields_mandatory">All fields are mandatory</string>
-	<string name="message_account_passwords_donot_match">Your password and confirmation password do not match</string>
+	<string name="message_account_username_mandatory">Sorry, but your username can\'t be empty.</string>
+	<string name="message_account_email_invalid">Invalid email address.</string>
+	<string name="message_account_password_mandatory">Sorry, but your password can\'t be empty.</string>
+	<string name="message_account_password_short_length">Password should be atleast 6 characters.</string>
 	<string name="message_account_invalid_domain">Domain name is not valid</string>
 	<string name="message_api_discovery_failed">Could not find an API for this domain</string>
-	<string name="message_account_creation_failed">Could not register account. Account unavailable</string>
+	<string name="message_reseting_password">Reseting password&#8230;</string>
+	<string name="message_logging_in">Logging in&#8230;</string>
+	<string name="message_account_creation">Creating account&#8230;</string>
+	<string name="message_account_creation_failed">Could not register account. Username not unavailable.</string>
 	
 	<string name="message_replies_load_failed">Could not fetch replies of this post</string>
 	<string name="message_followers_load_failed">Could not fetch followers of this channel</string>
@@ -98,19 +107,30 @@
 	<string name="channel_details_default_affiliation_hint">default affiliation</string>
 	<string name="channel_details_save">Save settings</string>
 	
+	<string name="create_account_title">Sign up</string>
 	<string name="create_account_channel_name">Username</string>
-	<string name="create_account_domain_name">Buddycloud-enabled site</string>
-	<string name="create_account_email_address">Email</string>
+	<string name="create_account_channel_name_hint">pick a username</string>
 	<string name="create_account_password">Password</string>
-	<string name="create_account_repeat_password">Repeat password</string>
-	<string name="create_account_domain_hint">The following buddycloud-enabled sites are available for new sign-ups</string>
-	
+	<string name="create_account_password_hint">at least 6 characters</string>
+	<string name="create_account_email_address">Email</string>
+	<string name="create_account_email_address_hint">username@example.com</string>
+	<string name="create_account_button">Join buddycloud</string>
+	<string name="create_account_footer_caption">This will sign you up to the demo Buddycloud service.\n\nTo run your own Buddycloud site, or build in-app messaging using Buddycloud, check out the instructions on buddycloud.com.</string>
+
+	<string name="login_title">Log in</string>
+	<string name="login_username">Username</string>
 	<string name="login_hint">User@example.com</string>
 	<string name="login_password">Password</string>
-    <string name="login_button">Login</string>
+    <string name="login_button">Log In</string>
     <string name="login_create_account_button">Create new account</string>
-    <string name="login_error_wrong_credentials">Wrong password</string>
-	<string name="login_error_bad_channel_format">Bad channel format. Expected format is user@domain.</string>
+    <string name="login_error_wrong_credentials">The username and password you entered did not match our records. Please double-check and try again.</string>
+	<string name="login_error_bad_channel_format">Username you entered not defined with proper format \'user@domain\'.</string>
+	
+	<string name="forgot_password_title">Forgot Password</string>
+	<string name="forgot_password_email">Email</string>
+	<string name="forgot_password_email_hint">email address to recover password</string>
+	<string name="forgot_password_error_no_email_found">The email you entered did not match our records. Please double-check and try again.</string>
+	<string name="forgot_password_button">Recover Password</string>
 	
 	<string name="ssl_error_title">SSL error</string>
 	<string name="ssl_error_message">Insecure connection or invalid certificate. Trust %1$s?</string>
@@ -120,6 +140,7 @@
 	<string name="share_channel_hint">Pick channel to share with</string>
 	<string name="share_caption_hint">Type caption</string>
 	<string name="share_button">Share</string>
+	<string name="signup_button">Sign Up</string>
 	
 	<string name="channel_list_personal_hint">PERSONAL</string>
 	<string name="channel_list_subscribed_hint">SUBSCRIBED</string>
@@ -200,7 +221,7 @@
 	<string name="message_channel_deleted">Channel was successfully deleted</string>
 	<string name="message_channel_deletion_failed">Could not delete channel</string>
 	
-	<string name="caption_forgot_password">Forgot your password?</string>
+	<string name="caption_forgot_password">Forgot password?</string>
 	<string name="title_reset_password">Reset password</string>
 	<string name="message_reset_password">Type your username. You will receive an email with a new random password.</string>
 	<string name="message_password_successfully_reset">Password successfully reset</string>

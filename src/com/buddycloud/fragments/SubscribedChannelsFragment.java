@@ -96,7 +96,7 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 	@Override
 	public void attached(Activity activity) {
 		SherlockFragmentActivity sherlockActivity = (SherlockFragmentActivity) activity;
-		sherlockActivity.getSupportActionBar().setTitle("");
+		sherlockActivity.getSupportActionBar().setTitle(R.string.app_name);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.buddycloud.utils;
+package com.buddycloud.customviews;
 
 import android.content.Context;
 import android.graphics.Bitmap;

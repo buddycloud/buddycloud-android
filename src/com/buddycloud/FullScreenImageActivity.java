@@ -3,7 +3,7 @@ package com.buddycloud;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.buddycloud.utils.TouchImageView;
+import com.buddycloud.customviews.TouchImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class FullScreenImageActivity extends SherlockFragmentActivity {

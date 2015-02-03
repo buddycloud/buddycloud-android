@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <dimen name="welcome_screen_logo_wh">160dp</dimen>
+    <dimen name="welcome_msg_txt_size">24sp</dimen>
+    <dimen name="welcome_screen_btn_txt_size">22sp</dimen>
+    <dimen name="welcome_screen_box_margin">100dp</dimen>
+    <dimen name="welcome_screen_btn_h">50dp</dimen>
+
+</resources>

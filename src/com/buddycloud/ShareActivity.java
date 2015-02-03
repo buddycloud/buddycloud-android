@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.buddycloud.customviews.MeasuredMediaView;
+import com.buddycloud.customviews.MeasuredMediaView.MeasureListener;
 import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.fragments.SearchChannelsFragment;
 import com.buddycloud.model.MediaModel;
@@ -31,8 +33,6 @@ import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.FileUtils;
 import com.buddycloud.utils.ImageHelper;
-import com.buddycloud.utils.MeasuredMediaView;
-import com.buddycloud.utils.MeasuredMediaView.MeasureListener;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 

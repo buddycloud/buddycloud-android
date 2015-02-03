@@ -145,8 +145,14 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 	}
 
 	public void scrollUp() {
-		ListView postsStream = (ListView) getView().findViewById(R.id.postsStream);
-		postsStream.smoothScrollToPosition(0);
+		final ListView postsStream = (ListView) getView().findViewById(R.id.postsStream);
+		postsStream.post(new Runnable() {
+	        @Override
+	        public void run() {
+	        	postsStream.setSelection(0);
+	        	postsStream.smoothScrollToPosition(0);
+	        }
+	    });
 	}
 
 	protected void fillMore() {

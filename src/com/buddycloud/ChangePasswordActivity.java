@@ -29,9 +29,9 @@ public class ChangePasswordActivity extends SherlockActivity {
 				final String password = passwordTxt.getText().toString();
 				if (!password.equals(
 						repeatPasswordTxt.getText().toString())) {
-					Toast.makeText(getApplicationContext(), getString(
-							R.string.message_account_passwords_donot_match), 
-							Toast.LENGTH_SHORT).show();
+//					Toast.makeText(getApplicationContext(), getString(
+//							R.string.message_account_passwords_donot_match), 
+//							Toast.LENGTH_SHORT).show();
 					hideProgress();
 					return;
 				}

@@ -1,86 +1,113 @@
 package com.buddycloud;
 
-import org.json.JSONObject;
-
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.buddycloud.customviews.TooltipErrorView;
 import com.buddycloud.http.SSLUtils;
-import com.buddycloud.model.AccountModel;
 import com.buddycloud.model.LoginModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.DNSUtils;
+import com.buddycloud.utils.InputUtils;
 
+/**
+ * This activity used to show the login screen 
+ * and handle all the actions.
+ * 
+ * @author Adnan Urooj (Deminem)
+ * 
+ */
 public class LoginActivity extends SherlockActivity {
 
-	public static final int REQUEST_CODE = 101;
-	public static final int RESULT_CODE_OK = 1010;
+	private static final String TAG = LoginActivity.class.getSimpleName();
+	
+	public static final int REQUEST_CODE = 104;
+	public static final int LOGGED_IN_RESULT = 204;
+	
+	private EditText mUsernameTxt;
+	private EditText mPasswordTxt;
+
+	private TooltipErrorView mUsernameErrorTooltip;
+	private TooltipErrorView mPasswordErrorTooltip;
+	private ProgressDialog mProgressDialog;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        getSupportActionBar().hide();
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setTitle(getString(R.string.login_title));
         
-        final RelativeLayout loginBtn = (RelativeLayout) findViewById(R.id.loginBtn);
-        final RelativeLayout createAccountBtn = (RelativeLayout) findViewById(R.id.createAccountBtn);
-        final EditText myChannelTxt = (EditText) findViewById(R.id.loginTxt);
-        final EditText passwordTxt = (EditText) findViewById(R.id.passwordTxt);
-        final View progressBar = findViewById(R.id.progressBar);
-        
+		mUsernameErrorTooltip = (TooltipErrorView) findViewById(R.id.usernameErrorTooltip);
+		mUsernameTxt = (EditText) findViewById(R.id.usernameTxt);
+		mUsernameTxt.addTextChangedListener(mUserNameTxtWatcher);
+
+		mPasswordErrorTooltip = (TooltipErrorView) findViewById(R.id.passwordErrorTooltip);
+		mPasswordTxt = (EditText) findViewById(R.id.passwordTxt);
+		mPasswordTxt.addTextChangedListener(mPasswordTxtWatcher);
+		
+		mProgressDialog = new ProgressDialog(this);
+		mProgressDialog.setMessage(getString(R.string.message_logging_in));
+		mProgressDialog.setCancelable(false);
+		
         String myChannelPref = Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
         if (myChannelPref != null) {
-        	myChannelTxt.setText(myChannelPref);
+        	mUsernameTxt.setText(myChannelPref);
         }
         
         String passPref = Preferences.getPreference(this, Preferences.PASSWORD);
         if (passPref != null) {
-        	passwordTxt.setText(passPref);
+        	mPasswordTxt.setText(passPref);
         }
-        
-		passwordTxt.setOnEditorActionListener(new OnEditorActionListener() {
+        mPasswordTxt.setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				
 				if (actionId == EditorInfo.IME_ACTION_DONE) {
-					login(loginBtn, myChannelTxt, passwordTxt, progressBar);
+					
+					final String myChannelJid = getValue(R.id.usernameTxt);
+					final String passwordTxt = getValue(R.id.passwordTxt);
+					
+					login(myChannelJid, passwordTxt);
 				}
 				return false;
 			}
 		});
         
+		final Button loginBtn = (Button) findViewById(R.id.loginBtn);
         loginBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				login(loginBtn, myChannelTxt, passwordTxt, progressBar);
+				
+				final String myChannelJid = getValue(R.id.usernameTxt);
+				final String passwordTxt = getValue(R.id.passwordTxt);
+				
+				login(myChannelJid, passwordTxt);
 			}
 		});
-        
-        createAccountBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent();
-				intent.setClass(getApplicationContext(), CreateAccountActivity.class);
-				startActivityForResult(intent, CreateAccountActivity.REQUEST_CODE);
-			}
-		});
-        
-        TextView forgotPasswordTxt = (TextView) findViewById(R.id.forgotPasswordText);
-        forgotPasswordTxt.setMovementMethod(LinkMovementMethod.getInstance());
-        forgotPasswordTxt.setOnClickListener(new OnClickListener() {
+
+        final TextView forgotPasswordLink = (TextView) findViewById(R.id.forgotPasswordLink);
+        forgotPasswordLink.setMovementMethod(LinkMovementMethod.getInstance());
+        forgotPasswordLink.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -89,90 +116,120 @@ public class LoginActivity extends SherlockActivity {
 		});
     }
 
-    protected void resetPassword() {
-    	AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setTitle(getString(R.string.title_reset_password));
-		alert.setMessage(getString(R.string.message_reset_password));
-		final EditText input = new EditText(this);
-		alert.setView(input);
-
-		alert.setPositiveButton(getString(R.string.ok), 
-				new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				String userJid = input.getText().toString();
-				AccountModel.getInstance().resetPassword(getApplicationContext(), 
-						userJid, new ModelCallback<JSONObject>() {
-							@Override
-							public void success(JSONObject response) {
-								Toast.makeText(getApplicationContext(), 
-										getString(R.string.message_password_successfully_reset), 
-										Toast.LENGTH_LONG).show();
-							}
-
-							@Override
-							public void error(Throwable throwable) {
-								Toast.makeText(getApplicationContext(), 
-										getString(R.string.message_password_reset_failed), 
-										Toast.LENGTH_LONG).show();
-							}
-				});
-			}
-		});
-
-		alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-			}
-		});
-
-		alert.show();
-    }
-
-	private void showLoginError(int stringId) {
-    	Toast.makeText(getApplicationContext(), getString(stringId), 
-    			Toast.LENGTH_LONG).show();
-    	clearAPIAddress();
-    	hideProgress();
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.login_screen_options, menu);
+		
+        MenuItem item = menu.findItem(R.id.menu_signup);
+        if (item != null) {
+        	item.setTitle(getString(R.string.signup_button).toUpperCase());
+        }
+        
+		return super.onCreateOptionsMenu(menu);
 	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	
+	    switch (item.getItemId()) {
+        	case android.R.id.home:
+        		InputUtils.hideKeyboard(LoginActivity.this);
+        		finish();
+        		return true;
+           	case R.id.menu_signup:
+           		InputUtils.hideKeyboard(LoginActivity.this);
+           		createAccount();
+        		return true;
+        	default:
+        		return super.onOptionsItemSelected(item);
+        }
+	}
+	
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == CreateAccountActivity.REQUEST_CODE && 
+    			resultCode == CreateAccountActivity.ACCOUNT_CREATED_RESULT) {
+			
+    		setResult(CreateAccountActivity.ACCOUNT_CREATED_RESULT);
+    		finish();
+    	}
+		
+    	super.onActivityResult(requestCode, resultCode, data);
+    }
+	
+	/**
+	 * Show the account signup screen
+	 */
+	private void createAccount() {
+	
+		Intent intent = new Intent();
+		intent.setClass(getApplicationContext(), CreateAccountActivity.class);
+		startActivityForResult(intent, CreateAccountActivity.REQUEST_CODE);
+	}
+	
+	/**
+	 * Reset the password
+	 * 
+	 */
+    private void resetPassword() {
+    	
+		Intent intent = new Intent();
+		intent.setClass(getApplicationContext(), RecoverPasswordActivity.class);
+		startActivity(intent);
+    }
 
 	private void clearAPIAddress() {
 		Preferences.setPreference(LoginActivity.this, Preferences.API_ADDRESS, null);
 	}
 
-	private void hideProgress() {
-		final RelativeLayout postBtn = (RelativeLayout) findViewById(R.id.loginBtn);
-        final View progressBar = findViewById(R.id.progressBar);
-        postBtn.setVisibility(View.VISIBLE);
-		progressBar.setVisibility(View.GONE);
+	private void showErrorToolTip(TooltipErrorView errorView, String errorMsg) {
+
+		if (errorView != null && !isEmpty(errorMsg)) {
+			errorView.setText(errorMsg);
+			errorView.setVisibility(View.VISIBLE);
+		}
 	}
-    
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	if (requestCode == CreateAccountActivity.REQUEST_CODE && 
-    			resultCode == CreateAccountActivity.ACCOUNT_CREATED_RESULT) {
-    		setResult(RESULT_CODE_OK);
-    		finish();
-    	}
-    	super.onActivityResult(requestCode, resultCode, data);
-    }
-    
-	protected void login(final RelativeLayout loginBtn,
-			final EditText myChannelTxt, final EditText passwordTxt,
-			final View progressBar) {
-		loginBtn.setVisibility(View.GONE);
-		progressBar.setVisibility(View.VISIBLE);
-		
-		String myChannelJid = myChannelTxt.getText().toString();
-		String password = passwordTxt.getText().toString();
-		
-		Preferences.setPreference(LoginActivity.this, Preferences.MY_CHANNEL_JID, myChannelJid);
-		Preferences.setPreference(LoginActivity.this, Preferences.PASSWORD, password);
-		
-		String[] myChannelJidSplit = myChannelJid.split("@");
-		
-		if (myChannelJidSplit.length < 2) {
-			showLoginError(R.string.login_error_bad_channel_format);
+
+	private void hideAllErrorTooltips() {
+
+		if (mUsernameErrorTooltip != null && mPasswordErrorTooltip != null) {
+
+			mUsernameErrorTooltip.setVisibility(View.GONE);
+			mPasswordErrorTooltip.setVisibility(View.GONE);
+		}
+	}
+	
+	private static boolean isEmpty(String string) {
+		return string.length() == 0;
+	}
+	
+	private String getValue(int resId) {
+		return ((EditText) findViewById(resId)).getText().toString();
+	}
+	
+	private void login(final String myChannelJid, final String passwordTxt) {
+	
+		if (isEmpty(myChannelJid)) {
+			showErrorToolTip(mUsernameErrorTooltip,
+					getString(R.string.message_account_username_mandatory));
 			return;
 		}
+
+		if (isEmpty(passwordTxt)) {
+			showErrorToolTip(mPasswordErrorTooltip,
+					getString(R.string.message_account_password_mandatory));
+			return;
+		}
+		
+		String[] myChannelJidSplit = myChannelJid.split("@");
+		if (myChannelJidSplit.length < 2) {
+			showErrorToolTip(mUsernameErrorTooltip, getString(R.string.login_error_bad_channel_format));
+			return;
+		}
+				
+		Preferences.setPreference(LoginActivity.this, Preferences.MY_CHANNEL_JID, myChannelJid);
+		Preferences.setPreference(LoginActivity.this, Preferences.PASSWORD, passwordTxt);
 		
 		// Resolve the API server through DNS lookup
 		DNSUtils.resolveAPISRV(new ModelCallback<String>() {
@@ -190,31 +247,98 @@ public class LoginActivity extends SherlockActivity {
 						
 						// Do nothing, SSL error not tolerable
 						clearAPIAddress();
-						hideProgress();
+						mProgressDialog.hide();
 					}
 				});
 			}
 
 			@Override
 			public void error(Throwable throwable) {
-				showLoginError(R.string.login_error_wrong_credentials);
+				mProgressDialog.hide();
+				Toast.makeText(
+						getApplicationContext(),
+						getString(R.string.login_error_wrong_credentials),
+						Toast.LENGTH_LONG).show();
 			}
 			
 			private void checkCredentials() {
 				LoginModel.getInstance().getFromServer(LoginActivity.this, new ModelCallback<Void>() {
 					@Override
 					public void success(Void response) {
-						setResult(RESULT_CODE_OK);
-						LoginActivity.this.finish();
+						mProgressDialog.hide();
+						setResult(LOGGED_IN_RESULT);
+						finish();
 					}
 					
 					@Override
 					public void error(Throwable throwable) {
-						showLoginError(R.string.login_error_wrong_credentials);
+						mProgressDialog.hide();
+						Toast.makeText(
+								getApplicationContext(),
+								getString(R.string.login_error_wrong_credentials),
+								Toast.LENGTH_LONG).show();
 					}
 				});
 			}
 			
 		}, myChannelJidSplit[1]);
+		
+		// remove all error tool tips
+		hideAllErrorTooltips();
+
+		//hide keyboard
+		InputUtils.hideKeyboard(LoginActivity.this);
+		
+		// show progress dialog
+		mProgressDialog.show();
 	}
+
+	private final TextWatcher mUserNameTxtWatcher = new TextWatcher() {
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before,
+				int count) {
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+		}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+			if (s.length() == 0) {
+				showErrorToolTip(mUsernameErrorTooltip,
+						getString(R.string.message_account_username_mandatory));
+			} else {
+				mUsernameErrorTooltip.setVisibility(View.GONE);
+			}
+		}
+	};
+
+	private final TextWatcher mPasswordTxtWatcher = new TextWatcher() {
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before,
+				int count) {
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+		}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+			if (s.length() == 0) {
+				showErrorToolTip(mPasswordErrorTooltip,
+						getString(R.string.message_account_password_mandatory));
+			} else if (s.length() < 6) {
+				showErrorToolTip(mPasswordErrorTooltip,
+						getString(R.string.message_account_password_short_length));
+			} else {
+				mPasswordErrorTooltip.setVisibility(View.GONE);
+			}
+		}
+	};
 }

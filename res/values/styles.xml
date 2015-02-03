@@ -1,22 +1,74 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="AppTheme2" parent="android:Theme.Light" />
 
-    <style name="AppTheme" parent="Theme.Sherlock.Light.DarkActionBar">
-        <item name="homeAsUpIndicator">@drawable/new_indicator</item>
+    <style name="AppTheme" parent="Theme.Sherlock.Light">
+        <item name="actionBarStyle">@style/AppTheme.ActionBar</item>
+        <item name="android:actionBarStyle" tools:targetApi="11">@style/AppTheme.ActionBar</item>
+        <item name="android:homeAsUpIndicator" tools:targetApi="11">@drawable/ic_up_indicator</item>
+        <item name="homeAsUpIndicator">@drawable/ic_up_indicator</item>
+        <item name="actionMenuTextAppearance" tools:targetApi="11">@style/AppTheme.MenuTextStyle</item>
+        <item name="android:actionMenuTextAppearance" tools:targetApi="11">@style/AppTheme.MenuTextStyle</item>
     </style>
-    
-     <style name="CardText">
+
+    <style name="AppTheme.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid">
+        <item name="actionMenuTextColor">#FFFFFF</item>
+        <item name="android:actionMenuTextColor" tools:targetApi="11">#FFFFFF</item>
+        <item name="android:background">#2DAEBF</item>
+        <item name="background">#2DAEBF</item>
+        <item name="android:icon">@drawable/bc_icon_white</item>
+        <item name="icon">@drawable/bc_icon_white</item>
+        <item name="android:height">45dp</item>
+        <item name="height">45dp</item>
+        <item name="android:titleTextStyle" tools:targetApi="11">@style/AppTheme.ActionBar.TitleTextStyle</item>
+        <item name="titleTextStyle">@style/AppTheme.ActionBar.TitleTextStyle</item>
+    </style>
+
+    <style name="AppTheme.MenuTextStyle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="AppTheme.ActionBar.TitleTextStyle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="CardText">
         <item name="android:textSize">@dimen/card_small_text</item>
         <item name="android:textColor">@color/card_text</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">2</item>
     </style>
-    
-     <style name="CardTitle" parent="@style/CardText">
+
+    <style name="CardTitle" parent="@style/CardText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/card_large_text</item>
         <item name="android:textColor">@color/card_title_text</item>
     </style>
-    </resources>
+
+    <style name="btnStyleGreen" parent="@android:style/Widget.Button">
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bc_green_btn_selector</item>
+        <item name="android:padding">10dip</item>
+    </style>
+
+    <style name="btnStyleDarkGrey" parent="@android:style/Widget.Button">
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bc_darkgrey_btn_selector</item>
+        <item name="android:padding">10dip</item>
+    </style>
+
+    <style name="btnStyleGrey" parent="@android:style/Widget.Button">
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bc_grey_btn_selector</item>
+        <item name="android:padding">10dip</item>
+    </style>
+
+</resources>

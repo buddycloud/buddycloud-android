@@ -15,7 +15,7 @@ import com.buddycloud.log.Logger;
  * Wherever you want a font just do:
  *    view.setTypeface(Typefaces.get(context, "assets/fontname.ttf"));
  */
-public class Typefaces {
+public class TypefacesUtil {
 	private static final String TAG = "Typefaces";
 
 	private static final Hashtable<String, Typeface> cache = new Hashtable<String, Typeface>();

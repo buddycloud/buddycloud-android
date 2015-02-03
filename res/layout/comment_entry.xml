@@ -23,7 +23,7 @@
         android:layout_marginTop="8dp"
         android:src="@drawable/personal_50px" />
 
-    <com.buddycloud.utils.TypefacedTextView
+    <com.buddycloud.customviews.TypefacedTextView
         xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
         android:id="@+id/bcPostContent"
         android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
         android:textSize="16sp"
         buddycloud:typeface="Roboto-Condensed.ttf" />
 
-    <com.buddycloud.utils.TypefacedTextView
+    <com.buddycloud.customviews.TypefacedTextView
         xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
         android:id="@+id/bcPostDate"
         android:layout_width="wrap_content"

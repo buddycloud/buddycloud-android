@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="welcome_screen_logo_wh">140dp</dimen>
+    <dimen name="welcome_msg_txt_size">22sp</dimen>
+    <dimen name="welcome_screen_btn_txt_size">20sp</dimen>
+    <dimen name="welcome_screen_box_margin">20dp</dimen>
+    <dimen name="welcome_screen_btn_h">40dp</dimen>
+    
+    <dimen name="create_acct_screen_label_txt_size">20sp</dimen>
+    <dimen name="create_acct_screen_editbox_txt_size">20sp</dimen>
+    <dimen name="create_acct_screen_btn_txt_size">18sp</dimen>
+    <dimen name="create_acct_screen_caption_txt_size">18sp</dimen>
+    
+    <dimen name="login_screen_label_txt_size">20sp</dimen>
+    <dimen name="login_screen_editbox_txt_size">20sp</dimen>
+    <dimen name="login_screen_btn_txt_size">18sp</dimen>
+
+    <dimen name="forgot_passwd_screen_label_txt_size">20sp</dimen>
+    <dimen name="forgot_passwd_screen_editbox_txt_size">20sp</dimen>
+    <dimen name="forgot_passwd_screen_btn_txt_size">18sp</dimen>
+    
+    <dimen name="corner_radius">4dip</dimen>
+    <dimen name="layer_padding">3dip</dimen>
+    
     <dimen name="standard_padding">1dip</dimen>
     <dimen name="big_padding">5dip</dimen>
     <dimen name="slidingmenu_offset">30dp</dimen>

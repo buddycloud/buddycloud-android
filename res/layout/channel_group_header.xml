@@ -5,7 +5,7 @@
       android:layout_height="match_parent"
       android:orientation="vertical" >
 
-      <com.buddycloud.utils.TypefacedTextView
+      <com.buddycloud.customviews.TypefacedTextView
 	       xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
 	       android:id="@+id/groupHeader"
 	       android:layout_width="wrap_content"

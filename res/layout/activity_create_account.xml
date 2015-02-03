@@ -1,4 +1,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+    xmlns:tooltipErrorView="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
@@ -6,126 +8,153 @@
     android:fillViewport="true"
     android:isScrollContainer="true" >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp" >
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        android:paddingTop="10dp" >
 
-        <TableLayout
+        <com.buddycloud.customviews.TypefacedTextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/create_account_channel_name"
+            android:textColor="@color/bc_dark_grey"
+            android:textSize="@dimen/create_acct_screen_label_txt_size"
+            buddycloud:typeface="Roboto-Regular.ttf" />
+
+        <com.buddycloud.customviews.TypefacedEditText
+            android:id="@+id/usernameTxt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:ems="15"
+            android:hint="@string/create_account_channel_name_hint"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:textColor="@color/bc_dark_grey"
+            android:textSize="@dimen/create_acct_screen_editbox_txt_size"
+            buddycloud:typeface="Roboto-Regular.ttf" >
+
+            <requestFocus />
+        </com.buddycloud.customviews.TypefacedEditText>
+
+        <com.buddycloud.customviews.TooltipErrorView
+            android:id="@+id/usernameErrorTooltip"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:visibility="gone"
+            tooltipErrorView:bgColor="#f6f6f6"
+            tooltipErrorView:borderColor="#d5d5d5"
+            tooltipErrorView:fontTypeface="Roboto-Light.ttf"
+            tooltipErrorView:textColor="#768595" />
+
+        <com.buddycloud.customviews.TypefacedTextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp"
+            android:text="@string/create_account_password"
+            android:textColor="@color/bc_dark_grey"
+            android:textSize="@dimen/create_acct_screen_label_txt_size"
+            buddycloud:typeface="Roboto-Regular.ttf" />
+
+        <com.buddycloud.customviews.TypefacedEditText
+            android:id="@+id/passwordTxt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:ems="15"
+            android:hint="@string/create_account_password_hint"
+            android:imeOptions="actionNext"
+            android:inputType="textPassword"
+            android:textColor="@color/bc_dark_grey"
+            android:textSize="@dimen/create_acct_screen_editbox_txt_size"
+            buddycloud:typeface="Roboto-Regular.ttf" >
+        </com.buddycloud.customviews.TypefacedEditText>
+
+        <com.buddycloud.customviews.TooltipErrorView
+            android:id="@+id/passwordErrorTooltip"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:visibility="gone"
+            tooltipErrorView:bgColor="#f6f6f6"
+            tooltipErrorView:borderColor="#d5d5d5"
+            tooltipErrorView:fontTypeface="Roboto-Light.ttf"
+            tooltipErrorView:textColor="#768595" />
+
+        <com.buddycloud.customviews.TypefacedTextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp"
+            android:text="@string/create_account_email_address"
+            android:textColor="@color/bc_dark_grey"
+            android:textSize="@dimen/create_acct_screen_label_txt_size"
+            buddycloud:typeface="Roboto-Regular.ttf" />
+
+        <com.buddycloud.customviews.TypefacedEditText
+            android:id="@+id/emailAddressTxt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:ems="15"
+            android:hint="@string/create_account_email_address_hint"
+            android:imeOptions="actionDone"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/bc_dark_grey"
+            android:textSize="@dimen/create_acct_screen_editbox_txt_size"
+            buddycloud:typeface="Roboto-Regular.ttf" >
+        </com.buddycloud.customviews.TypefacedEditText>
+
+        <com.buddycloud.customviews.TooltipErrorView
+            android:id="@+id/emailErrorTooltip"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:visibility="gone"
+            tooltipErrorView:bgColor="#f6f6f6"
+            tooltipErrorView:borderColor="#d5d5d5"
+            tooltipErrorView:fontTypeface="Roboto-Light.ttf"
+            tooltipErrorView:textColor="#768595" />
+
+        <com.buddycloud.customviews.TypefacedButton
+            android:id="@+id/createAccountBtn"
+            style="@style/btnStyleGreen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:stretchColumns="1,2"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true" >
+            android:layout_gravity="end"
+            android:layout_margin="10dp"
+            android:text="@string/create_account_button"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/create_acct_screen_btn_txt_size"
+            buddycloud:typeface="Roboto-Regular.ttf" />
 
-            <TableRow
-                android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:background="#eef7f9" >
+
+            <com.buddycloud.customviews.TypefacedTextView
+                android:id="@+id/createAccountCaption"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp" >
-
-                <ImageView
-                    android:id="@+id/logoSquare"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:background="@color/bc_green_blue"
-                    android:src="@drawable/square_logo_white" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" >
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-
-                    <EditText
-                        android:id="@+id/loginTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:ems="15"
-                        android:hint="@string/create_account_channel_name"
-                        android:imeOptions="actionNext"
-                        android:inputType="text" >
-
-                        <requestFocus />
-                    </EditText>
-
-                    <AutoCompleteTextView
-                        android:id="@+id/domainTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:ems="15"
-                        android:hint="@string/create_account_domain_name"
-                        android:imeOptions="actionNext"
-                        android:inputType="text" >
-                    </AutoCompleteTextView>
-
-                    <EditText
-                        android:id="@+id/emailAddressTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:ems="15"
-                        android:hint="@string/create_account_email_address"
-                        android:inputType="textEmailAddress" />
-
-                    <EditText
-                        android:id="@+id/passwordTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:ems="15"
-                        android:hint="@string/create_account_password"
-                        android:inputType="textPassword" />
-
-                    <EditText
-                        android:id="@+id/repeatPasswordTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ems="15"
-                        android:hint="@string/create_account_repeat_password"
-                        android:inputType="textPassword" />
-
-                    <ProgressBar
-                        android:id="@+id/progressBar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:visibility="gone" />
-
-                    <RelativeLayout
-                        android:id="@+id/createAccountBtn"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:background="@color/bc_orange"
-                        android:padding="@dimen/login_button_padding" >
-
-                        <com.buddycloud.utils.TypefacedTextView
-                            xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
-                            android:id="@+id/textView2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:text="@string/login_create_account_button"
-                            android:textColor="#FFFFFF"
-                            android:textSize="20sp"
-                            buddycloud:typeface="Roboto-Light.ttf" />
-                    </RelativeLayout>
-                </LinearLayout>
-            </TableRow>
-        </TableLayout>
-    </RelativeLayout>
+                android:layout_margin="10dp"
+                android:text="@string/create_account_footer_caption"
+                android:textColor="@color/bc_dark_grey"
+                android:textSize="@dimen/create_acct_screen_caption_txt_size"
+                buddycloud:typeface="Roboto-Light.ttf" />
+        </LinearLayout>
+    </LinearLayout>
 
 </ScrollView>

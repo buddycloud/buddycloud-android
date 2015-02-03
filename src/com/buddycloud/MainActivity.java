@@ -40,16 +40,15 @@ public class MainActivity extends SlidingFragmentActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
 		strict();
 		ImageHelper.configUIL(getApplicationContext());
 		
 		super.onCreate(savedInstanceState);
-		
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		
-		setSlidingActionBarEnabled(false);
-		
+		getSupportActionBar().setHomeButtonEnabled(false);
+		getSupportActionBar().setTitle(R.string.app_name);
+
+		setSlidingActionBarEnabled(false);		
 		setBehindContentView(R.layout.menu_frame);
 		setContentView(R.layout.content_frame);
 		
@@ -60,24 +59,21 @@ public class MainActivity extends SlidingFragmentActivity {
 					savedInstanceState, "mContent");
 		}
 		
+		// Check if the welcome screen visible for login.
+		// Otherwise, show the main screen.
 		if (shouldLogin()) {
-			Intent loginActivity = new Intent();
-			loginActivity.setClass(getApplicationContext(), LoginActivity.class);
-			startActivityForResult(loginActivity, LoginActivity.REQUEST_CODE);
+			Intent welcomeActivity = new Intent();
+			welcomeActivity.setClass(getApplicationContext(), WelcomeActivity.class);
+			startActivityForResult(welcomeActivity, WelcomeActivity.REQUEST_CODE);
 		} else { 
 			startActivity();
 		}
-
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 	
 	// You need to do the Play Services APK check here too.
 	@Override
 	protected void onResume() {
 	    super.onResume();
-	    
-	    // Check for the Google Play Services for GCM.
-	    GCMUtils.checkPlayServices(this);
 	}
 
 	 @Override
@@ -147,8 +143,8 @@ public class MainActivity extends SlidingFragmentActivity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == LoginActivity.REQUEST_CODE) {
-			if (resultCode == LoginActivity.RESULT_CODE_OK) {
+		if (requestCode == WelcomeActivity.REQUEST_CODE) {
+			if (resultCode == WelcomeActivity.RESULT_CODE_OK) {
 				startActivity();
 			} else {
 				finish();

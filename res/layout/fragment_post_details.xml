@@ -40,13 +40,14 @@
                         android:scaleType="fitXY"
                         android:contentDescription="@string/comment_box_avatar_desc" />
 
-                    <com.buddycloud.utils.TypefacedTextView
+                    <com.buddycloud.customviews.TypefacedTextView
                         xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
                         android:id="@+id/title"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
                         android:textColor="#ff707070"
                         android:textSize="17sp"
                         buddycloud:typeface="Roboto-BoldCondensed.ttf" />

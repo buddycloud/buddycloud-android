@@ -48,7 +48,7 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical" >
 
-                <com.buddycloud.utils.TypefacedTextView
+                <com.buddycloud.customviews.TypefacedTextView
                     xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
                     android:id="@+id/bcCommentCount"
                     android:layout_width="wrap_content"
@@ -76,7 +76,7 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp" >
 
-                <com.buddycloud.utils.TypefacedTextView
+                <com.buddycloud.customviews.TypefacedTextView
                     xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
                     android:id="@+id/title"
                     android:layout_width="0dp"
