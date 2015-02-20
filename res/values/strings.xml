@@ -33,15 +33,18 @@
     <string name="menu_role_publisher">Change to follower+post</string>
     <string name="menu_role_outcast">Ban</string>
     
+    
+
     <string name="apiAddressTxtHint">https://api.buddycloud.org</string>
 	
 	<string name="action_followed">You\'re now following %1$s</string>
 	<string name="action_unfollowed">You unfollowed %1$s</string>
 	<string name="action_follow_failed">Couldn\'t change your role in %1$s</string>
 	
-	<string name="message_post_created">Post created</string>
-	<string name="message_post_creation_failed">Post creation failed</string>
-	<string name="message_reply_created">Reply created</string>
+	<string name="message_topic_created">New topic has been created.</string>
+	<string name="message_topic_creation_failed">Houston, we\'ve some problem. Your new topic is not created, please try again.</string>
+	<string name="message_reply_created">Comment has been posted successfully.</string>
+	<string name="message_reply_creation_failed">Houston, we\'ve some problem. Your comment is failed, please try again.</string>
 	<string name="title_confirm_delete">Confirm deletion</string>
 	<string name="message_confirm_delete">Are you sure you want to delete this post?</string>
 	<string name="message_post_deleted">Post deleted</string>
@@ -62,6 +65,8 @@
 
 	<string name="message_account_fields_mandatory">All fields are mandatory</string>
 	<string name="message_account_username_mandatory">Sorry, but your username can\'t be empty.</string>
+	<string name="message_account_username_invalid1">Pick username without domain and spaces.</string>
+	<string name="message_account_username_invalid2">Invalid username. Only characters and numbers are allowed.</string>
 	<string name="message_account_email_invalid">Invalid email address.</string>
 	<string name="message_account_password_mandatory">Sorry, but your password can\'t be empty.</string>
 	<string name="message_account_password_short_length">Password should be atleast 6 characters.</string>
@@ -70,7 +75,11 @@
 	<string name="message_reseting_password">Reseting password&#8230;</string>
 	<string name="message_logging_in">Logging in&#8230;</string>
 	<string name="message_account_creation">Creating account&#8230;</string>
-	<string name="message_account_creation_failed">Could not register account. Username not unavailable.</string>
+	<string name="message_account_creation_failed">Could not register account. Username not available.</string>
+	<string name="message_post_comment_mandatory">Comment can\'t be empty.</string>
+	<string name="message_post_topic_mandatory">Topic can\'t be empty.</string>
+	<string name="message_topic_creation">Posting a topic&#8230;</string>
+
 	
 	<string name="message_replies_load_failed">Could not fetch replies of this post</string>
 	<string name="message_followers_load_failed">Could not fetch followers of this channel</string>
@@ -81,6 +90,8 @@
 	<string name="message_fetch_subscribed_failed">Could not fetch list of subscribed</string>
 	<string name="message_sync_failed">Could not synchronize unread counters</string>
 	<string name="message_post_details_load_failed">Could not fetch post details</string>
+	<string name="message_no_network_connection">Not connected with internet. Please try again.</string>
+	<string name="message_no_topics_found">No topics found. Why not create a new topic?</string>
 	
 	<string name="message_notifications_settings_load_failed">Could not load notification settings</string>
 	
@@ -119,8 +130,9 @@
 
 	<string name="login_title">Log in</string>
 	<string name="login_username">Username</string>
-	<string name="login_hint">User@example.com</string>
+	<string name="login_hint">username@example.com</string>
 	<string name="login_password">Password</string>
+	<string name="login_password_hint">password</string>
     <string name="login_button">Log In</string>
     <string name="login_create_account_button">Create new account</string>
     <string name="login_error_wrong_credentials">The username and password you entered did not match our records. Please double-check and try again.</string>
@@ -135,7 +147,9 @@
 	<string name="ssl_error_title">SSL error</string>
 	<string name="ssl_error_message">Insecure connection or invalid certificate. Trust %1$s?</string>
 	
-	<string name="search_hint">Search</string>
+	<string name="search_title">Search</string>
+	<string name="search_hint">Search for channels, posts, and more&#8230;</string>
+	<string name="message_search_no_result">No results found.</string>
 	
 	<string name="share_channel_hint">Pick channel to share with</string>
 	<string name="share_caption_hint">Type caption</string>
@@ -144,10 +158,16 @@
 	
 	<string name="channel_list_personal_hint">PERSONAL</string>
 	<string name="channel_list_subscribed_hint">SUBSCRIBED</string>
+	<string name="channel_list_counts_formatted_txt">%1$d Mentions  |  %2$d Replies  |  %3$d Views</string>
+	
+	<string name="post_new_topic_title">Create New Topic</string>
+	<string name="post_new_topic_hint">Write a topic&#8230;</string>
+	<string name="post_new_topic_at_channel">at %1$s</string>
+	
 	
 	<string name="comment_box_avatar_desc">Channel avatar</string>
 	
-	<string name="post_comment_hint">add your comment</string>
+	<string name="post_comment_hint">Write a comment&#8230;</string>
 	<string name="post_comment_button">Comment</string>
 	
 	<string name="pref_notifications_category_title">Notifications</string>
@@ -209,6 +229,8 @@
 	<string name="gcm_follow_request_approved_notification_title">Follow request approved</string>
 	<string name="gcm_follow_request_approved_notification_content">Your request to follow %1$s was approved</string>
 	
+	<string name="message_">can</string>
+	
 	<string name="menu_pending_subscriptions">Pending subscriptions</string>
 	<string name="menu_pending_subscription_deny">Deny</string>
 	<string name="menu_pending_subscription_approve">Approve</string>
@@ -234,15 +256,22 @@
 	
 	<string name="message_send_bug_report">Send bug report</string>
 	
-	<string name="change_password_button">Change password</string>
-	<string name="change_current_password">current password</string>
-	<string name="change_new_password">new password</string>
-	<string name="change_repeat_new_password">repeat new password</string>
-	<string name="message_change_password_success">Password successfully changed</string>
-	<string name="message_change_password_failed">Couldn\'t change password</string>
+	<string name="acct_change_password_title">Change Password</string>
+	<string name="acct_change_password_button">Change Password</string>
+	<string name="acct_change_current_password">Current password</string>
+	<string name="acct_change_new_password">New password</string>
+	<string name="acct_change_repeat_new_password">Repeat new password</string>
+	<string name="acct_message_current_password_mandatory">Sorry, but your current password can\'t be empty.</string>
+	<string name="acct_message_new_password_mandatory">Sorry, but your new password can\'t be empty.</string>
+	<string name="acct_message_repeat_new_password_mandatory">Sorry, but your repeat new password can\'t be empty.</string>
+	<string name="acct_message_new_and_repeat_password_not_match">Sorry, new and repeat password do not match.</string>
+	<string name="acct_message_new_and_current_password_not_match">Sorry, new password should not be current password.</string>
+	<string name="acct_message_changing_password">Changing Password&#8230;</string>
+	<string name="acct_message_change_password_success">Password successfully changed</string>
+	<string name="acct_message_change_password_failed">Couldn\'t change password</string>
 
-	<string name="about_buddycloud_protocol_title">The buddycloud protocol</string>
-	<string name="about_buddycloud_protocol_content">buddycloud is a new way to build communication tools. The buddycloud protocol enables communication, file sharing and chat, using open standards and is secure.</string>
+	<string name="about_buddycloud_protocol_title">Buddycloud for Android</string>
+	<string name="about_buddycloud_protocol_content">Buddycloud is a new way to build communication tools. The buddycloud protocol enables communication, file sharing and chat, using open standards and is secure.\n\nBuddycloud for Android is built using open source software licenses.</string>
     <string name="about_buddycloud_contributors_title">Contributors</string>
     <string name="about_buddycloud_version_title">Version</string>
     
