@@ -1,43 +1,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+    xmlns:app="http://schemas.android.com/apk/res/com.buddycloud"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:orientation="horizontal"
+    android:background="@drawable/reply_box_shadow" >
 
-        <View
-        	android:layout_width="match_parent"
-        	android:layout_height="1dp"
-        	android:background="#EEEEEE"/>
-        
-        <LinearLayout
-            android:id="@+id/bcCommentSection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="@dimen/big_padding"
-            android:background="#FFFFFF" >
+    <com.buddycloud.customviews.CircularImageView
+        android:id="@+id/bcReplyAuthorPic"
+        android:layout_width="@dimen/post_item_replies_avatar_size"
+        android:layout_height="@dimen/post_item_replies_avatar_size"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/avatar_icon"
+        app:civ_border="false"
+        app:civ_border_color="#EEEEEE"
+        app:civ_border_width="1dp"
+        app:civ_shadow="true" />
 
-        	<ImageView
-		       android:id="@+id/bcCommentPic"
-		       android:layout_width="40dp"
-		       android:layout_height="40dp"
-		       android:contentDescription="@string/comment_box_avatar_desc" />
-        
-            <EditText
-                android:id="@+id/postContentTxt"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-	        	android:layout_gravity="bottom"
-                android:inputType="textMultiLine|textCapSentences"
-    			android:imeOptions="actionNone" />
+    <com.buddycloud.customviews.TypefacedEditText
+        android:id="@+id/postNewCommentTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/reply_box_selector"
+        android:ems="15"
+        android:hint="@string/post_comment_hint"
+        android:imeOptions="actionSend"
+        android:inputType="textMultiLine"
+        android:textColor="@color/bc_dark_grey"
+        android:textSize="@dimen/post_item_comment_box_txt_size"
+        buddycloud:typeface="Roboto-Regular.ttf" >
 
-            <ImageView
-                android:id="@+id/postButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/post_btn_selector" />
+    </com.buddycloud.customviews.TypefacedEditText>
 
-        </LinearLayout>
-        
 </LinearLayout>

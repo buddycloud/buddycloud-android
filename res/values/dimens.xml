@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+    <dimen name="action_bar_height">56dp</dimen>
+    
+    
     <dimen name="welcome_screen_logo_wh">140dp</dimen>
     <dimen name="welcome_msg_txt_size">22sp</dimen>
     <dimen name="welcome_screen_btn_txt_size">20sp</dimen>
@@ -18,9 +22,51 @@
     <dimen name="forgot_passwd_screen_label_txt_size">20sp</dimen>
     <dimen name="forgot_passwd_screen_editbox_txt_size">20sp</dimen>
     <dimen name="forgot_passwd_screen_btn_txt_size">18sp</dimen>
+
+    <dimen name="change_passwd_screen_label_txt_size">20sp</dimen>
+    <dimen name="change_passwd_screen_editbox_txt_size">20sp</dimen>
+    <dimen name="change_passwd_screen_btn_txt_size">18sp</dimen>
     
     <dimen name="corner_radius">4dip</dimen>
     <dimen name="layer_padding">3dip</dimen>
+    
+    <dimen name="post_new_topic_txt_size">18sp</dimen>
+    <dimen name="post_new_topic_hint_txt_size">14sp</dimen>
+    <dimen name="post_new_topic_txt_counter_size">16sp</dimen>
+    
+    <dimen name="personal_header_avatar_size">90dp</dimen>
+    <dimen name="personal_header_size">200dp</dimen>
+    <dimen name="personal_header_icon_size">20dp</dimen>
+    <dimen name="personal_header_icon_txt_size">15sp</dimen>
+    <dimen name="personal_header_txt_size">18sp</dimen>
+    
+    <dimen name="post_item_title_size">16sp</dimen>
+    <dimen name="post_item_avatar_size">60dp</dimen>
+    <dimen name="post_item_dateTime_size">12sp</dimen>
+    <dimen name="post_item_content_size">16sp</dimen>
+    <dimen name="post_item_margin_size">15dp</dimen>
+    
+    <dimen name="post_item_comment_box_txt_size">16sp</dimen>
+    <dimen name="post_item_replies_avatar_size">40dp</dimen>
+    
+    <dimen name="about_buddycloud_padding">40dp</dimen>
+    <dimen name="about_buddycloud_logo_wh">70dp</dimen>
+    <dimen name="about_buddycloud_protocol_title_size">30sp</dimen>
+    <dimen name="about_buddycloud_protocol_content_size">18sp</dimen>
+    <dimen name="about_buddycloud_version_title_size">18sp</dimen>
+    <dimen name="about_buddycloud_contributors_title_size">22sp</dimen>
+    <dimen name="about_buddycloud_contributors_size">18sp</dimen>
+
+     <dimen name="channel_item_avatar_size">60dp</dimen>
+     
+    
+    <dimen name="notif_size">25dp</dimen>
+    
+    <dimen name="search_no_results_found_txt_size">20sp</dimen>
+   
+    <dimen name="list_empty_avatar_size">120dp</dimen>
+    <dimen name="list_empty_view_margin_size">50dp</dimen>
+    <dimen name="list_empty_label_txt_size">18sp</dimen>
     
     <dimen name="standard_padding">1dip</dimen>
     <dimen name="big_padding">5dip</dimen>
