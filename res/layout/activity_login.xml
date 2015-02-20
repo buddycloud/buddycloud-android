@@ -71,7 +71,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:ems="15"
-            android:hint="@string/login_password"
+            android:hint="@string/login_password_hint"
             android:imeOptions="actionDone"
             android:inputType="textPassword"
             android:textColor="@color/bc_dark_grey"

@@ -1,4 +1,4 @@
-package com.buddycloud;
+package com.buddycloud.notifications;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
 import com.buddycloud.log.Logger;
-import com.buddycloud.notifications.GCMUtils;
 
 /**
  * This {@code WakefulBroadcastReceiver} takes care of creating and managing a
@@ -34,6 +33,7 @@ public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
         startWakefulService(context, (intent.setComponent(comp)));
         setResultCode(Activity.RESULT_OK);
         
+        // clear the previous GCM message authors
         GCMUtils.clearGCMAuthors(context);
     }
 }

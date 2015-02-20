@@ -235,28 +235,28 @@ public class ShareActivity extends Activity {
 		try {
 			post = createPost(picChannel, picId);
 		} catch (JSONException e) {
-			Toast.makeText(getApplicationContext(),
-					getString(R.string.message_post_creation_failed), 
-					Toast.LENGTH_LONG).show();
-			hideProgress();
+//			Toast.makeText(getApplicationContext(),
+//					getString(R.string.message_post_creation_failed), 
+//					Toast.LENGTH_LONG).show();
+//			hideProgress();
 			return;
 		}
 		
 		PostsModel.getInstance().save(this, post, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
-				Toast.makeText(getApplicationContext(),
-						getString(R.string.message_post_created),
-						Toast.LENGTH_LONG).show();
-				finish();
+//				Toast.makeText(getApplicationContext(),
+//						getString(R.string.message_post_created),
+//						Toast.LENGTH_LONG).show();
+//				finish();
 			}
 			
 			@Override
 			public void error(Throwable throwable) {
-				Toast.makeText(getApplicationContext(),
-						getString(R.string.message_post_creation_failed), 
-						Toast.LENGTH_LONG).show();
-				hideProgress();
+//				Toast.makeText(getApplicationContext(),
+//						getString(R.string.message_post_creation_failed), 
+//						Toast.LENGTH_LONG).show();
+//				hideProgress();
 			}
 		}, targetChannelView.getText().toString());
 		

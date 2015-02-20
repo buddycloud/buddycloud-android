@@ -24,10 +24,10 @@
             android:contentDescription="@string/comment_box_avatar_desc"
             android:scaleType="fitXY"
             android:src="@drawable/personal_50px"
-            app:civ_border="false"
-            app:civ_border_color="#EEEEEE"
-            app:civ_border_width="1dp"
-            app:civ_shadow="false" />
+            app:border="false"
+            app:border_color="#EEEEEE"
+            app:border_width="1dp"
+            app:shadow="false" />
 
         <com.buddycloud.customviews.TypefacedTextView
             android:id="@+id/unreadCounter"

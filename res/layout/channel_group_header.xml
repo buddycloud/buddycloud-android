@@ -1,19 +1,28 @@
-<LinearLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:orientation="vertical" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:background="@color/bc_green_blue"
+    android:orientation="horizontal" >
 
-      <com.buddycloud.customviews.TypefacedTextView
-	       xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
-	       android:id="@+id/groupHeader"
-	       android:layout_width="wrap_content"
-	       android:layout_height="wrap_content"
-	       android:textColor="@color/bc_green"
-	       android:textSize="16sp"
-	       android:layout_marginLeft="4dp"
-	       buddycloud:typeface="Roboto-BoldCondensed.ttf" />
-      
+    <com.buddycloud.customviews.TypefacedTextView
+        android:id="@+id/groupHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:paddingBottom="3dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="3dp"
+        android:text="@string/channel_list_personal_hint"
+        android:textColor="@color/bc_dark_grey"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        buddycloud:typeface="Roboto-BoldCondensed.ttf" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="2" />
+
 </LinearLayout>
-

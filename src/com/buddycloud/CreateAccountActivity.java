@@ -40,6 +40,7 @@ import com.buddycloud.http.SSLUtils;
 import com.buddycloud.model.AccountModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.preferences.Preferences;
+import com.buddycloud.utils.ActionbarUtil;
 import com.buddycloud.utils.DNSUtils;
 import com.buddycloud.utils.InputUtils;
 
@@ -75,8 +76,7 @@ public class CreateAccountActivity extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_create_account);
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setTitle(getString(R.string.create_account_title));
+		ActionbarUtil.showActionBarwithBack(this, getString(R.string.create_account_title));
 
 		mUsernameErrorTooltip = (TooltipErrorView) findViewById(R.id.usernameErrorTooltip);
 		mUsernameTxt = (EditText) findViewById(R.id.usernameTxt);
@@ -96,11 +96,11 @@ public class CreateAccountActivity extends SherlockActivity {
 				if (actionId == EditorInfo.IME_ACTION_DONE) {
 					
 					final String accountNameTxt = getValue(R.id.usernameTxt);
-					final String emailAddressTxt = getValue(R.id.emailAddressTxt);
 					final String passwordTxt = getValue(R.id.passwordTxt);
-					
+					final String emailAddressTxt = getValue(R.id.emailAddressTxt);
+
 					// resolve API service and create account.
-					resolveAPISRVAndCreateAccount(accountNameTxt, emailAddressTxt, passwordTxt);
+					resolveAPISRVAndCreateAccount(accountNameTxt, passwordTxt, emailAddressTxt);
 				}
 				return false;
 			}
@@ -134,11 +134,11 @@ public class CreateAccountActivity extends SherlockActivity {
 			public void onClick(View v) {
 
 				final String accountNameTxt = getValue(R.id.usernameTxt);
-				final String emailAddressTxt = getValue(R.id.emailAddressTxt);
 				final String passwordTxt = getValue(R.id.passwordTxt);
+				final String emailAddressTxt = getValue(R.id.emailAddressTxt);
 
 				// resolve API service and create account.
-				resolveAPISRVAndCreateAccount(accountNameTxt, emailAddressTxt, passwordTxt);
+				resolveAPISRVAndCreateAccount(accountNameTxt, passwordTxt, emailAddressTxt);
 			}
 		});
 	}
@@ -209,7 +209,8 @@ public class CreateAccountActivity extends SherlockActivity {
 	 * Resolve API Service and create new account
 	 * 
 	 */
-	private void resolveAPISRVAndCreateAccount(final String accountNameTxt, final String passwordTxt,
+	private void resolveAPISRVAndCreateAccount(final String accountNameTxt, 
+			final String passwordTxt,
 			final String emailAddressTxt) {
 		
 		if (isEmpty(accountNameTxt)) {
@@ -256,14 +257,14 @@ public class CreateAccountActivity extends SherlockActivity {
 							@Override
 							public void error(Throwable throwable) {
 								// Do nothing, SSL error not tolerable
-								mProgressDialog.hide();
+								mProgressDialog.dismiss();
 							}
 						});
 			}
 
 			@Override
 			public void error(Throwable throwable) {
-				mProgressDialog.hide();
+				mProgressDialog.dismiss();
 				Toast.makeText(
 						getApplicationContext(),
 						getString(R.string.message_api_discovery_failed),
@@ -302,7 +303,7 @@ public class CreateAccountActivity extends SherlockActivity {
 
 					@Override
 					public void success(JSONObject response) {
-						mProgressDialog.hide();
+						mProgressDialog.dismiss();
 						Preferences.setPreference(getApplicationContext(),
 								Preferences.MY_CHANNEL_JID, bareJid);
 						Preferences.setPreference(getApplicationContext(),
@@ -315,7 +316,7 @@ public class CreateAccountActivity extends SherlockActivity {
 
 					@Override
 					public void error(Throwable throwable) {
-						mProgressDialog.hide();
+						mProgressDialog.dismiss();
 						showErrorToolTip(mUsernameErrorTooltip,
 								getString(R.string.message_account_creation_failed));
 
@@ -354,6 +355,12 @@ public class CreateAccountActivity extends SherlockActivity {
 		
 		final String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
 		return (!isEmpty(email) && email.matches(EMAIL_REGEX));
+	}
+	
+	private static boolean isValidUsername(String username) {
+		
+		final String USERNAME_REGEX = "^([a-zA-Z0-9._])+$";
+		return (!isEmpty(username) && username.matches(USERNAME_REGEX));
 	}
 	
 	public static boolean isBareJid(CharSequence target) {
@@ -429,7 +436,15 @@ public class CreateAccountActivity extends SherlockActivity {
 			if (s.length() == 0) {
 				showErrorToolTip(mUsernameErrorTooltip,
 						getString(R.string.message_account_username_mandatory));
-			} else {
+			} else if (s.toString().contains("@") || s.toString().contains(" ")) {
+				showErrorToolTip(mUsernameErrorTooltip,
+						getString(R.string.message_account_username_invalid1));
+			}
+			else if (!isValidUsername(s.toString())) {
+				showErrorToolTip(mUsernameErrorTooltip,
+						getString(R.string.message_account_username_invalid2));
+			}
+			else {
 				mUsernameErrorTooltip.setVisibility(View.GONE);
 			}
 		}

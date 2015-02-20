@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
-import com.buddycloud.GCMIntentService;
 import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.fragments.GenericChannelsFragment;

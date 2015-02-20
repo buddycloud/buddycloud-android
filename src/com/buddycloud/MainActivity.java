@@ -1,10 +1,8 @@
 package com.buddycloud;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.Window;
@@ -19,10 +17,11 @@ import com.buddycloud.fragments.SubscribedChannelsFragment;
 import com.buddycloud.log.Logger;
 import com.buddycloud.model.SyncModel;
 import com.buddycloud.notifications.GCMEvent;
+import com.buddycloud.notifications.GCMIntentService;
 import com.buddycloud.notifications.GCMUtils;
 import com.buddycloud.preferences.Preferences;
+import com.buddycloud.utils.ActionbarUtil;
 import com.buddycloud.utils.Backstack;
-import com.buddycloud.utils.ImageHelper;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnClosedListener;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnOpenedListener;
@@ -31,7 +30,7 @@ import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 public class MainActivity extends SlidingFragmentActivity {
 
 	private static final String TAG = MainActivity.class.getName();
-	private static final boolean DEVELOPER_MODE = false;
+
 	private String myJid;
 	private Backstack backStack;
 	
@@ -40,13 +39,10 @@ public class MainActivity extends SlidingFragmentActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		strict();
-		ImageHelper.configUIL(getApplicationContext());
-		
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		getSupportActionBar().setHomeButtonEnabled(false);
-		getSupportActionBar().setTitle(R.string.app_name);
+		
+		ActionbarUtil.showActionBar(this, getString(R.string.app_name), true);
 
 		setSlidingActionBarEnabled(false);		
 		setBehindContentView(R.layout.menu_frame);
@@ -83,27 +79,8 @@ public class MainActivity extends SlidingFragmentActivity {
 			getSupportFragmentManager().putFragment(outState, "mContent", channelStreamFrag);
 		}
 	}
-	
-	@SuppressLint("NewApi")
-	private void strict() {
-		if (DEVELOPER_MODE) {
-	         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-	                 .detectDiskReads()
-	                 .detectDiskWrites()
-	                 .detectNetwork()   // or .detectAll() for all detectable problems
-	                 .penaltyLog()
-	                 .build());
-	         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-	                 .detectLeakedSqlLiteObjects()
-	                 .detectLeakedClosableObjects()
-	                 .penaltyLog()
-	                 .penaltyDeath()
-	                 .build());
-	     }
-	}
-	
+
 	private boolean shouldLogin() {
-		//TODO Check credentials here too
 		return Preferences.getPreference(this, Preferences.MY_CHANNEL_JID) == null || 
 				Preferences.getPreference(this, Preferences.PASSWORD) == null || 
 				Preferences.getPreference(this, Preferences.API_ADDRESS) == null;
@@ -120,7 +97,6 @@ public class MainActivity extends SlidingFragmentActivity {
 	
 	@Override
 	public void onBackPressed() {
-		//TODO Animation between fragments
 		if (getSlidingMenu().isMenuShowing()) {
 			finish();
 		} else {

@@ -1,4 +1,4 @@
-package com.buddycloud;
+package com.buddycloud.notifications;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,20 +8,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import com.buddycloud.init.ApplicationManager;
 import com.buddycloud.log.Logger;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.ModelCallbackImpl;
 import com.buddycloud.model.NotificationSettingsModel;
 import com.buddycloud.model.SyncModel;
-import com.buddycloud.notifications.GCMEvent;
-import com.buddycloud.notifications.GCMFollowRequestApprovedNotificationListener;
-import com.buddycloud.notifications.GCMFollowRequestNotificationListener;
-import com.buddycloud.notifications.GCMNotificationListener;
-import com.buddycloud.notifications.GCMPostNotificationListener;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.VersionUtils;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 public class GCMIntentService extends IntentService {
 
@@ -33,29 +31,49 @@ public class GCMIntentService extends IntentService {
 	}
 	
 	@Override
-	protected void onHandleIntent(Intent remoteMessage) {
+	protected void onHandleIntent(Intent remoteIntent) {
 		
-		Logger.info(TAG, "GCM reveived " + remoteMessage.getStringExtra("message"));
-
-		final Context context = ApplicationManager.getAppContext();
-		final SyncModel syncModel = SyncModel.getInstance();
-		SyncModel.getInstance().syncNoSummary(context, new ModelCallbackImpl<Void>(){
-			@Override
-			public void success(Void response) {
-				syncModel.fill(context, new ModelCallbackImpl<Void>());
-			}
-			
-			@Override
-			public void error(Throwable throwable) {
-				success(null);
-			}
-		});
-		
-		GCMEvent event = GCMEvent.valueOf(remoteMessage.getStringExtra("event"));
-		GCMNotificationListener notificationListener = createNotificationListener(context, event);
-		if (notificationListener != null) {
-			notificationListener.onMessage(event, context, remoteMessage);
+		Logger.info(TAG, "GCM reveived " + remoteIntent.toString());
+        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
+        String messageType = gcm.getMessageType(remoteIntent);
+        
+		Bundle extras = remoteIntent.getExtras();
+		if (!extras.isEmpty())
+		{
+			if (GoogleCloudMessaging.
+                    MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
+				Logger.info(TAG, "Send error: " + extras.toString());
+            } else if (GoogleCloudMessaging.
+                    MESSAGE_TYPE_DELETED.equals(messageType)) {
+            	Logger.info(TAG, "Deleted messages on server: " + extras.toString());
+            } else if (GoogleCloudMessaging.
+                    MESSAGE_TYPE_MESSAGE.equals(messageType)) {
+            	
+            	// If it's a regular GCM message, do some work.
+        		final Context context = ApplicationManager.getAppContext();
+        		final SyncModel syncModel = SyncModel.getInstance();
+        		SyncModel.getInstance().syncNoSummary(context, new ModelCallbackImpl<Void>(){
+        			@Override
+        			public void success(Void response) {
+        				syncModel.fill(context, new ModelCallbackImpl<Void>());
+        			}
+        			
+        			@Override
+        			public void error(Throwable throwable) {
+        				success(null);
+        			}
+        		});
+        		
+        		GCMEvent event = GCMEvent.valueOf(remoteIntent.getStringExtra("event"));
+        		GCMNotificationListener notificationListener = createNotificationListener(context, event);
+        		if (notificationListener != null) {
+        			notificationListener.onMessage(event, context, remoteIntent);
+        		}
+            }
 		}
+
+		 // Release the wake lock provided by the WakefulBroadcastReceiver.
+        GCMBroadcastReceiver.completeWakefulIntent(remoteIntent);
 	}
 
 	private GCMNotificationListener createNotificationListener(

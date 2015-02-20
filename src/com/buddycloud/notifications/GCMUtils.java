@@ -23,8 +23,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.TaskStackBuilder;
 
-import com.buddycloud.GCMBroadcastReceiver;
-import com.buddycloud.GCMIntentService;
 import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.log.Logger;

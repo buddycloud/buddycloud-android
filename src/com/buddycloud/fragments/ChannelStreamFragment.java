@@ -64,37 +64,37 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 			Bundle savedInstanceState) {
 		final View view = inflater.inflate(R.layout.fragment_channel_stream, container, false);
 		
-		showProgress(view);
-		
-		PostsModel.getInstance().setListener(this);
-		
-		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
-		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
-		ImageView avatarView = (ImageView) view.findViewById(R.id.bcCommentPic);
-		
-		DisplayImageOptions dio = new DisplayImageOptions.Builder()
-				.cloneFrom(ImageHelper.defaultImageOptions())
-				.showImageOnFail(R.drawable.personal_50px)
-				.showImageOnLoading(R.drawable.personal_50px)
-				.build();
-		ImageLoader.getInstance().displayImage(avatarURL, avatarView, dio);
-		
-		final ImageView postButton = (ImageView) view.findViewById(R.id.postButton);
-		postButton.setEnabled(false);
-		if (SubscribedChannelsModel.canPost(getRole())) {
-			EditText postContent = (EditText) view.findViewById(R.id.postContentTxt);
-			postButton.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					createPost(view);
-				}
-			});
-			configurePostSection(postContent, postButton);
-		} else {
-			view.findViewById(R.id.bcCommentSection).setVisibility(View.GONE);
-		}
-		
-		syncd(view, getActivity());
+//		showProgress(view);
+//		
+//		PostsModel.getInstance().setListener(this);
+//		
+//		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
+//		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
+//		ImageView avatarView = (ImageView) view.findViewById(R.id.bcCommentPic);
+//		
+//		DisplayImageOptions dio = new DisplayImageOptions.Builder()
+//				.cloneFrom(ImageHelper.defaultImageOptions())
+//				.showImageOnFail(R.drawable.personal_50px)
+//				.showImageOnLoading(R.drawable.personal_50px)
+//				.build();
+//		ImageLoader.getInstance().displayImage(avatarURL, avatarView, dio);
+//		
+//		final ImageView postButton = (ImageView) view.findViewById(R.id.postButton);
+//		postButton.setEnabled(false);
+//		if (SubscribedChannelsModel.canPost(getRole())) {
+//			EditText postContent = (EditText) view.findViewById(R.id.postContentTxt);
+//			postButton.setOnClickListener(new OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//					createPost(view);
+//				}
+//			});
+//			configurePostSection(postContent, postButton);
+//		} else {
+//			view.findViewById(R.id.bcCommentSection).setVisibility(View.GONE);
+//		}
+//		
+//		syncd(view, getActivity());
 		
 		return view;
 	}
@@ -268,35 +268,35 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 	}
 	
 	private void createPost(final View view) {
-		
-		final ImageView postButton = (ImageView) view.findViewById(R.id.postButton);
-		
-		if (!postButton.isEnabled()) {
-			return;
-		}
-		
-		showProgress(view);
-		
-		final EditText postContent = (EditText) view.findViewById(R.id.postContentTxt);
-		
-		JSONObject post = createJSONPost(postContent);
-		postContent.setText("");
-		
-		PostsModel.getInstance().save(getActivity(), post, smartify(
-				new ModelCallback<JSONObject>() {
-			@Override
-			public void success(JSONObject response) {
-				Toast.makeText(getActivity().getApplicationContext(), 
-						getString(R.string.message_post_created), Toast.LENGTH_LONG).show();
-				fillRemotely(null, null);
-			}
-			
-			@Override
-			public void error(Throwable throwable) {
-				// Best effort. We now have offline messages.
-				hideProgress(view);
-			}
-		}), getChannelJid());
+//		
+//		final ImageView postButton = (ImageView) view.findViewById(R.id.postButton);
+//		
+//		if (!postButton.isEnabled()) {
+//			return;
+//		}
+//		
+//		showProgress(view);
+//		
+//		final EditText postContent = (EditText) view.findViewById(R.id.postContentTxt);
+//		
+//		JSONObject post = createJSONPost(postContent);
+//		postContent.setText("");
+//		
+//		PostsModel.getInstance().save(getActivity(), post, smartify(
+//				new ModelCallback<JSONObject>() {
+//			@Override
+//			public void success(JSONObject response) {
+////				Toast.makeText(getActivity().getApplicationContext(), 
+////						getString(R.string.message_post_created), Toast.LENGTH_LONG).show();
+////				fillRemotely(null, null);
+//			}
+//			
+//			@Override
+//			public void error(Throwable throwable) {
+//				// Best effort. We now have offline messages.
+//				hideProgress(view);
+//			}
+//		}), getChannelJid());
 	}
 
 	private JSONObject createJSONPost(final EditText postContent) {

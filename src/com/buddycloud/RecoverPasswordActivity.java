@@ -21,6 +21,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.customviews.TooltipErrorView;
 import com.buddycloud.model.AccountModel;
 import com.buddycloud.model.ModelCallback;
+import com.buddycloud.utils.ActionbarUtil;
 import com.buddycloud.utils.InputUtils;
 
 /**
@@ -44,8 +45,7 @@ public class RecoverPasswordActivity extends SherlockActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recover_password);
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setTitle(getString(R.string.forgot_password_title));
+        ActionbarUtil.showActionBarwithBack(this, getString(R.string.forgot_password_title));
 
 		mForgotPasswordEmailErrorTooltip = (TooltipErrorView) findViewById(R.id.forgotPasswordEmailErrorTooltip);
 		mForgotPasswordEmailTxt = (EditText) findViewById(R.id.forgotPasswordEmailTxt);
@@ -139,7 +139,7 @@ public class RecoverPasswordActivity extends SherlockActivity {
 				emailAddressTxt, new ModelCallback<JSONObject>() {
 					@Override
 					public void success(JSONObject response) {
-						mProgressDialog.hide();
+						mProgressDialog.dismiss();
 						Toast.makeText(getApplicationContext(), 
 								getString(R.string.message_password_successfully_reset), 
 								Toast.LENGTH_LONG).show();
@@ -153,7 +153,7 @@ public class RecoverPasswordActivity extends SherlockActivity {
 
 					@Override
 					public void error(Throwable throwable) {
-						mProgressDialog.hide();
+						mProgressDialog.dismiss();
 						Toast.makeText(getApplicationContext(), 
 								getString(R.string.message_password_reset_failed), 
 								Toast.LENGTH_LONG).show();

@@ -143,90 +143,90 @@ public class PostCard extends AbstractCard {
 			}
 		});
 		
-		TextView contentTextView = holder.getView(R.id.bcPostContent);
-		TextView contentTextViewAlt = holder.getView(R.id.bcPostContentAlt);
-		
-		final MeasuredMediaView mediaView = holder.getView(R.id.bcImageContent);
-		mediaView.setImageBitmap(null);
-		
-		drawNoMediaLayout(contentTextView, contentTextViewAlt, mediaView);
-		
-		if (mediaArray != null) {
-			drawMediaLayout(mediaArray, context, contentTextView,
-					contentTextViewAlt, mediaView);
-		}
-		
-		RelativeLayout topicWrapper = holder.getView(R.id.topicWrapper);
-		topicWrapper.forceLayout();
-		
-		View postWrapper = holder.getView(R.id.postWrapper);
-		TextView publishedView = holder.getView(R.id.bcPostDate);
-		boolean pending = PostsModel.isPending(post);
-		if (!pending) {
-			try {
-				long publishedTime = TimeUtils.fromISOToDate(published).getTime();
-				publishedView.setText(
-						DateUtils.getRelativeTimeSpanString(publishedTime, 
-								new Date().getTime(), DateUtils.MINUTE_IN_MILLIS));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-			publishedView.setTextColor(context.getResources().getColor(
-					R.color.bc_text_light_grey));
-			setBackgroundEnabled(context, postWrapper);
-		} else {
-			publishedView.setTextColor(context.getResources().getColor(
-					R.color.bc_text_bold_grey));
-			publishedView.setText(Html.fromHtml("&#x231A;"));
-			setBackgroundDisabled(context, postWrapper);
-		}
-		
-		View contextArrowDown = holder.getView(R.id.bcArrowDown);
-		contextArrowDown.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				PostContextUtils.showPostContextActions(context, channelJid, 
-						postId, role);
-			}
-		});
+//		TextView contentTextView = holder.getView(R.id.bcPostContent);
+//		TextView contentTextViewAlt = holder.getView(R.id.bcPostContentAlt);
+//		
+//		final MeasuredMediaView mediaView = holder.getView(R.id.bcImageContent);
+//		mediaView.setImageBitmap(null);
+//		
+//		drawNoMediaLayout(contentTextView, contentTextViewAlt, mediaView);
+//		
+//		if (mediaArray != null) {
+//			drawMediaLayout(mediaArray, context, contentTextView,
+//					contentTextViewAlt, mediaView);
+//		}
+//		
+//		RelativeLayout topicWrapper = holder.getView(R.id.topicWrapper);
+//		topicWrapper.forceLayout();
+//		
+//		View postWrapper = holder.getView(R.id.postWrapper);
+//		TextView publishedView = holder.getView(R.id.bcPostDate);
+//		boolean pending = PostsModel.isPending(post);
+//		if (!pending) {
+//			try {
+//				long publishedTime = TimeUtils.fromISOToDate(published).getTime();
+//				publishedView.setText(
+//						DateUtils.getRelativeTimeSpanString(publishedTime, 
+//								new Date().getTime(), DateUtils.MINUTE_IN_MILLIS));
+//			} catch (ParseException e) {
+//				e.printStackTrace();
+//			}
+//			publishedView.setTextColor(context.getResources().getColor(
+//					R.color.bc_text_light_grey));
+//			setBackgroundEnabled(context, postWrapper);
+//		} else {
+//			publishedView.setTextColor(context.getResources().getColor(
+//					R.color.bc_text_bold_grey));
+//			publishedView.setText(Html.fromHtml("&#x231A;"));
+//			setBackgroundDisabled(context, postWrapper);
+//		}
+//		
+//		View contextArrowDown = holder.getView(R.id.bcArrowDown);
+//		contextArrowDown.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				PostContextUtils.showPostContextActions(context, channelJid, 
+//						postId, role);
+//			}
+//		});
 		
 		// Replies section
-		LinearLayout commentList = holder.getView(R.id.replyListView);
-		ReplySectionUtils.configure(commentList, repliesAdapter);
-		
-		// Create reply section
-		View replyFrame = holder.getView(R.id.replyFrameView);
-		if (!SubscribedChannelsModel.canPost(role) || pending) {
-			replyFrame.setVisibility(View.GONE);
-		} else {
-			replyFrame.setVisibility(View.VISIBLE);
-			ImageView replyAuthorView = holder.getView(R.id.replyAuthorView);
-			String replyAuthorURL = AvatarUtils.avatarURL(viewGroup.getContext(), 
-					Preferences.getPreference(context, Preferences.MY_CHANNEL_JID));
-//			ImageHelper.picasso(viewGroup.getContext()).load(replyAuthorURL)
-//					.placeholder(R.drawable.personal_50px)
-//					.error(R.drawable.personal_50px)
-//					.transform(ImageHelper.createRoundTransformation(context, 16, false, -1))
-//					.into(replyAuthorView);
-			
-			ImageLoader.getInstance().displayImage(replyAuthorURL, replyAuthorView, dio);
-			
-			final Button replyBtn = holder.getView(R.id.replyBtn);
-			replyBtn.setTypeface(TypefacesUtil.get(context,  "fonts/Roboto-Light.ttf"));
-			final EditText replyTxt = holder.getView(R.id.replyContentTxt);
-			replyBtn.setEnabled(false);
-			
-			final View thisView = convertView;
-			
-			replyBtn.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					reply(thisView, context, replyBtn, replyTxt);
-				}
-			});
-			configureReplySection(replyTxt, replyBtn);
-		}
-		
+//		LinearLayout commentList = holder.getView(R.id.replyListView);
+//		ReplySectionUtils.configure(commentList, repliesAdapter);
+//		
+//		// Create reply section
+//		View replyFrame = holder.getView(R.id.replyFrameView);
+//		if (!SubscribedChannelsModel.canPost(role) || pending) {
+//			replyFrame.setVisibility(View.GONE);
+//		} else {
+//			replyFrame.setVisibility(View.VISIBLE);
+//			ImageView replyAuthorView = holder.getView(R.id.replyAuthorView);
+//			String replyAuthorURL = AvatarUtils.avatarURL(viewGroup.getContext(), 
+//					Preferences.getPreference(context, Preferences.MY_CHANNEL_JID));
+////			ImageHelper.picasso(viewGroup.getContext()).load(replyAuthorURL)
+////					.placeholder(R.drawable.personal_50px)
+////					.error(R.drawable.personal_50px)
+////					.transform(ImageHelper.createRoundTransformation(context, 16, false, -1))
+////					.into(replyAuthorView);
+//			
+//			ImageLoader.getInstance().displayImage(replyAuthorURL, replyAuthorView, dio);
+//			
+//			final Button replyBtn = holder.getView(R.id.replyBtn);
+//			replyBtn.setTypeface(TypefacesUtil.get(context,  "fonts/Roboto-Light.ttf"));
+//			final EditText replyTxt = holder.getView(R.id.replyContentTxt);
+//			replyBtn.setEnabled(false);
+//			
+//			final View thisView = convertView;
+//			
+//			replyBtn.setOnClickListener(new OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//					reply(thisView, context, replyBtn, replyTxt);
+//				}
+//			});
+//			configureReplySection(replyTxt, replyBtn);
+//		}
+//		
 		return convertView;
 	}
 
@@ -351,11 +351,11 @@ public class PostCard extends AbstractCard {
 	}
 	
 	private void showProgress(View container) {
-		container.findViewById(R.id.replyStreamProgress).setVisibility(View.VISIBLE);
+		//container.findViewById(R.id.replyStreamProgress).setVisibility(View.VISIBLE);
 	}
 	
 	private void hideProgress(View container) {
-		container.findViewById(R.id.replyStreamProgress).setVisibility(View.GONE);
+		//container.findViewById(R.id.replyStreamProgress).setVisibility(View.GONE);
 	}
 	
 	private void reply(final View convertView, final Context context,
@@ -372,10 +372,10 @@ public class PostCard extends AbstractCard {
 		PostsModel.getInstance().save(context, replyPost, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
-				Toast.makeText(context, context.getString(R.string.message_post_created), 
-						Toast.LENGTH_LONG).show();
-				hideProgress(convertView);
-				fragment.fillRemotely(null, null);
+//				Toast.makeText(context, context.getString(R.string.message_post_created), 
+//						Toast.LENGTH_LONG).show();
+//				hideProgress(convertView);
+//				fragment.fillRemotely(null, null);
 			}
 			
 			@Override
@@ -429,12 +429,12 @@ public class PostCard extends AbstractCard {
 	
 	private static CardViewHolder fillHolder(View view) {
 		return CardViewHolder.create(view, 
-				R.id.bcPostContentAlt, R.id.bcProfilePic, 
-				R.id.bcPostContent, R.id.bcCommentCount, 
-				R.id.bcImageContent, R.id.bcPostDate, 
-				R.id.replyListView, R.id.replyAuthorView,
-				R.id.replyContentTxt, R.id.replyBtn, 
-				R.id.topicWrapper, R.id.replyFrameView, 
+//				R.id.bcPostContentAlt, R.id.bcProfilePic, 
+//				R.id.bcPostContent, R.id.bcCommentCount, 
+//				R.id.bcImageContent, R.id.bcPostDate, 
+//				R.id.replyListView, R.id.replyAuthorView,
+//				R.id.replyContentTxt, R.id.replyBtn, 
+//				R.id.topicWrapper,
 				R.id.bcArrowDown, R.id.postWrapper);
 	}
 

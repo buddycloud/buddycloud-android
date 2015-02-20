@@ -3,7 +3,6 @@
     
     <dimen name="action_bar_height">56dp</dimen>
     
-    
     <dimen name="welcome_screen_logo_wh">140dp</dimen>
     <dimen name="welcome_msg_txt_size">22sp</dimen>
     <dimen name="welcome_screen_btn_txt_size">20sp</dimen>

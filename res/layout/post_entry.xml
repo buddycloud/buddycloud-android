@@ -24,7 +24,6 @@
                 android:id="@+id/postTitleWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bc_post_bottom_border"
                 android:orientation="horizontal"
                 android:paddingBottom="5dp" >
 
@@ -109,7 +108,6 @@
                 android:layout_below="@id/postTitleWrapper"
                 android:layout_margin="10dp"
                 android:adjustViewBounds="true"
-                android:background="@color/red_color"
                 android:visibility="gone" />
 
             <!-- Description -->
@@ -134,10 +132,10 @@
             android:layout_marginLeft="@dimen/post_item_margin_size"
             android:scaleType="fitXY"
             android:src="@drawable/avatar_icon"
-            app:civ_border="false"
-            app:civ_border_color="#EEEEEE"
-            app:civ_border_width="1dp"
-            app:civ_shadow="true" />
+            app:border="false"
+            app:border_color="#EEEEEE"
+            app:border_width="1dp"
+            app:shadow="true" />
     </FrameLayout>
 
      <!-- Comments section -->
@@ -147,7 +145,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/postContentWrapper"
         android:background="@drawable/comment_item_shadow"
-        android:divider="@color/app_bg_color"
+        android:divider="@color/bc_bg_color"
         android:dividerHeight="0dp"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
@@ -159,7 +157,7 @@
         android:id="@+id/commentBoxFrameView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/reply_box_bg_color"
+        android:background="@color/bc_reply_box_bg_color"
         android:layout_below="@id/replyListViewSection"
         layout="@layout/layout_comment_box" />
 

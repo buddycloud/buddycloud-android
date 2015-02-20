@@ -25,6 +25,7 @@ import com.buddycloud.http.SSLUtils;
 import com.buddycloud.model.LoginModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.preferences.Preferences;
+import com.buddycloud.utils.ActionbarUtil;
 import com.buddycloud.utils.DNSUtils;
 import com.buddycloud.utils.InputUtils;
 
@@ -54,8 +55,7 @@ public class LoginActivity extends SherlockActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setTitle(getString(R.string.login_title));
+        ActionbarUtil.showActionBarwithBack(this, getString(R.string.login_title));
         
 		mUsernameErrorTooltip = (TooltipErrorView) findViewById(R.id.usernameErrorTooltip);
 		mUsernameTxt = (EditText) findViewById(R.id.usernameTxt);
@@ -247,14 +247,14 @@ public class LoginActivity extends SherlockActivity {
 						
 						// Do nothing, SSL error not tolerable
 						clearAPIAddress();
-						mProgressDialog.hide();
+						mProgressDialog.dismiss();
 					}
 				});
 			}
 
 			@Override
 			public void error(Throwable throwable) {
-				mProgressDialog.hide();
+				mProgressDialog.dismiss();
 				Toast.makeText(
 						getApplicationContext(),
 						getString(R.string.login_error_wrong_credentials),
@@ -265,14 +265,14 @@ public class LoginActivity extends SherlockActivity {
 				LoginModel.getInstance().getFromServer(LoginActivity.this, new ModelCallback<Void>() {
 					@Override
 					public void success(Void response) {
-						mProgressDialog.hide();
+						mProgressDialog.dismiss();
 						setResult(LOGGED_IN_RESULT);
 						finish();
 					}
 					
 					@Override
 					public void error(Throwable throwable) {
-						mProgressDialog.hide();
+						mProgressDialog.dismiss();
 						Toast.makeText(
 								getApplicationContext(),
 								getString(R.string.login_error_wrong_credentials),
