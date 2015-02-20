@@ -108,7 +108,7 @@ public class CreateAccountActivity extends SherlockActivity {
         
 		mCreateAccountCaption = (TextView) findViewById(R.id.createAccountCaption);
 		SpannableString hyperLinkSpan = new SpannableString(mCreateAccountCaption.getText().toString());
-		hyperLinkSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.bc_green_blue)), 162, hyperLinkSpan.length() - 1, 0);
+		hyperLinkSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.bc_green_blue_color)), 162, hyperLinkSpan.length() - 1, 0);
 		hyperLinkSpan.setSpan(new UnderlineSpan(), 162, hyperLinkSpan.length() - 1, 0);
 		hyperLinkSpan.setSpan(new ClickableSpan() {
 			

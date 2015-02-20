@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="30dp"
-    android:background="@color/bc_green_blue"
+    android:background="@color/bc_green_blue_color"
     android:orientation="horizontal" >
 
     <com.buddycloud.customviews.TypefacedTextView
@@ -15,14 +15,9 @@
         android:paddingLeft="15dp"
         android:paddingTop="3dp"
         android:text="@string/channel_list_personal_hint"
-        android:textColor="@color/bc_dark_grey"
+        android:textColor="@color/bc_dark_grey_color"
         android:textSize="16sp"
         android:textStyle="bold"
         buddycloud:typeface="Roboto-BoldCondensed.ttf" />
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="2" />
 
 </LinearLayout>

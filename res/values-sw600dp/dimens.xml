@@ -6,5 +6,5 @@
     <dimen name="welcome_screen_btn_txt_size">22sp</dimen>
     <dimen name="welcome_screen_box_margin">100dp</dimen>
     <dimen name="welcome_screen_btn_h">50dp</dimen>
-
+    
 </resources>

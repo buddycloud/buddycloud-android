@@ -37,7 +37,7 @@
             android:background="@drawable/notif_circle_view_shape"
             android:gravity="center"
             android:text="20+"
-            android:textColor="@color/bc_dark_grey"
+            android:textColor="@color/bc_dark_grey_color"
             android:textSize="12sp"
             app:typeface="Roboto-BoldCondensed.ttf" />
     </FrameLayout>

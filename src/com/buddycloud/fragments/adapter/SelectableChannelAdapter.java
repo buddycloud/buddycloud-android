@@ -82,7 +82,6 @@ public abstract class SelectableChannelAdapter extends GenericChannelAdapter {
 			return childView;
 		}
 		
-		childView.setBackgroundResource(R.drawable.channel_item_background_selector);
 		childView.setPadding(CHILD_PADDING, CHILD_PADDING, 
 				CHILD_PADDING, CHILD_PADDING);
 		childView.setOnLongClickListener(new OnLongClickListener() {

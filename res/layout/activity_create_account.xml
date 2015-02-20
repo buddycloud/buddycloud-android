@@ -21,7 +21,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:text="@string/create_account_channel_name"
-            android:textColor="@color/bc_dark_grey"
+            android:textColor="@color/bc_dark_grey_color"
             android:textSize="@dimen/create_acct_screen_label_txt_size"
             buddycloud:typeface="Roboto-Regular.ttf" />
 
@@ -35,7 +35,7 @@
             android:hint="@string/create_account_channel_name_hint"
             android:imeOptions="actionNext"
             android:inputType="text"
-            android:textColor="@color/bc_dark_grey"
+            android:textColor="@color/bc_dark_grey_color"
             android:textSize="@dimen/create_acct_screen_editbox_txt_size"
             buddycloud:typeface="Roboto-Regular.ttf" >
 
@@ -60,7 +60,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
             android:text="@string/create_account_password"
-            android:textColor="@color/bc_dark_grey"
+            android:textColor="@color/bc_dark_grey_color"
             android:textSize="@dimen/create_acct_screen_label_txt_size"
             buddycloud:typeface="Roboto-Regular.ttf" />
 
@@ -74,7 +74,7 @@
             android:hint="@string/create_account_password_hint"
             android:imeOptions="actionNext"
             android:inputType="textPassword"
-            android:textColor="@color/bc_dark_grey"
+            android:textColor="@color/bc_dark_grey_color"
             android:textSize="@dimen/create_acct_screen_editbox_txt_size"
             buddycloud:typeface="Roboto-Regular.ttf" >
         </com.buddycloud.customviews.TypefacedEditText>
@@ -97,7 +97,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
             android:text="@string/create_account_email_address"
-            android:textColor="@color/bc_dark_grey"
+            android:textColor="@color/bc_dark_grey_color"
             android:textSize="@dimen/create_acct_screen_label_txt_size"
             buddycloud:typeface="Roboto-Regular.ttf" />
 
@@ -111,7 +111,7 @@
             android:hint="@string/create_account_email_address_hint"
             android:imeOptions="actionDone"
             android:inputType="textEmailAddress"
-            android:textColor="@color/bc_dark_grey"
+            android:textColor="@color/bc_dark_grey_color"
             android:textSize="@dimen/create_acct_screen_editbox_txt_size"
             buddycloud:typeface="Roboto-Regular.ttf" >
         </com.buddycloud.customviews.TypefacedEditText>
@@ -151,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:text="@string/create_account_footer_caption"
-                android:textColor="@color/bc_dark_grey"
+                android:textColor="@color/bc_dark_grey_color"
                 android:textSize="@dimen/create_acct_screen_caption_txt_size"
                 buddycloud:typeface="Roboto-Light.ttf" />
         </LinearLayout>

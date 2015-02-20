@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:background="@color/bc_green_blue"
+    android:background="@color/bc_green_blue_color"
     tools:context=".WelcomeActivity" >
 
     <TableLayout

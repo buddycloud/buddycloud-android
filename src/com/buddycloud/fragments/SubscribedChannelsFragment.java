@@ -4,13 +4,20 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -31,11 +38,15 @@ import com.buddycloud.model.ModelListener;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.model.SyncModel;
 import com.buddycloud.model.TopicChannelModel;
+import com.buddycloud.preferences.Preferences;
+import com.buddycloud.utils.ChannelAdapterHelper;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class SubscribedChannelsFragment extends ContentFragment implements ModelListener {
 
+	private ExpandableListView channelListView;
 	private SubscribedChannelsAdapter adapter = new SubscribedChannelsAdapter();
+	
 	private GenericChannelsFragment genericChannelFrag = new GenericChannelsFragment(adapter) {
 		@Override
 		public void channelSelected(JSONObject channelItem) {
@@ -51,6 +62,9 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 			public void dataChanged() {
 				adapter.sort(getActivity());
 				adapter.notifyDataSetChanged();
+				
+				// my personal channel header
+				updateChannelPersonalHeader();
 			}
 
 			@Override
@@ -60,8 +74,7 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 
 			@Override
 			public void pendingItemAdded(String channelJid, JSONObject pendingItem) {
-				// TODO Auto-generated method stub
-				
+
 			}
 		};
 		SyncModel.getInstance().setListener(notifyChangeListener);
@@ -72,9 +85,52 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		adapter.load(getActivity());
-		return genericChannelFrag.onCreateView(inflater, container, savedInstanceState);
+		
+		final String channelJid = getMyChannelJid(container.getContext());
+		
+		final View view = genericChannelFrag.onCreateView(inflater, container, savedInstanceState);
+		channelListView = (ExpandableListView) view.findViewById(R.id.channelListView);
+		channelListView.addHeaderView(ChannelAdapterHelper.createChannelPersonalHeader(container.getContext(), null, container, channelJid));
+		
+		// update personal channel counters
+		updateChannelPersonalHeader();
+		
+		return view;
 	}
 
+	/**
+	 * Update the personal channel header information
+	 * such as (@mention, @replies, @views)
+	 */
+	private void updateChannelPersonalHeader() {
+		
+		if (channelListView == null)
+			return ;
+		
+		final String channelJid = getMyChannelJid(getActivity());
+		JSONObject allCounters = SyncModel.getInstance().getFromCache(getActivity(), channelJid);
+		JSONObject counters = allCounters.optJSONObject(channelJid);
+		
+		if (counters != null) {
+			Integer mentionsCount = counters.has("mentionsCount") ? counters.optInt("mentionsCount") : 0;
+			Integer replyCount = counters.has("replyCount") ? counters.optInt("replyCount") : 0;
+			Integer visitCount = counters.has("visitCount") ? counters.optInt("visitCount") : 0;
+
+			final String counts = String.format(getString(R.string.channel_list_counts_formatted_txt), mentionsCount, replyCount, visitCount);
+			SpannableString boldSpan = new SpannableString(counts);
+			boldSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, counts.indexOf("Mentions") - 1, 0);
+			boldSpan.setSpan(new StyleSpan(Typeface.BOLD), counts.indexOf("|") + 1, counts.indexOf("Replies") - 1, 0);
+			boldSpan.setSpan(new StyleSpan(Typeface.BOLD), counts.lastIndexOf("|") + 1, counts.indexOf("Views") - 1, 0);
+			
+			final TextView notifCount = (TextView)channelListView.findViewById(R.id.bcUserNotifCounts);
+			notifCount.setText(boldSpan);
+		}
+	}
+	
+	private String getMyChannelJid(final Context context) {
+		return Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
+	}
+	
 	private void selectChannel(String channelJid) {
 		showChannelFragment(channelJid);
 		hideMenu();
@@ -185,6 +241,7 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 	@Override
 	public void dataChanged() {
 		adapter.reload(getActivity());
+		
 	}
 
 	@Override

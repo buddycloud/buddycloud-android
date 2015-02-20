@@ -49,7 +49,7 @@
                         android:ellipsize="end"
                         android:gravity="center"
                         android:lines="1"
-                        android:textColor="@color/bc_dark_grey"
+                        android:textColor="@color/bc_dark_grey_color"
                         android:textSize="@dimen/post_item_title_size"
                         buddycloud:typeface="Roboto-Regular.ttf" />
 
@@ -118,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/bcImageContent"
                 android:padding="15dp"
-                android:textColor="@color/bc_dark_grey"
+                android:textColor="@color/bc_dark_grey_color"
                 android:textSize="@dimen/post_item_content_size"
                 buddycloud:typeface="Roboto-Light.ttf" />
         </RelativeLayout>

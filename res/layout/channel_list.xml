@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bc_dark_grey" >
+    android:background="@color/bc_dark_grey_color" >
 
     <LinearLayout
         android:id="@+id/wrapperLayout"
@@ -12,25 +12,25 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="0px"
         android:orientation="vertical" >
 
-        	<ProgressBar
-                android:id="@+id/channelListProgress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:visibility="gone" />
-            
-            <ExpandableListView
-                android:id="@+id/channelListView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@null"
-				android:dividerHeight="0dp" >
-            </ExpandableListView>
-        	
+        <ProgressBar
+            android:id="@+id/channelListProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone" />
 
+        <ExpandableListView
+            android:id="@+id/channelListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:groupIndicator="@null"
+            android:listSelector="@drawable/channel_item_background_selector"
+            android:scrollbars="none" >
+        </ExpandableListView>
     </LinearLayout>
 
 </RelativeLayout>

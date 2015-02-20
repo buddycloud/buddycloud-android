@@ -17,6 +17,32 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ChannelAdapterHelper {
 
+	public static View createChannelPersonalHeader(Context context, View convertView,
+			ViewGroup viewGroup, String channelJid) {
+		
+		LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+		convertView = inflater.inflate(R.layout.channel_personal_header, null);
+		
+		String avatarURL = AvatarUtils.avatarURL(context, channelJid);
+		DisplayImageOptions dio = new DisplayImageOptions.Builder()
+				.cloneFrom(ImageHelper.defaultImageOptions())
+				.showImageOnFail(R.drawable.avatar_icon)
+				.showImageOnLoading(R.drawable.avatar_icon)
+				.build();
+		
+		ImageView avatar = (ImageView) convertView.findViewById(R.id.bcProfilePic);
+		ImageLoader.getInstance().displayImage(avatarURL, avatar, dio);
+		
+		String[] channelUserName = channelJid.split("@");
+		TextView bcUsername = (TextView) convertView.findViewById(R.id.bcUserName);
+		bcUsername.setText(TextUtils.capitalize(channelUserName[0]));
+		
+		TextView bcUserChannelJId = (TextView) convertView.findViewById(R.id.bcUserChannelJId);
+		bcUserChannelJId.setText(channelJid);
+		
+		return convertView;
+	}
+	
 	public static View createChannelGroupItem(Context context, View convertView,
 			ViewGroup viewGroup, String channelGroup) {
 		LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());

@@ -37,7 +37,7 @@
         android:hint="@string/post_comment_hint"
         android:imeOptions="actionSend"
         android:inputType="textMultiLine"
-        android:textColor="@color/bc_dark_grey"
+        android:textColor="@color/bc_dark_grey_color"
         android:textSize="@dimen/post_item_comment_box_txt_size"
         buddycloud:typeface="Roboto-Regular.ttf" >
 

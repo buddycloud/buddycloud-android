@@ -1,0 +1,74 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+    xmlns:app="http://schemas.android.com/apk/res/com.buddycloud"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/personal_header_size"
+    android:background="@color/bc_dark_grey_color" >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/personal_header_size"
+        android:scaleType="fitXY"
+        android:src="@drawable/personal_bg" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/personal_header_size"
+        android:background="#73000000"
+        android:orientation="vertical" >
+
+        <com.buddycloud.customviews.CircularImageView
+            android:id="@+id/bcProfilePic"
+            android:layout_width="@dimen/personal_header_avatar_size"
+            android:layout_height="@dimen/personal_header_avatar_size"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/avatar_icon"
+            app:border="false"
+            app:border_color="#EEEEEE"
+            app:border_width="1dp"
+            app:shadow="false" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical" >
+
+            <com.buddycloud.customviews.TypefacedTextView
+                android:id="@+id/bcUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/personal_header_txt_size"
+                buddycloud:typeface="Roboto-Regular.ttf" />
+
+            <com.buddycloud.customviews.TypefacedTextView
+                android:id="@+id/bcUserChannelJId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/personal_header_jid_txt_size"
+                buddycloud:typeface="Roboto-Light.ttf" />
+        </LinearLayout>
+
+        <com.buddycloud.customviews.TypefacedTextView
+            android:id="@+id/bcUserNotifCounts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/channel_list_counts_formatted_txt"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/personal_header_notif_counts_txt_size"
+            buddycloud:typeface="Roboto-Light.ttf" />
+    </LinearLayout>
+</FrameLayout>
