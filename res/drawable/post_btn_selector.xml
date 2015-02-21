@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
- <selector xmlns:android="http://schemas.android.com/apk/res/android">
-   <item android:state_enabled="false" android:drawable="@drawable/speech_balloon_plus_disabled" />
-   <item android:state_enabled="true" android:drawable="@drawable/speech_balloon_plus" />
-   <item android:drawable="@drawable/speech_balloon_plus_disabled"/>
- </selector>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/speech_balloon_plus_disabled" android:state_enabled="false"/>
+    <item android:drawable="@drawable/speech_balloon_plus" android:state_enabled="true"/>
+    <item android:drawable="@drawable/speech_balloon_plus_disabled"/>
+
+</selector>

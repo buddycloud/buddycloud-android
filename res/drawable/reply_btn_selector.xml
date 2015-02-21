@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
- <selector xmlns:android="http://schemas.android.com/apk/res/android">
-   <item android:state_enabled="false" android:drawable="@drawable/rounded_corners" />
-   <item android:state_enabled="true" android:drawable="@drawable/rounded_corners_enabled" />
-   <item android:drawable="@drawable/rounded_corners"/>
- </selector>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/rounded_corners" android:state_enabled="false"/>
+    <item android:drawable="@drawable/rounded_corners_enabled" android:state_enabled="true"/>
+    <item android:drawable="@drawable/rounded_corners"/>
+
+</selector>
