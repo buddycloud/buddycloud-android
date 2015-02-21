@@ -1,24 +1,67 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#555555" >
+    android:background="@android:color/white" >
 
-    <EditText
-        android:id="@+id/searchTxt"
+    <LinearLayout
+        android:id="@+id/search_boxFrame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="4dp"
-        android:ems="10"
-        android:hint="@string/search_hint"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:textColor="#FFFFFF" >
+        android:layout_height="45dp"
+        android:orientation="horizontal"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:paddingTop="1dp" >
 
-        <requestFocus />
-    </EditText>
+        <RelativeLayout
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:gravity="right" >
+
+            <ImageView
+                android:id="@+id/search_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_search" />
+        </RelativeLayout>
+
+        <com.buddycloud.customviews.TypefacedEditText
+            android:id="@+id/searchTxt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/search_hint"
+            android:layout_weight="5"
+            android:layout_gravity="center"
+            android:gravity="left|center_vertical"
+            android:lines="1"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:textColor="@color/bc_dark_grey_color"
+            android:textSize="@dimen/search_screen_editbox_txt_size"
+            buddycloud:typeface="Roboto-Regular.ttf" >
+
+            <requestFocus />
+        </com.buddycloud.customviews.TypefacedEditText>
+
+        <RelativeLayout
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:gravity="left" >
+
+            <ImageButton
+                android:id="@+id/search_cancel_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_cancel_light" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/contentFrame"
@@ -27,9 +70,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/searchTxt"
+        android:layout_below="@+id/search_boxFrame"
         android:layout_marginTop="4dp" >
-
     </FrameLayout>
 
 </RelativeLayout>

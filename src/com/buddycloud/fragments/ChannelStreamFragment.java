@@ -16,11 +16,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -47,54 +47,41 @@ import com.buddycloud.model.PostsModel;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.model.TopicChannelModel;
 import com.buddycloud.preferences.Preferences;
-import com.buddycloud.utils.AvatarUtils;
-import com.buddycloud.utils.ImageHelper;
 import com.buddycloud.utils.InputUtils;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ChannelStreamFragment extends ContentFragment implements ModelListener {
 
+	private SwipeRefreshLayout postStreamRefreshLayout;
+	private ListView postStream;
 	private CardListAdapter cardAdapter;
 	private EndlessScrollListener scrollListener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		final View view = inflater.inflate(R.layout.fragment_channel_stream, container, false);
+		final View view = inflater.inflate(R.layout.fragment_channel_stream, container, false);		
+		showProgress(view);
 		
-//		showProgress(view);
-//		
-//		PostsModel.getInstance().setListener(this);
-//		
-//		String myChannelJid = (String) Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
-//		String avatarURL = AvatarUtils.avatarURL(getActivity(), myChannelJid);
-//		ImageView avatarView = (ImageView) view.findViewById(R.id.bcCommentPic);
-//		
-//		DisplayImageOptions dio = new DisplayImageOptions.Builder()
-//				.cloneFrom(ImageHelper.defaultImageOptions())
-//				.showImageOnFail(R.drawable.personal_50px)
-//				.showImageOnLoading(R.drawable.personal_50px)
-//				.build();
-//		ImageLoader.getInstance().displayImage(avatarURL, avatarView, dio);
-//		
-//		final ImageView postButton = (ImageView) view.findViewById(R.id.postButton);
-//		postButton.setEnabled(false);
-//		if (SubscribedChannelsModel.canPost(getRole())) {
-//			EditText postContent = (EditText) view.findViewById(R.id.postContentTxt);
-//			postButton.setOnClickListener(new OnClickListener() {
-//				@Override
-//				public void onClick(View v) {
-//					createPost(view);
-//				}
-//			});
-//			configurePostSection(postContent, postButton);
-//		} else {
-//			view.findViewById(R.id.bcCommentSection).setVisibility(View.GONE);
-//		}
-//		
-//		syncd(view, getActivity());
+		postStream = (ListView) view.findViewById(R.id.postsStream);
+		postStreamRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout);
+		postStreamRefreshLayout.setColorSchemeResources(R.color.bc_green_blue_color);
+		postStreamRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			
+			@Override
+			public void onRefresh() {
+				postStreamRefreshLayout.setRefreshing(true);
+				scrollListener.setRefreshing(true);
+
+				// refresh the post stream
+				synchPostStream(view, getActivity());
+			}
+		});
+		
+		PostsModel.getInstance().setListener(this);
+		synchChannelMetadata(); 
+		synchPostStream(view, getActivity());
 		
 		return view;
 	}
@@ -111,29 +98,23 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 		ImageLoader.getInstance().stop();
 	}
 
+	public SwipeRefreshLayout getSwipeRefreshLayout() {
+		return postStreamRefreshLayout;
+	}
+	
+	public CardListAdapter getPostStreamAdapter() {
+		return cardAdapter;
+	}
+	
 	private String getChannelJid() {
 		return getArguments().getString(GenericChannelsFragment.CHANNEL);
 	}
 	
-	private void syncd(View view, Context context) {
-		
-		ListView contentView = (ListView) view.findViewById(R.id.postsStream);
-		if (cardAdapter == null) {
-			this.cardAdapter = new CardListAdapter();
-			cardAdapter.setFragment(this);
-			contentView.setAdapter(cardAdapter);
-			this.scrollListener = new EndlessScrollListener(this);
-			contentView.setOnScrollListener(scrollListener);
-		} else {
-			cardAdapter.clear();
-			cardAdapter.notifyDataSetChanged();
-		}
-		
-		fillMetadata();
-//		fillMore();
-	}
-	
-	private void fillMetadata() {
+	/**
+	 * Synchronize the channel metadata
+	 * 
+	 */
+	private void synchChannelMetadata() {
 		ChannelMetadataModel.getInstance().fill(getActivity(), new ModelCallback<Void>() {
 			@Override
 			public void success(Void response) {
@@ -143,18 +124,28 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 			public void error(Throwable throwable) {}
 		}, getChannelJid());
 	}
-
-	public void scrollUp() {
-		final ListView postsStream = (ListView) getView().findViewById(R.id.postsStream);
-		postsStream.post(new Runnable() {
-	        @Override
-	        public void run() {
-	        	postsStream.setSelection(0);
-	        	postsStream.smoothScrollToPosition(0);
-	        }
-	    });
+	
+	/**
+	 * Synchronize the post stream with latest posts
+	 * from remote
+	 * 
+	 * @param view
+	 * @param context
+	 */
+	private void synchPostStream(View view, Context context) {
+		
+		if (cardAdapter == null) {
+			this.cardAdapter = new CardListAdapter();
+			cardAdapter.setFragment(this);
+			postStream.setAdapter(cardAdapter);
+			this.scrollListener = new EndlessScrollListener(this);
+			postStream.setOnScrollListener(scrollListener);
+		} 
+		
+		// get the latest post from remote
+		fillRemotely(null, null);
 	}
-
+	
 	protected void fillMore() {
 		scrollListener.setLoading(true);
 		String lastUpdated = null;
@@ -182,6 +173,24 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 		return post;
 	}
 
+	public void scrollUp() {
+		final ListView postsStream = (ListView) getView().findViewById(R.id.postsStream);
+		postsStream.post(new Runnable() {
+	        @Override
+	        public void run() {
+	        	postsStream.setSelection(0);
+	        	postsStream.smoothScrollToPosition(0);
+	        }
+	    });
+	}
+
+	/**
+	 * A post card adapter callback
+	 * 
+	 * @param lastUpdated
+	 * @param lastId
+	 * @return
+	 */
 	private ModelCallback<Boolean> fillAdapterCallback(final String lastUpdated,
 			final String lastId) {
 		return smartify(new ModelCallback<Boolean>() {
@@ -195,41 +204,14 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 		});
 	}
 
-	public void fillRemotely(final String lastId, final String lastUpdated) {
-		PostsModel.getInstance().fillMore(getActivity(), smartify(new ModelCallback<Void>() {
-			@Override
-			public void success(Void response) {
-				fillAdapter(getActivity(), lastUpdated, smartify(new ModelCallback<Boolean>() {
-					@Override
-					public void success(Boolean response) {
-						if (response) {
-							scrollListener.setLoading(false);
-						}
-						hideProgress(getView());
-					}
-
-					@Override
-					public void error(Throwable throwable) {
-						Toast.makeText(getActivity(), 
-								getString(R.string.message_post_fetch_failed), 
-								Toast.LENGTH_LONG).show();
-						scrollListener.setLoading(false);
-						hideProgress(getView());
-					}
-				}));
-			}
-			
-			@Override
-			public void error(Throwable throwable) {
-				Toast.makeText(getActivity(), 
-						getString(R.string.message_post_fetch_failed), 
-						Toast.LENGTH_LONG).show();
-				scrollListener.setLoading(false);
-				hideProgress(getView());
-			}
-		}), getChannelJid(), lastId);
-	}
-	
+	/**
+	 * Get the posts from the local cache w.r.t last updated
+	 * timestamp.
+	 * 
+	 * @param context
+	 * @param lastUpdated
+	 * @param callback
+	 */
 	private void fillAdapter(final Context context, final String lastUpdated, 
 			final ModelCallback<Boolean> callback) {
 		if (!isAttachedToActivity()) {
@@ -262,6 +244,56 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 			
 		}.execute();
 	}
+	
+	/**
+	 * Get the latest posts from the remote w.r.t last
+	 * post id and last updated timestamp.
+	 * 
+	 * @param lastId
+	 * @param lastUpdated
+	 */
+	public void fillRemotely(final String lastId, final String lastUpdated) {
+		PostsModel.getInstance().fillMore(getActivity(), smartify(new ModelCallback<Void>() {
+			@Override
+			public void success(Void response) {
+				fillAdapter(getActivity(), lastUpdated, smartify(new ModelCallback<Boolean>() {
+					@Override
+					public void success(Boolean response) {
+						if (response) {
+							postStreamRefreshLayout.setRefreshing(false);
+							scrollListener.setRefreshing(false);
+							scrollListener.setLoading(false);
+						}
+						hideProgress(getView());
+					}
+
+					@Override
+					public void error(Throwable throwable) {
+						Toast.makeText(getActivity(), 
+								getString(R.string.message_post_fetch_failed), 
+								Toast.LENGTH_LONG).show();
+						postStreamRefreshLayout.setRefreshing(false);
+						scrollListener.setRefreshing(false);
+						scrollListener.setLoading(false);
+						hideProgress(getView());
+					}
+				}));
+			}
+			
+			@Override
+			public void error(Throwable throwable) {
+				Toast.makeText(getActivity(), 
+						getString(R.string.message_post_fetch_failed), 
+						Toast.LENGTH_LONG).show();
+				postStreamRefreshLayout.setRefreshing(false);
+				scrollListener.setRefreshing(false);
+				scrollListener.setLoading(false);
+				hideProgress(getView());
+			}
+		}), getChannelJid(), lastId);
+	}
+	
+
 	
 	private PostCard toCard(JSONObject post, final String channelJid) {
 		return new PostCard(channelJid, post, this, getRole());

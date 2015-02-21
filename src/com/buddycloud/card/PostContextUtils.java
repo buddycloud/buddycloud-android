@@ -19,8 +19,11 @@ public class PostContextUtils {
 	private static final String CONTEXT_DELETE = "Delete";
 	private static final String CONTEXT_SHARE = "Share";
 	
+	public static final int TOPIC_POST = 9001;
+	public static final int COMMENT_POST = 9002;
+	
 	public static void showPostContextActions(final Context context, final String channelJid, 
-			final String postId, String role) {
+			final String postId, String role, final int postContext) {
 		
 		final List<String> contextItems = new ArrayList<String>();
 		if (SubscribedChannelsModel.canDeletePost(role)) {
@@ -34,7 +37,8 @@ public class PostContextUtils {
 				new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int item) {
 		        if (contextItems.get(item).equals(CONTEXT_DELETE)) {
-		        	confirmDelete(context, channelJid, postId);		        }
+		        	confirmDelete(context, channelJid, postId, postContext);		        
+		        }
 		    }
 		});
 		AlertDialog alert = builder.create();
@@ -42,7 +46,7 @@ public class PostContextUtils {
 	}
 	
 	private static void confirmDelete(final Context context, final String channelJid, 
-			final String postId) {
+			final String postId, final int postContext) {
 		new AlertDialog.Builder(context)
 				.setIcon(android.R.drawable.ic_dialog_alert)
 				.setTitle(context.getString(R.string.title_confirm_delete))
@@ -52,23 +56,36 @@ public class PostContextUtils {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								delete(context, channelJid, postId);
+								delete(context, channelJid, postId, postContext);
 							}
 						}).setNegativeButton(R.string.no, null).show();
 	}
 	
-	private static void delete(final Context context, String channelJid, final String postId) {
+	private static void delete(final Context context, String channelJid, final String postId, 
+			final int postContext) {
 		PostsModel.getInstance().delete(context, new ModelCallback<Void>() {
 			@Override
 			public void success(Void response) {
-				Toast.makeText(context, context.getString(R.string.message_post_deleted),
-						Toast.LENGTH_LONG).show();
+				if (postContext == TOPIC_POST) {
+					Toast.makeText(context, context.getString(R.string.message_post_topic_deleted),
+							Toast.LENGTH_LONG).show();
+				}
+				else if (postContext == COMMENT_POST) {
+					Toast.makeText(context, context.getString(R.string.message_post_comment_deleted),
+							Toast.LENGTH_LONG).show();
+				}
 			}
 
 			@Override
 			public void error(Throwable throwable) {
-				Toast.makeText(context, context.getString(R.string.message_post_delete_failed),
-						Toast.LENGTH_LONG).show();
+				if (postContext == TOPIC_POST) {
+					Toast.makeText(context, context.getString(R.string.message_post_topic_delete_failed),
+							Toast.LENGTH_LONG).show();
+				}
+				else if (postContext == COMMENT_POST) {
+					Toast.makeText(context, context.getString(R.string.message_post_comment_delete_failed),
+							Toast.LENGTH_LONG).show();
+				}
 			}
 		}, channelJid, postId);
 	}

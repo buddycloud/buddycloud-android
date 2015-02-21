@@ -12,23 +12,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
+import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.buddycloud.FullScreenImageActivity;
 import com.buddycloud.MainActivity;
@@ -43,6 +49,7 @@ import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ImageHelper;
+import com.buddycloud.utils.InputUtils;
 import com.buddycloud.utils.TextUtils;
 import com.buddycloud.utils.TimeUtils;
 import com.buddycloud.utils.TypefacesUtil;
@@ -109,7 +116,6 @@ public class PostCard extends AbstractCard {
 			} catch (JSONException e) {}
 		}
 		
-		
 		boolean reuse = convertView != null && convertView.getTag() != null; 
 		CardViewHolder holder = null;
 		
@@ -122,18 +128,17 @@ public class PostCard extends AbstractCard {
 			holder = (CardViewHolder) convertView.getTag();
 		}
 		
-		String avatarURL = AvatarUtils.avatarURL(viewGroup.getContext(), postAuthor);
 		final Context context = viewGroup.getContext();
+		String avatarURL = AvatarUtils.avatarURL(viewGroup.getContext(), postAuthor);	
 		ImageView avatarView = holder.getView(R.id.bcProfilePic);
-		
 		DisplayImageOptions dio = new DisplayImageOptions.Builder()
 				.cloneFrom(ImageHelper.defaultImageOptions())
-				.showImageOnFail(R.drawable.personal_50px)
-				.showImageOnLoading(R.drawable.personal_50px)
+				.showImageOnFail(R.drawable.avatar_icon)
+				.showImageOnLoading(R.drawable.avatar_icon)
 				.preProcessor(ImageHelper.createRoundProcessor(16, false, -1))
 				.build();
-		ImageLoader.getInstance().displayImage(avatarURL, avatarView, dio);
 		
+		ImageLoader.getInstance().displayImage(avatarURL, avatarView, dio);
 		avatarView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -143,116 +148,126 @@ public class PostCard extends AbstractCard {
 			}
 		});
 		
-//		TextView contentTextView = holder.getView(R.id.bcPostContent);
-//		TextView contentTextViewAlt = holder.getView(R.id.bcPostContentAlt);
-//		
-//		final MeasuredMediaView mediaView = holder.getView(R.id.bcImageContent);
-//		mediaView.setImageBitmap(null);
-//		
-//		drawNoMediaLayout(contentTextView, contentTextViewAlt, mediaView);
-//		
-//		if (mediaArray != null) {
-//			drawMediaLayout(mediaArray, context, contentTextView,
-//					contentTextViewAlt, mediaView);
-//		}
-//		
-//		RelativeLayout topicWrapper = holder.getView(R.id.topicWrapper);
-//		topicWrapper.forceLayout();
-//		
-//		View postWrapper = holder.getView(R.id.postWrapper);
-//		TextView publishedView = holder.getView(R.id.bcPostDate);
-//		boolean pending = PostsModel.isPending(post);
-//		if (!pending) {
-//			try {
-//				long publishedTime = TimeUtils.fromISOToDate(published).getTime();
-//				publishedView.setText(
-//						DateUtils.getRelativeTimeSpanString(publishedTime, 
-//								new Date().getTime(), DateUtils.MINUTE_IN_MILLIS));
-//			} catch (ParseException e) {
-//				e.printStackTrace();
-//			}
-//			publishedView.setTextColor(context.getResources().getColor(
-//					R.color.bc_text_light_grey));
-//			setBackgroundEnabled(context, postWrapper);
-//		} else {
-//			publishedView.setTextColor(context.getResources().getColor(
-//					R.color.bc_text_bold_grey));
-//			publishedView.setText(Html.fromHtml("&#x231A;"));
-//			setBackgroundDisabled(context, postWrapper);
-//		}
-//		
-//		View contextArrowDown = holder.getView(R.id.bcArrowDown);
-//		contextArrowDown.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				PostContextUtils.showPostContextActions(context, channelJid, 
-//						postId, role);
-//			}
-//		});
+		final TextView postAuthorView = holder.getView(R.id.bcPostAuthor);
+		if (!TextUtils.isEmpty(postAuthor)) {
+			postAuthorView.setText(TextUtils.capitalize(postAuthor));
+		}
 		
-		// Replies section
-//		LinearLayout commentList = holder.getView(R.id.replyListView);
-//		ReplySectionUtils.configure(commentList, repliesAdapter);
-//		
-//		// Create reply section
-//		View replyFrame = holder.getView(R.id.replyFrameView);
-//		if (!SubscribedChannelsModel.canPost(role) || pending) {
-//			replyFrame.setVisibility(View.GONE);
-//		} else {
-//			replyFrame.setVisibility(View.VISIBLE);
-//			ImageView replyAuthorView = holder.getView(R.id.replyAuthorView);
-//			String replyAuthorURL = AvatarUtils.avatarURL(viewGroup.getContext(), 
-//					Preferences.getPreference(context, Preferences.MY_CHANNEL_JID));
-////			ImageHelper.picasso(viewGroup.getContext()).load(replyAuthorURL)
-////					.placeholder(R.drawable.personal_50px)
-////					.error(R.drawable.personal_50px)
-////					.transform(ImageHelper.createRoundTransformation(context, 16, false, -1))
-////					.into(replyAuthorView);
-//			
-//			ImageLoader.getInstance().displayImage(replyAuthorURL, replyAuthorView, dio);
-//			
-//			final Button replyBtn = holder.getView(R.id.replyBtn);
-//			replyBtn.setTypeface(TypefacesUtil.get(context,  "fonts/Roboto-Light.ttf"));
-//			final EditText replyTxt = holder.getView(R.id.replyContentTxt);
-//			replyBtn.setEnabled(false);
-//			
-//			final View thisView = convertView;
-//			
-//			replyBtn.setOnClickListener(new OnClickListener() {
-//				@Override
-//				public void onClick(View v) {
-//					reply(thisView, context, replyBtn, replyTxt);
-//				}
-//			});
-//			configureReplySection(replyTxt, replyBtn);
-//		}
-//		
+		final View postContainer = holder.getView(R.id.postContainer);
+		final TextView contentTextView = holder.getView(R.id.bcPostContent);
+		final TextView contentTextViewAlt = holder.getView(R.id.bcPostPending);
+		final MeasuredMediaView mediaView = holder.getView(R.id.bcImageContent);
+		mediaView.setImageBitmap(null);
+		drawNoMediaLayout(contentTextView, contentTextViewAlt, mediaView);
+		
+		if (mediaArray != null) {
+			drawMediaLayout(mediaArray, context, contentTextView,
+				contentTextViewAlt, mediaView);
+		}
+		
+		FrameLayout postContentWrapper = holder.getView(R.id.postContentWrapper);
+		postContentWrapper.forceLayout();
+		
+		View contextArrowDown = holder.getView(R.id.bcArrowDown);
+		contextArrowDown.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				PostContextUtils.showPostContextActions(context, channelJid, 
+						postId, role, PostContextUtils.TOPIC_POST);
+			}
+		});
+		
+		TextView publishedView = holder.getView(R.id.bcPostDate);
+		TextView publishedPendingView = holder.getView(R.id.bcPostPending);
+		boolean pending = PostsModel.isPending(post);
+		if (!pending) {
+			try {
+				long publishedTime = TimeUtils.fromISOToDate(published).getTime();
+				publishedView.setText(
+						DateUtils.getRelativeTimeSpanString(publishedTime, 
+								new Date().getTime(), DateUtils.MINUTE_IN_MILLIS));
+				publishedPendingView.setVisibility(View.GONE);
+				contextArrowDown.setVisibility(View.VISIBLE);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		} else {
+			publishedView.setText(Html.fromHtml("&#x231A;"));
+			publishedPendingView.setVisibility(View.VISIBLE);
+			contextArrowDown.setVisibility(View.GONE);
+		}
+		
+		// REPLIES SECTION
+		LinearLayout replyListViewSection = holder.getView(R.id.replyListViewSection);
+		if (repliesAdapter.getCount() > 0) {
+			replyListViewSection.setVisibility(View.VISIBLE);
+			ReplySectionUtils.configure(replyListViewSection, repliesAdapter);
+		}
+		else {
+			replyListViewSection.setVisibility(View.GONE);
+		}
+		
+		// COMMENT BOX SECTION
+		View commentBoxFrameView = holder.getView(R.id.commentBoxFrameView);
+		if (!SubscribedChannelsModel.canPost(role)) {
+			commentBoxFrameView.setVisibility(View.GONE);
+		} else {
+			commentBoxFrameView.setVisibility(View.VISIBLE);
+			ImageView replyAuthorPicView = holder.getView(R.id.bcReplyAuthorPic);
+			String replyAuthorURL = AvatarUtils.avatarURL(viewGroup.getContext(), 
+					Preferences.getPreference(context, Preferences.MY_CHANNEL_JID));
+
+			ImageLoader.getInstance().displayImage(replyAuthorURL, replyAuthorPicView, dio);
+
+			final EditText replyTxt = holder.getView(R.id.postNewCommentTxt);
+			replyTxt.setOnEditorActionListener(new OnEditorActionListener() {
+				@Override
+				public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+					
+					if (actionId == EditorInfo.IME_ACTION_SEND || 
+							actionId == EditorInfo.IME_ACTION_DONE) {
+						
+						sendReply(context, replyTxt);
+					}
+					return false;
+				}
+			});
+		}
+
+		// adjust shadow
+		adjustShadow(context, postContainer, replyListViewSection);
 		return convertView;
 	}
 
-	private void setBackgroundDisabled(Context context, View view) {
-		setBackground(context, view, R.drawable.bc_shadow_dis);
-	}
 	
-	private void setBackgroundEnabled(Context context, View view) {
-		setBackground(context, view, R.drawable.bc_shadow);
+	private void adjustShadow(final Context context,
+			View postContainer,
+			View replyListViewSection) {
+		
+		if (getRepliesAdapter() != null && getRepliesAdapter().getCount() > 0) {
+			setBackground(context, postContainer, R.drawable.post_item_list_shadow);
+			if(!SubscribedChannelsModel.canPost(role)) {
+				setBackground(context, replyListViewSection, R.drawable.comment_item_shadow);
+			} else {
+				setBackground(context, replyListViewSection, R.drawable.comment_item_list_shadow);
+			}
+		}
+		else if(!SubscribedChannelsModel.canPost(role)) {
+			setBackground(context, postContainer, R.drawable.post_item_shadow); 
+		}
 	}
 	
 	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
-	private void setBackground(Context context, View view, int resId) {
-		int pLeft = view.getPaddingLeft();
-		int pTop = view.getPaddingTop();
-		int pRight = view.getPaddingRight();
-		int pBottom = view.getPaddingBottom();
-		int sdk = android.os.Build.VERSION.SDK_INT;
+	private void setBackground(final Context context, View view, int resId) {
+		if (view == null) return ;
+		
 		Drawable drawable = context.getResources().getDrawable(resId);
-		if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 			view.setBackgroundDrawable(drawable);
 		} else {
-		    view.setBackground(drawable);
+			 view.setBackground(drawable);
 		}
-		view.setPadding(pLeft, pTop, pRight, pBottom);
 	}
 	
 	public CardListAdapter getRepliesAdapter() {
@@ -262,7 +277,7 @@ public class PostCard extends AbstractCard {
 	private void drawNoMediaLayout(TextView contentTextView,
 			TextView contentTextViewAlt, final MeasuredMediaView mediaView) {
 		mediaView.setVisibility(View.GONE);
-		contentTextViewAlt.setVisibility(View.INVISIBLE);
+		contentTextViewAlt.setVisibility(View.GONE);
 		contentTextView.setVisibility(View.VISIBLE);
 		contentTextView.setText(anchoredContent);
 		contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -349,67 +364,27 @@ public class PostCard extends AbstractCard {
 				MediaModel.ENDPOINT + "/" + mediaJson.optString("id");
 		return userMediaURL;
 	}
-	
-	private void showProgress(View container) {
-		//container.findViewById(R.id.replyStreamProgress).setVisibility(View.VISIBLE);
-	}
-	
-	private void hideProgress(View container) {
-		//container.findViewById(R.id.replyStreamProgress).setVisibility(View.GONE);
-	}
-	
-	private void reply(final View convertView, final Context context,
-			final Button replyBtn, final EditText replyTxt) {
-		
-		if (!replyBtn.isEnabled()) {
-			return;
-		}
-		
-		showProgress(convertView);
-		
+
+	private void sendReply(final Context context, final EditText replyTxt) {
+
 		JSONObject replyPost = createReply(replyTxt);
 		replyTxt.setText("");
+		
 		PostsModel.getInstance().save(context, replyPost, new ModelCallback<JSONObject>() {
 			@Override
 			public void success(JSONObject response) {
-//				Toast.makeText(context, context.getString(R.string.message_post_created), 
-//						Toast.LENGTH_LONG).show();
-//				hideProgress(convertView);
-//				fragment.fillRemotely(null, null);
+				Toast.makeText(context, context.getString(R.string.message_reply_created), 
+						Toast.LENGTH_LONG).show();
+				InputUtils.hideKeyboard(fragment.getActivity());
+				fragment.fillRemotely(null, null);
 			}
 			
 			@Override
 			public void error(Throwable throwable) {
-				// Best effort. We now have offline messages.
-				hideProgress(convertView);
 			}
 		}, channelJid);
 	}
-	
-	public static void configureReplySection(final EditText replyContent, final Button replyBtn) {
-		replyContent.addTextChangedListener(new TextWatcher() {
 
-			@Override
-			public void afterTextChanged(Editable arg0) {
-				
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-				
-			}
-
-			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {
-				boolean enabled = arg0 != null && arg0.length() > 0;
-				replyBtn.setEnabled(enabled);
-			}
-			
-		});
-	}
-	
 	private JSONObject createReply(EditText postContent) {
 		JSONObject reply = new JSONObject();
 		try {
@@ -429,13 +404,15 @@ public class PostCard extends AbstractCard {
 	
 	private static CardViewHolder fillHolder(View view) {
 		return CardViewHolder.create(view, 
-//				R.id.bcPostContentAlt, R.id.bcProfilePic, 
-//				R.id.bcPostContent, R.id.bcCommentCount, 
-//				R.id.bcImageContent, R.id.bcPostDate, 
-//				R.id.replyListView, R.id.replyAuthorView,
-//				R.id.replyContentTxt, R.id.replyBtn, 
-//				R.id.topicWrapper,
-				R.id.bcArrowDown, R.id.postWrapper);
+				R.id.postContentWrapper, R.id.postContainer,
+				R.id.postTitleWrapper, R.id.bcProfilePic, 
+				R.id.bcPostAuthor, 
+				R.id.bcPostDate, R.id.bcTopRightView, 
+				R.id.bcArrowDown, R.id.bcPostPending,
+				R.id.bcImageContent, R.id.bcPostContent, 
+				R.id.replyListViewSection,
+				R.id.commentBoxFrameView, R.id.bcReplyAuthorPic,
+				R.id.postNewCommentTxt);
 	}
 
 	@Override

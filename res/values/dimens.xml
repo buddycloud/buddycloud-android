@@ -44,10 +44,12 @@
     <dimen name="post_item_avatar_size">60dp</dimen>
     <dimen name="post_item_dateTime_size">12sp</dimen>
     <dimen name="post_item_content_size">16sp</dimen>
-    <dimen name="post_item_margin_size">15dp</dimen>
+    <dimen name="post_item_margin_size">18dp</dimen>
     
     <dimen name="post_item_comment_box_txt_size">16sp</dimen>
-    <dimen name="post_item_replies_avatar_size">40dp</dimen>
+    <dimen name="post_item_replies_avatar_size">42dp</dimen>
+    
+    
     
     <dimen name="about_buddycloud_padding">40dp</dimen>
     <dimen name="about_buddycloud_logo_wh">70dp</dimen>
@@ -62,7 +64,8 @@
     
     <dimen name="notif_size">25dp</dimen>
     
-    <dimen name="search_no_results_found_txt_size">20sp</dimen>
+    <dimen name="search_screen_no_results_found_txt_size">20sp</dimen>
+    <dimen name="search_screen_editbox_txt_size">18sp</dimen>
    
     <dimen name="list_empty_avatar_size">120dp</dimen>
     <dimen name="list_empty_view_margin_size">50dp</dimen>

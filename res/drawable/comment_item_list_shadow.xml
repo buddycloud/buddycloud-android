@@ -5,7 +5,6 @@
     <item>
         <shape>
             <padding
-                android:bottom="1.5dp"
                 android:left="1dp"
                 android:right="1dp" />
 
@@ -15,7 +14,6 @@
     <item>
         <shape>
             <padding
-                android:bottom="1.5dp"
                 android:left="1dp"
                 android:right="1dp" />
 
@@ -25,7 +23,6 @@
     <item>
         <shape>
             <padding
-                android:bottom="1.5dp"
                 android:left="1dp"
                 android:right="1dp" />
 
@@ -35,7 +32,6 @@
     <item>
         <shape>
             <padding
-                android:bottom="1.5dp"
                 android:left="1dp"
                 android:right="1dp" />
 
@@ -45,7 +41,6 @@
     <item>
         <shape>
             <padding
-                android:bottom="1.5dp"
                 android:left="1dp"
                 android:right="1dp" />
 
@@ -56,7 +51,7 @@
     <!-- Background -->
     <item>
         <shape>
-            <solid android:color="@color/bc_reply_box_bg_color" />
+            <solid android:color="@color/bc_bg_color" />
         </shape>
     </item>
 

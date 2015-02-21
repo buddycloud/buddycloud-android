@@ -1,24 +1,22 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bc_dark_grey_color" >
+    android:background="@color/bc_dark_grey_color"
+    android:orientation="vertical" >
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/wrapperLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical" >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
         <ProgressBar
             android:id="@+id/channelListProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
             android:visibility="gone" />
 
         <ExpandableListView
@@ -31,6 +29,17 @@
             android:listSelector="@drawable/channel_item_background_selector"
             android:scrollbars="none" >
         </ExpandableListView>
-    </LinearLayout>
 
-</RelativeLayout>
+        <com.buddycloud.customviews.TypefacedTextView
+            android:id="@+id/search_results_not_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/message_search_no_result"
+            android:textColor="@color/bc_light_grey_color"
+            android:textSize="@dimen/search_screen_no_results_found_txt_size"
+            android:visibility="gone"
+            buddycloud:typeface="Roboto-Regular.ttf" />
+    </RelativeLayout>
+
+</LinearLayout>

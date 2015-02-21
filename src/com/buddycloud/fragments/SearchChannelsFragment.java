@@ -30,8 +30,9 @@ public class SearchChannelsFragment extends SherlockFragment {
 		
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View view = super.onCreateView(inflater, container, savedInstanceState);
+			final View emptyView = LayoutInflater.from(container.getContext()).inflate(R.layout.search_results_empty, null);
 			final ExpandableListView channelsView = (ExpandableListView) view.findViewById(R.id.channelListView);
-			channelsView.setEmptyView(null);
+			channelsView.setEmptyView(emptyView);
 			view.findViewById(R.id.channelListProgress).setVisibility(View.GONE);
 			adapter.configure(genericChannelFrag, view);
 			return view;

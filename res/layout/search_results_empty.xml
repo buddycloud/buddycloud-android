@@ -1,0 +1,17 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+    android:layout_width="match_parent"
+    android:background="@android:color/transparent"
+    android:layout_height="match_parent" >
+
+    <com.buddycloud.customviews.TypefacedTextView
+        android:id="@+id/search_results_not_found"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:layout_centerInParent="true"
+        android:text="@string/message_search_no_result"
+        android:textColor="@color/bc_light_grey_color"
+        android:textSize="@dimen/search_screen_no_results_found_txt_size"
+        buddycloud:typeface="Roboto-Regular.ttf" />
+
+</RelativeLayout>

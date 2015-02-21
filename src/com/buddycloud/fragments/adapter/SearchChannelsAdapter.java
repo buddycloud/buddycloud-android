@@ -14,7 +14,10 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.buddycloud.R;
@@ -67,9 +70,9 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 			final String channel = channels.optString(i);
 			allSubscribedChannels.add(channel);
 			JSONObject metadata = ChannelMetadataModel.getInstance().getFromCache(context, channel);
-			plainMetadata.put(channel, getPlainMetadata(metadata));
+			plainMetadata.put(channel, getPlainMetadata(context, metadata));
 		}
-		
+
 		if (!affiliationsToDisplay.isEmpty()) {
 			this.allAffiliations = SubscribedChannelsModel.getInstance().getFromCache(context);
 		}
@@ -80,6 +83,7 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 
 	@SuppressLint("DefaultLocale")
 	public void filter(final Context context, String q) {
+		emptyView(context, false);
 		clearChannels();
 		int matchedChannels = 0;
 		for (String channel : allSubscribedChannels) {
@@ -100,7 +104,7 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 			matchedChannels++;
 		}
 		if (matchedChannels <= SEARCH_THRESHOLD && q.length() > 0 && remoteSearch) {
-			setLoading();
+			setLoading(context);
 			Semaphore s = new Semaphore(1);
 			search(context, q, SearchChannelsModel.METADATA_TYPE, METADATA_SEARCH, s);
 			search(context, q, SearchChannelsModel.POST_TYPE, CONTENT_SEARCH, s);
@@ -116,7 +120,7 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 	}
 
 	@SuppressWarnings("unchecked")
-	private String getPlainMetadata(JSONObject metadata) {
+	private String getPlainMetadata(final Context context, JSONObject metadata) {
 		if (metadata == null) {
 			return "";
 		}
@@ -141,7 +145,7 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 					}
 				}
 				if (!s.tryAcquire()) {
-					setLoaded();
+					setLoaded(context, response.length() == 0);
 				}
 			}
 
@@ -151,20 +155,35 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 						R.string.message_search_failed), 
 						Toast.LENGTH_LONG).show();
 				if (!s.tryAcquire()) {
-					setLoaded();
+					setLoaded(context, true);
 				}
 			}
 		}, type, q);
 	}
 
-	private void setLoading() {
+	private void setLoading(final Context context) {
 		view.findViewById(R.id.channelListProgress).setVisibility(View.VISIBLE);
+		emptyView(context, false);
 	}
 	
-	private void setLoaded() {
+	private void setLoaded(final Context context, final boolean isShow) {
 		view.findViewById(R.id.channelListProgress).setVisibility(View.GONE);
+		emptyView(context, isShow);
 	}
 
+	private void emptyView(final Context context, final boolean isShow) {
+		
+		TextView emptyView = (TextView)view.findViewById(R.id.search_results_not_found);
+		if (emptyView != null) {
+			if (isShow) {
+				emptyView.setVisibility(View.VISIBLE);
+			}
+			else {
+				emptyView.setVisibility(View.GONE);
+			}
+		}
+	}
+	
 	public void configure(GenericChannelsFragment genericChannelFrag, View view) {
 		this.view = view;
 	}

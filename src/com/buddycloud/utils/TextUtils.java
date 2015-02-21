@@ -23,7 +23,7 @@ public class TextUtils {
 		if (text == null) {
 			return null;
 		}
-		Matcher matcher = LINKS_PATTERN.matcher(text);
+		Matcher matcher = LINKS_PATTERN.matcher(text.trim());
 
 		StringBuffer textBuffer = new StringBuffer();
 		while (matcher.find()) {

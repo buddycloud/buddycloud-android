@@ -2,47 +2,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#eeeeee" >
+    android:background="@color/bc_bg_color" >
 
-    <LinearLayout
-        android:id="@+id/wrapperLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="0px"
-        android:orientation="vertical" >
+    <ProgressBar
+        android:id="@+id/channelStreamProgress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
 
-        <LinearLayout
-            android:id="@+id/contentLayout"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ListView
+            android:id="@+id/postsStream"
             android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:layout_weight="1"
-            android:orientation="vertical" >
-
-            <ProgressBar
-                android:id="@+id/channelStreamProgress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:visibility="gone" />
-            
-            <ListView
-                android:id="@+id/postsStream"
-                android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-		        android:divider="@android:color/transparent"
-		        android:dividerHeight="8dp"
-		        android:listSelector="@android:color/transparent"
-		        android:overScrollMode="never"
-		        android:scrollbars="none"/>
-
-        </LinearLayout>
-        
-        <include layout="@layout/layout_comment_box"/>
-               
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10dp"
+            android:listSelector="@android:color/transparent"
+            android:overScrollMode="never"
+            android:padding="10dp"
+            android:scrollbars="none" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

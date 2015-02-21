@@ -20,9 +20,7 @@
         android:scaleType="fitXY"
         android:src="@drawable/avatar_icon"
         app:border="false"
-        app:border_color="#EEEEEE"
-        app:border_width="1dp"
-        app:shadow="true" />
+        app:shadow="false" />
 
     <com.buddycloud.customviews.TypefacedEditText
         android:id="@+id/postNewCommentTxt"
