@@ -108,6 +108,12 @@
             android:name=".FullScreenImageActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
         </activity>
+        <activity
+            android:name=".PostNewTopicActivity"
+            android:label="@string/post_new_topic_title"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait">
+        </activity>
         
         <activity
             android:name=".ShareActivity"

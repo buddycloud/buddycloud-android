@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.support.v4.util.LruCache;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.EditText;
@@ -33,6 +34,8 @@ public class TypefacedEditText extends EditText {
 
 	private static final String FONTS_PATH = "fonts/";
     
+	private KeyImeChange keyImeChangeListener;
+	
 	public TypefacedEditText(Context context) {
 		super(context);
 	}
@@ -89,5 +92,22 @@ public class TypefacedEditText extends EditText {
 	        outAttrs.imeOptions &= ~EditorInfo.IME_FLAG_NO_ENTER_ACTION;
 	    }
 	    return connection;
+	}
+	
+	@Override
+	public boolean onKeyPreIme(int keyCode, KeyEvent event) {
+		if (keyImeChangeListener != null) {
+			return keyImeChangeListener.onKeyPreIme(keyCode, event);
+		}
+
+		return false;
+	}
+	
+	public void setOnKeyPreImeListener(KeyImeChange listener) {
+		this.keyImeChangeListener = listener;
+	}
+	
+	public interface KeyImeChange {
+		public boolean onKeyPreIme(int keyCode, KeyEvent event);
 	}
 }

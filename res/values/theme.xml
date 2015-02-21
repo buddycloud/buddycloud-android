@@ -34,7 +34,7 @@
     <style name="AppTheme.ActionBarOverflow" parent="android:Widget.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_ab_overflow_compat</item>
     </style>
-    
+
     <style name="AppTheme.ActionBar.TitleTextStyle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">22sp</item>
@@ -59,6 +59,12 @@
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/bc_grey_btn_selector</item>
         <item name="android:padding">10dip</item>
+    </style>
+
+    <!-- Add New Post Topic Button -->
+    <style name="fab_layout_wrap_width_wrap_height_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="CardText">

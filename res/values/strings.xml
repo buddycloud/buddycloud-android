@@ -163,7 +163,7 @@
 	<string name="channel_list_counts_formatted_txt">%1$d Mentions  |  %2$d Replies  |  %3$d Views</string>
 	
 	<string name="post_new_topic_title">Create New Topic</string>
-	<string name="post_new_topic_hint">Write a topic&#8230;</string>
+	<string name="post_new_topic_hint">Write a new post topic&#8230;</string>
 	<string name="post_new_topic_at_channel">at %1$s</string>
 	
 	

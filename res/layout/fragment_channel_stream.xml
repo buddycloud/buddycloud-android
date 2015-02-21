@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res/com.buddycloud"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -30,5 +31,26 @@
             android:padding="10dp"
             android:scrollbars="none" />
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <com.software.shell.fab.FloatingActionButton
+        android:id="@+id/addNewTopicBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:visibility="gone"
+        fab:animation_onHide="@anim/fab_roll_to_down"
+        fab:animation_onShow="@anim/fab_roll_from_down"
+        fab:button_color="@color/bc_green_blue_color"
+        fab:button_colorPressed="#248b98"
+        fab:image="@drawable/fab_plus_icon"
+        fab:image_size="28dp"
+        fab:shadow_color="#757575"
+        fab:shadow_radius="1.0dp"
+        fab:shadow_xOffset="0.5dp"
+        fab:shadow_yOffset="1.0dp"
+        fab:type="normal" />
 
 </RelativeLayout>

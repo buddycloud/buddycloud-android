@@ -142,6 +142,18 @@ public class MainActivity extends SlidingFragmentActivity {
 			} else {
 				backStack.pop();
 			}
+		} else if (requestCode == PostNewTopicActivity.REQUEST_CODE) {
+			if (resultCode == PostNewTopicActivity.NEW_POST_CREATED_RESULT) {
+				channelStreamFrag.synchPostStream();
+			}
+			else if (data != null) {
+				final String channelJid = data.getStringExtra(GenericChannelsFragment.CHANNEL);
+				showChannelFragment(channelJid);
+				backStack.pushGeneric(data.getBundleExtra(GenericChannelsFragment.INPUT_ARGS));
+			}
+			else {
+				backStack.pop();
+			}
 		}
 	}
 

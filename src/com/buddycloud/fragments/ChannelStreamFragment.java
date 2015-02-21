@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,8 +32,10 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.ChannelDetailActivity;
+import com.buddycloud.FullScreenImageActivity;
 import com.buddycloud.GenericChannelActivity;
 import com.buddycloud.MainActivity;
+import com.buddycloud.PostNewTopicActivity;
 import com.buddycloud.R;
 import com.buddycloud.card.Card;
 import com.buddycloud.card.CardListAdapter;
@@ -50,9 +53,11 @@ import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.InputUtils;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.software.shell.fab.FloatingActionButton;
 
 public class ChannelStreamFragment extends ContentFragment implements ModelListener {
 
+	private FloatingActionButton addPostTopicBtn;
 	private SwipeRefreshLayout postStreamRefreshLayout;
 	private ListView postStream;
 	private CardListAdapter cardAdapter;
@@ -75,13 +80,32 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 				scrollListener.setRefreshing(true);
 
 				// refresh the post stream
-				synchPostStream(view, getActivity());
+				synchPostStream();
 			}
 		});
 		
+		addPostTopicBtn = (FloatingActionButton) view.findViewById(R.id.addNewTopicBtn);
+		addPostTopicBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+			
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), PostNewTopicActivity.class);
+				intent.putExtra(GenericChannelsFragment.CHANNEL, getChannelJid());
+				getActivity().startActivityForResult(intent, PostNewTopicActivity.REQUEST_CODE);
+			}
+		});
+		
+		if (!SubscribedChannelsModel.canPost(getRole())) {
+			addPostTopicBtn.setVisibility(View.GONE);
+		} else {
+			addPostTopicBtn.setVisibility(View.VISIBLE);
+		}
+				
 		PostsModel.getInstance().setListener(this);
 		synchChannelMetadata(); 
-		synchPostStream(view, getActivity());
+		synchPostStream();
 		
 		return view;
 	}
@@ -98,6 +122,22 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 		ImageLoader.getInstance().stop();
 	}
 
+	public void showAddPostTopicBtn() {
+		if (addPostTopicBtn != null) {
+			addPostTopicBtn.show();
+		}
+	}
+	
+	public void hideAddPostTopicBtn() {
+		if (addPostTopicBtn != null) {
+			addPostTopicBtn.hide();
+		}
+	}
+	
+	public ListView getPostStreamView() {
+		return postStream;
+	}
+	
 	public SwipeRefreshLayout getSwipeRefreshLayout() {
 		return postStreamRefreshLayout;
 	}
@@ -132,7 +172,7 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 	 * @param view
 	 * @param context
 	 */
-	private void synchPostStream(View view, Context context) {
+	public void synchPostStream() {
 		
 		if (cardAdapter == null) {
 			this.cardAdapter = new CardListAdapter();
@@ -292,55 +332,11 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 			}
 		}), getChannelJid(), lastId);
 	}
-	
 
-	
 	private PostCard toCard(JSONObject post, final String channelJid) {
 		return new PostCard(channelJid, post, this, getRole());
 	}
-	
-	private void createPost(final View view) {
-//		
-//		final ImageView postButton = (ImageView) view.findViewById(R.id.postButton);
-//		
-//		if (!postButton.isEnabled()) {
-//			return;
-//		}
-//		
-//		showProgress(view);
-//		
-//		final EditText postContent = (EditText) view.findViewById(R.id.postContentTxt);
-//		
-//		JSONObject post = createJSONPost(postContent);
-//		postContent.setText("");
-//		
-//		PostsModel.getInstance().save(getActivity(), post, smartify(
-//				new ModelCallback<JSONObject>() {
-//			@Override
-//			public void success(JSONObject response) {
-////				Toast.makeText(getActivity().getApplicationContext(), 
-////						getString(R.string.message_post_created), Toast.LENGTH_LONG).show();
-////				fillRemotely(null, null);
-//			}
-//			
-//			@Override
-//			public void error(Throwable throwable) {
-//				// Best effort. We now have offline messages.
-//				hideProgress(view);
-//			}
-//		}), getChannelJid());
-	}
 
-	private JSONObject createJSONPost(final EditText postContent) {
-		JSONObject post = new JSONObject();
-		try {
-			post.putOpt("content", postContent.getText().toString());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return post;
-	}
-	
 	private void loadTitle(Activity activity) {
 		SlidingFragmentActivity sherlockActivity = (SlidingFragmentActivity) activity;
 		sherlockActivity.getSupportActionBar().setTitle(getChannelJid());

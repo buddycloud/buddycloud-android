@@ -11,8 +11,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
@@ -41,6 +43,7 @@ import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.customviews.MeasuredMediaView;
 import com.buddycloud.customviews.MeasuredMediaView.MeasureListener;
+import com.buddycloud.customviews.TypefacedEditText;
 import com.buddycloud.fragments.ChannelStreamFragment;
 import com.buddycloud.model.MediaModel;
 import com.buddycloud.model.ModelCallback;
@@ -219,7 +222,7 @@ public class PostCard extends AbstractCard {
 
 			ImageLoader.getInstance().displayImage(replyAuthorURL, replyAuthorPicView, dio);
 
-			final EditText replyTxt = holder.getView(R.id.postNewCommentTxt);
+			final TypefacedEditText replyTxt = holder.getView(R.id.postNewCommentTxt);
 			replyTxt.setOnEditorActionListener(new OnEditorActionListener() {
 				@Override
 				public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -230,6 +233,32 @@ public class PostCard extends AbstractCard {
 						sendReply(context, replyTxt);
 					}
 					return false;
+				}
+			});
+			replyTxt.setOnKeyPreImeListener(new TypefacedEditText.KeyImeChange() {
+				
+				@Override
+				public boolean onKeyPreIme(int keyCode, KeyEvent event) {
+					if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+						new Handler().postDelayed(new Runnable() {
+							
+							@Override
+							public void run() {
+								fragment.showAddPostTopicBtn();
+							}
+						}, 1000);
+					}
+					
+					return false;
+				}
+			});
+			replyTxt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+				
+				@Override
+				public void onFocusChange(View v, boolean hasFocus) {
+					if (hasFocus) {
+						fragment.hideAddPostTopicBtn();
+					}
 				}
 			});
 		}

@@ -11,4 +11,8 @@ public class InputUtils {
 		imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
 	}
 
+	public static boolean isActive(Activity activity) {
+		InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+		return imm.isActive();
+	}
 }
