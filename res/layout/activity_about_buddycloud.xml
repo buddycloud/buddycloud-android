@@ -1,78 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:layout_marginTop="0dp"
-    android:orientation="vertical" >
+    android:layout_height="fill_parent"
+    android:background="#FFFFFF"
+    android:fillViewport="true"
+    android:isScrollContainer="true"
+    android:scrollbars="none" >
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="0dp"
-        android:adjustViewBounds="true"
-        android:padding="0dp"
-        android:src="@drawable/logo_about" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/about_buddycloud_protocol_title"
-        android:textAllCaps="true"
-        android:textSize="14sp"
-        android:layout_marginTop="8dp"
-        android:textStyle="bold" />
-
-    <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:background="#CCCCCC" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:text="@string/about_buddycloud_protocol_content" />
-    
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/about_buddycloud_contributors_title"
-        android:textAllCaps="true"
-        android:textSize="14sp"
-        android:textStyle="bold" />
-
-    <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:background="#CCCCCC" />
-    
     <LinearLayout
-        android:id="@+id/contributorsFrame"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" />
-	
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/about_buddycloud_version_title"
-        android:textAllCaps="true"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bc_bg_color"
+        android:orientation="vertical"
+        android:padding="@dimen/about_buddycloud_padding" >
 
-    <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:background="#CCCCCC" />
-    
-    <TextView
-        android:id="@+id/versionTxt"
-        android:textSize="16sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
 
-</LinearLayout>
+            <ImageView
+                android:layout_width="@dimen/about_buddycloud_logo_wh"
+                android:layout_height="@dimen/about_buddycloud_logo_wh"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_launcher" />
+
+            <com.buddycloud.customviews.TypefacedTextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/about_buddycloud_protocol_title"
+                android:textColor="@color/bc_green_blue_color"
+                android:textSize="@dimen/about_buddycloud_protocol_title_size"
+                buddycloud:typeface="Roboto-Light.ttf" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical" >
+
+            <com.buddycloud.customviews.TypefacedTextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/about_buddycloud_version_title"
+                android:textColor="@color/bc_green_blue_color"
+                android:textSize="@dimen/about_buddycloud_version_title_size"
+                buddycloud:typeface="Roboto-Regular.ttf" />
+
+            <com.buddycloud.customviews.TypefacedTextView
+                android:id="@+id/versionTxt"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/bc_dark_grey_color"
+                android:textSize="@dimen/about_buddycloud_version_title_size"
+                buddycloud:typeface="Roboto-Regular.ttf" />
+        </LinearLayout>
+
+        <com.buddycloud.customviews.TypefacedTextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/about_buddycloud_protocol_content"
+            android:textColor="@color/bc_dark_grey_color"
+            android:textSize="@dimen/about_buddycloud_protocol_content_size"
+            buddycloud:typeface="Roboto-Light.ttf" />
+
+        <LinearLayout
+            android:id="@+id/contributorsFrame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical" >
+
+            <com.buddycloud.customviews.TypefacedTextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/about_buddycloud_contributors_title"
+                android:textColor="@color/bc_green_blue_color"
+                android:textSize="@dimen/about_buddycloud_contributors_title_size"
+                buddycloud:typeface="Roboto-Regular.ttf" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/bc_green_blue_color" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
