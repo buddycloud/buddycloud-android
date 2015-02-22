@@ -54,7 +54,8 @@
 	<string name="message_post_fetch_failed">Could not retrieve posts from the server</string>
 	
 	<string name="title_topic_channel_create">Create new topic channel</string>
-	<string name="message_topic_channel_hint">Enter the channel name (channel@domain)</string>
+	<string name="message_topic_channel_manadatory">Sorry, but your topic channel name can\'t be empty.</string>
+    <string name="message_topic_channel_invalid">Invalid topic channel name. Pick channel name without domain and spaces.</string>
 	<string name="message_topic_channel_create">Topic channel created</string>
 	<string name="message_topic_channel_creation_failed">Could not create topic channel</string>
 	
@@ -176,6 +177,9 @@
 	<string name="post_new_topic_hint">Write a new post topic&#8230;</string>
 	<string name="post_new_topic_at_channel">at %1$s</string>
 	
+	<string name="topic_channel">Enter the channel name:</string>
+	<string name="topic_channel_hint">channel name</string>
+	<string name="topic_channel_domain_hint">\@%1$s</string>
 	
 	<string name="comment_box_avatar_desc">Channel avatar</string>
 	
@@ -222,7 +226,7 @@
 	<string name="pref_rate_buddycloud_title">Rate buddycloud</string>
 	<string name="pref_rate_buddycloud_summary">We love you. Love us back in the Play store</string>	
 	
-	<string name="pref_danger_zone_category_title">Danger zone</string>
+	<string name="pref_delete_acct_category_title">Delete account</string>
 	
 	<string name="pref_account_category_title">Account</string>
 	<string name="pref_change_password_title">Change password</string>
