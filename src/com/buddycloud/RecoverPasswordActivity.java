@@ -134,6 +134,12 @@ public class RecoverPasswordActivity extends SherlockActivity {
 			return;
 		}
 		
+		// remove all error tool tips
+		hideAllErrorTooltips();
+		
+		// show progress dialog
+		mProgressDialog.show();
+		
 		// Recover password through email
 		AccountModel.getInstance().resetPassword(getApplicationContext(), 
 				emailAddressTxt, new ModelCallback<JSONObject>() {
@@ -159,12 +165,6 @@ public class RecoverPasswordActivity extends SherlockActivity {
 								Toast.LENGTH_LONG).show();
 					}
 		});
-
-		// remove all error tool tips
-		hideAllErrorTooltips();
-		
-		// show progress dialog
-		mProgressDialog.show();
 	}
 
 	private final TextWatcher mEmailAddressTxtWatcher = new TextWatcher() {

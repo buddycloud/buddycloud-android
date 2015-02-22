@@ -56,7 +56,7 @@ public class CreateAccountActivity extends SherlockActivity {
 	private static final String TAG = CreateAccountActivity.class.getSimpleName();
 
 	private static final String DOMAIN_SUGGESTION_URL = "http://buddycloud.com/registration-helper/sign-up-domains.json";
-	private static final String BUDDYCLOUD_DOMAIN = "buddycloud.org";
+	public static final String BUDDYCLOUD_DOMAIN = "buddycloud.org";
 
 	public static final int REQUEST_CODE = 105;
 	public static final int ACCOUNT_CREATED_RESULT = 205;
@@ -239,6 +239,15 @@ public class CreateAccountActivity extends SherlockActivity {
 					Toast.LENGTH_LONG).show();
 			return;
 		}
+		
+		// remove all error tooltips
+		hideAllErrorTooltips();
+
+		//hide keyboard
+		InputUtils.hideKeyboard(CreateAccountActivity.this);
+		
+		// show progress dialog
+		mProgressDialog.show();
 
 		// resolve API service
 		DNSUtils.resolveAPISRV(new ModelCallback<String>() {
@@ -272,15 +281,6 @@ public class CreateAccountActivity extends SherlockActivity {
 				return;
 			}
 		}, BUDDYCLOUD_DOMAIN);
-
-		// remove all error tooltips
-		hideAllErrorTooltips();
-
-		//hide keyboard
-		InputUtils.hideKeyboard(CreateAccountActivity.this);
-		
-		// show progress dialog
-		mProgressDialog.show();
 	}
 	
 	/**

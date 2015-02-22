@@ -230,6 +230,15 @@ public class LoginActivity extends SherlockActivity {
 				
 		Preferences.setPreference(LoginActivity.this, Preferences.MY_CHANNEL_JID, myChannelJid);
 		Preferences.setPreference(LoginActivity.this, Preferences.PASSWORD, passwordTxt);
+
+		// remove all error tool tips
+		hideAllErrorTooltips();
+
+		//hide keyboard
+		InputUtils.hideKeyboard(LoginActivity.this);
+		
+		// show progress dialog
+		mProgressDialog.show();
 		
 		// Resolve the API server through DNS lookup
 		DNSUtils.resolveAPISRV(new ModelCallback<String>() {
@@ -282,15 +291,6 @@ public class LoginActivity extends SherlockActivity {
 			}
 			
 		}, myChannelJidSplit[1]);
-		
-		// remove all error tool tips
-		hideAllErrorTooltips();
-
-		//hide keyboard
-		InputUtils.hideKeyboard(LoginActivity.this);
-		
-		// show progress dialog
-		mProgressDialog.show();
 	}
 
 	private final TextWatcher mUserNameTxtWatcher = new TextWatcher() {
