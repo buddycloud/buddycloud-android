@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical" >
+
+    <com.buddycloud.customviews.TypefacedTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/topic_channel"
+        android:textColor="@color/bc_dark_grey_color"
+        android:textSize="@dimen/login_screen_label_txt_size"
+        buddycloud:typeface="Roboto-Regular.ttf" />
+
+    <com.buddycloud.customviews.TypefacedEditText
+        android:id="@+id/topicChannelTxt"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:ems="15"
+        android:hint="@string/topic_channel_hint"
+        android:imeOptions="actionNext"
+        android:inputType="text"
+        android:textColor="@color/bc_dark_grey_color"
+        android:textSize="18sp"
+        buddycloud:typeface="Roboto-Regular.ttf" >
+
+        <requestFocus />
+    </com.buddycloud.customviews.TypefacedEditText>
+
+    <com.buddycloud.customviews.TypefacedTextView
+        android:id="@+id/topicChannelJidTxt"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/topic_channel_domain_hint"
+        android:textColor="@color/bc_grey_color"
+        android:textSize="18sp"
+        buddycloud:typeface="Roboto-Regular.ttf" />
+
+</LinearLayout>

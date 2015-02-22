@@ -9,7 +9,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
@@ -23,11 +25,14 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.buddycloud.CreateAccountActivity;
 import com.buddycloud.GenericChannelActivity;
 import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.SearchActivity;
 import com.buddycloud.SettingsActivity;
+import com.buddycloud.customviews.TypefacedEditText;
+import com.buddycloud.customviews.TypefacedTextView;
 import com.buddycloud.fragments.adapter.FindFriendsAdapter;
 import com.buddycloud.fragments.adapter.MostActiveChannelsAdapter;
 import com.buddycloud.fragments.adapter.RecommendedChannelsAdapter;
@@ -40,6 +45,8 @@ import com.buddycloud.model.SyncModel;
 import com.buddycloud.model.TopicChannelModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.ChannelAdapterHelper;
+import com.buddycloud.utils.TextUtils;
+import com.buddycloud.utils.TypefacesUtil;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class SubscribedChannelsFragment extends ContentFragment implements ModelListener {
@@ -193,17 +200,51 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 	}
 
 	private void createNewTopicChannel() {
+		
+		final View view = LayoutInflater.from(getActivity()).inflate(R.layout.topic_channel_create, null);
+		if (view == null) return;
+		
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-
 		alert.setTitle(getString(R.string.title_topic_channel_create));
-		alert.setMessage(getString(R.string.message_topic_channel_hint));
-		final EditText input = new EditText(getActivity());
-		alert.setView(input);
+		alert.setView(view);
+		
+		final EditText channelTopicTxt = (EditText)view.findViewById(R.id.topicChannelTxt);
+		channelTopicTxt.addTextChangedListener(new TextWatcher() {
 
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				if (s.length() == 0) {
+					channelTopicTxt.setError(getString(R.string.message_topic_channel_manadatory));
+				} else if (s.toString().contains("@") || s.toString().contains(" ")) {
+					channelTopicTxt.setError(getString(R.string.message_topic_channel_invalid));
+				}
+			}
+		});
+		
+		final TextView topicChannelJidTxt = (TextView)view.findViewById(R.id.topicChannelJidTxt);
+		topicChannelJidTxt.setText(String.format(getString(R.string.topic_channel_domain_hint), CreateAccountActivity.BUDDYCLOUD_DOMAIN));
+		
 		alert.setPositiveButton(getString(R.string.ok), 
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				String channelJid = input.getText().toString();
+				
+				String channelJid = channelTopicTxt.getText().toString();
+				if (TextUtils.isEmpty(channelJid)) {
+					channelTopicTxt.setError(getString(R.string.message_topic_channel_manadatory));
+					return ;
+				}
+
+				channelJid = channelJid + "@" + CreateAccountActivity.BUDDYCLOUD_DOMAIN;
 				TopicChannelModel.getInstance().save(getActivity(), null, new ModelCallback<Void>() {
 					@Override
 					public void success(Void response) {

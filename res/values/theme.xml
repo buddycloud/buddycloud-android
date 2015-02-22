@@ -13,6 +13,7 @@
         <item name="actionOverflowButtonStyle">@style/AppTheme.ActionBarOverflow</item>
         <item name="actionMenuTextAppearance" tools:targetApi="11">@style/AppTheme.MenuTextStyle</item>
         <item name="android:actionMenuTextAppearance" tools:targetApi="11">@style/AppTheme.MenuTextStyle</item>
+        <item name="android:alertDialogTheme">@style/AppTheme.AlertDialogTheme</item>
     </style>
 
     <style name="AppTheme.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid">
@@ -50,7 +51,28 @@
         <item name="android:textColorPrimary">@color/bc_dark_grey_color</item>
         <item name="android:textColorSecondary">@color/bc_grey_shade_color</item>
     </style>
-    
+
+    <style name="AppTheme.AlertDialogTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowTitleStyle">@style/AppTheme.AlertDialogTitleStyle</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+        <item name="android:windowIsFloating">true</item>
+        <!--
+    If you don't want your own button bar style use
+            @android:style/Holo.Light.ButtonBar.AlertDialog
+            and
+            ?android:attr/borderlessButtonStyle
+    instead of @style/MyButtonBar and @style/MyBorderlessButton
+        -->
+    </style>
+
+    <style name="AppTheme.AlertDialogTitleStyle">
+        <item name="android:textColor">@color/bc_green_blue_color</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="btnStyleGreen" parent="@android:style/Widget.Button">
         <item name="android:textSize">15sp</item>
         <item name="android:gravity">center</item>

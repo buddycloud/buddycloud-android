@@ -16,8 +16,14 @@ import com.buddycloud.log.Logger;
  *    view.setTypeface(Typefaces.get(context, "assets/fontname.ttf"));
  */
 public class TypefacesUtil {
+	
 	private static final String TAG = "Typefaces";
 
+	private static final String FONTS_PATH = "fonts/";
+	
+	public static final String FONT_ROBOTO_REGULAR = "Roboto-Regular.ttf";
+	public static final String FONT_ROBOTO_LIGHT = "Roboto-Light.ttf";
+	
 	private static final Hashtable<String, Typeface> cache = new Hashtable<String, Typeface>();
 
 	public static Typeface get(Context c, String assetPath) {
@@ -35,5 +41,25 @@ public class TypefacesUtil {
 			}
 			return cache.get(assetPath);
 		}
+	}
+	
+	/**
+	 * Get the typeface for given font name
+	 * 
+	 * @param context
+	 * @param fontName
+	 * @return
+	 */
+	public static Typeface getTypeface(final Context context, final String fontName) {
+		if (TextUtils.isEmpty(fontName)) return null;
+		
+		Typeface typeface = cache.get(fontName);
+		if (typeface == null) {
+			typeface = TypefacesUtil.get(context, FONTS_PATH + fontName);
+
+			// Cache the Typeface object
+			cache.put(fontName, typeface);
+		}
+		return typeface;
 	}
 }
