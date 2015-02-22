@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/list_empty_view_margin_size"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="@dimen/list_empty_avatar_size"
+            android:layout_height="@dimen/list_empty_avatar_size"
+            android:layout_gravity="center"
+            android:src="@drawable/bc_grey_logo" />
+
+        <com.buddycloud.customviews.TypefacedTextView
+            android:id="@+id/search_results_not_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="@string/message_no_topics_found"
+            android:textColor="@color/bc_dark_grey_color"
+            android:textSize="@dimen/list_empty_label_txt_size"
+            buddycloud:typeface="Roboto-Regular.ttf" />
+    </LinearLayout>
+
+</RelativeLayout>

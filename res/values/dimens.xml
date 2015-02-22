@@ -67,7 +67,7 @@
     <dimen name="search_screen_no_results_found_txt_size">20sp</dimen>
     <dimen name="search_screen_editbox_txt_size">18sp</dimen>
    
-    <dimen name="list_empty_avatar_size">120dp</dimen>
+    <dimen name="list_empty_avatar_size">140dp</dimen>
     <dimen name="list_empty_view_margin_size">50dp</dimen>
     <dimen name="list_empty_label_txt_size">18sp</dimen>
     

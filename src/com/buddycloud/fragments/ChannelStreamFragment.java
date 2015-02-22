@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -68,8 +69,9 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 			Bundle savedInstanceState) {
 		final View view = inflater.inflate(R.layout.fragment_channel_stream, container, false);		
 		showProgress(view);
-		
+
 		postStream = (ListView) view.findViewById(R.id.postsStream);
+		postStream.setEmptyView(getEmptyListView(view));
 		postStreamRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout);
 		postStreamRefreshLayout.setColorSchemeResources(R.color.bc_green_blue_color);
 		postStreamRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -145,9 +147,13 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 	public CardListAdapter getPostStreamAdapter() {
 		return cardAdapter;
 	}
-	
+
 	private String getChannelJid() {
 		return getArguments().getString(GenericChannelsFragment.CHANNEL);
+	}
+	
+	private View getEmptyListView(View view) {
+		return (view != null) ? view.findViewById(android.R.id.empty) : null;
 	}
 	
 	/**

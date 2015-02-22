@@ -53,4 +53,11 @@
         fab:shadow_yOffset="1.0dp"
         fab:type="normal" />
 
+    <include
+        android:id="@android:id/empty"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/list_empty_view"
+        android:visibility="gone" />
+
 </RelativeLayout>
