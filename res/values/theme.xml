@@ -26,6 +26,12 @@
         <item name="titleTextStyle">@style/AppTheme.ActionBar.TitleTextStyle</item>
     </style>
 
+    <!-- Theme without ActionBar shadow -->
+    <style name="NoActionBarShadowTheme" parent="AppTheme">
+        <item name="windowContentOverlay">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
     <style name="AppTheme.MenuTextStyle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">18sp</item>
@@ -40,6 +46,11 @@
         <item name="android:textSize">22sp</item>
     </style>
 
+    <style name="AppTheme.SettingPreferences" parent="AppTheme">
+        <item name="android:textColorPrimary">@color/bc_dark_grey_color</item>
+        <item name="android:textColorSecondary">@color/bc_grey_shade_color</item>
+    </style>
+    
     <style name="btnStyleGreen" parent="@android:style/Widget.Button">
         <item name="android:textSize">15sp</item>
         <item name="android:gravity">center</item>

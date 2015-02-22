@@ -53,6 +53,7 @@ public class SearchChannelsFragment extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = genericChannelFrag.onCreateView(inflater, container, savedInstanceState);
+		adapter.configure(view);
 		adapter.load(container.getContext());
 		if (initialFilter != null) {
 			filter(getActivity(), initialFilter);

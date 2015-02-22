@@ -14,17 +14,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 
+import com.buddycloud.R;
+import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.fragments.GenericSelectableChannelsFragment;
 import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.utils.ChannelAdapterHelper;
+import com.buddycloud.utils.TextUtils;
 
 public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 
 	private List<String> categories = new ArrayList<String>();
 	private Map<String, List<JSONObject>> channelsPerCategory = new HashMap<String, List<JSONObject>>();
 	private Map<String, Integer> categoryOrder = new HashMap<String, Integer>(); 
+	private View parentView;
 	
 	@Override
 	public JSONObject getChild(int groupPosition, int childPosition) {
@@ -183,6 +188,7 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 		
 		ExpandableListView listView = (ExpandableListView) viewGroup;
 	    listView.expandGroup(groupPosition);
+
 		return returningView;
 	}
 
@@ -196,10 +202,36 @@ public abstract class GenericChannelAdapter extends BaseExpandableListAdapter {
 		return true;
 	}
 	
+	protected void showNoResultsFoundView(final String emptyMsg) {
+		if (parentView == null || TextUtils.isEmpty(emptyMsg)) return;
+		
+		ExpandableListView lv = (ExpandableListView)parentView.findViewById(R.id.channelListView);
+		View emptyView = parentView.findViewById(R.id.channelListEmpty);
+		if (lv != null && emptyView != null) {
+			TextView tv = (TextView)emptyView.findViewById(R.id.results_not_found);
+			tv.setText(emptyMsg);
+			
+			lv.setEmptyView(emptyView);
+		}
+		
+		View progressView = parentView.findViewById(R.id.channelListProgress);
+		if (progressView != null) {
+			progressView.setVisibility(View.GONE);
+		}
+		
+	}
+	
+	public abstract String getTitle(final Context context);
+
 	public void load(final Context context) {
 	}
 
+	public void configure(View view) {
+		this.parentView = view;
+	}
+	
 	public void configure(GenericSelectableChannelsFragment fragment, View view) {
+		this.parentView = view;
 	}
 
 	public void onFinish() {

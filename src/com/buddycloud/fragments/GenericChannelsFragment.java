@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.ExpandableListView.OnChildClickListener;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -68,7 +69,7 @@ public abstract class GenericChannelsFragment extends SherlockFragment {
 		super.onStop();
 		ImageLoader.getInstance().stop();
 	}
-
+	
 	private void expandAll(View view) {
 		ExpandableListView listView = (ExpandableListView) view.findViewById(
 				R.id.channelListView);

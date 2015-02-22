@@ -34,6 +34,11 @@ public class FindFriendsAdapter extends GenericChannelAdapter {
 	
 	public static final String ADAPTER_NAME = "FIND_FRIENDS";
 	
+	public String getTitle(final Context context) {
+		return (context != null) ? context.getResources().getString(R.string.menu_find_friends) : null;
+	}
+	
+	@Override
 	public void configure(final GenericSelectableChannelsFragment fragment, View view) {
 		
 		String adapterState = fragment.getActivity().getIntent().getStringExtra(ADAPTER_STATE);
@@ -92,6 +97,8 @@ public class FindFriendsAdapter extends GenericChannelAdapter {
 			}
 		});
         builderSingle.show();
+        
+        super.configure(fragment, view);
 	}
 
 	private void restoreAdapterState(String adapterStateStr, Context context) {

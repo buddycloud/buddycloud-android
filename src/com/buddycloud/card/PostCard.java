@@ -153,7 +153,7 @@ public class PostCard extends AbstractCard {
 		
 		final TextView postAuthorView = holder.getView(R.id.bcPostAuthor);
 		if (!TextUtils.isEmpty(postAuthor)) {
-			postAuthorView.setText(TextUtils.capitalize(postAuthor));
+			postAuthorView.setText(TextUtils.capitalize(postAuthor.trim()));
 		}
 		
 		final View postContainer = holder.getView(R.id.postContainer);

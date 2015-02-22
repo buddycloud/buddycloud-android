@@ -17,6 +17,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +51,15 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 		setCategoryOrder(PERSONAL, SUBSCRIBED, METADATA_SEARCH, CONTENT_SEARCH);
 	}
 	
+	@Override
+	public void configure(View view) {
+		super.configure(view);
+	}
+
+	public String getTitle(final Context context) {
+		return (context != null) ? context.getResources().getString(R.string.menu_search) : null;
+	}
+	
 	public void addAffiliationToDisplay(String affiliation) {
 		this.affiliationsToDisplay.add(affiliation);
 	}
@@ -58,6 +68,7 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 		this.remoteSearch = enabled;
 	}
 	
+	@Override
 	public void load(final Context context) {
 		this.myChannel = Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
 		JSONObject subscriptions = SubscribedChannelsModel.getInstance().getFromCache(context);
@@ -83,8 +94,9 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 
 	@SuppressLint("DefaultLocale")
 	public void filter(final Context context, String q) {
-		emptyView(context, false);
+		setLoading(context);
 		clearChannels();
+		
 		int matchedChannels = 0;
 		for (String channel : allSubscribedChannels) {
 			String channelPlainMetadata = plainMetadata.get(channel);
@@ -162,28 +174,29 @@ public class SearchChannelsAdapter extends GenericChannelAdapter {
 	}
 
 	private void setLoading(final Context context) {
-		view.findViewById(R.id.channelListProgress).setVisibility(View.VISIBLE);
-		emptyView(context, false);
-	}
-	
-	private void setLoaded(final Context context, final boolean isShow) {
-		view.findViewById(R.id.channelListProgress).setVisibility(View.GONE);
-		emptyView(context, isShow);
-	}
-
-	private void emptyView(final Context context, final boolean isShow) {
+		ProgressBar progressBar = (ProgressBar)view.findViewById(R.id.channelListProgress);
+		ExpandableListView elv = (ExpandableListView)view.findViewById(R.id.channelListView);
+		View noResultsFound = view.findViewById(R.id.channelListEmpty);
 		
-		TextView emptyView = (TextView)view.findViewById(R.id.search_results_not_found);
-		if (emptyView != null) {
-			if (isShow) {
-				emptyView.setVisibility(View.VISIBLE);
-			}
-			else {
-				emptyView.setVisibility(View.GONE);
+		if (elv != null) {
+			progressBar.setVisibility(View.VISIBLE);
+			elv.setEmptyView(progressBar);
+			
+			if (noResultsFound != null) {
+				noResultsFound.setVisibility(View.GONE);
 			}
 		}
 	}
 	
+	private void setLoaded(final Context context, final boolean isShow) {
+		ProgressBar progressBar = (ProgressBar)view.findViewById(R.id.channelListProgress);
+		progressBar.setVisibility(View.GONE);
+		
+		if (isShow) {	
+			showNoResultsFoundView(context.getString(R.string.message_search_no_result));
+		}
+	}
+
 	public void configure(GenericChannelsFragment genericChannelFrag, View view) {
 		this.view = view;
 	}

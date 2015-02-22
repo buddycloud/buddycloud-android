@@ -16,8 +16,7 @@
             android:id="@+id/channelListProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="100dp"
+            android:layout_centerInParent="true"
             android:visibility="gone" />
 
         <ExpandableListView
@@ -31,16 +30,13 @@
             android:scrollbars="none" >
         </ExpandableListView>
 
-        <com.buddycloud.customviews.TypefacedTextView
-            android:id="@+id/search_results_not_found"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/message_search_no_result"
-            android:textColor="@color/bc_light_grey_color"
-            android:textSize="@dimen/search_screen_no_results_found_txt_size"
-            android:visibility="gone"
-            buddycloud:typeface="Roboto-Regular.ttf" />
+        <include
+            android:id="@+id/channelListEmpty"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            layout="@layout/list_empty_view"
+            android:visibility="gone" />
+
     </RelativeLayout>
 
 </LinearLayout>

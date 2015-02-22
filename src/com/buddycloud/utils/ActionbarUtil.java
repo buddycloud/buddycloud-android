@@ -10,6 +10,7 @@ import android.view.ViewConfiguration;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.buddycloud.R;
 
 /**
@@ -22,15 +23,22 @@ import com.buddycloud.R;
  */
 public class ActionbarUtil {
 
+	public static void setTitle(final SherlockPreferenceActivity activity, final String title) {
+		if (activity == null || title == null) return;
+		
+		activity.getSupportActionBar().setTitle(title);
+		activity.getSupportActionBar().setDisplayShowTitleEnabled(true);
+	}
+	
 	public static void setTitle(final SherlockActivity activity, final String title) {
-		if (activity == null) return;
+		if (activity == null || title == null) return;
 		
 		activity.getSupportActionBar().setTitle(title);
 		activity.getSupportActionBar().setDisplayShowTitleEnabled(true);
 	}
 	
 	public static void setTitle(final SherlockFragmentActivity activity, final String title) {
-		if (activity == null) return;
+		if (activity == null || title == null) return;
 		
 		activity.getSupportActionBar().setTitle(title);
 		activity.getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -108,6 +116,21 @@ public class ActionbarUtil {
 		makeOverflowMenuShow(activity.getApplicationContext());
 	}
 
+	/**
+	 * Show the actionbar with backstack icon
+	 * 
+	 * @param activity
+	 * @param title
+	 */
+	public static void showActionBarwithBack(final SherlockPreferenceActivity activity, 
+			final String title) {
+		if (activity == null) return;
+		
+		setTitle(activity, title);
+		makeOverflowMenuShow(activity.getApplicationContext());
+		setActionBar(activity.getActionBar(), activity.getSupportActionBar(), R.drawable.ic_ab_up_compat);
+	}
+	
 	/**
 	 * Show the actionbar with backstack icon
 	 * 

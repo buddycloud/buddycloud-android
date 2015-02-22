@@ -89,7 +89,7 @@ public class CommentCard extends AbstractCard {
 
 		TextView replyAuthorView = holder.getView(R.id.bcPostAuthor);
 		if (!TextUtils.isEmpty(replyAuthor)) {
-			replyAuthorView.setText(TextUtils.capitalize(replyAuthor));
+			replyAuthorView.setText(TextUtils.capitalize(replyAuthor.trim()));
 		}
 
 		View contextArrowDown = holder.getView(R.id.bcArrowDown);

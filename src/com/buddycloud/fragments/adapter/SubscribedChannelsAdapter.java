@@ -26,6 +26,10 @@ public class SubscribedChannelsAdapter extends GenericChannelAdapter {
 		setCategoryOrder(PERSONAL, SUBSCRIBED);
 	}
 	
+	public String getTitle(final Context context) {
+		return (context != null) ? context.getResources().getString(R.string.app_name) : null;
+	}
+	
 	public void load(final Context context) {
 		reload(context);
 		loadFromServer(context);

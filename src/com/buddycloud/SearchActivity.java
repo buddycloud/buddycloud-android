@@ -33,8 +33,7 @@ public class SearchActivity extends SherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
 
-		ActionbarUtil.showActionBarwithBack(this,
-				getString(R.string.search_title));
+		ActionbarUtil.showActionBarwithBack(this, getString(R.string.search_title));
 
 		String q = getIntent().getStringExtra(SearchChannelsFragment.FILTER);
 		searchView = (TextView) findViewById(R.id.searchTxt);

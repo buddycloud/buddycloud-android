@@ -85,10 +85,15 @@
 	
 	<string name="message_replies_load_failed">Could not fetch replies of this post</string>
 	<string name="message_followers_load_failed">Could not fetch followers of this channel</string>
+	<string name="message_followers_not_found">Not found any followers of this channel</string>
 	<string name="message_most_active_load_failed">Could not fetch most active channels</string>
+	<string name="message_most_active_not_found">Not found any most active channels</string>
 	<string name="message_recommended_load_failed">Could not fetch recommended channels</string>
+	<string name="message_recommended_not_found">Not found any recommended channels</string>
 	<string name="message_similar_load_failed">Could not fetch similar channels</string>
+	<string name="message_similar_not_found">Not found any similar channels</string>
 	<string name="message_search_failed">Could not contact server to search for channels</string>
+	<string name="message_search_not_found">Not results</string>
 	<string name="message_fetch_subscribed_failed">Could not fetch list of subscribed</string>
 	<string name="message_sync_failed">Could not synchronize unread counters</string>
 	<string name="message_post_details_load_failed">Could not fetch post details</string>
@@ -239,6 +244,7 @@
 	<string name="message_pending_subsriptions_load_failed">Could not fetch pending subscriptions</string>
 	<string name="message_subscription_change_success">Subscriptions were successfully changed</string>
 	<string name="message_subscription_change_failed">Couldn\'t change subscriptions</string>
+	<string name="message_subscription_not_found">Not found any pending subscriptions</string>
 	
 	<string name="title_confirm_delete_channel">Delete channel</string>
 	<string name="message_confirm_delete_channel">Do you really want to delete this channel?</string>

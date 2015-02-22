@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -153,7 +154,18 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 	}
 	
 	private View getEmptyListView(View view) {
-		return (view != null) ? view.findViewById(android.R.id.empty) : null;
+		
+		View emptyView = null;
+		if (view != null) {
+			emptyView = view.findViewById(android.R.id.empty);
+			TextView tv = (TextView)emptyView.findViewById(R.id.results_not_found);
+			if (tv != null) {
+				tv.setText(getString(R.string.message_no_topics_found));
+				tv.setTextColor(getActivity().getResources().getColor(R.color.bc_dark_grey_color));
+			}
+		}
+		
+		return emptyView;
 	}
 	
 	/**

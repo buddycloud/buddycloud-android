@@ -8,6 +8,7 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.ActionMode;
@@ -15,6 +16,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.R;
+import com.buddycloud.fragments.GenericSelectableChannelsFragment;
 import com.buddycloud.model.FollowersModel;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.SubscribedChannelsModel;
@@ -38,25 +40,40 @@ public class FollowersAdapter extends SelectableChannelAdapter {
 		setCategoryOrder(OWNER, MODERATOR, FOLLOW_POST, FOLLOW, BANNED);
 	}
 	
+	public String getTitle(final Context context) {
+		return (context != null) ? context.getResources().getString(R.string.menu_follow) : null;
+	}
+	
+	@Override
+	public void configure(GenericSelectableChannelsFragment fragment, View view) {
+		super.configure(fragment, view);
+	}
+		
 	public void load(final Context context) {
 		showProgress();
 		FollowersModel.getInstance().getFromServer(context, new ModelCallback<JSONObject>() {
-			@SuppressWarnings("unchecked")
 			@Override
 			public void success(JSONObject response) {
 				hideProgress();
-				Iterator<String> keys = response.keys();
-				while (keys.hasNext()) {
-					String channelJid = keys.next();
-					addChannel(getCategory(response.optString(channelJid)), 
-							createChannelItem(channelJid), context);
-					notifyDataSetChanged();
+				if (response.length() > 0) {
+					for (int i = 0; i < response.length(); i++) {
+						Iterator<String> keys = response.keys();
+						while (keys.hasNext()) {
+							String channelJid = keys.next();
+							addChannel(getCategory(response.optString(channelJid)), 
+									createChannelItem(channelJid), context);
+							notifyDataSetChanged();
+						}
+					}
+				} else {
+					showNoResultsFoundView(context.getString(R.string.message_followers_not_found));
 				}
 			}
 			
 			@Override
 			public void error(Throwable throwable) {
 				hideProgress();
+				showNoResultsFoundView(context.getString(R.string.message_followers_not_found));
 				Toast.makeText(context, context.getString(
 						R.string.message_followers_load_failed), 
 						Toast.LENGTH_LONG).show();

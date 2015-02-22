@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.fragments.GenericSelectableChannelsFragment;
 import com.buddycloud.fragments.adapter.FindFriendsAdapter;
@@ -15,6 +16,7 @@ import com.buddycloud.fragments.adapter.PendingSubscriptionsAdapter;
 import com.buddycloud.fragments.adapter.RecommendedChannelsAdapter;
 import com.buddycloud.fragments.adapter.SimilarChannelsAdapter;
 import com.buddycloud.model.SubscribedChannelsModel;
+import com.buddycloud.utils.ActionbarUtil;
 import com.facebook.Session;
 
 public class GenericChannelActivity extends SherlockFragmentActivity {
@@ -26,15 +28,32 @@ public class GenericChannelActivity extends SherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_generic_channels);
-        
+       
+		String adapterName = getIntent().getStringExtra(ADAPTER_NAME);
+		GenericChannelAdapter adapter = createAdapter(adapterName);
+		if (adapter != null) {
+			ActionbarUtil.showActionBarwithBack(this, adapter.getTitle(getApplicationContext()));
+		}
+		
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		final GenericSelectableChannelsFragment frag = new GenericSelectableChannelsFragment();
-		String adapterName = getIntent().getStringExtra(ADAPTER_NAME);
-		frag.setAdapter(createAdapter(adapterName));
+		frag.setAdapter(adapter);
 		transaction.replace(R.id.contentFrame, frag);
 		transaction.commitAllowingStateLoss();
     }
     
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	
+	    switch (item.getItemId()) {
+        	case android.R.id.home:
+        		finish();
+        		return true;
+        	default:
+        		return super.onOptionsItemSelected(item);
+        }
+	}
+	
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	super.onActivityResult(requestCode, resultCode, data);

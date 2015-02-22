@@ -1,5 +1,5 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory 
+    <com.buddycloud.customviews.CustomPrefCategory 
         android:title="@string/pref_notifications_category_title"
         android:key="pref_key_notifications_settings">
         <CheckBoxPreference
@@ -27,9 +27,9 @@
             android:summary="@string/pref_enable_post_anychannel_notification_summary"
             android:title="@string/pref_enable_post_anychannel_notification_title"
             android:defaultValue="true"/>
-    </PreferenceCategory>
+    </com.buddycloud.customviews.CustomPrefCategory >
     
-    <PreferenceCategory 
+    <com.buddycloud.customviews.CustomPrefCategory  
         android:title="@string/pref_security_category_title"
         android:key="pref_key_security_settings">
         <CheckBoxPreference
@@ -37,9 +37,9 @@
             android:summary="@string/pref_disable_ssl_check_summary"
             android:title="@string/pref_disable_ssl_check_title"
             android:defaultValue="false"/>
-    </PreferenceCategory>
+    </com.buddycloud.customviews.CustomPrefCategory >
     
-    <PreferenceCategory 
+    <com.buddycloud.customviews.CustomPrefCategory  
         android:title="@string/pref_vibration_sound_category_title"
         android:key="pref_key_vibration_sound_settings">
         <CheckBoxPreference
@@ -52,9 +52,9 @@
             android:summary="@string/pref_enable_sound_summary"
             android:title="@string/pref_enable_sound_title"
             android:defaultValue="true"/>
-    </PreferenceCategory>
+    </com.buddycloud.customviews.CustomPrefCategory >
 
-    <PreferenceCategory 
+    <com.buddycloud.customviews.CustomPrefCategory  
         android:title="@string/pref_account_category_title"
         android:key="pref_key_account">
         <Preference
@@ -63,9 +63,9 @@
         <Preference
             android:key="pref_key_mark_all_as_read"
             android:title="@string/pref_mark_all_as_read"/>
-    </PreferenceCategory>
+    </com.buddycloud.customviews.CustomPrefCategory>
     
-    <PreferenceCategory 
+    <com.buddycloud.customviews.CustomPrefCategory  
         android:title="@string/pref_about_category_title"
         android:key="pref_key_about_settings">
         <Preference
@@ -79,13 +79,13 @@
             android:key="pref_key_rate_buddycloud"
             android:summary="@string/pref_rate_buddycloud_summary"
             android:title="@string/pref_rate_buddycloud_title"/>
-    </PreferenceCategory>
+    </com.buddycloud.customviews.CustomPrefCategory >
     
-    <PreferenceCategory 
+    <com.buddycloud.customviews.CustomPrefCategory  
         android:title="@string/pref_danger_zone_category_title"
         android:key="pref_key_danger_zone">
         <Preference
             android:key="pref_key_delete_account"
             android:title="@string/pref_delete_account_title"/>
-    </PreferenceCategory>
+    </com.buddycloud.customviews.CustomPrefCategory >
 </PreferenceScreen>

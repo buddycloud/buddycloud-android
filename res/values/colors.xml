@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
+    <color name="bc_actionbar_app_primary_theme">#2DAEBF</color>
+    <color name="bc_actionbar_gradient_start">#50000000</color>
+    <color name="bc_actionbar_gradient_light_start">#2DAEBF</color>
+    <color name="bc_app_primary_theme">#2DAEBF</color>
+    <color name="bc_apptheme_primary_dark">#1f7985</color>
+    <color name="bc_apptheme_primary">#2DAEBF</color>
+    
     <color name="bc_bg_color">#eff1f5</color>
     <color name="bc_green_blue_color">#2DAEBF</color>
     <color name="bc_dark_grey_color">#38434C</color>
     <color name="bc_grey_color">#C4C8CD</color>
+    <color name="bc_grey_shade_color">#9ca0a4</color>
 	<color name="bc_light_grey_color">#E5E9EF</color>
 
     <color name="bc_postDate_color">#9DA3A6</color>
@@ -11,6 +19,7 @@
     <color name="bc_reply_box_bg_color">#F0F3F1</color>
     <color name="bc_notif_color">#B5BBC0</color>
     <color name="bc_channel_list_selector_color">#4b555d</color>
+    <color name="bc_settings_pref_list_selector_color">#2DAEBF</color>
   
     
     
@@ -20,12 +29,7 @@
     <color name="greyColor">#8e927e</color>
     <color name="yellowColor">#dbc44c</color>
          
-    <color name="bc_actionbar_app_primary_theme">#2DAEBF</color>
-    <color name="bc_actionbar_gradient_start">#50000000</color>
-    <color name="bc_actionbar_gradient_light_start">#2DAEBF</color>
-    <color name="bc_app_primary_theme">#2DAEBF</color>
-    <color name="bc_apptheme_primary_dark">#1f7985</color>
-    <color name="bc_apptheme_primary">#2DAEBF</color>
+
         
     <color name="bc_dark_green">#114149</color>
     <color name="stroke">#dddddd</color>

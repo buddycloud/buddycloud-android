@@ -42,7 +42,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:layout_marginTop="5dp"
                 android:layout_weight="4"
                 android:orientation="vertical" >
 
@@ -72,7 +71,6 @@
                 android:id="@+id/bcTopRightView"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:layout_marginTop="5dp"
                 android:gravity="top|right"
                 android:orientation="horizontal" >
 
@@ -107,10 +105,14 @@
         <com.buddycloud.customviews.MeasuredMediaView
             android:id="@+id/bcImageContent"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:layout_below="@id/commentTitleWrapper"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
             android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/personal_bg"
             android:visibility="gone" />
 
         <!-- Description -->

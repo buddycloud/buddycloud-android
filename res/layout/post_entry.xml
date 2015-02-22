@@ -103,9 +103,11 @@
             <com.buddycloud.customviews.MeasuredMediaView
                 android:id="@+id/bcImageContent"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/postTitleWrapper"
-                android:layout_margin="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:scaleType="fitXY"
                 android:adjustViewBounds="true"
                 android:visibility="gone" />
 

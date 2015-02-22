@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.ActionMode;
@@ -17,6 +19,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.R;
+import com.buddycloud.fragments.GenericSelectableChannelsFragment;
 import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PendingSubscriptionsModel;
 import com.buddycloud.model.SubscribedChannelsModel;
@@ -35,22 +38,36 @@ public class PendingSubscriptionsAdapter extends SelectableChannelAdapter {
 		setCategoryOrder(PENDING);
 	}
 	
+	public String getTitle(final Context context) {
+		return (context != null) ? context.getString(R.string.menu_pending_subscriptions) : null;
+	}
+	
+	@Override
+	public void configure(GenericSelectableChannelsFragment fragment, View view) {
+		super.configure(fragment, view);
+	}
+	
 	public void load(final Context context) {
 		showProgress();
 		PendingSubscriptionsModel.getInstance().getFromServer(context, new ModelCallback<JSONArray>() {
 			@Override
 			public void success(JSONArray response) {
 				hideProgress();
-				for (int i = 0; i < response.length(); i++) {
-					String channelJid = response.optString(i);
-					addChannel(PENDING, createChannelItem(channelJid), context);
-					notifyDataSetChanged();
+				if (response.length() > 0) {
+					for (int i = 0; i < response.length(); i++) {
+						String channelJid = response.optString(i);
+						addChannel(PENDING, createChannelItem(channelJid), context);
+						notifyDataSetChanged();
+					}
+				} else {
+					showNoResultsFoundView(context.getString(R.string.message_subscription_not_found));
 				}
 			}
 			
 			@Override
 			public void error(Throwable throwable) {
 				hideProgress();
+				showNoResultsFoundView(context.getString(R.string.menu_pending_subscriptions));
 				Toast.makeText(context, context.getString(
 						R.string.message_pending_subsriptions_load_failed), 
 						Toast.LENGTH_LONG).show();
@@ -58,8 +75,7 @@ public class PendingSubscriptionsAdapter extends SelectableChannelAdapter {
 
 		}, channelJid);
 	}
-	
-	
+
 	private void changeSubscriptions(final Context context, String newSubscription) {
 		Collection<JSONObject> channelItems = getSelection();
 		List<JSONObject> subscriptions = new LinkedList<JSONObject>();
