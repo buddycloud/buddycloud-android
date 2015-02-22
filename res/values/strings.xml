@@ -62,6 +62,7 @@
 	<string name="message_avatar_uploading">Uploading avatar</string>
 	<string name="message_avatar_uploaded">Upload successful</string>
 	
+	<string name="message_metadata_saving">Channel metadata updating&#8230;</string>
 	<string name="message_metadata_updated">Channel metadata updated</string>
 	<string name="message_metadata_update_failed">Could not update channel metadata</string>
 
@@ -115,8 +116,8 @@
 	<string name="channel_details_title_hint">title</string>
 	<string name="channel_details_description">Description</string>
 	<string name="channel_details_description_hint">description</string>
-	<string name="channel_details_access_model">Access model</string>
-	<string name="channel_details_access_model_hint">access model</string>
+	<string name="channel_details_access_model">Channel Privacy</string>
+	<string name="channel_details_access_model_hint">channel privacy</string>
 	<string name="channel_details_creation_date">Creation date</string>
 	<string name="channel_details_creation_date_hint">creation date</string>
 	<string name="channel_details_channel_type">Channel type</string>
@@ -124,7 +125,11 @@
 	<string name="channel_details_default_affiliation">Default affiliation</string>
 	<string name="channel_details_default_affiliation_hint">default affiliation</string>
 	<string name="channel_details_save">Save settings</string>
-	
+	<string name="channel_details_role_member">member (only view channel)</string>
+	<string name="channel_details_role_publisher">publisher (follower+post)</string>
+	<string name="channel_details_access_model_member">member only</string>
+	<string name="channel_details_access_model_open">open</string>
+		
 	<string name="create_account_title">Sign up</string>
 	<string name="create_account_channel_name">Username</string>
 	<string name="create_account_channel_name_hint">pick a username</string>

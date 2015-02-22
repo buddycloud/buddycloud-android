@@ -49,7 +49,10 @@
     <dimen name="post_item_comment_box_txt_size">16sp</dimen>
     <dimen name="post_item_replies_avatar_size">42dp</dimen>
     
-    
+    <dimen name="channel_detail_item_avatar_size">80dp</dimen>
+	<dimen name="channel_detail_item_label_size">18sp</dimen>
+	<dimen name="channel_detail_item_edit_size">18sp</dimen>
+	<dimen name="channel_detail_item_btn_size">18sp</dimen>
     
     <dimen name="about_buddycloud_padding">40dp</dimen>
     <dimen name="about_buddycloud_logo_wh">70dp</dimen>
@@ -59,9 +62,8 @@
     <dimen name="about_buddycloud_contributors_title_size">22sp</dimen>
     <dimen name="about_buddycloud_contributors_size">18sp</dimen>
 
-     <dimen name="channel_item_avatar_size">60dp</dimen>
-     
-    
+    <dimen name="channel_item_avatar_size">60dp</dimen>
+
     <dimen name="notif_size">25dp</dimen>
     
     <dimen name="search_screen_no_results_found_txt_size">20sp</dimen>

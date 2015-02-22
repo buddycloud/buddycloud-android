@@ -11,4 +11,9 @@
     <dimen name="list_empty_view_margin_size">120dp</dimen>
     <dimen name="list_empty_label_txt_size">34sp</dimen>
 
+    <dimen name="channel_detail_item_avatar_size">180dp</dimen>
+	<dimen name="channel_detail_item_label_size">28sp</dimen>
+	<dimen name="channel_detail_item_edit_size">28sp</dimen>
+	<dimen name="channel_detail_item_btn_size">32sp</dimen>
+	
 </resources>
