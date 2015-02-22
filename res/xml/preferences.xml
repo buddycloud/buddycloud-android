@@ -82,8 +82,8 @@
     </com.buddycloud.customviews.CustomPrefCategory >
     
     <com.buddycloud.customviews.CustomPrefCategory  
-        android:title="@string/pref_danger_zone_category_title"
-        android:key="pref_key_danger_zone">
+        android:title="@string/pref_delete_acct_category_title"
+        android:key="pref_key_delete_acct">
         <Preference
             android:key="pref_key_delete_account"
             android:title="@string/pref_delete_account_title"/>
