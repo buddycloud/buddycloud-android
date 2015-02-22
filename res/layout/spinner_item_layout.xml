@@ -4,6 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content"
-    android:textSize="18sp"
+    android:textSize="@dimen/channel_detail_item_edit_size"
     android:paddingLeft="8dip"
-    android:textColor="#FFFFFF"/>
+    android:textColor="@color/bc_dark_grey_color"/>

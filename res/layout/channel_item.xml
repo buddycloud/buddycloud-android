@@ -25,8 +25,6 @@
             android:scaleType="fitXY"
             android:src="@drawable/personal_50px"
             app:border="false"
-            app:border_color="#EEEEEE"
-            app:border_width="1dp"
             app:shadow="false" />
 
         <com.buddycloud.customviews.TypefacedTextView
@@ -36,7 +34,6 @@
             android:layout_gravity="right|bottom"
             android:background="@drawable/notif_circle_view_shape"
             android:gravity="center"
-            android:text="20+"
             android:textColor="@color/bc_dark_grey_color"
             android:textSize="12sp"
             app:typeface="Roboto-BoldCondensed.ttf" />
@@ -62,7 +59,6 @@
             android:id="@+id/bcMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Really good article written by Xcede&apos;s Viki Dowthwaite - we&apos;ll be posting the Data Science specific second half to this Fashion related section next week!"
             android:textColor="#aeaeae"
             android:textSize="14sp"
             buddycloud:typeface="Roboto-Light.ttf" />

@@ -1,187 +1,251 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+    xmlns:app="http://schemas.android.com/apk/res/com.buddycloud"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ScrollView01"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#555555" >
-    
-<RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="8dp" >
-    
-    <ImageView
-        android:id="@+id/avatarView"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="8dp"
-        android:layout_marginTop="15dp"
-        android:adjustViewBounds="true"
-        android:background="@drawable/share_preview_border"
-        android:scaleType="centerCrop" />
+    android:layout_height="match_parent"
+    android:background="@color/bc_bg_color"
+    android:scrollbars="none" >
 
-    <TextView
-        android:id="@+id/textViewTitle"
-        android:layout_width="wrap_content"
+    <TableLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/avatarView"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:text="@string/channel_details_title"
-        android:textColor="@color/stroke" />
-    
-    <EditText
-        android:id="@+id/titleTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textViewTitle"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/textViewTitle"
-        android:layout_marginRight="8dp"
-        android:ems="10"
-        android:hint="@string/channel_details_title_hint"
-        android:inputType="textNoSuggestions"
-        android:textColor="#FFFFFF" />
+        android:layout_margin="10dp"
+        android:stretchColumns="1,2" >
 
-    <TextView
-        android:id="@+id/textViewDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/titleTxt"
-        android:layout_below="@+id/titleTxt"
-        android:text="@string/channel_details_description"
-        android:textColor="@color/stroke" />
-    
-    <EditText
-        android:id="@+id/descriptionTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textViewDescription"
-        android:layout_alignRight="@+id/titleTxt"
-        android:layout_below="@+id/textViewDescription"
-        android:ems="10"
-        android:hint="@string/channel_details_description_hint"
-        android:inputType="textNoSuggestions"
-        android:textColor="#FFFFFF" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/descriptionTxt"
-        android:layout_below="@+id/descriptionTxt"
-        android:text="@string/channel_details_access_model"
-        android:textColor="@color/stroke" />
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/channel_detail_item_avatar_size"
+                android:layout_weight="10">
 
-    <Spinner
-        android:id="@+id/accessModelTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_alignRight="@+id/descriptionTxt"
-        android:layout_below="@+id/textView1"
-        android:ems="10"
-        android:hint="@string/channel_details_access_model_hint"
-        android:textColor="#FFFFFF" />
+                <com.buddycloud.customviews.CircularImageView
+                    android:id="@+id/bcProfilePic"
+                    android:layout_width="@dimen/channel_detail_item_avatar_size"
+                    android:layout_height="@dimen/channel_detail_item_avatar_size"
+                    android:layout_gravity="center"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/avatar_icon"
+                    app:border="false"
+                    app:border_color="#EEEEEE"
+                    app:border_width="1dp"
+                    app:shadow="false" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/accessModelTxt"
-        android:layout_below="@+id/accessModelTxt"
-        android:text="@string/channel_details_creation_date"
-        android:textColor="@color/stroke" />
+                <com.buddycloud.customviews.TypefacedEditText
+                    android:id="@+id/titleTxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:ems="10"
+                    android:layout_toRightOf="@id/bcProfilePic"
+                    android:gravity="top|left"
+                    android:layout_marginLeft="5dp"
+                    android:hint="@string/channel_details_title_hint"
+                    android:imeOptions="actionNext"
+                    android:inputType="textNoSuggestions"
+                    android:padding="3dp"
+                    android:textColor="@color/bc_dark_grey_color"
+                    android:textSize="@dimen/channel_detail_item_edit_size"
+                    buddycloud:typeface="Roboto-Regular.ttf" >
+                </com.buddycloud.customviews.TypefacedEditText>
 
-    <EditText
-        android:id="@+id/creationDateTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_alignRight="@+id/accessModelTxt"
-        android:layout_below="@+id/textView2"
-        android:layout_centerVertical="true"
-        android:ems="10"
-        android:hint="@string/channel_details_creation_date_hint"
-        android:textColor="#FFFFFF"
-        android:inputType="textNoSuggestions" />
+            </RelativeLayout>
+        </TableRow>
 
-    <TextView
-        android:id="@+id/TextView01"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/creationDateTxt"
-        android:layout_below="@+id/creationDateTxt"
-        android:text="@string/channel_details_channel_type"
-        android:textColor="@color/stroke" />
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
-    <EditText
-        android:id="@+id/channelTypeTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/TextView01"
-        android:layout_alignRight="@+id/creationDateTxt"
-        android:layout_below="@+id/TextView01"
-        android:ems="10"
-        android:hint="@string/channel_details_channel_type_hint"
-        android:textColor="#FFFFFF"
-        android:inputType="textNoSuggestions" />
-
-    <TextView
-        android:id="@+id/TextView02"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/channelTypeTxt"
-        android:layout_below="@+id/channelTypeTxt"
-        android:text="@string/channel_details_default_affiliation"
-        android:textColor="@color/stroke" />
-
-    <Spinner
-        android:id="@+id/defaultAffiliationTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/TextView02"
-        android:layout_alignRight="@+id/channelTypeTxt"
-        android:layout_below="@+id/TextView02"
-        android:ems="10"
-        android:hint="@string/channel_details_default_affiliation_hint"
-        android:textColor="#FFFFFF" />
-
-    <ProgressBar
-        android:layout_below="@+id/defaultAffiliationTxt"
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone" />
-    
-    <FrameLayout
-        android:id="@+id/postMetadataBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/defaultAffiliationTxt"
-        android:layout_centerHorizontal="true"
-        android:background="@color/bc_green"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:padding="@dimen/login_button_padding" >
-
-        <com.buddycloud.customviews.TypefacedTextView
-                xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:orientation="vertical" >
+
+                <com.buddycloud.customviews.TypefacedTextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/channel_details_description"
+                    android:textColor="@color/bc_green_blue_color"
+                    android:textSize="@dimen/channel_detail_item_label_size"
+                    buddycloud:typeface="Roboto-Bold.ttf" />
+
+                <com.buddycloud.customviews.TypefacedEditText
+                    android:id="@+id/descriptionTxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:ems="10"
+                    android:minLines="3"
+                    android:gravity="top|left"
+                    android:hint="@string/channel_details_description_hint"
+                    android:imeOptions="actionNext"
+                    android:inputType="textNoSuggestions|textMultiLine"
+                    android:padding="5dp"
+                    android:scrollbars="vertical"
+                    android:textColor="@color/bc_dark_grey_color"
+                    android:textSize="@dimen/channel_detail_item_edit_size"
+                    buddycloud:typeface="Roboto-Regular.ttf" >
+                </com.buddycloud.customviews.TypefacedEditText>
+            </LinearLayout>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:orientation="vertical" >
+
+                <com.buddycloud.customviews.TypefacedTextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/channel_details_access_model"
+                    android:textColor="@color/bc_green_blue_color"
+                    android:textSize="@dimen/channel_detail_item_label_size"
+                    buddycloud:typeface="Roboto-Bold.ttf"  />
+
+                <Spinner
+                    android:id="@+id/accessModelTxt"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:ems="10"
+                    android:hint="@string/channel_details_access_model_hint"
+                    android:textColor="@color/bc_dark_grey_color"
+                    android:textSize="@dimen/channel_detail_item_edit_size" />
+            </LinearLayout>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:orientation="vertical" >
+
+                <com.buddycloud.customviews.TypefacedTextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/channel_details_creation_date"
+                    android:textColor="@color/bc_green_blue_color"
+                    android:textSize="@dimen/channel_detail_item_label_size"
+                    buddycloud:typeface="Roboto-Bold.ttf"  />
+
+                <com.buddycloud.customviews.TypefacedTextView
+                    android:id="@+id/creationDateTxt"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/channel_details_creation_date_hint"
+                    android:textColor="@color/bc_dark_grey_color"
+                    android:textSize="@dimen/channel_detail_item_label_size"
+                    buddycloud:typeface="Roboto-Regular.ttf" />
+            </LinearLayout>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:orientation="vertical" >
+
+                <com.buddycloud.customviews.TypefacedTextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/channel_details_channel_type"
+                    android:textColor="@color/bc_green_blue_color"
+                    android:textSize="@dimen/channel_detail_item_label_size"
+                    buddycloud:typeface="Roboto-Bold.ttf"  />
+
+                <com.buddycloud.customviews.TypefacedTextView
+                    android:id="@+id/channelTypeTxt"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/channel_details_channel_type_hint"
+                    android:textColor="@color/bc_dark_grey_color"
+                    android:textSize="@dimen/channel_detail_item_label_size"
+                    buddycloud:typeface="Roboto-Regular.ttf" />
+            </LinearLayout>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:orientation="vertical" >
+
+                <com.buddycloud.customviews.TypefacedTextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/channel_details_default_affiliation"
+                    android:textColor="@color/bc_green_blue_color"
+                    android:textSize="@dimen/channel_detail_item_label_size"
+                    buddycloud:typeface="Roboto-Bold.ttf"  />
+
+                <Spinner
+                    android:id="@+id/defaultAffiliationTxt"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:ems="10"
+                    android:hint="@string/channel_details_default_affiliation_hint"
+                    android:textColor="@color/bc_dark_grey_color"
+                    android:textSize="@dimen/channel_detail_item_edit_size" />
+            </LinearLayout>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" 
+            android:layout_marginBottom="15dp" >
+
+            <com.buddycloud.customviews.TypefacedButton
+                android:id="@+id/saveSettingsBtn"
+                style="@style/btnStyleGreen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_span="2"
                 android:text="@string/channel_details_save"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                buddycloud:typeface="Roboto-Light.ttf" />
-
-    </FrameLayout>
-
-</RelativeLayout>
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/channel_detail_item_btn_size"
+                buddycloud:typeface="Roboto-Regular.ttf" />
+        </TableRow>
+    </TableLayout>
 
 </ScrollView>
