@@ -278,7 +278,7 @@ public class BuddycloudHTTPHelper {
 				Preferences.MY_CHANNEL_JID);
 		String passPref = Preferences.getPreference(parent,
 				Preferences.PASSWORD);
-		String auth = loginPref.split("@")[0] + ":" + passPref;
+		String auth = loginPref + ":" + passPref;
 		String authToken = Base64.encodeToString(auth.getBytes(),
 				Base64.NO_WRAP);
 		method.setHeader("Authorization", "Basic " + authToken);
@@ -287,7 +287,7 @@ public class BuddycloudHTTPHelper {
 	public static String getAuthHeader(Context parent, String password) {
 		String loginPref = Preferences.getPreference(parent,
 				Preferences.MY_CHANNEL_JID);
-		String auth = loginPref.split("@")[0] + ":" + password;
+		String auth = loginPref + ":" + password;
 		String authToken = Base64.encodeToString(auth.getBytes(),
 				Base64.NO_WRAP);
 		return "Basic " + authToken;

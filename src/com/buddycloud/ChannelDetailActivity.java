@@ -316,10 +316,13 @@ public class ChannelDetailActivity extends SherlockActivity {
 
 		TextView creationDateTxt = (TextView) findViewById(R.id.creationDateTxt);
 		try {
-			long creationDateTime = TimeUtils.fromISOToDate(metadata.optString("creationDate")).getTime();
-			creationDateTxt.setText(
-					DateUtils.getRelativeTimeSpanString(creationDateTime, 
-							new Date().getTime(), DateUtils.MINUTE_IN_MILLIS));
+			if (metadata != null && !TextUtils.isEmpty(metadata.optString("creationDate"))) {
+				long creationDateTime = TimeUtils.fromISOToDate(metadata.optString("creationDate")).getTime();
+				creationDateTxt.setText(
+						DateUtils.getRelativeTimeSpanString(creationDateTime, 
+								new Date().getTime(), DateUtils.MINUTE_IN_MILLIS));
+			}
+	
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

@@ -117,21 +117,19 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 		final String channelJid = getMyChannelJid(getActivity());
 		JSONObject allCounters = SyncModel.getInstance().getFromCache(getActivity(), channelJid);
 		JSONObject counters = allCounters.optJSONObject(channelJid);
-		
-		if (counters != null) {
-			Integer mentionsCount = counters.has("mentionsCount") ? counters.optInt("mentionsCount") : 0;
-			Integer replyCount = counters.has("replyCount") ? counters.optInt("replyCount") : 0;
-			Integer visitCount = counters.has("visitCount") ? counters.optInt("visitCount") : 0;
 
-			final String counts = String.format(getString(R.string.channel_list_counts_formatted_txt), mentionsCount, replyCount, visitCount);
-			SpannableString boldSpan = new SpannableString(counts);
-			boldSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, counts.indexOf("Mentions") - 1, 0);
-			boldSpan.setSpan(new StyleSpan(Typeface.BOLD), counts.indexOf("|") + 1, counts.indexOf("Replies") - 1, 0);
-			boldSpan.setSpan(new StyleSpan(Typeface.BOLD), counts.lastIndexOf("|") + 1, counts.indexOf("Views") - 1, 0);
-			
-			final TextView notifCount = (TextView)channelListView.findViewById(R.id.bcUserNotifCounts);
-			notifCount.setText(boldSpan);
-		}
+		Integer mentionsCount = (counters != null && counters.has("mentionsCount")) ? counters.optInt("mentionsCount") : 0;
+		Integer replyCount = (counters != null && counters.has("replyCount")) ? counters.optInt("replyCount") : 0;
+		Integer visitCount = (counters != null && counters.has("visitCount")) ? counters.optInt("visitCount") : 0;
+
+		final String counts = String.format(getString(R.string.channel_list_counts_formatted_txt), mentionsCount, replyCount, visitCount);
+		SpannableString boldSpan = new SpannableString(counts);
+		boldSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, counts.indexOf("Mentions") - 1, 0);
+		boldSpan.setSpan(new StyleSpan(Typeface.BOLD), counts.indexOf("|") + 1, counts.indexOf("Replies") - 1, 0);
+		boldSpan.setSpan(new StyleSpan(Typeface.BOLD), counts.lastIndexOf("|") + 1, counts.indexOf("Views") - 1, 0);
+		
+		final TextView notifCount = (TextView)channelListView.findViewById(R.id.bcUserNotifCounts);
+		notifCount.setText(boldSpan);
 	}
 	
 	private String getMyChannelJid(final Context context) {
