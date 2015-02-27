@@ -10,6 +10,7 @@ public class Preferences {
 
 	public static final String PREFS_NAME = "BuddycloudPrefsFile";
 	
+	public static final String BUDDYCLOUD_SCHEME = "buddycloud";
 	public static final String MY_CHANNEL_JID = "com.buddycloud.MYCHANNELJID";
 	public static final String API_ADDRESS = "com.buddycloud.APIADDRESS";
 	public static final String PASSWORD = "com.buddycloud.PASSWORD";

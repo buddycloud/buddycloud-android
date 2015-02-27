@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
 
@@ -157,19 +158,13 @@ public class MainActivity extends SlidingFragmentActivity {
 		}
 	}
 
-	private void startActivity() {
-		this.myJid = (String) Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
-		
-		registerInGCM();
-		addMenuFragment();
-		customizeMenu();
-	}
-
 	@Override
 	public void onAttachedToWindow() {
 		Uri data = getIntent().getData();
+		String scheme = getIntent().getScheme();
 		String channelJid = null;
-		if (data != null) {
+		
+		if (data != null && scheme != null && scheme.equals(Preferences.BUDDYCLOUD_SCHEME)) {
 			channelJid = data.getSchemeSpecificPart();
 		}
 		if (channelJid == null) {
@@ -189,6 +184,15 @@ public class MainActivity extends SlidingFragmentActivity {
 			process(gcmEvent);
 		}
 		super.onAttachedToWindow();
+	}
+	
+
+	private void startActivity() {
+		this.myJid = (String) Preferences.getPreference(this, Preferences.MY_CHANNEL_JID);
+		
+		registerInGCM();
+		addMenuFragment();
+		customizeMenu();
 	}
 	
 	private void process(GCMEvent event) {
