@@ -41,7 +41,7 @@ public class FollowersAdapter extends SelectableChannelAdapter {
 	}
 	
 	public String getTitle(final Context context) {
-		return (context != null) ? context.getResources().getString(R.string.menu_follow) : null;
+		return (context != null) ? context.getResources().getString(R.string.menu_channel_followers) : null;
 	}
 	
 	@Override
