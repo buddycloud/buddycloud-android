@@ -166,40 +166,46 @@ public class ChannelDetailActivity extends SherlockActivity {
 		}
 
 		final Button saveMetadataBtn = (Button) findViewById(R.id.saveSettingsBtn);
-		saveMetadataBtn.setOnClickListener(new OnClickListener() {
+		if (editable) {
+			saveMetadataBtn.setEnabled(true);
+			saveMetadataBtn.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				mProgressDialog.show();
-				
-				JSONObject newMetadata = createMetadataJSON();
-				ChannelMetadataModel.getInstance().save(
-						getApplicationContext(), newMetadata,
-						new ModelCallback<JSONObject>() {
-							@Override
-							public void success(JSONObject response) {
-								mProgressDialog.dismiss();
-								Toast.makeText(
-										getApplicationContext(),
-										getString(R.string.message_metadata_updated),
-										Toast.LENGTH_SHORT).show();
-								finish();
-							}
+				@Override
+				public void onClick(View v) {
+					mProgressDialog.show();
+					
+					JSONObject newMetadata = createMetadataJSON();
+					ChannelMetadataModel.getInstance().save(
+							getApplicationContext(), newMetadata,
+							new ModelCallback<JSONObject>() {
+								@Override
+								public void success(JSONObject response) {
+									mProgressDialog.dismiss();
+									Toast.makeText(
+											getApplicationContext(),
+											getString(R.string.message_metadata_updated),
+											Toast.LENGTH_SHORT).show();
+									finish();
+								}
 
-							@Override
-							public void error(Throwable throwable) {
-								mProgressDialog.dismiss();
-								Toast.makeText(
-										getApplicationContext(),
-										getString(R.string.message_metadata_update_failed)
-												+ throwable.getMessage(),
-										Toast.LENGTH_SHORT).show();
-							}
+								@Override
+								public void error(Throwable throwable) {
+									mProgressDialog.dismiss();
+									Toast.makeText(
+											getApplicationContext(),
+											getString(R.string.message_metadata_update_failed)
+													+ throwable.getMessage(),
+											Toast.LENGTH_SHORT).show();
+								}
 
-						}, channelJid);
-			}
+							}, channelJid);
+				}
 
-		});
+			});
+		}
+		else {
+			saveMetadataBtn.setEnabled(false);
+		}
 	}
 
 	@Override

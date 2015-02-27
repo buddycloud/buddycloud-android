@@ -27,7 +27,6 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.log.Logger;
 import com.buddycloud.utils.ActionbarUtil;
-import com.buddycloud.utils.InputUtils;
 import com.buddycloud.utils.VersionUtils;
 
 public class AboutBuddycloudActivity extends SherlockActivity {

@@ -4,7 +4,6 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -13,26 +12,25 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
-import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.buddycloud.ChannelDetailActivity;
 import com.buddycloud.CreateAccountActivity;
 import com.buddycloud.GenericChannelActivity;
 import com.buddycloud.MainActivity;
 import com.buddycloud.R;
 import com.buddycloud.SearchActivity;
 import com.buddycloud.SettingsActivity;
-import com.buddycloud.customviews.TypefacedEditText;
-import com.buddycloud.customviews.TypefacedTextView;
 import com.buddycloud.fragments.adapter.FindFriendsAdapter;
 import com.buddycloud.fragments.adapter.MostActiveChannelsAdapter;
 import com.buddycloud.fragments.adapter.RecommendedChannelsAdapter;
@@ -44,10 +42,11 @@ import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.model.SyncModel;
 import com.buddycloud.model.TopicChannelModel;
 import com.buddycloud.preferences.Preferences;
+import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ChannelAdapterHelper;
 import com.buddycloud.utils.TextUtils;
-import com.buddycloud.utils.TypefacesUtil;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class SubscribedChannelsFragment extends ContentFragment implements ModelListener {
 
@@ -93,11 +92,12 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 			Bundle savedInstanceState) {
 		adapter.load(getActivity());
 		
-		final String channelJid = getMyChannelJid(container.getContext());
+		final String channelJid = getMyChannelJid();
 		
+		final View personalHeaderView = ChannelAdapterHelper.createChannelPersonalHeader(container.getContext(), null, container, channelJid);
 		final View view = genericChannelFrag.onCreateView(inflater, container, savedInstanceState);
 		channelListView = (ExpandableListView) view.findViewById(R.id.channelListView);
-		channelListView.addHeaderView(ChannelAdapterHelper.createChannelPersonalHeader(container.getContext(), null, container, channelJid));
+		channelListView.addHeaderView(personalHeaderView);
 		
 		// update personal channel counters
 		updateChannelPersonalHeader();
@@ -114,7 +114,7 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 		if (channelListView == null)
 			return ;
 		
-		final String channelJid = getMyChannelJid(getActivity());
+		final String channelJid = getMyChannelJid();
 		JSONObject allCounters = SyncModel.getInstance().getFromCache(getActivity(), channelJid);
 		JSONObject counters = allCounters.optJSONObject(channelJid);
 
@@ -130,10 +130,34 @@ public class SubscribedChannelsFragment extends ContentFragment implements Model
 		
 		final TextView notifCount = (TextView)channelListView.findViewById(R.id.bcUserNotifCounts);
 		notifCount.setText(boldSpan);
+		
+		final String avatarURL = AvatarUtils.avatarURL(getActivity(), channelJid);
+		final ImageView avatar = (ImageView)channelListView.findViewById(R.id.bcProfilePic);
+		avatar.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), ChannelDetailActivity.class);
+				intent.putExtra(GenericChannelsFragment.CHANNEL, getMyChannelJid());
+				intent.putExtra(SubscribedChannelsModel.ROLE, getRole());
+				getActivity().startActivity(intent);
+			}
+		});
+		ImageLoader.getInstance().displayImage(avatarURL, avatar);
 	}
 	
-	private String getMyChannelJid(final Context context) {
-		return Preferences.getPreference(context, Preferences.MY_CHANNEL_JID);
+	private String getMyChannelJid() {
+		return Preferences.getPreference(getActivity(), Preferences.MY_CHANNEL_JID);
+	}
+	
+	private String getRole() {
+		JSONObject subscribed = SubscribedChannelsModel.getInstance().getFromCache(getActivity());
+		if (!subscribed.has(getMyChannelJid())) {
+			return null;
+		}
+		return subscribed.optString(getMyChannelJid());
 	}
 	
 	private void selectChannel(String channelJid) {

@@ -1,28 +1,5 @@
 package com.buddycloud.customviews;
 
-import com.buddycloud.R;
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Shader;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.util.AttributeSet;
-import android.widget.ImageView;
-
-/**
- * A convenience class to create circular image view. 
- * 
- * @author Adnan Urooj (Deminem)
- * 
- */
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -40,6 +17,14 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
+
+import com.buddycloud.R;
+/**
+ * A convenience class to create circular image view. 
+ * 
+ * @author Adnan Urooj (Deminem)
+ * 
+ */
 
 public class CircularImageView extends ImageView {
 	// Border & Selector configuration variables

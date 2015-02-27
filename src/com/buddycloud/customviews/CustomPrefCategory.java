@@ -1,8 +1,5 @@
 package com.buddycloud.customviews;
 
-import com.buddycloud.R;
-import com.buddycloud.utils.TypefacesUtil;
-
 import android.content.Context;
 import android.graphics.Typeface;
 import android.preference.PreferenceCategory;
@@ -10,6 +7,9 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
+
+import com.buddycloud.R;
+import com.buddycloud.utils.TypefacesUtil;
 
 public class CustomPrefCategory extends PreferenceCategory {
 

@@ -17,7 +17,6 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.buddycloud.R;
-import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.fragments.GenericSelectableChannelsFragment;
 import com.buddycloud.model.ChannelMetadataModel;
 import com.buddycloud.model.ModelCallback;

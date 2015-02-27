@@ -2,20 +2,16 @@ package com.buddycloud.fragments;
 
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.TextView;
 import android.widget.ExpandableListView.OnChildClickListener;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.buddycloud.R;
 import com.buddycloud.fragments.adapter.GenericChannelAdapter;
-import com.buddycloud.preferences.Preferences;
-import com.buddycloud.utils.ChannelAdapterHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.PauseOnScrollListener;
 

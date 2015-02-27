@@ -11,7 +11,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.ActionMode;

@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.buddycloud.fragments.SearchChannelsFragment;
-import com.buddycloud.log.Logger;
 import com.buddycloud.utils.ActionbarUtil;
 import com.buddycloud.utils.InputUtils;
 
