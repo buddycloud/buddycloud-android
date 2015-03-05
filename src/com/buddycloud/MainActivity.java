@@ -13,6 +13,7 @@ import com.buddycloud.fragments.ChannelStreamFragment;
 import com.buddycloud.fragments.ContentFragment;
 import com.buddycloud.fragments.GenericChannelsFragment;
 import com.buddycloud.fragments.SearchChannelsFragment;
+import com.buddycloud.fragments.SlidingFragmentActivity;
 import com.buddycloud.fragments.SubscribedChannelsFragment;
 import com.buddycloud.log.Logger;
 import com.buddycloud.model.SyncModel;
@@ -25,7 +26,6 @@ import com.buddycloud.utils.Backstack;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnClosedListener;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnOpenedListener;
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 public class MainActivity extends SlidingFragmentActivity {
 

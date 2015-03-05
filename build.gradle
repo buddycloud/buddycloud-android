@@ -1,0 +1,70 @@
+apply plugin: 'com.android.application'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.1.0'
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+    maven { url "http://jzaccone.github.io/SlidingMenu-aar" }
+    mavenCentral()
+    jcenter()
+}
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "com.buddycloud"
+        minSdkVersion 14
+        targetSdkVersion 21
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src', 'aidl']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.google.android.gms:play-services:6.5.87'
+    compile 'joda-time:joda-time:2.3'
+    compile 'commons-codec:commons-codec:1.6'
+    compile files('libs/httpmime-4.2.3.jar')
+    compile files('libs/org.apache.commons.io.jar')
+    compile files('libs/org.xbill.dns_2.1.4.jar')
+    compile files('libs/universal-image-loader-1.9.1.jar')
+    compile ':actionbarsherlock:4.4.0@aar'
+    compile 'com.github.shell-software:fab:1.0.5'
+    compile 'com.facebook.android:facebook-android-sdk:3.21.1'
+    compile 'com.jeremyfeinstein.slidingmenu:library:1.3@aar'
+}
