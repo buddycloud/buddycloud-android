@@ -45,7 +45,6 @@ import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.AvatarUtils;
 import com.buddycloud.utils.ChannelAdapterHelper;
 import com.buddycloud.utils.TextUtils;
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class SubscribedChannelsFragment extends ContentFragment implements ModelListener {

@@ -49,7 +49,6 @@ import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.model.TopicChannelModel;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.InputUtils;
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.software.shell.fab.FloatingActionButton;
 
