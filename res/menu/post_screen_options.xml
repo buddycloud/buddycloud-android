@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_post_send"
+        android:orderInCategory="1"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_menu_send"
+        android:title="@string/menu_post_send">
+    </item>
+
+</menu>

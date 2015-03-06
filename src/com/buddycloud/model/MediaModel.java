@@ -19,8 +19,10 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.webkit.MimeTypeMap;
+import android.widget.ProgressBar;
 
 import com.buddycloud.http.BuddycloudHTTPHelper;
+import com.buddycloud.http.MultiPartEntityWithProgress;
 import com.buddycloud.preferences.Preferences;
 import com.buddycloud.utils.FileUtils;
 
@@ -58,6 +60,15 @@ public class MediaModel extends AbstractModel<JSONObject, JSONObject, String> {
 			ModelCallback<JSONObject> callback, String... p) {
 		try {
 			postMedia(context, callback, p);
+		} catch (Exception e) {
+			callback.error(e);
+		}
+	}
+	
+	public void saveWithProgress(Context context, JSONObject object,
+			MediaModelCallback<JSONObject> callback, String... p) {
+		try {
+			postMediaGeneralWithProgress(context, callback, p[0], url(context, p[1]), true);
 		} catch (Exception e) {
 			callback.error(e);
 		}
@@ -142,6 +153,77 @@ public class MediaModel extends AbstractModel<JSONObject, JSONObject, String> {
 		}
 	}
 
+	private void postMediaGeneralWithProgress(Context context,
+			final MediaModelCallback<JSONObject> callback, String imageUri, 
+			String url, boolean post) throws IOException {
+		
+		MultiPartEntityWithProgress reqEntity = new MultiPartEntityWithProgress(HttpMultipartMode.BROWSER_COMPATIBLE, 
+				new MultiPartEntityWithProgress.ProgressListener() {
+			
+			@Override
+			public void transferred(long progress, long totalSize) {
+				callback.progress(progress, totalSize);
+			}
+		});
+		
+		ContentResolver cr = context.getContentResolver();
+		
+		final Uri streamUri = Uri.parse(imageUri);
+		String streamType = cr.getType(streamUri);
+		
+		String fileName = streamUri.getLastPathSegment();
+		if (streamType == null) {
+			streamType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+					FilenameUtils.getExtension(fileName));
+		}
+		InputStream is = context.getContentResolver().openInputStream(streamUri);
+		
+		String realPath = FileUtils.getRealPathFromURI(context, streamUri);
+		MediaModelCallback<JSONObject> tempCallback = null;
+
+		File mediaFile = null;
+		if (realPath == null) {
+			File tempDir = context.getCacheDir();
+			final File tempFile = File.createTempFile("buddycloud-tmp-", 
+					MimeTypeMap.getSingleton().getExtensionFromMimeType(streamType), 
+					tempDir);
+			IOUtils.copy(is, new FileOutputStream(tempFile));
+			tempCallback = new MediaModelCallback<JSONObject>() {
+				@Override
+				public void success(JSONObject response) {
+					tempFile.delete();
+					callback.success(response);
+				}
+				
+				@Override
+				public void error(Throwable throwable) {
+					tempFile.delete();
+					callback.error(throwable);
+				}
+
+				@Override
+				public void progress(long progress, long totalSize) {
+					callback.progress(progress, totalSize);
+				}
+			};
+			mediaFile = tempFile;
+		} else {
+			mediaFile = new File(realPath);
+			tempCallback = callback;
+		}
+		
+		reqEntity.addPart("data", new FileBody(mediaFile));
+		reqEntity.addPart("filename", new StringBody(fileName));
+		reqEntity.addPart("content-type", new StringBody(streamType));
+		reqEntity.addPart("title", new StringBody("Android upload"));
+
+		if (post) {
+			BuddycloudHTTPHelper.post(url, reqEntity, context, tempCallback);
+		} else {
+			BuddycloudHTTPHelper.put(url, reqEntity, context, tempCallback);
+		}
+	}
+	
 	@Override
 	public JSONObject getFromCache(Context context, String... p) {
 		// TODO Auto-generated method stub
@@ -151,13 +233,10 @@ public class MediaModel extends AbstractModel<JSONObject, JSONObject, String> {
 	@Override
 	public void fill(Context context, ModelCallback<Void> callback, String... p) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void delete(Context context, ModelCallback<Void> callback, String... p) {
 		// TODO Auto-generated method stub
-		
 	}
-
 }

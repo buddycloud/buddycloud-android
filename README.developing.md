@@ -20,6 +20,8 @@ Besides the Android SDK and the support library, we use:
 * [picasso](https://github.com/square/picasso) for displaying and transforming images; and
 * [dnsjava](http://www.xbill.org/dnsjava/) for DNS queries.
 * [GooglePlayServices](https://developer.android.com/google/play-services/setup.html) setup google play services SDK for GCM.
+* [fab](https://github.com/shell-software/fab) for material design floating action button in older android devices.
+* [image-chooser-library](https://github.com/coomar2841/image-chooser-library) for selecting images/videos from gallery/photos/camera.
 
 Security model
 ----------
@@ -52,17 +54,17 @@ ShareActivity --post created------> exit
 ### Fragments inside MainActivity
 
 ```
-┌-----------┬-------------------┐
-│           │                   │
-│           │                   │
-│           │                   │
-│Subscribed │     Channel       │
-│ Channels  │     Stream        │
-│ Fragment  │     Fragment      │
-│           │                   │
-│           │                   │
-│           │                   │
-└-----------┴-------------------┘
+���-----------���-------------------���
+���           ���                   ���
+���           ���                   ���
+���           ���                   ���
+���Subscribed ���     Channel       ���
+��� Channels  ���     Stream        ���
+��� Fragment  ���     Fragment      ���
+���           ���                   ���
+���           ���                   ���
+���           ���                   ���
+���-----------���-------------------���
 ```
 
 ### Flow of the data

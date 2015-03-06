@@ -12,6 +12,8 @@
     <color name="bc_grey_color">#C4C8CD</color>
     <color name="bc_grey_shade_color">#9ca0a4</color>
 	<color name="bc_light_grey_color">#E5E9EF</color>
+	
+	<color name="bc_post_topic_bg_color">#eff1f5</color>
 
     <color name="bc_postDate_color">#9DA3A6</color>
     <color name="bc_reply_section_list_bg_color">#FBFDFC</color>

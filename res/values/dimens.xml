@@ -30,8 +30,11 @@
     <dimen name="layer_padding">3dip</dimen>
     
     <dimen name="post_new_topic_txt_size">18sp</dimen>
-    <dimen name="post_new_topic_channelJid_txt_size">14sp</dimen>
+    <dimen name="post_new_topic_To_txt_size">18sp</dimen>
+    <dimen name="post_new_topic_channelJid_txt_size">18sp</dimen>
     <dimen name="post_new_topic_counter_txt_size">16sp</dimen>
+    <dimen name="post_new_topic_thumbnail_size">60dp</dimen>
+    <dimen name="post_new_topic_attached_thmbnail_size">80dp</dimen>
     
     <dimen name="personal_header_avatar_size">90dp</dimen>
     <dimen name="personal_header_size">200dp</dimen>

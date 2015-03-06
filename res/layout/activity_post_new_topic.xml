@@ -5,68 +5,127 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:background="@color/bc_bg_color"
+    android:background="@android:color/white"
     tools:context=".PostNewTopicActivity" >
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/bottomPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@drawable/post_box_selector"
-        android:orientation="vertical"
-        android:paddingTop="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="5dp" >
+        android:layout_alignParentBottom="true"
+        android:background="@color/bc_grey_shade_color" >
 
-        <com.buddycloud.customviews.TypefacedEditText
-            android:id="@+id/postTxt"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:ems="15"
-            android:gravity="top"
-            android:hint="@string/post_new_topic_hint"
-            android:imeOptions="actionDone"
-            android:inputType="textMultiLine"
-            android:minLines="7"
-            android:background="#00000000"
-            android:textColor="@color/bc_dark_grey_color"
-            android:textSize="@dimen/post_new_topic_txt_size"
-            buddycloud:typeface="Roboto-Regular.ttf" >
-
-            <requestFocus />
-        </com.buddycloud.customviews.TypefacedEditText>
+        <include
+            android:id="@+id/thumbnailAttachmentPanel"
+            android:layout_width="@dimen/post_new_topic_attached_thmbnail_size"
+            android:layout_height="@dimen/post_new_topic_attached_thmbnail_size"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            layout="@layout/thumbnail_media_view" />
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:paddingTop="10dp" >
+            android:layout_below="@id/thumbnailAttachmentPanel"
+            android:background="@color/bc_post_topic_bg_color"
+            android:padding="5dp" >
 
-            <com.buddycloud.customviews.TypefacedTextView
-                android:id="@+id/channelJidTxt"
+            <ImageView
+                android:id="@+id/mediaSelection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:gravity="center|left"
-                android:text="at deminem@buddycloud.org"
-                android:textColor="@color/bc_grey_color"
-                android:textSize="@dimen/post_new_topic_channelJid_txt_size"
-                buddycloud:typeface="Roboto-Regular.ttf" />
+                android:layout_gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:src="@drawable/ic_camera"
+                android:visibility="visible" />
 
             <com.buddycloud.customviews.TypefacedTextView
                 android:id="@+id/postCounterTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_toLeftOf="@id/channelJidTxt"
+                android:layout_centerVertical="true"
                 android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:text="0"
-                android:textStyle="bold"
                 android:textColor="@color/bc_dark_grey_color"
                 android:textSize="@dimen/post_new_topic_counter_txt_size"
+                android:textStyle="bold"
                 buddycloud:typeface="Roboto-Regular.ttf" />
         </RelativeLayout>
-    </LinearLayout>
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/bottomPanel"
+        android:layout_alignParentTop="true"
+        android:background="@color/white"
+        android:fillViewport="true"
+        android:scrollbars="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/topPanel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bc_post_topic_bg_color"
+                android:orientation="horizontal"
+                android:padding="10dp" >
+
+                <com.buddycloud.customviews.TypefacedTextView
+                    android:id="@+id/channelJidTo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center|left"
+                    android:paddingRight="10dp"
+                    android:text="To:"
+                    android:textColor="@color/bc_grey_shade_color"
+                    android:textSize="@dimen/post_new_topic_To_txt_size"
+                    buddycloud:typeface="Roboto-Regular.ttf" />
+
+                <com.buddycloud.customviews.TypefacedTextView
+                    android:id="@+id/channelJidTxt"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:text="deminem@buddycloud.org"
+                    android:textColor="@color/blueColor"
+                    android:textSize="@dimen/post_new_topic_channelJid_txt_size"
+                    buddycloud:typeface="Roboto-Regular.ttf" />
+
+                <ImageView
+                    android:id="@+id/bcArrowRight"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/right_arrow_icon"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <com.buddycloud.customviews.TypefacedEditText
+                android:id="@+id/postTxt"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:gravity="top"
+                android:hint="@string/post_new_topic_hint"
+                android:imeOptions="actionDone"
+                android:inputType="textMultiLine"
+                android:padding="10dp"
+                android:background="#00000000"
+                android:scrollbars="vertical"
+                android:textColor="@color/bc_dark_grey_color"
+                android:textSize="@dimen/post_new_topic_txt_size"
+                buddycloud:typeface="Roboto-Regular.ttf" >
+            </com.buddycloud.customviews.TypefacedEditText>
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

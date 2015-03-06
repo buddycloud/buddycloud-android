@@ -1,6 +1,7 @@
 <resources>
 
     <string name="app_name">buddycloud</string>
+    <string name="app_name_uppercase">Buddycloud</string>
 	<string name="app_id">246626368832474</string>
 	<string name="buddycloud_website">http://buddycloud.com/</string>
     
@@ -19,6 +20,7 @@
     <string name="menu_find_active">Active channels</string>
     <string name="menu_find_recommended">Recommended channels</string>
     <string name="menu_find_friends">Find friends</string>
+    <string name="menu_post_send">Post send</string>
     
     <string name="menu_follow">Follow</string>
     <string name="menu_unfollow">Unfollow</string>
@@ -41,8 +43,8 @@
 	<string name="action_unfollowed">You unfollowed %1$s</string>
 	<string name="action_follow_failed">Couldn\'t change your role in %1$s</string>
 	
-	<string name="message_topic_created">New topic has been created.</string>
-	<string name="message_topic_creation_failed">Houston, we\'ve some problem. Your new topic is not created, please try again.</string>
+	<string name="message_post_created">New post has been created.</string>
+	<string name="message_post_creation_failed">Houston, we\'ve some problem. Your new post is not created, please try again.</string>
 	<string name="message_reply_created">Comment has been posted successfully.</string>
 	<string name="message_reply_creation_failed">Houston, we\'ve some problem. Your comment is failed, please try again.</string>
 	<string name="title_confirm_delete">Confirm deletion</string>
@@ -81,8 +83,10 @@
 	<string name="message_account_creation">Creating account&#8230;</string>
 	<string name="message_account_creation_failed">Could not register account. Username not available.</string>
 	<string name="message_post_comment_mandatory">Comment can\'t be empty.</string>
-	<string name="message_post_topic_mandatory">Topic can\'t be empty.</string>
-	<string name="message_topic_creation">Posting a topic&#8230;</string>
+	<string name="message_post_topic_mandatory">Post can\'t be empty.</string>
+	<string name="message_post_topic_channelJid_mandatory">Channel can\'t be empty. Please select the channel.</string>
+	<string name="message_post_topic_attachment_in_progress">Media attachment is in progress.</string>
+	<string name="message_post_creation">Posting&#8230;</string>
 
 	
 	<string name="message_replies_load_failed">Could not fetch replies of this post</string>
@@ -173,9 +177,8 @@
 	<string name="channel_list_subscribed_hint">SUBSCRIBED</string>
 	<string name="channel_list_counts_formatted_txt">%1$d Mentions  |  %2$d Replies  |  %3$d Views</string>
 	
-	<string name="post_new_topic_title">Create New Topic</string>
-	<string name="post_new_topic_hint">Write a new post topic&#8230;</string>
-	<string name="post_new_topic_at_channel">at %1$s</string>
+	<string name="post_new_topic_title">Post to buddycloud</string>
+	<string name="post_new_topic_hint">Write a new post&#8230;</string>
 	
 	<string name="topic_channel">Enter the channel name:</string>
 	<string name="topic_channel_hint">channel name</string>

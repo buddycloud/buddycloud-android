@@ -454,8 +454,7 @@ public class BuddycloudHTTPHelper {
 					return "";
 				}
 
-				String responseStr = EntityUtils
-						.toString(resEntityGet, "utf-8");
+				String responseStr = EntityUtils.toString(resEntityGet, "utf-8");
 				return responseStr;
 			} catch (Throwable e) {
 				Logger.error(TAG, e.getLocalizedMessage(), e);

@@ -323,8 +323,8 @@ public class PostCard extends AbstractCard {
 			final Context context, final TextView contentTextView,
 			final TextView contentTextViewAlt,
 			final MeasuredMediaView mediaView, int widthMeasureSpec) {
-		final String imageURLLo = getMediaLoURL(mediaArray, context);
 		
+		final String imageURLLo = getMediaLoURL(mediaArray, context);
 		DisplayImageOptions dio = new DisplayImageOptions.Builder()
 				.cloneFrom(ImageHelper.defaultImageOptions())
 				.preProcessor(ImageHelper.createRoundProcessor(8, true, widthMeasureSpec))
@@ -334,7 +334,7 @@ public class PostCard extends AbstractCard {
 			
 			@Override
 			public void onLoadingStarted(String arg0, View arg1) {
-				
+				contentTextViewAlt.setVisibility(View.VISIBLE);
 			}
 			
 			@Override
@@ -343,10 +343,10 @@ public class PostCard extends AbstractCard {
 			
 			@Override
 			public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
-				contentTextViewAlt.setVisibility(View.VISIBLE);
-				contentTextView.setVisibility(View.INVISIBLE);
-				contentTextViewAlt.setText(anchoredContent);
-				contentTextViewAlt.setMovementMethod(LinkMovementMethod.getInstance());
+				contentTextViewAlt.setVisibility(View.GONE);
+				contentTextView.setVisibility(View.VISIBLE);
+				contentTextView.setText(anchoredContent);
+				contentTextView.setMovementMethod(LinkMovementMethod.getInstance());
 				
 				final String imageURLHi = getMediaHiURL(mediaArray, context);
 				
