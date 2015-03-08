@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -217,43 +218,44 @@ public class PostCard extends AbstractCard {
 
 			final TypefacedEditText replyTxt = holder.getView(R.id.postNewCommentTxt);
 			replyTxt.setOnEditorActionListener(new OnEditorActionListener() {
-				@Override
-				public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-					
-					if (actionId == EditorInfo.IME_ACTION_SEND || 
-							actionId == EditorInfo.IME_ACTION_DONE) {
-						
-						sendReply(context, replyTxt);
-					}
-					return false;
-				}
-			});
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    /**
+                     * Android doesn't show "Send" button for multiline edittext. So we've
+                     * override that particular action for all the devices.
+                     */
+                    if (actionId == EditorInfo.IME_ACTION_SEND ||
+                            actionId == EditorInfo.IME_ACTION_DONE ||
+                            event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+
+                        sendReply(context, replyTxt);
+                        return true;
+                    }
+
+                    return false;
+                }
+            });
 			replyTxt.setOnKeyPreImeListener(new TypefacedEditText.KeyImeChange() {
-				
-				@Override
-				public boolean onKeyPreIme(int keyCode, KeyEvent event) {
-					if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-						new Handler().postDelayed(new Runnable() {
-							
-							@Override
-							public void run() {
-								fragment.showAddPostTopicBtn();
-							}
-						}, 1000);
-					}
-					
-					return false;
-				}
-			});
-			replyTxt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-				
-				@Override
-				public void onFocusChange(View v, boolean hasFocus) {
-					if (hasFocus) {
-						fragment.hideAddPostTopicBtn();
-					}
-				}
-			});
+
+                @Override
+                public boolean onKeyPreIme(int keyCode, KeyEvent event) {
+                    /**
+                     * Check if the "back key" pressed for the keypad to close.
+                     * So we can also show the "+" add post button.
+                     */
+                    if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                        new Handler().postDelayed(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                fragment.showAddPostTopicBtn();
+                            }
+                        }, 500);
+                    }
+
+                    return false;
+                }
+            });
 		}
 
 		// adjust shadow
@@ -261,7 +263,6 @@ public class PostCard extends AbstractCard {
 		return convertView;
 	}
 
-	
 	private void adjustShadow(final Context context,
 			View postContainer,
 			View replyListViewSection) {
@@ -388,6 +389,12 @@ public class PostCard extends AbstractCard {
 	}
 
 	private void sendReply(final Context context, final EditText replyTxt) {
+
+        if (replyTxt == null || TextUtils.isEmpty(replyTxt.getText().toString())) {
+            Toast.makeText(context, context.getString(R.string.message_post_comment_mandatory),
+                    Toast.LENGTH_LONG).show();
+            return ;
+        }
 
 		JSONObject replyPost = createReply(replyTxt);
 		replyTxt.setText("");

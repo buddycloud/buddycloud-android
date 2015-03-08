@@ -13,6 +13,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -21,6 +22,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -63,12 +65,12 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		final View view = inflater.inflate(R.layout.fragment_channel_stream, container, false);		
-		showProgress(view);
+		final View activityRootView = inflater.inflate(R.layout.fragment_channel_stream, container, false);
+		showProgress(activityRootView);
 
-		postStream = (ListView) view.findViewById(R.id.postsStream);
-		postStream.setEmptyView(getEmptyListView(view));
-		postStreamRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshLayout);
+		postStream = (ListView) activityRootView.findViewById(R.id.postsStream);
+		postStream.setEmptyView(getEmptyListView(activityRootView));
+		postStreamRefreshLayout = (SwipeRefreshLayout) activityRootView.findViewById(R.id.refreshLayout);
 		postStreamRefreshLayout.setColorSchemeResources(R.color.bc_green_blue_color);
 		postStreamRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			
@@ -82,7 +84,7 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 			}
 		});
 		
-		addPostTopicBtn = (FloatingActionButton) view.findViewById(R.id.addNewTopicBtn);
+		addPostTopicBtn = (FloatingActionButton) activityRootView.findViewById(R.id.addNewTopicBtn);
 		addPostTopicBtn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -100,12 +102,27 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 		} else {
 			addPostTopicBtn.setVisibility(View.VISIBLE);
 		}
-				
+
+        // hide add '+' post topic button, when keyboard visible
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                //r will be populated with the coordinates of your view that area still visible.
+                activityRootView.getWindowVisibleDisplayFrame(r);
+
+                int heightDiff = activityRootView.getRootView().getHeight() - (r.bottom - r.top);
+                if (heightDiff > 100) { // if more than 100 pixels, its probably a keyboard...
+                    hideAddPostTopicBtn();  // hide add '+' post topic button
+                }
+            }
+        });
+
 		PostsModel.getInstance().setListener(this);
 		synchChannelMetadata(); 
 		synchPostStream();
 		
-		return view;
+		return activityRootView;
 	}
 	
 	@Override
@@ -121,17 +138,19 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 	}
 
 	public void showAddPostTopicBtn() {
-		if (addPostTopicBtn != null) {
+        boolean canPost = SubscribedChannelsModel.canPost(getRole());
+		if (addPostTopicBtn != null && canPost) {
 			addPostTopicBtn.show();
 		}
 	}
 	
 	public void hideAddPostTopicBtn() {
-		if (addPostTopicBtn != null) {
+        boolean canPost = SubscribedChannelsModel.canPost(getRole());
+		if (addPostTopicBtn != null && canPost) {
 			addPostTopicBtn.hide();
 		}
 	}
-	
+
 	public ListView getPostStreamView() {
 		return postStream;
 	}
@@ -181,9 +200,6 @@ public class ChannelStreamFragment extends ContentFragment implements ModelListe
 	/**
 	 * Synchronize the post stream with latest posts
 	 * from remote
-	 * 
-	 * @param view
-	 * @param context
 	 */
 	public void synchPostStream() {
 		

@@ -26,6 +26,7 @@
             android:clipToPadding="false"
             android:divider="@android:color/transparent"
             android:dividerHeight="10dp"
+            android:descendantFocusability="afterDescendants"
             android:listSelector="@android:color/transparent"
             android:overScrollMode="never"
             android:padding="10dp"
