@@ -22,7 +22,7 @@ The buddycloud app demonstrate the rich set of features provided by the [Buddycl
 
 [![Google Play](http://developer.android.com/images/brand/en_generic_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=com.buddycloud)
 
-* Available on google play store (build version 1.0.31). Android support 4.0+.
+* Available on [google play store](https://play.google.com/store/apps/details?id=com.buddycloud) (build version 1.0.31). Android support 4.0+.
 * [Build Releases](http://downloads.buddycloud.com/packages/android/) - previous release versions.
 
 ## Documentation
@@ -77,7 +77,7 @@ You can debug the buddycloud android app TCP and HTTPS session usage:
 
 	sudo tcptrack -i eth0 port 443
 
-or, want to find out some information related to UI width adb (android debug bridge):
+or, want to find out some information related to UI with adb (android debug bridge):
 
     adb -d logcat -v time -s buddycloud
     
