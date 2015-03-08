@@ -29,6 +29,8 @@ import com.buddycloud.utils.ActionbarUtil;
 import com.buddycloud.utils.DNSUtils;
 import com.buddycloud.utils.InputUtils;
 
+import java.util.Locale;
+
 /**
  * This activity used to show the login screen 
  * and handle all the actions.
@@ -123,7 +125,7 @@ public class LoginActivity extends SherlockActivity {
 		
         MenuItem item = menu.findItem(R.id.menu_signup);
         if (item != null) {
-        	item.setTitle(getString(R.string.signup_button).toUpperCase());
+        	item.setTitle(getString(R.string.signup_button).toUpperCase(Locale.ENGLISH));
         }
         
 		return super.onCreateOptionsMenu(menu);

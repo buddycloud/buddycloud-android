@@ -95,8 +95,8 @@ public class CommentCard extends AbstractCard {
 		String avatarURL = AvatarUtils.avatarURL(viewGroup.getContext(), replyAuthor);
 		DisplayImageOptions dio = new DisplayImageOptions.Builder()
 				.cloneFrom(ImageHelper.defaultImageOptions())
-				.showImageOnFail(R.drawable.avatar_icon)
-				.showImageOnLoading(R.drawable.avatar_icon)
+				.showImageOnFail(R.drawable.ic_avatar)
+				.showImageOnLoading(R.drawable.ic_avatar)
 				.preProcessor(ImageHelper.createRoundProcessor(16, false, -1))
 				.build();
 

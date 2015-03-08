@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:buddycloud="http://schemas.android.com/apk/res/com.buddycloud"
+    xmlns:buddycloud="http://schemas.android.com/apk/res-auto"
     xmlns:tooltipErrorView="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -85,7 +85,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center|left"
                     android:paddingRight="10dp"
-                    android:text="To:"
+                    android:text="@string/post_new_topic_to_channelJid"
                     android:textColor="@color/bc_grey_shade_color"
                     android:textSize="@dimen/post_new_topic_To_txt_size"
                     buddycloud:typeface="Roboto-Regular.ttf" />
@@ -96,9 +96,9 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center|left"
-                    android:text="deminem@buddycloud.org"
                     android:textColor="@color/blueColor"
                     android:textSize="@dimen/post_new_topic_channelJid_txt_size"
+                    android:hint="@string/post_new_topic_channelJid_hint"
                     buddycloud:typeface="Roboto-Regular.ttf" />
 
                 <ImageView
@@ -106,7 +106,7 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/right_arrow_icon"
+                    android:src="@drawable/ic_right_arrow"
                     android:visibility="gone" />
             </LinearLayout>
 

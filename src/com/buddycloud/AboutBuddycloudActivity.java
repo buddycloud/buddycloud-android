@@ -96,7 +96,7 @@ public class AboutBuddycloudActivity extends SherlockActivity {
 		
 		final String githubUri = "http://github.com/" + githubAuthor.trim();
 		final String contributorInfo = contributor.trim() + "\n" + "@" + githubAuthor.trim();
-		TextView tv = (TextView)LayoutInflater.from(context).inflate(R.layout.contributors, null);
+		TextView tv = (TextView)View.inflate(context, R.layout.contributors, null);
 		SpannableString hyperLinkSpan = new SpannableString(contributorInfo);
 		hyperLinkSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.bc_about_contributor_link_color)), 
 				contributorInfo.indexOf("@"), hyperLinkSpan.length(), 0);

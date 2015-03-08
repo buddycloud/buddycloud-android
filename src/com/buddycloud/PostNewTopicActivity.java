@@ -10,6 +10,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -35,6 +37,7 @@ import com.buddycloud.model.ModelCallback;
 import com.buddycloud.model.PostsModel;
 import com.buddycloud.model.SubscribedChannelsModel;
 import com.buddycloud.utils.ActionbarUtil;
+import com.buddycloud.utils.FileUtils;
 import com.buddycloud.utils.ImageHelper;
 import com.buddycloud.utils.InputUtils;
 import com.buddycloud.utils.NetworkUtil;
@@ -61,6 +64,8 @@ public class PostNewTopicActivity extends SherlockActivity
 	
 	public static final int REQUEST_CODE = 109;
 	public static final int NEW_POST_CREATED_RESULT = 209;
+
+    private static final String MEDIA_THUMBNAIL_DIR = "media_thumbnail";
 	
 	private TextView mPostContentTxtCounter;
 	private MediaChooserManager mChooserManager;
@@ -161,13 +166,16 @@ public class PostNewTopicActivity extends SherlockActivity
 	@Override
 	protected void onResume() {
 		super.onResume();
-		ImageLoader.getInstance().resume();	
+		ImageLoader.getInstance().resume();
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
 		ImageLoader.getInstance().stop();
+
+        // clean up media thumbnail selection
+        cleanUpMediaSelection();
 	}
     
 	@Override
@@ -335,13 +343,16 @@ public class PostNewTopicActivity extends SherlockActivity
 	
 	private void mediaSelection() {
 		mChooserManager = new MediaChooserManager(this,
-				ChooserType.REQUEST_PICK_PICTURE_OR_VIDEO);
+				ChooserType.REQUEST_PICK_PICTURE_OR_VIDEO, MEDIA_THUMBNAIL_DIR, true);
 		mChooserManager.setMediaChooserListener(this);
 		
 		try {
 			String path = mChooserManager.choose();
+
+            // clean up media thumbnail selection
+            cleanUpMediaSelection();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.error(TAG, "Exception: ", e);
 		}
 	}
 	
@@ -444,7 +455,14 @@ public class PostNewTopicActivity extends SherlockActivity
 				thumbnailAttachmentPanel.setVisibility(View.GONE);
 			}
 		});
+
+        // clean up media thumbnail selection
+        cleanUpMediaSelection();
 	}
+
+    private void cleanUpMediaSelection() {
+        FileUtils.removeAllFiles(MEDIA_THUMBNAIL_DIR);
+    }
 	
 	private final TextWatcher mNewPostTextWatcher = new TextWatcher() {
 		

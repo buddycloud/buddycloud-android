@@ -219,8 +219,8 @@ public class GCMUtils {
 	public static Builder createNotificationBuilder(Context context) {
 		NotificationCompat.Builder builder =
 		        new NotificationCompat.Builder(context)
-		        .setSmallIcon(R.drawable.notification_icon)
-		        .setLights(Color.GREEN, 1000, 1000);
+		        .setSmallIcon(R.drawable.ic_notification)
+		        .setLights(context.getResources().getColor(R.color.bc_green_blue_color), 1000, 1000);
 		
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 		
@@ -271,8 +271,4 @@ public class GCMUtils {
 		notification.flags |= Notification.FLAG_SHOW_LIGHTS;
 		return notification;
 	}
-	
-
-	
-
 }

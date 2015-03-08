@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:background="@drawable/bc_shadow"
+        android:background="@drawable/ic_bc_shadow"
         android:paddingBottom="12dp" >
 
         <RelativeLayout

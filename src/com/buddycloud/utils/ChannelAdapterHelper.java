@@ -21,13 +21,13 @@ public class ChannelAdapterHelper {
 			ViewGroup viewGroup, String channelJid) {
 		
 		LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-		convertView = inflater.inflate(R.layout.channel_personal_header, null);
+		convertView = inflater.inflate(R.layout.channel_personal_header, viewGroup, false);
 		
 		String avatarURL = AvatarUtils.avatarURL(context, channelJid);
 		DisplayImageOptions dio = new DisplayImageOptions.Builder()
 				.cloneFrom(ImageHelper.defaultImageOptions())
-				.showImageOnFail(R.drawable.avatar_icon)
-				.showImageOnLoading(R.drawable.avatar_icon)
+				.showImageOnFail(R.drawable.ic_avatar)
+				.showImageOnLoading(R.drawable.ic_avatar)
 				.build();
 		
 		ImageView avatar = (ImageView) convertView.findViewById(R.id.bcProfilePic);

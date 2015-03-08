@@ -179,7 +179,9 @@
 	
 	<string name="post_new_topic_title">Post to buddycloud</string>
 	<string name="post_new_topic_hint">Write a new post&#8230;</string>
-	
+    <string name="post_new_topic_to_channelJid">To:</string>
+    <string name="post_new_topic_channelJid_hint">Select a channel</string>
+
 	<string name="topic_channel">Enter the channel name:</string>
 	<string name="topic_channel_hint">channel name</string>
 	<string name="topic_channel_domain_hint">\@%1$s</string>
