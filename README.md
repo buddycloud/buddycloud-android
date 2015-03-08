@@ -1,7 +1,5 @@
 #buddycloud-android 
 
-[![Google Play](http://developer.android.com/images/brand/en_generic_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=com.buddycloud)
-
 The buddycloud app demonstrate the rich set of features provided by the [Buddycloud REST API] (http://buddycloud.com/api "buddycloud REST API").
 
 ![screenshots](https://raw.githubusercontent.com/buddycloud/buddycloud-android/master/screenshots.png)
@@ -20,6 +18,17 @@ The buddycloud app demonstrate the rich set of features provided by the [Buddycl
 * Friends Finder (Facebook and addressbook)
 * and much more...
  
+## Downloads
+
+[![Google Play](http://developer.android.com/images/brand/en_generic_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=com.buddycloud)
+
+* Available on google play store (build version 1.0.31). Android support 4.0+.
+* [Build Releases](http://downloads.buddycloud.com/packages/android/) - previous release versions.
+
+## Documentation
+ * [Requirements](https://docs.google.com/a/buddycloud.com/document/d/1c-vJ8lUbpZ47P-7gIpTtjhTL54d10aQkD0mI12uwEuA/edit) - Android demo app requirements
+ * [Screen Designs & Mockups](https://buddycloud.mybalsamiq.com/projects/android/grid) - Screen design and mockups
+
 ## FAQ
 
 ### General
