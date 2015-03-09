@@ -67,7 +67,7 @@ Besides the Android SDK and the support library, we use opensource third-party l
 
 #### How do I install Buddycloud android app?
 
-If you want to use the app as end user then download it from google playstore. However, if you're software developer and want to install the app then checkout the sources from Github and use gradle to build (show above) and install the .apk file.
+If you want to use the app as end user then download it from google playstore. However, if you're software developer and want to install the app then checkout the sources from Github and use gradle to build (see above) and install the .apk file.
 
 	gradle installDebug
 
@@ -81,7 +81,7 @@ or, want to find out some information related to UI with adb (android debug brid
 
     adb -d logcat -v time -s buddycloud
     
-#### Roadmap
+#### Roadmapho
 
 We use GitHub milestones and issues to track our progress, so please check our [milestones](https://github.com/buddycloud/buddycloud-android/milestones) page for release planning. 
 
