@@ -81,7 +81,7 @@ or, want to find out some information related to UI with adb (android debug brid
 
     adb -d logcat -v time -s buddycloud
     
-#### Roadmapho
+#### Roadmap
 
 We use GitHub milestones and issues to track our progress, so please check our [milestones](https://github.com/buddycloud/buddycloud-android/milestones) page for release planning. 
 
