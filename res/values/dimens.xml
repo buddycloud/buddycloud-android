@@ -18,6 +18,7 @@
     <dimen name="login_screen_editbox_txt_size">20sp</dimen>
     <dimen name="login_screen_btn_txt_size">18sp</dimen>
 
+    <dimen name="forgot_passwd_screen_hint_size">14sp</dimen>
     <dimen name="forgot_passwd_screen_label_txt_size">20sp</dimen>
     <dimen name="forgot_passwd_screen_editbox_txt_size">20sp</dimen>
     <dimen name="forgot_passwd_screen_btn_txt_size">18sp</dimen>

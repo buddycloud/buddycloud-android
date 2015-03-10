@@ -153,14 +153,16 @@
     <string name="login_button">Log In</string>
     <string name="login_create_account_button">Create new account</string>
     <string name="login_error_wrong_credentials">The username and password you entered did not match our records. Please double-check and try again.</string>
-	<string name="login_error_bad_channel_format">Username you entered not defined with proper format \'user@domain\'.</string>
+	<string name="login_error_bad_channel_format">Username you entered not defined with proper format \'username@example.com\'.</string>
 	
 	<string name="forgot_password_title">Forgot Password</string>
-	<string name="forgot_password_email">Email</string>
-	<string name="forgot_password_email_hint">email address to recover password</string>
-	<string name="forgot_password_error_no_email_found">The email you entered did not match our records. Please double-check and try again.</string>
+	<string name="forgot_password_username">Username</string>
+	<string name="forgot_password_username_hint">username to recover password</string>
+	<string name="forgot_password_error_no_username_found">The username you entered did not match our records. Please double-check and try again.</string>
+    <string name="forgot_password_error_bad_username_format">Username you entered not defined with proper format \'username@example.com\'.</string>
+    <string name="forgot_password_hint">Please provide the \'username@example.com\' and new password will be send to the email address provided during registration.</string>
 	<string name="forgot_password_button">Recover Password</string>
-	
+
 	<string name="ssl_error_title">SSL error</string>
 	<string name="ssl_error_message">Insecure connection or invalid certificate. Trust %1$s?</string>
 	
@@ -267,8 +269,7 @@
 	
 	<string name="caption_forgot_password">Forgot password?</string>
 	<string name="title_reset_password">Reset password</string>
-	<string name="message_reset_password">Type your username. You will receive an email with a new random password.</string>
-	<string name="message_password_successfully_reset">Password successfully reset</string>
+	<string name="message_password_successfully_reset">Please check your email with a new random password</string>
 	<string name="message_password_reset_failed">Could not reset password</string>
 	
 	<string name="title_confirm_delete_account">Delete account</string>

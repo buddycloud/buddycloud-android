@@ -35,9 +35,9 @@ public class RecoverPasswordActivity extends SherlockActivity {
 
 	private static final String TAG = RecoverPasswordActivity.class.getSimpleName();
 	
-	private EditText mForgotPasswordEmailTxt;
+	private EditText mUsernameTxt;
 
-	private TooltipErrorView mForgotPasswordEmailErrorTooltip;
+	private TooltipErrorView mUsernameErrorTooltip;
 	private ProgressDialog mProgressDialog;
 	
     @Override
@@ -47,34 +47,34 @@ public class RecoverPasswordActivity extends SherlockActivity {
 
         ActionbarUtil.showActionBarwithBack(this, getString(R.string.forgot_password_title));
 
-		mForgotPasswordEmailErrorTooltip = (TooltipErrorView) findViewById(R.id.forgotPasswordEmailErrorTooltip);
-		mForgotPasswordEmailTxt = (EditText) findViewById(R.id.forgotPasswordEmailTxt);
-		mForgotPasswordEmailTxt.addTextChangedListener(mEmailAddressTxtWatcher);
+		mUsernameErrorTooltip = (TooltipErrorView) findViewById(R.id.usernameErrorTooltip);
+		mUsernameTxt = (EditText) findViewById(R.id.usernameTxt);
+		mUsernameTxt.addTextChangedListener(mUsernameTxtWatcher);
 		
 		mProgressDialog = new ProgressDialog(this);
 		mProgressDialog.setMessage(getString(R.string.message_reseting_password));
 		mProgressDialog.setCancelable(false);
 
-		mForgotPasswordEmailTxt.setOnEditorActionListener(new OnEditorActionListener() {
-			@Override
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				
-				if (actionId == EditorInfo.IME_ACTION_DONE) {
+		mUsernameTxt.setOnEditorActionListener(new OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-					final String forgotPasswordEmailTxt = getValue(R.id.forgotPasswordEmailTxt);					
-					recoverPassword(forgotPasswordEmailTxt);
-				}
-				return false;
-			}
-		});
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+
+                    final String usernameTxt = getValue(R.id.usernameTxt);
+                    recoverPassword(usernameTxt);
+                }
+                return false;
+            }
+        });
         
 		final Button forgotPasswordBtn = (Button) findViewById(R.id.forgotPasswordBtn);
 		forgotPasswordBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
-				final String forgotPasswordEmailTxt = getValue(R.id.forgotPasswordEmailTxt);					
-				recoverPassword(forgotPasswordEmailTxt);
+
+                final String usernameTxt = getValue(R.id.usernameTxt);
+                recoverPassword(usernameTxt);
 			}
 		});
     }
@@ -102,37 +102,38 @@ public class RecoverPasswordActivity extends SherlockActivity {
 
 	private void hideAllErrorTooltips() {
 
-		if (mForgotPasswordEmailErrorTooltip != null) {
-			mForgotPasswordEmailErrorTooltip.setVisibility(View.GONE);
+		if (mUsernameErrorTooltip != null) {
+			mUsernameErrorTooltip.setVisibility(View.GONE);
 		}
 	}
 	
 	private static boolean isEmpty(String string) {
 		return string.length() == 0;
 	}
-	
-	private static boolean isValidEmail(String email) {
-		
-		final String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-		return (!isEmpty(email) && email.matches(EMAIL_REGEX));
-	}
-	
+
 	private String getValue(int resId) {
 		return ((EditText) findViewById(resId)).getText().toString();
 	}
 	
 	/**
-	 * Recover the password
+	 * Recover the password for the given username
 	 * 
-	 * @param emailAddressTxt
+	 * @param usernameTxt
 	 */
-	private void recoverPassword(final String emailAddressTxt) {
-	
-		if (!isValidEmail(emailAddressTxt)) {
-			showErrorToolTip(mForgotPasswordEmailErrorTooltip,
-					getString(R.string.message_account_email_invalid));
-			return;
-		}
+	private void recoverPassword(final String usernameTxt) {
+
+        if (isEmpty(usernameTxt)) {
+            showErrorToolTip(mUsernameErrorTooltip,
+                    getString(R.string.message_account_username_mandatory));
+            return;
+        }
+
+        String[] myUsernameSplit = usernameTxt.split("@");
+        if (myUsernameSplit.length < 2) {
+            showErrorToolTip(mUsernameErrorTooltip,
+                    getString(R.string.forgot_password_error_bad_username_format));
+            return;
+        }
 		
 		// remove all error tool tips
 		hideAllErrorTooltips();
@@ -140,9 +141,9 @@ public class RecoverPasswordActivity extends SherlockActivity {
 		// show progress dialog
 		mProgressDialog.show();
 		
-		// Recover password through email
-		AccountModel.getInstance().resetPassword(getApplicationContext(), 
-				emailAddressTxt, new ModelCallback<JSONObject>() {
+		// Recover the password for given user@example.com
+		AccountModel.getInstance().resetPassword(getApplicationContext(),
+                usernameTxt, new ModelCallback<JSONObject>() {
 					@Override
 					public void success(JSONObject response) {
 						mProgressDialog.dismiss();
@@ -167,7 +168,7 @@ public class RecoverPasswordActivity extends SherlockActivity {
 		});
 	}
 
-	private final TextWatcher mEmailAddressTxtWatcher = new TextWatcher() {
+	private final TextWatcher mUsernameTxtWatcher = new TextWatcher() {
 
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
@@ -182,10 +183,10 @@ public class RecoverPasswordActivity extends SherlockActivity {
 		@Override
 		public void afterTextChanged(Editable s) {
 			if (s.length() == 0) {
-				showErrorToolTip(mForgotPasswordEmailErrorTooltip,
-						getString(R.string.message_account_email_invalid));
+                showErrorToolTip(mUsernameErrorTooltip,
+                        getString(R.string.message_account_username_mandatory));
 			} else {
-				mForgotPasswordEmailErrorTooltip.setVisibility(View.GONE);
+				mUsernameErrorTooltip.setVisibility(View.GONE);
 			}
 		}
 	};
